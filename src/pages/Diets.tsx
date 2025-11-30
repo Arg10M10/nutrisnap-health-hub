@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Heart, Bookmark, PlusCircle, CheckCircle } from "lucide-react";
+import { BookOpen, Heart, Bookmark, PlusCircle, CheckCircle, Sunrise, Sun, Coffee, Moon } from "lucide-react";
 import { toast } from "sonner";
 import { diets, Diet } from "@/data/diets";
 import DietDetailDrawer from "@/components/DietDetailDrawer";
@@ -36,7 +37,6 @@ const Diets = () => {
     const diet = diets.find((d) => d.id === dietId);
     if (diet) {
       setActiveDietId(dietId);
-      setSelectedDiet(diet); // <-- This line opens the drawer automatically
       toast.success(`¡Has empezado la dieta ${diet.name}!`, {
         icon: <CheckCircle className="text-primary" />,
       });
@@ -45,6 +45,16 @@ const Diets = () => {
 
   const mySavedDiets = diets.filter((diet) => savedDiets.includes(diet.id));
   const activeDiet = diets.find((diet) => diet.id === activeDietId);
+
+  const MealPlanItem = ({ icon: Icon, meal, food }: { icon: React.ElementType, meal: string, food: string }) => (
+    <div className="flex items-start gap-3">
+      <Icon className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
+      <div>
+        <p className="font-semibold text-foreground">{meal}</p>
+        <p className="text-muted-foreground">{food}</p>
+      </div>
+    </div>
+  );
 
   return (
     <PageLayout>
@@ -119,18 +129,20 @@ const Diets = () => {
               mySavedDiets.map((diet) => {
                 const isActive = activeDietId === diet.id;
                 return (
-                  <Card key={diet.id} className={`p-6 cursor-pointer hover:border-primary/50 transition-colors ${isActive ? "border-primary" : ""}`} onClick={() => setSelectedDiet(diet)}>
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <span className="text-4xl">{diet.icon}</span>
-                        <div>
-                          <h3 className="text-foreground mb-1">{diet.name}</h3>
-                          <p className="text-base text-muted-foreground">{diet.description}</p>
+                  <Card key={diet.id} className={`p-6 transition-all duration-300 ${isActive ? "border-primary" : ""}`}>
+                    <div className="cursor-pointer" onClick={() => setSelectedDiet(diet)}>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <span className="text-4xl">{diet.icon}</span>
+                          <div>
+                            <h3 className="text-foreground mb-1">{diet.name}</h3>
+                            <p className="text-base text-muted-foreground">{diet.description}</p>
+                          </div>
                         </div>
+                        {isActive && <Badge>Activa</Badge>}
                       </div>
-                      {isActive && <Badge>Activa</Badge>}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mt-4">
                       <Button onClick={(e) => handleToggleSave(e, diet.id, diet.name)} variant="outline" className="w-full h-12 text-base">
                         <Heart className="mr-2 w-5 h-5" /> Quitar
                       </Button>
@@ -138,6 +150,25 @@ const Diets = () => {
                         {isActive ? (<><CheckCircle className="mr-2 w-5 h-5" /> En Curso</>) : (<><PlusCircle className="mr-2 w-5 h-5" /> Empezar</>)}
                       </Button>
                     </div>
+                    <AnimatePresence>
+                      {isActive && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                          animate={{ opacity: 1, height: 'auto', marginTop: '1rem' }}
+                          exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          className="overflow-hidden"
+                        >
+                          <div className="pt-4 border-t border-border space-y-4">
+                            <h4 className="font-semibold text-foreground text-lg">Ejemplo de menú diario</h4>
+                            <MealPlanItem icon={Sunrise} meal="Desayuno" food={diet.sampleMealPlan.breakfast} />
+                            <MealPlanItem icon={Sun} meal="Comida" food={diet.sampleMealPlan.lunch} />
+                            <MealPlan-item icon={Coffee} meal="Merienda" food={diet.sampleMealPlan.snack} />
+                            <MealPlanItem icon={Moon} meal="Cena" food={diet.sampleMealPlan.dinner} />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </Card>
                 );
               })
