@@ -51,12 +51,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    setLoading(true);
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const initializeSession = async () => {
       try {
-        setSession(session);
-        const currentUser = session?.user ?? null;
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        setSession(initialSession);
+        const currentUser = initialSession?.user ?? null;
         setUser(currentUser);
 
         if (currentUser) {
@@ -65,9 +64,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setProfile(null);
         }
       } catch (error) {
-        console.error("Error during auth state change:", error);
+        console.error("Error initializing session:", error);
       } finally {
         setLoading(false);
+      }
+    };
+
+    initializeSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      setSession(newSession);
+      const currentUser = newSession?.user ?? null;
+      setUser(currentUser);
+
+      if (currentUser) {
+        await fetchProfile(currentUser.id);
+      } else {
+        setProfile(null);
       }
     });
 
