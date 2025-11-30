@@ -6,13 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Heart, Bookmark, PlusCircle, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
-import { diets } from "@/data/diets";
+import { diets, Diet } from "@/data/diets";
+import DietDetailDrawer from "@/components/DietDetailDrawer";
 
 const Diets = () => {
   const [savedDiets, setSavedDiets] = useState<number[]>([]);
   const [activeDietId, setActiveDietId] = useState<number | null>(null);
+  const [selectedDiet, setSelectedDiet] = useState<Diet | null>(null);
 
-  const handleToggleSave = (dietId: number, dietName: string) => {
+  const handleToggleSave = (e: React.MouseEvent, dietId: number, dietName: string) => {
+    e.stopPropagation();
     if (savedDiets.includes(dietId)) {
       setSavedDiets(savedDiets.filter((id) => id !== dietId));
       toast.success(`${dietName} eliminada de tus dietas`);
@@ -27,7 +30,8 @@ const Diets = () => {
     }
   };
 
-  const handleSetActive = (dietId: number) => {
+  const handleSetActive = (e: React.MouseEvent, dietId: number) => {
+    e.stopPropagation();
     const diet = diets.find((d) => d.id === dietId);
     if (diet) {
       setActiveDietId(dietId);
@@ -80,7 +84,7 @@ const Diets = () => {
             {diets.map((diet) => {
               const isSaved = savedDiets.includes(diet.id);
               return (
-                <Card key={diet.id} className="p-6">
+                <Card key={diet.id} className="p-6 cursor-pointer hover:border-primary/50 transition-colors" onClick={() => setSelectedDiet(diet)}>
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <span className="text-4xl">{diet.icon}</span>
@@ -101,7 +105,7 @@ const Diets = () => {
                       ))}
                     </div>
                   </div>
-                  <Button onClick={() => handleToggleSave(diet.id, diet.name)} variant={isSaved ? "default" : "outline"} className="w-full h-12 text-base">
+                  <Button onClick={(e) => handleToggleSave(e, diet.id, diet.name)} variant={isSaved ? "default" : "outline"} className="w-full h-12 text-base">
                     {isSaved ? (<><Heart className="mr-2 w-5 h-5 fill-current" /> Guardado</>) : (<><Heart className="mr-2 w-5 h-5" /> Guardar Dieta</>)}
                   </Button>
                 </Card>
@@ -113,7 +117,7 @@ const Diets = () => {
               mySavedDiets.map((diet) => {
                 const isActive = activeDietId === diet.id;
                 return (
-                  <Card key={diet.id} className={`p-6 ${isActive ? "border-primary" : ""}`}>
+                  <Card key={diet.id} className={`p-6 cursor-pointer hover:border-primary/50 transition-colors ${isActive ? "border-primary" : ""}`} onClick={() => setSelectedDiet(diet)}>
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
                         <span className="text-4xl">{diet.icon}</span>
@@ -125,10 +129,10 @@ const Diets = () => {
                       {isActive && <Badge>Activa</Badge>}
                     </div>
                     <div className="flex gap-2">
-                      <Button onClick={() => handleToggleSave(diet.id, diet.name)} variant="outline" className="w-full h-12 text-base">
+                      <Button onClick={(e) => handleToggleSave(e, diet.id, diet.name)} variant="outline" className="w-full h-12 text-base">
                         <Heart className="mr-2 w-5 h-5" /> Quitar
                       </Button>
-                      <Button onClick={() => handleSetActive(diet.id)} disabled={isActive} className="w-full h-12 text-base">
+                      <Button onClick={(e) => handleSetActive(e, diet.id)} disabled={isActive} className="w-full h-12 text-base">
                         {isActive ? (<><CheckCircle className="mr-2 w-5 h-5" /> En Curso</>) : (<><PlusCircle className="mr-2 w-5 h-5" /> Empezar</>)}
                       </Button>
                     </div>
@@ -144,6 +148,7 @@ const Diets = () => {
           </TabsContent>
         </Tabs>
       </div>
+      <DietDetailDrawer isOpen={!!selectedDiet} diet={selectedDiet} onClose={() => setSelectedDiet(null)} />
     </PageLayout>
   );
 };

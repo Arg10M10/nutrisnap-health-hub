@@ -5,6 +5,8 @@ export type Diet = {
   benefits: string[];
   icon: string;
   category: string;
+  foodsToEat: string[];
+  foodsToAvoid: string[];
 };
 
 export const diets: Diet[] = [
@@ -15,6 +17,8 @@ export const diets: Diet[] = [
     benefits: ["Salud cardiovascular", "Control de peso", "Longevidad"],
     icon: "🥗",
     category: "Bienestar General",
+    foodsToEat: ["Frutas", "Verduras", "Pescado", "Aceite de Oliva", "Nueces", "Legumbres", "Granos integrales"],
+    foodsToAvoid: ["Carnes rojas procesadas", "Azúcares añadidos", "Grasas trans", "Alimentos muy procesados"],
   },
   {
     id: 2,
@@ -23,6 +27,8 @@ export const diets: Diet[] = [
     benefits: ["Digestión saludable", "Menor colesterol", "Sostenible"],
     icon: "🥬",
     category: "Estilo de Vida",
+    foodsToEat: ["Frutas", "Verduras", "Legumbres", "Tofu", "Tempeh", "Huevos", "Lácteos", "Semillas"],
+    foodsToAvoid: ["Carne de res", "Pollo", "Pescado", "Mariscos"],
   },
   {
     id: 3,
@@ -31,6 +37,8 @@ export const diets: Diet[] = [
     benefits: ["Presión arterial", "Salud renal", "Menos retención"],
     icon: "🧂",
     category: "Salud Específica",
+    foodsToEat: ["Frutas y verduras frescas", "Carnes sin procesar", "Hierbas y especias", "Avena", "Yogur natural"],
+    foodsToAvoid: ["Comida enlatada", "Embutidos", "Salsas comerciales", "Snacks salados", "Comida rápida"],
   },
   {
     id: 4,
@@ -39,6 +47,8 @@ export const diets: Diet[] = [
     benefits: ["Digestión", "Control glucosa", "Saciedad"],
     icon: "🌾",
     category: "Bienestar General",
+    foodsToEat: ["Avena", "Lentejas", "Brócoli", "Manzanas", "Almendras", "Chía", "Pan integral"],
+    foodsToAvoid: ["Pan blanco", "Arroz blanco", "Bebidas azucaradas", "Comida frita"],
   },
   {
     id: 5,
@@ -47,6 +57,8 @@ export const diets: Diet[] = [
     benefits: ["Articulaciones", "Sistema inmune", "Energía"],
     icon: "🍓",
     category: "Salud Específica",
+    foodsToEat: ["Bayas", "Pescado graso (salmón)", "Brócoli", "Aguacates", "Té verde", "Cúrcuma"],
+    foodsToAvoid: ["Azúcares refinados", "Carbohidratos procesados", "Frituras", "Margarina"],
   },
   {
     id: 6,
@@ -55,6 +67,8 @@ export const diets: Diet[] = [
     benefits: ["Presión arterial", "Colesterol", "Salud cardíaca"],
     icon: "🩺",
     category: "Salud Específica",
+    foodsToEat: ["Frutas", "Verduras", "Granos integrales", "Lácteos bajos en grasa", "Pollo", "Pescado"],
+    foodsToAvoid: ["Dulces", "Bebidas azucaradas", "Carnes rojas", "Alimentos altos en grasas saturadas"],
   },
   {
     id: 7,
@@ -63,6 +77,8 @@ export const diets: Diet[] = [
     benefits: ["Pérdida de peso", "Energía estable", "Control de azúcar"],
     icon: "🥑",
     category: "Pérdida de Peso",
+    foodsToEat: ["Aguacates", "Aceite de coco", "Pescado graso", "Carne", "Huevos", "Quesos", "Verduras de hoja verde"],
+    foodsToAvoid: ["Granos (trigo, arroz)", "Azúcar", "Frutas (excepto bayas)", "Tubérculos (patatas)"],
   },
   {
     id: 8,
@@ -71,6 +87,8 @@ export const diets: Diet[] = [
     benefits: ["Menos procesados", "Antiinflamatoria", "Saciedad"],
     icon: "🍖",
     category: "Estilo de Vida",
+    foodsToEat: ["Carne magra", "Pescado", "Frutas", "Verduras", "Nueces", "Semillas"],
+    foodsToAvoid: ["Lácteos", "Granos", "Legumbres", "Azúcar refinada", "Alimentos procesados"],
   },
   {
     id: 9,
@@ -79,6 +97,8 @@ export const diets: Diet[] = [
     benefits: ["Ética animal", "Sostenibilidad", "Baja en grasas"],
     icon: "🌱",
     category: "Estilo de Vida",
+    foodsToEat: ["Frutas", "Verduras", "Legumbres", "Granos", "Nueces", "Semillas", "Tofu", "Leches vegetales"],
+    foodsToAvoid: ["Carne", "Pescado", "Lácteos", "Huevos", "Miel", "Gelatina"],
   },
   {
     id: 10,
@@ -87,6 +107,8 @@ export const diets: Diet[] = [
     benefits: ["Control de peso", "Glucosa estable", "Menos antojos"],
     icon: "🍞",
     category: "Pérdida de Peso",
+    foodsToEat: ["Carne", "Pescado", "Huevos", "Verduras de superficie", "Grasas naturales (mantequilla, aceite de oliva)"],
+    foodsToAvoid: ["Azúcar", "Almidones (pan, pasta, arroz, patatas)", "Frutas muy dulces"],
   },
   {
     id: 11,
@@ -95,6 +117,8 @@ export const diets: Diet[] = [
     benefits: ["Mejora digestiva", "Menos inflamación", "Más energía"],
     icon: "🚫",
     category: "Salud Específica",
+    foodsToEat: ["Frutas", "Verduras", "Carne", "Pescado", "Arroz", "Quinoa", "Maíz", "Legumbres"],
+    foodsToAvoid: ["Trigo", "Cebada", "Centeno", "Avena (a menos que sea certificada)", "Salsas con harina"],
   },
   {
     id: 12,
@@ -103,5 +127,7 @@ export const diets: Diet[] = [
     benefits: ["Flexible", "Saludable", "Sostenible"],
     icon: "🥕",
     category: "Estilo de Vida",
+    foodsToEat: ["Principalmente vegetales", "Frutas", "Legumbres", "Granos", "Pequeñas porciones de carne/pescado"],
+    foodsToAvoid: ["Grandes cantidades de carne roja", "Alimentos muy procesados"],
   },
 ];
