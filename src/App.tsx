@@ -16,7 +16,7 @@ import NotFound from "./pages/NotFound";
 import AnalysisResultPage from "@/pages/AnalysisResult";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
-import OnboardingGender from "./pages/onboarding/Gender";
+import Onboarding from "./pages/onboarding/Onboarding";
 
 const queryClient = new QueryClient();
 
@@ -40,10 +40,9 @@ const AppRoutes = () => {
   }
 
   if (!profile?.onboarding_completed) {
-    // For now, we only have one step. This can be expanded later.
     return (
       <Routes>
-        <Route path="*" element={<OnboardingGender />} />
+        <Route path="*" element={<Onboarding />} />
       </Routes>
     );
   }
