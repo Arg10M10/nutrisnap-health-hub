@@ -11,7 +11,7 @@ import Exercises from "./pages/Exercises";
 import Progress from "./pages/Progress";
 import Diets from "./pages/Diets";
 import NotFound from "./pages/NotFound";
-import AnalysisResultPage from "./pages/AnalysisResult";
+import AnalysisResultPage from "@/pages/AnalysisResult";
 
 const queryClient = new QueryClient();
 
