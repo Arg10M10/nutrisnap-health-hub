@@ -1,8 +1,26 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useAuth } from "@/context/AuthContext";
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
+const ProfileItem = ({ label, value }: { label: string, value: string | number | null | undefined }) => (
+  <div className="flex justify-between items-center border-b py-3">
+    <p className="text-sm font-medium text-muted-foreground">{label}</p>
+    <p className="text-sm font-semibold text-foreground text-right">{value || 'No especificado'}</p>
+  </div>
+);
 
 const Settings = () => {
+  const { profile, loading } = useAuth();
+
+  const goalLabels: { [key: string]: string } = {
+    lose_weight: 'Perder peso',
+    maintain_weight: 'Mantener peso',
+    gain_weight: 'Ganar peso',
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4 sticky top-0 bg-background/80 backdrop-blur-sm z-10 border-b">
@@ -14,20 +32,28 @@ const Settings = () => {
       <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Perfil</CardTitle>
-            <CardDescription>Edita tu información personal y preferencias.</CardDescription>
+            <CardTitle>Tu Perfil</CardTitle>
+            <CardDescription>Esta es la información que nos proporcionaste durante el registro.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">Esta función estará disponible próximamente.</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Notificaciones</CardTitle>
-            <CardDescription>Gestiona cómo y cuándo te contactamos.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">Ajustes de notificaciones estarán aquí.</p>
+            {loading ? (
+              <div className="flex justify-center items-center h-24">
+                <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              </div>
+            ) : profile ? (
+              <div className="space-y-2">
+                <ProfileItem label="Nombre Completo" value={profile.full_name} />
+                <ProfileItem label="Género" value={profile.gender} />
+                <ProfileItem label="Edad" value={profile.age} />
+                <ProfileItem label="Fecha de Nacimiento" value={profile.date_of_birth ? format(new Date(profile.date_of_birth), 'PPP', { locale: es }) : 'No especificado'} />
+                <ProfileItem label="Objetivo Principal" value={profile.goal ? goalLabels[profile.goal] : 'No especificado'} />
+                <ProfileItem label="Altura" value={`${profile.height || 'N/A'} ${profile.units === 'metric' ? 'cm' : 'in'}`} />
+                <ProfileItem label="Peso" value={`${profile.weight || 'N/A'} ${profile.units === 'metric' ? 'kg' : 'lbs'}`} />
+                <ProfileItem label="Experiencia previa" value={profile.previous_apps_experience} />
+              </div>
+            ) : (
+              <p className="text-muted-foreground">No se pudo cargar la información del perfil.</p>
+            )}
           </CardContent>
         </Card>
         <Card>

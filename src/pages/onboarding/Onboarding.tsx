@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
@@ -16,7 +17,8 @@ import { FinalStep } from './steps/FinalStep';
 const TOTAL_STEPS = 7;
 
 const Onboarding = () => {
-  const { user } = useAuth();
+  const { user, refetchProfile } = useAuth();
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     gender: null,
@@ -52,9 +54,10 @@ const Onboarding = () => {
         .eq('id', user.id);
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      await refetchProfile();
       toast.success('¡Todo listo! Bienvenido a NutriSnap.');
-      window.location.reload();
+      navigate('/');
     },
     onError: (error) => {
       toast.error('Hubo un error al guardar tu perfil.');
