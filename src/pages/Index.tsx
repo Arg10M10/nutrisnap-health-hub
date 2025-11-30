@@ -2,13 +2,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Flame, Leaf, Beef, Wheat, Droplets, ScanLine, LogOut } from "lucide-react";
+import { Flame, Leaf, Beef, Wheat, Droplets, ScanLine } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MacroProgressCircle from "@/components/MacroProgressCircle";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 
 const Index = () => {
   // Define daily goals (can be moved to a context or user profile later)
@@ -29,15 +26,6 @@ const Index = () => {
 
   // State for recent items, starting empty
   const [recentItems, setRecentItems] = useState<any[]>([]);
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast.error("Error al cerrar sesión.");
-    } else {
-      toast.success("Has cerrado sesión.");
-    }
-  };
 
   // Calculations
   const caloriesRemaining = dailyGoals.calories - currentIntake.calories;
@@ -88,9 +76,6 @@ const Index = () => {
             <Leaf className="w-8 h-8 text-primary" />
             <h1 className="text-primary text-3xl">NutriSnap</h1>
           </div>
-          <Button variant="ghost" size="icon" onClick={handleLogout}>
-            <LogOut className="w-6 h-6 text-muted-foreground" />
-          </Button>
         </header>
 
         {/* Date Tabs */}
