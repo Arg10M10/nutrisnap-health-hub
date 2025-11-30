@@ -14,6 +14,7 @@ interface SessionContextValue {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
+  updateProfile: (newProfileData: Partial<Profile>) => void;
 }
 
 const SessionContext = createContext<SessionContextValue>({
@@ -21,6 +22,7 @@ const SessionContext = createContext<SessionContextValue>({
   user: null,
   profile: null,
   loading: true,
+  updateProfile: () => {},
 });
 
 export const SessionProvider = ({ children }: { children: React.ReactNode }) => {
@@ -29,20 +31,32 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const updateProfile = (newProfileData: Partial<Profile>) => {
+    setProfile(prevProfile => {
+      if (!prevProfile) return null;
+      return { ...prevProfile, ...newProfileData };
+    });
+  };
+
   useEffect(() => {
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
-        setProfile(profileData);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
+          setProfile(profileData);
+        }
+      } catch (error) {
+        console.error("Error in getSession:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     getSession();
@@ -72,7 +86,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   }, []);
 
   return (
-    <SessionContext.Provider value={{ session, user, profile, loading }}>
+    <SessionContext.Provider value={{ session, user, profile, loading, updateProfile }}>
       {children}
     </SessionContext.Provider>
   );

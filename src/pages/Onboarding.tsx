@@ -15,7 +15,7 @@ import { toast } from "sonner";
 const TOTAL_STEPS = 7;
 
 const Onboarding = () => {
-  const { profile } = useSession();
+  const { profile, updateProfile } = useSession();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     gender: "",
@@ -47,9 +47,11 @@ const Onboarding = () => {
   const handleFinish = async () => {
     if (!profile) return;
 
+    const updatedProfileData = { ...formData, onboarding_completed: true };
+
     const { error } = await supabase
       .from("profiles")
-      .update({ ...formData, onboarding_completed: true })
+      .update(updatedProfileData)
       .eq("id", profile.id);
 
     if (error) {
@@ -57,7 +59,7 @@ const Onboarding = () => {
       console.error(error);
     } else {
       toast.success("¡Perfil completado! Bienvenido a NutriSnap.");
-      window.location.reload();
+      updateProfile(updatedProfileData);
     }
   };
 
