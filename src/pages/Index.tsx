@@ -1,14 +1,19 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Flame, Leaf, Beef, Wheat, Droplets, ScanLine } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MacroProgressCircle from "@/components/MacroProgressCircle";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import { useNutrition } from "@/context/NutritionContext";
+import WeeklyCalendar from "@/components/WeeklyCalendar";
 
 const Index = () => {
-  const { intake, recentAnalyses } = useNutrition();
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const { getDataForDate } = useNutrition();
+  const { intake, analyses } = getDataForDate(selectedDate);
 
   const dailyGoals = {
     calories: 2000,
@@ -21,13 +26,8 @@ const Index = () => {
   const calorieProgress = (intake.calories / dailyGoals.calories) * 100;
   
   const proteinProgress = (intake.protein / dailyGoals.protein) * 100;
-  const proteinText = intake.protein > dailyGoals.protein ? "exceso" : "restante";
-
   const carbsProgress = (intake.carbs / dailyGoals.carbs) * 100;
-  const carbsText = intake.carbs > dailyGoals.carbs ? "exceso" : "restante";
-
   const fatsProgress = (intake.fats / dailyGoals.fats) * 100;
-  const fatsText = intake.fats > dailyGoals.fats ? "exceso" : "restante";
 
   const macroCards = [
     {
@@ -36,7 +36,6 @@ const Index = () => {
       icon: <Beef className="w-6 h-6 text-red-500" />,
       current: intake.protein,
       label: "Proteína",
-      status: proteinText,
     },
     {
       value: carbsProgress,
@@ -44,7 +43,6 @@ const Index = () => {
       icon: <Wheat className="w-6 h-6 text-orange-500" />,
       current: intake.carbs,
       label: "Carbs",
-      status: carbsText,
     },
     {
       value: fatsProgress,
@@ -52,7 +50,6 @@ const Index = () => {
       icon: <Droplets className="w-6 h-6 text-blue-500" />,
       current: intake.fats,
       label: "Grasas",
-      status: fatsText,
     },
   ];
 
@@ -66,12 +63,7 @@ const Index = () => {
           </div>
         </header>
 
-        <Tabs defaultValue="today" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 h-12">
-            <TabsTrigger value="today" className="text-base">Hoy</TabsTrigger>
-            <TabsTrigger value="yesterday" className="text-base">Ayer</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <WeeklyCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
 
         <Card className="p-6 flex justify-between items-center bg-gradient-to-br from-primary/10 to-secondary/10">
           <div>
@@ -102,15 +94,15 @@ const Index = () => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-foreground text-2xl font-semibold">Análisis Recientes</h2>
-          {recentAnalyses.length > 0 ? (
+          <h2 className="text-foreground text-2xl font-semibold">Análisis del Día</h2>
+          {analyses.length > 0 ? (
             <div className="space-y-3">
-              {recentAnalyses.map((item) => (
+              {analyses.map((item) => (
                 <RecentAnalysisCard 
                   key={item.id} 
                   imageUrl={item.imageUrl}
                   foodName={item.foodName}
-                  time={item.timestamp}
+                  time={format(new Date(item.timestamp), 'p', { locale: es })}
                   calories={item.caloriesValue}
                   protein={item.proteinValue}
                   carbs={item.carbsValue}
@@ -121,8 +113,8 @@ const Index = () => {
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
               <ScanLine className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground">No has analizado nada hoy.</p>
-              <p className="text-sm text-muted-foreground">¡Usa el escáner para empezar!</p>
+              <p className="text-muted-foreground">No hay datos para este día.</p>
+              <p className="text-sm text-muted-foreground">¡Usa el escáner para empezar a registrar!</p>
             </Card>
           )}
         </div>
