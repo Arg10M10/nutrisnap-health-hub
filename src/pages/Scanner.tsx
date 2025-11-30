@@ -148,15 +148,18 @@ const Scanner = () => {
         autoPlay
         playsInline
         className={cn(
-          "w-full h-full object-cover transition-opacity duration-300",
-          state === "camera" ? "opacity-100" : "opacity-0"
+          "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
+          state === "camera" ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
       />
       {capturedImage && (
         <img
           src={capturedImage}
           alt="Comida capturada"
-          className="w-full h-full object-cover"
+          className={cn(
+            "absolute inset-0 w-full h-full object-cover",
+            state !== "camera" ? "opacity-100" : "opacity-0 pointer-events-none"
+          )}
         />
       )}
 
