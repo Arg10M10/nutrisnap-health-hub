@@ -19,6 +19,8 @@ import { cn } from "@/lib/utils";
 type ScannerState = "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
 
+const MAX_DIMENSION = 1024; // Max width/height for the image
+
 const Scanner = () => {
   const [state, setState] = useState<ScannerState>("camera");
   const [scanMode, setScanMode] = useState<ScanMode>("food");
@@ -67,11 +69,28 @@ const Scanner = () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      
+      const { videoWidth, videoHeight } = video;
+      let width = videoWidth;
+      let height = videoHeight;
+
+      if (width > height) {
+        if (width > MAX_DIMENSION) {
+          height *= MAX_DIMENSION / width;
+          width = MAX_DIMENSION;
+        }
+      } else {
+        if (height > MAX_DIMENSION) {
+          width *= MAX_DIMENSION / height;
+          height = MAX_DIMENSION;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
       const context = canvas.getContext("2d");
-      context?.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const imageData = canvas.toDataURL("image/jpeg");
+      context?.drawImage(video, 0, 0, width, height);
+      const imageData = canvas.toDataURL("image/jpeg", 0.8); // Compress to 80% quality
       setCapturedImage(imageData);
       stopCamera();
       setState("captured");
@@ -86,15 +105,35 @@ const Scanner = () => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setCapturedImage(reader.result as string);
-        setState("captured");
-        toast.success("Imagen cargada con éxito.");
-      };
-      reader.onerror = () => {
-        toast.error("No se pudo leer el archivo de imagen.");
-        setError("No se pudo leer el archivo de imagen.");
-        setState("error");
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = canvasRef.current;
+          if (!canvas) return;
+
+          let { width, height } = img;
+          if (width > height) {
+            if (width > MAX_DIMENSION) {
+              height *= MAX_DIMENSION / width;
+              width = MAX_DIMENSION;
+            }
+          } else {
+            if (height > MAX_DIMENSION) {
+              width *= MAX_DIMENSION / height;
+              height = MAX_DIMENSION;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+          const resizedImageData = canvas.toDataURL("image/jpeg", 0.8);
+          setCapturedImage(resizedImageData);
+          setState("captured");
+          toast.success("Imagen cargada y optimizada.");
+        };
+        img.src = e.target?.result as string;
       };
       reader.readAsDataURL(file);
     }
