@@ -1,115 +1,115 @@
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Camera, Dumbbell, Target, Book, Leaf, TrendingUp } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Bell, Leaf, Flame, Beef, Wheat, Droplets } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MacroProgressCircle from "@/components/MacroProgressCircle";
+import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 
 const Index = () => {
-  const navigate = useNavigate();
-
-  const quickActions = [
+  const recentItems = [
     {
-      title: "Escanear Comida",
-      description: "Analiza tu comida al instante",
-      icon: Camera,
-      path: "/scanner",
-      color: "bg-primary/10 text-primary",
+      imageUrl: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=2080&auto=format&fit=crop",
+      foodName: "Ensalada Fresca",
+      time: "12:57pm",
+      calories: 253,
+      protein: 12,
+      carbs: 10,
+      fats: 15,
     },
     {
-      title: "Ejercicios",
-      description: "Rutinas personalizadas",
-      icon: Dumbbell,
-      path: "/exercises",
-      color: "bg-secondary/10 text-secondary",
+      imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1981&auto=format&fit=crop",
+      foodName: "Pizza de Pepperoni",
+      time: "11:31am",
+      calories: 455,
+      protein: 20,
+      carbs: 45,
+      fats: 22,
     },
-    {
-      title: "Misiones",
-      description: "Completa tus objetivos",
-      icon: Target,
-      path: "/missions",
-      color: "bg-accent/10 text-accent",
-    },
-    {
-      title: "Dietas",
-      description: "Planes alimenticios",
-      icon: Book,
-      path: "/diets",
-      color: "bg-primary/10 text-primary",
-    },
-  ];
-
-  const stats = [
-    { label: "Calorías Hoy", value: "0", icon: TrendingUp },
-    { label: "Misiones", value: "0/5", icon: Target },
-    { label: "Racha", value: "0 días", icon: Leaf },
   ];
 
   return (
     <PageLayout>
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header */}
-        <div className="text-center space-y-3 pt-4">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Leaf className="w-10 h-10 text-primary" />
-            <h1 className="text-primary">NutriSnap</h1>
+        <header className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Leaf className="w-8 h-8 text-primary" />
+            <h1 className="text-primary text-3xl">NutriSnap</h1>
           </div>
-          <p className="text-xl text-muted-foreground">
-            Tu compañero de salud diario
-          </p>
-        </div>
+          <Button variant="ghost" size="icon">
+            <Bell className="w-6 h-6 text-muted-foreground" />
+          </Button>
+        </header>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-3 gap-3">
-          {stats.map((stat, i) => (
-            <Card key={i} className="p-4 text-center">
-              <stat.icon className="w-6 h-6 text-primary mx-auto mb-2" />
-              <p className="text-2xl font-bold text-foreground mb-1">{stat.value}</p>
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
-            </Card>
-          ))}
-        </div>
+        {/* Date Tabs */}
+        <Tabs defaultValue="today" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 h-12">
+            <TabsTrigger value="today" className="text-base">Hoy</TabsTrigger>
+            <TabsTrigger value="yesterday" className="text-base">Ayer</TabsTrigger>
+          </TabsList>
+        </Tabs>
 
-        {/* Quick Actions */}
-        <div className="space-y-4">
-          <h2 className="text-foreground">Acciones Rápidas</h2>
-          <div className="grid gap-4">
-            {quickActions.map((action, i) => (
-              <Button
-                key={i}
-                variant="outline"
-                className="h-auto p-0 overflow-hidden"
-                onClick={() => navigate(action.path)}
-              >
-                <Card className="w-full p-6 border-0 shadow-none hover:bg-muted/50 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className={`p-4 rounded-2xl ${action.color}`}>
-                      <action.icon className="w-8 h-8" />
-                    </div>
-                    <div className="text-left flex-1">
-                      <h3 className="text-foreground mb-1">{action.title}</h3>
-                      <p className="text-base text-muted-foreground">
-                        {action.description}
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              </Button>
-            ))}
+        {/* Main Calorie Card */}
+        <Card className="p-6 flex justify-between items-center bg-gradient-to-br from-primary/10 to-secondary/10">
+          <div>
+            <p className="text-muted-foreground text-lg">Calorías restantes</p>
+            <p className="text-5xl font-bold text-foreground">1250</p>
           </div>
-        </div>
-
-        {/* Daily Tip */}
-        <Card className="p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20">
-          <div className="flex items-start gap-3">
-            <div className="text-3xl">💡</div>
-            <div>
-              <h3 className="text-foreground mb-2">Consejo del Día</h3>
-              <p className="text-base text-muted-foreground">
-                Bebe un vaso de agua al despertar para activar tu metabolismo y mejorar tu digestión.
-              </p>
+          <div className="w-24 h-24 relative">
+            <MacroProgressCircle value={60} color="hsl(var(--primary))" size="large" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Flame className="w-8 h-8 text-primary" />
             </div>
           </div>
         </Card>
+
+        {/* Macronutrient Cards */}
+        <div className="grid grid-cols-3 gap-4">
+          {/* Protein */}
+          <Card className="p-4 text-center space-y-2">
+            <div className="w-16 h-16 mx-auto relative">
+              <MacroProgressCircle value={110} color="#ef4444" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Beef className="w-6 h-6 text-red-500" />
+              </div>
+            </div>
+            <p className="text-xl font-bold text-foreground">45g</p>
+            <p className="text-sm text-muted-foreground">Proteína (exceso)</p>
+          </Card>
+          {/* Carbs */}
+          <Card className="p-4 text-center space-y-2">
+            <div className="w-16 h-16 mx-auto relative">
+              <MacroProgressCircle value={40} color="#f97316" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Wheat className="w-6 h-6 text-orange-500" />
+              </div>
+            </div>
+            <p className="text-xl font-bold text-foreground">89g</p>
+            <p className="text-sm text-muted-foreground">Carbs (restante)</p>
+          </Card>
+          {/* Fats */}
+          <Card className="p-4 text-center space-y-2">
+            <div className="w-16 h-16 mx-auto relative">
+              <MacroProgressCircle value={75} color="#3b82f6" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Droplets className="w-6 h-6 text-blue-500" />
+              </div>
+            </div>
+            <p className="text-xl font-bold text-foreground">48g</p>
+            <p className="text-sm text-muted-foreground">Grasas (restante)</p>
+          </Card>
+        </div>
+
+        {/* Recent Analysis */}
+        <div className="space-y-4">
+          <h2 className="text-foreground text-2xl font-semibold">Análisis Recientes</h2>
+          <div className="space-y-3">
+            {recentItems.map((item, index) => (
+              <RecentAnalysisCard key={index} {...item} />
+            ))}
+          </div>
+        </div>
       </div>
     </PageLayout>
   );

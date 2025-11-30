@@ -1,0 +1,46 @@
+import { Card } from "@/components/ui/card";
+import { Flame, Beef, Wheat, Droplets } from "lucide-react";
+
+interface RecentAnalysisCardProps {
+  imageUrl: string;
+  foodName: string;
+  time: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+}
+
+const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs, fats }: RecentAnalysisCardProps) => {
+  return (
+    <Card className="p-4 flex items-center gap-4">
+      <img src={imageUrl} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
+      <div className="flex-1">
+        <div className="flex justify-between items-start mb-2">
+          <h4 className="font-semibold text-foreground">{foodName}</h4>
+          <span className="text-xs text-muted-foreground">{time}</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Flame className="w-4 h-4 text-primary" />
+            <span>{calories} kcal</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Beef className="w-4 h-4 text-red-500" />
+            <span>{protein}g</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Wheat className="w-4 h-4 text-orange-500" />
+            <span>{carbs}g</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Droplets className="w-4 h-4 text-blue-500" />
+            <span>{fats}g</span>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+export default RecentAnalysisCard;
