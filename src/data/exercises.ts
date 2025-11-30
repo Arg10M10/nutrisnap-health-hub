@@ -46,6 +46,22 @@ export const exercises: Exercise[] = [
     ],
     duration: 'Practicar al menos 2 o 3 veces por semana.'
   },
+  { 
+    name: 'Ejercicios con peso corporal', 
+    description: 'Flexiones, sentadillas, planchas. 2-3 veces/sem.', 
+    category: 'Fuerza', 
+    icon: Dumbbell, 
+    minAge: 10, 
+    maxAge: 17,
+    whatItIs: 'Ejercicios que usan el propio peso del cuerpo para crear resistencia y fortalecer los músculos, como flexiones, sentadillas y planchas. Son seguros y fundamentales para el desarrollo físico.',
+    howToDoIt: [
+      'Aprende la forma correcta para evitar lesiones.', 
+      'Comienza con pocas repeticiones y aumenta gradualmente.', 
+      'Concéntrate en mantener el abdomen apretado.', 
+      'Puedes hacer variaciones más fáciles, como flexiones de rodillas.'
+    ],
+    duration: '2 a 3 veces por semana, en días no consecutivos.'
+  },
 
   // Adultos Jóvenes (18-30)
   { 
@@ -81,6 +97,22 @@ export const exercises: Exercise[] = [
     ],
     duration: '3 a 4 veces por semana, enfocándose en diferentes grupos musculares cada día.'
   },
+  { 
+    name: 'Yoga o Pilates', 
+    description: 'Mejora flexibilidad, fuerza y mente. 2-3 veces/sem.', 
+    category: 'Flexibilidad', 
+    icon: PersonStanding, 
+    minAge: 18, 
+    maxAge: 50,
+    whatItIs: 'Disciplinas que combinan posturas físicas, técnicas de respiración y meditación o concentración. Son excelentes para mejorar la flexibilidad, la fuerza del core y reducir el estrés.',
+    howToDoIt: [
+      'Busca una clase para principiantes o sigue videos en línea.', 
+      'Concéntrate en la conexión entre movimiento y respiración.', 
+      'No fuerces las posturas, la flexibilidad mejora con el tiempo.', 
+      'Usa una esterilla para mayor comodidad y agarre.'
+    ],
+    duration: '2 a 3 sesiones de 45-60 minutos por semana.'
+  },
 
   // Adultos (31-50)
   { 
@@ -115,8 +147,24 @@ export const exercises: Exercise[] = [
     ],
     duration: '2 a 3 sesiones de 30-45 minutos por semana.'
   },
+  { 
+    name: 'Ciclismo', 
+    description: 'Cardio de bajo impacto, ideal para resistencia. 2-3 veces/sem.', 
+    category: 'Cardio', 
+    icon: Bike, 
+    minAge: 31, 
+    maxAge: 65,
+    whatItIs: 'Ya sea en una bicicleta estática o al aire libre, el ciclismo es un excelente ejercicio cardiovascular que fortalece las piernas y mejora la resistencia sin ejercer mucha presión sobre las articulaciones.',
+    howToDoIt: [
+      'Ajusta la altura del asiento para que tu pierna esté casi extendida en la parte inferior del pedal.', 
+      'Mantén un ritmo constante (cadencia) de 80-100 RPM.', 
+      'Varía la resistencia o la inclinación para simular diferentes terrenos.', 
+      'Si es al aire libre, usa siempre casco.'
+    ],
+    duration: '2 a 3 paseos de 30-60 minutos por semana.'
+  },
 
-  // Adultos Mayores (51-65)
+  // Adultos Mayores (51-80)
   { 
     name: 'Caminata rápida', 
     description: 'Mantén un buen ritmo. 30-45 min, 5 días a la semana.', 
@@ -149,4 +197,20 @@ export const exercises: Exercise[] = [
     ],
     duration: '2 a 3 sesiones de 45-60 minutos por semana.'
   },
+  { 
+    name: 'Ejercicios de fuerza con bandas', 
+    description: 'Fortalece músculos sin impacto. 2 veces/sem.', 
+    category: 'Fuerza', 
+    icon: Dumbbell, 
+    minAge: 51, 
+    maxAge: 80,
+    whatItIs: 'Uso de bandas elásticas de resistencia para fortalecer los principales grupos musculares. Es una forma segura y efectiva de mantener la masa muscular y la densidad ósea, con un riesgo mínimo de lesiones.',
+    howToDoIt: [
+      'Elige una banda con una resistencia adecuada para ti.', 
+      'Realiza movimientos lentos y controlados.', 
+      'Concéntrate en ejercicios para piernas, espalda y brazos.', 
+      'Realiza 2-3 series de 10-15 repeticiones por ejercicio.'
+    ],
+    duration: '2 sesiones de 20-30 minutos por semana, en días no consecutivos.'
+  }
 ];
