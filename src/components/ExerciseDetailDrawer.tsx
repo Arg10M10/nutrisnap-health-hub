@@ -23,7 +23,7 @@ const ExerciseDetailDrawer = ({ exercise, isOpen, onClose }: ExerciseDetailDrawe
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent>
-        <ScrollArea className="max-h-[80vh]">
+        <ScrollArea data-vaul-scrollable className="max-h-[80vh]">
           <div className="p-6">
             <DrawerHeader className="text-left p-0 mb-4">
               <div className="flex items-center gap-4 mb-2">
