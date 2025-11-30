@@ -1,17 +1,28 @@
 import { createContext, useContext, ReactNode, useMemo } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import useLocalStorage from '@/hooks/useLocalStorage';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
-import { format, isSameDay, subDays } from 'date-fns';
+import { format, isSameDay, subDays, parseISO } from 'date-fns';
 
-export interface RecentAnalysis extends AnalysisResult {
+// This is now the shape of our data from the Supabase table
+export interface FoodEntry {
   id: string;
-  imageUrl: string;
-  timestamp: string; // Now an ISO string
-  caloriesValue: number;
-  proteinValue: number;
-  carbsValue: number;
-  fatsValue: number;
+  created_at: string;
+  food_name: string;
+  image_url: string;
+  calories: string;
+  protein: string;
+  carbs: string;
+  fats: string;
+  sugars: string;
+  health_rating: string;
+  reason: string;
+  calories_value: number;
+  protein_value: number;
+  carbs_value: number;
+  fats_value: number;
 }
 
 interface DailyIntake {
@@ -21,13 +32,12 @@ interface DailyIntake {
   fats: number;
 }
 
-type IntakeHistory = Record<string, DailyIntake>; // Key is "yyyy-MM-dd"
-
 interface NutritionState {
   addAnalysis: (result: AnalysisResult, imageUrl?: string) => void;
-  getDataForDate: (date: Date) => { intake: DailyIntake; analyses: RecentAnalysis[] };
+  getDataForDate: (date: Date) => { intake: DailyIntake; analyses: FoodEntry[] };
   streak: number;
   streakDays: string[];
+  isLoading: boolean;
 }
 
 const NutritionContext = createContext<NutritionState | undefined>(undefined);
@@ -41,74 +51,96 @@ const parseNutrientValue = (value: string): number => {
 };
 
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
-  const [intakeHistory, setIntakeHistory] = useLocalStorage<IntakeHistory>('nutrisnap-intake-history', {});
-  const [recentAnalyses, setRecentAnalyses] = useLocalStorage<RecentAnalysis[]>('nutrisnap-recent-analyses', []);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  const streakData = useMemo(() => {
-    let currentStreak = 0;
-    const daysInStreak: string[] = [];
-    const today = new Date();
+  const { data: foodEntries = [], isLoading } = useQuery<FoodEntry[]>({
+    queryKey: ['food_entries', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('food_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (error) throw new Error(error.message);
+      return data || [];
+    },
+    enabled: !!user,
+  });
 
-    for (let i = 0; i < 365; i++) { // Check up to a year back
-      const dateToCheck = subDays(today, i);
-      const dateKey = format(dateToCheck, 'yyyy-MM-dd');
-      const intakeForDay = intakeHistory[dateKey];
-
-      if (intakeForDay && intakeForDay.calories > 0) {
-        currentStreak++;
-        daysInStreak.push(dateKey);
-      } else {
-        break; // Streak is broken
-      }
-    }
-    return { streak: currentStreak, streakDays: daysInStreak };
-  }, [intakeHistory]);
+  const addEntryMutation = useMutation({
+    mutationFn: async (newEntry: Omit<FoodEntry, 'id' | 'created_at' | 'user_id'>) => {
+      if (!user) throw new Error('User not found');
+      const { error } = await supabase.from('food_entries').insert({ ...newEntry, user_id: user.id });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+    },
+    onError: (error) => {
+      toast.error('No se pudo guardar el análisis.', { description: error.message });
+    },
+  });
 
   const addAnalysis = (result: AnalysisResult, imageUrl = '/placeholder.svg') => {
-    const caloriesValue = parseNutrientValue(result.calories);
-    const proteinValue = parseNutrientValue(result.protein);
-    const carbsValue = parseNutrientValue(result.carbs);
-    const fatsValue = parseNutrientValue(result.fats);
-
-    const todayKey = format(new Date(), 'yyyy-MM-dd');
-
-    setIntakeHistory(prev => {
-      const todayIntake = prev[todayKey] || { calories: 0, protein: 0, carbs: 0, fats: 0 };
-      return {
-        ...prev,
-        [todayKey]: {
-          calories: todayIntake.calories + caloriesValue,
-          protein: todayIntake.protein + proteinValue,
-          carbs: todayIntake.carbs + carbsValue,
-          fats: todayIntake.fats + fatsValue,
-        }
-      };
-    });
-
-    const newAnalysis: RecentAnalysis = {
-      ...result,
-      id: new Date().toISOString(),
-      imageUrl,
-      timestamp: new Date().toISOString(),
-      caloriesValue,
-      proteinValue,
-      carbsValue,
-      fatsValue,
+    const newEntry = {
+      food_name: result.foodName,
+      image_url: imageUrl,
+      calories: result.calories,
+      protein: result.protein,
+      carbs: result.carbs,
+      fats: result.fats,
+      sugars: result.sugars,
+      health_rating: result.healthRating,
+      reason: result.reason,
+      calories_value: parseNutrientValue(result.calories),
+      protein_value: parseNutrientValue(result.protein),
+      carbs_value: parseNutrientValue(result.carbs),
+      fats_value: parseNutrientValue(result.fats),
     };
-
-    setRecentAnalyses(prev => [newAnalysis, ...prev]);
+    addEntryMutation.mutate(newEntry);
     toast.success(`${result.foodName} añadido a tu diario.`);
   };
 
   const getDataForDate = (date: Date) => {
-    const dateKey = format(date, 'yyyy-MM-dd');
-    const intake = intakeHistory[dateKey] || { calories: 0, protein: 0, carbs: 0, fats: 0 };
-    const analyses = recentAnalyses.filter(analysis => isSameDay(new Date(analysis.timestamp), date));
+    const analyses = foodEntries.filter(entry => isSameDay(parseISO(entry.created_at), date));
+    const intake = analyses.reduce(
+      (acc, entry) => ({
+        calories: acc.calories + (entry.calories_value || 0),
+        protein: acc.protein + (entry.protein_value || 0),
+        carbs: acc.carbs + (entry.carbs_value || 0),
+        fats: acc.fats + (entry.fats_value || 0),
+      }),
+      { calories: 0, protein: 0, carbs: 0, fats: 0 }
+    );
     return { intake, analyses };
   };
 
+  const streakData = useMemo(() => {
+    if (!foodEntries.length) return { streak: 0, streakDays: [] };
+
+    const entryDays = new Set(foodEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
+    
+    let currentStreak = 0;
+    const daysInStreak: string[] = [];
+    const today = new Date();
+
+    for (let i = 0; i < 365; i++) {
+      const dateToCheck = subDays(today, i);
+      const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+      if (entryDays.has(dateKey)) {
+        currentStreak++;
+        daysInStreak.push(dateKey);
+      } else {
+        break;
+      }
+    }
+    return { streak: currentStreak, streakDays: daysInStreak };
+  }, [foodEntries]);
+
   return (
-    <NutritionContext.Provider value={{ addAnalysis, getDataForDate, ...streakData }}>
+    <NutritionContext.Provider value={{ addAnalysis, getDataForDate, ...streakData, isLoading }}>
       {children}
     </NutritionContext.Provider>
   );
