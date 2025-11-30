@@ -9,8 +9,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Target } from "lucide-react";
 
-const MotionFormLabel = motion(FormLabel);
-
 const formSchema = z.object({
   main_goal: z.enum(["lose", "maintain", "gain"], { required_error: "Por favor, selecciona tu objetivo principal." }),
   target_weight: z.coerce.number().min(30, "El peso debe ser de al menos 30 kg.").max(300, "El peso no puede ser mayor a 300 kg."),
@@ -57,19 +55,24 @@ const Step2 = ({ data, update, next, prev }: Step2Props) => {
                       className="grid grid-cols-3 gap-4"
                     >
                       {["lose", "maintain", "gain"].map((goal) => (
-                        <MotionFormLabel
-                          key={goal}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-6 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer transition-colors"
-                        >
+                        <FormItem key={goal}>
                           <FormControl>
-                            <RadioGroupItem value={goal} className="sr-only" />
+                            <RadioGroupItem value={goal} id={`goal-${goal}`} className="peer sr-only" />
                           </FormControl>
-                          {goal === "lose" && "Bajar"}
-                          {goal === "maintain" && "Mantenerme"}
-                          {goal === "gain" && "Subir"}
-                        </MotionFormLabel>
+                          <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <FormLabel
+                              htmlFor={`goal-${goal}`}
+                              className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-6 h-24 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary cursor-pointer transition-colors"
+                            >
+                              {goal === "lose" && "Bajar"}
+                              {goal === "maintain" && "Mantenerme"}
+                              {goal === "gain" && "Subir"}
+                            </FormLabel>
+                          </motion.div>
+                        </FormItem>
                       ))}
                     </RadioGroup>
                   </FormControl>

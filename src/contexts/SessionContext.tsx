@@ -40,7 +40,6 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
 
   useEffect(() => {
     const fetchUserSession = async () => {
-      setLoading(true);
       try {
         const { data: { session } } = await supabase.auth.getSession();
         setSession(session);
@@ -48,18 +47,12 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         setUser(currentUser);
 
         if (currentUser) {
-          const { data: profileData, error } = await supabase
+          const { data: profileData } = await supabase
             .from("profiles")
             .select("*")
             .eq("id", currentUser.id)
             .single();
-          
-          if (error) {
-            console.warn("No se pudo obtener el perfil:", error.message);
-            setProfile(null);
-          } else {
-            setProfile(profileData);
-          }
+          setProfile(profileData);
         } else {
           setProfile(null);
         }
