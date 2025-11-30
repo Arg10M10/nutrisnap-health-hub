@@ -39,24 +39,23 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   };
 
   useEffect(() => {
-    setLoading(true);
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const fetchUserSession = async () => {
+      setLoading(true);
       try {
+        const { data: { session } } = await supabase.auth.getSession();
         setSession(session);
-        setUser(session?.user ?? null);
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
 
-        if (session?.user) {
+        if (currentUser) {
           const { data: profileData, error } = await supabase
             .from("profiles")
             .select("*")
-            .eq("id", session.user.id)
+            .eq("id", currentUser.id)
             .single();
-
+          
           if (error) {
-            console.error("Error fetching profile:", error);
+            console.warn("No se pudo obtener el perfil:", error.message);
             setProfile(null);
           } else {
             setProfile(profileData);
@@ -65,11 +64,30 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
           setProfile(null);
         }
       } catch (e) {
-        console.error("Error in onAuthStateChange handler:", e);
+        console.error("Error al obtener la sesión:", e);
       } finally {
         setLoading(false);
       }
-    });
+    };
+
+    fetchUserSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
+          setProfile(profileData);
+        } else {
+          setProfile(null);
+        }
+      }
+    );
 
     return () => {
       subscription.unsubscribe();
