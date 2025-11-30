@@ -29,8 +29,9 @@ const AnalysisResultPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background overflow-y-auto">
-      <div className="relative">
+    <div className="flex flex-col h-screen bg-background">
+      {/* Top part with image, non-scrollable */}
+      <div className="relative flex-shrink-0">
         <img src={image} alt="Comida analizada" className="w-full h-64 object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
         <Button
@@ -43,15 +44,18 @@ const AnalysisResultPage = () => {
         </Button>
       </div>
 
-      <div className="p-4 -mt-16 space-y-6 pb-8">
-        <FoodAnalysisCard result={result} />
-        <div className="grid grid-cols-2 gap-4">
-          <Button onClick={() => navigate('/scanner')} variant="outline" size="lg" className="h-14 text-base">
-            <Scan className="mr-2 w-5 h-5" /> Escanear Otro
-          </Button>
-          <Button onClick={handleAddToDiary} size="lg" className="h-14 text-base">
-            <PlusCircle className="mr-2 w-5 h-5" /> Añadir al Diario
-          </Button>
+      {/* Scrollable content area */}
+      <div className="flex-grow overflow-y-auto">
+        <div className="p-4 -mt-16 space-y-6 pb-24">
+          <FoodAnalysisCard result={result} />
+          <div className="grid grid-cols-2 gap-4">
+            <Button onClick={() => navigate('/scanner')} variant="outline" size="lg" className="h-14 text-base">
+              <Scan className="mr-2 w-5 h-5" /> Escanear Otro
+            </Button>
+            <Button onClick={handleAddToDiary} size="lg" className="h-14 text-base">
+              <PlusCircle className="mr-2 w-5 h-5" /> Añadir al Diario
+            </Button>
+          </div>
         </div>
       </div>
     </div>
