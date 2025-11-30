@@ -11,13 +11,6 @@ import { Link } from 'react-router-dom';
 
 const Logo = () => <Leaf className="w-12 h-12 text-primary" />;
 
-const GoogleIcon = () => (
-  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4">
-    <title>Google</title>
-    <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.62 2.04-4.82 2.04-5.82 0-9.6-4.16-9.6-9.6s3.78-9.6 9.6-9.6c2.93 0 5.32 1.15 6.92 2.68L22 2.92C19.43 1.12 16.25 0 12.48 0 5.88 0 .02 5.82.02 12.54s5.86 12.54 12.46 12.54c3.33 0 6.08-1.06 8.04-3.02 2.05-2.05 2.98-5.08 2.98-8.58 0-.77-.08-1.48-.2-2.16H12.48z" fill="currentColor"/>
-  </svg>
-);
-
 export default function Login() {
   const [isSignUp, setIsSignUp] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -167,7 +160,7 @@ export default function Login() {
             </div>
 
             <Button variant="outline" className="w-full" onClick={signInWithGoogle} disabled={loading}>
-              <GoogleIcon />
+              <img src="/google-logo.png" alt="Google logo" className="mr-2 h-4 w-4" />
               Continuar con Google
             </Button>
 
