@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Camera, Scan, RefreshCw, Loader2, AlertTriangle } from "lucide-react";
+import { Camera, Scan, RefreshCw, Loader2, AlertTriangle, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +16,7 @@ const Scanner = () => {
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
   const streamRef = useRef<MediaStream | null>(null);
@@ -67,6 +68,28 @@ const Scanner = () => {
     }
   };
 
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCapturedImage(reader.result as string);
+        setState("captured");
+        toast.success("Imagen cargada con éxito.");
+      };
+      reader.onerror = () => {
+        toast.error("No se pudo leer el archivo de imagen.");
+        setError("No se pudo leer el archivo de imagen.");
+        setState("error");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const analyzeMutation = useMutation({
     mutationFn: async (imageData: string) => {
       const { data, error } = await supabase.functions.invoke("analyze-food", {
@@ -102,6 +125,9 @@ const Scanner = () => {
     setAnalysisResult(null);
     setCapturedImage(null);
     setError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
     setState("idle");
   };
 
@@ -118,8 +144,15 @@ const Scanner = () => {
         <Card className="aspect-square bg-muted rounded-3xl flex items-center justify-center overflow-hidden relative">
           {state === "idle" && (
             <div className="text-center space-y-4 p-4">
-              <Camera className="w-24 h-24 text-muted-foreground mx-auto" />
-              <Button onClick={startCamera} size="lg">Activar Cámara</Button>
+              <div className="flex items-center justify-center gap-8 text-muted-foreground">
+                <Camera className="w-20 h-20" />
+                <Upload className="w-20 h-20" />
+              </div>
+              <p className="text-lg text-muted-foreground">Usa tu cámara o sube una foto</p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button onClick={startCamera} size="lg"><Camera className="mr-2 w-5 h-5" /> Activar Cámara</Button>
+                <Button onClick={handleUploadClick} size="lg" variant="outline"><Upload className="mr-2 w-5 h-5" /> Subir Foto</Button>
+              </div>
             </div>
           )}
           {(state === "camera" || state === "captured") && (
@@ -149,13 +182,20 @@ const Scanner = () => {
             </div>
           )}
         </Card>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="image/*"
+          className="hidden"
+        />
         <canvas ref={canvasRef} className="hidden" />
 
         <div className="space-y-3">
           {state === "camera" && <Button onClick={handleCapture} size="lg" className="w-full h-16 text-lg rounded-2xl"><Camera className="mr-2 w-6 h-6" /> Tomar Foto</Button>}
           {state === "captured" && (
             <div className="grid grid-cols-2 gap-3">
-              <Button onClick={startCamera} variant="outline" size="lg" className="h-16 text-lg rounded-2xl"><RefreshCw className="mr-2 w-6 h-6" /> Repetir</Button>
+              <Button onClick={handleReset} variant="outline" size="lg" className="h-16 text-lg rounded-2xl"><RefreshCw className="mr-2 w-6 h-6" /> Repetir</Button>
               <Button onClick={handleAnalyze} size="lg" className="h-16 text-lg rounded-2xl"><Scan className="mr-2 w-6 h-6" /> Analizar</Button>
             </div>
           )}
