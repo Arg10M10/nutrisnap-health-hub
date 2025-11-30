@@ -8,7 +8,7 @@ import {
   AlertTriangle,
   X,
   Image as ImageIcon,
-  FlipHorizontal,
+  ScanLine,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
@@ -50,8 +50,8 @@ const Scanner = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
+        // The onCanPlay event will set the state to "camera"
       }
-      setState("camera");
     } catch (err) {
       console.error("Error accessing camera:", err);
       toast.error("No se pudo acceder a la cámara.", {
@@ -206,52 +206,53 @@ const Scanner = () => {
 
   return (
     <div className="fixed inset-0 bg-black text-white z-50">
-      {/* Camera View for Food */}
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        className={cn(
-          "absolute inset-0 w-full h-full object-cover",
-          state !== "camera" || scanMode !== 'food',
-          "hidden"
-        )}
-      />
-      {/* Barcode Scanner View */}
-      {state === "camera" && scanMode === 'barcode' && (
-        BarcodeScanner ? (
-          <BarcodeScanner
-            onResult={handleBarcodeScan}
-            onError={(error) => {
-              console.error(error);
-              toast.error("Error del escáner de códigos.");
-            }}
+      {/* Camera Viewport */}
+      <div className="absolute inset-0 w-full h-full">
+        {scanMode === 'food' && (
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            onCanPlay={() => setState("camera")}
+            className={cn(
+              "w-full h-full object-cover",
+              state === "captured" && "hidden"
+            )}
           />
-        ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4">
-            <Loader2 className="w-16 h-16 text-primary animate-spin" />
-            <p className="text-primary-foreground text-lg">Cargando escáner...</p>
-          </div>
-        )
-      )}
+        )}
+        {scanMode === 'barcode' && state === 'camera' && (
+          BarcodeScanner ? (
+            <BarcodeScanner
+              onResult={handleBarcodeScan}
+              onError={(error) => {
+                console.error(error);
+                toast.error("Error del escáner de códigos.");
+              }}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-black">
+              <Loader2 className="w-10 h-10 animate-spin" />
+            </div>
+          )
+        )}
+      </div>
 
       {/* Captured Image Preview */}
       {capturedImage && (
         <img
           src={capturedImage}
           alt="Comida capturada"
-          className={cn(
-            "absolute inset-0 w-full h-full object-cover",
-            state !== "captured" && "hidden"
-          )}
+          className="absolute inset-0 w-full h-full object-cover"
         />
       )}
 
-      {/* Overlays for different states */}
-      {state === "initializing" && (
+      {/* Overlays */}
+      {(state === "initializing" || (scanMode === 'barcode' && !BarcodeScanner)) && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4">
           <Loader2 className="w-16 h-16 text-primary animate-spin" />
-          <p className="text-primary-foreground text-lg">Iniciando cámara...</p>
+          <p className="text-primary-foreground text-lg">
+            {scanMode === 'food' ? 'Iniciando cámara...' : 'Cargando escáner...'}
+          </p>
         </div>
       )}
       {state === "loading" && (
@@ -272,67 +273,56 @@ const Scanner = () => {
 
       {/* UI Controls */}
       <div className="absolute inset-0 flex flex-col justify-between p-6 pointer-events-none">
-        {/* Top Bar */}
-        <div className="flex justify-between items-center w-full pointer-events-auto">
-          <div className="w-10"></div> {/* Spacer */}
-          <h2 className="text-xl font-bold text-white drop-shadow-md">
-            {state === 'captured' ? 'Confirmar Foto' : 'Escáner'}
-          </h2>
+        <div className="flex justify-end w-full pointer-events-auto">
           <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-10 h-10">
             <X className="w-6 h-6 text-white" />
           </Button>
         </div>
 
-        {/* Bottom Controls */}
-        {state === "camera" && (
+        {state !== 'captured' && state !== 'loading' && (
           <div className="flex flex-col items-center gap-6 pointer-events-auto">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-black/50 p-1 rounded-xl">
               <Button
                 onClick={() => setScanMode("food")}
                 variant="ghost"
                 className={cn(
-                  "rounded-full px-6 h-12 text-base font-semibold transition-colors",
+                  "flex items-center gap-2 rounded-lg px-4 py-2 h-12 text-base font-semibold transition-all",
                   scanMode === "food"
                     ? "bg-white text-black hover:bg-gray-200"
-                    : "bg-black/40 text-white hover:bg-black/60"
+                    : "bg-transparent text-white hover:bg-white/10"
                 )}
               >
-                Comida
+                <Scan className="w-5 h-5" /> Escanear Comida
               </Button>
               <Button
                 onClick={() => setScanMode("barcode")}
                 variant="ghost"
                 className={cn(
-                  "rounded-full px-6 h-12 text-base font-semibold transition-colors",
+                  "flex items-center gap-2 rounded-lg px-4 py-2 h-12 text-base font-semibold transition-all",
                   scanMode === "barcode"
                     ? "bg-white text-black hover:bg-gray-200"
-                    : "bg-black/40 text-white hover:bg-black/60"
+                    : "bg-transparent text-white hover:bg-white/10"
                 )}
               >
-                Código de Barras
+                <ScanLine className="w-5 h-5" /> Código de Barras
               </Button>
             </div>
             {scanMode === 'food' && (
-              <div className="flex items-center justify-around w-full">
-                <button
-                  onClick={handleUploadClick}
-                  className="w-16 h-16 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
-                  aria-label="Subir imagen"
-                >
-                  <ImageIcon className="w-8 h-8 text-white" />
-                </button>
+              <div className="flex items-center justify-center w-full" style={{ height: '80px' }}>
+                <div className="absolute left-6">
+                  <button
+                    onClick={handleUploadClick}
+                    className="w-16 h-16 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                    aria-label="Subir imagen"
+                  >
+                    <ImageIcon className="w-8 h-8 text-white" />
+                  </button>
+                </div>
                 <button
                   onClick={handleCapture}
                   className="w-20 h-20 rounded-full border-4 border-white bg-white active:bg-gray-200 transition-colors"
                   aria-label="Tomar foto"
                 />
-                <button
-                  onClick={() => toast.info("Próximamente", { description: "La función para cambiar de cámara estará disponible pronto." })}
-                  className="w-16 h-16 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
-                  aria-label="Cambiar cámara"
-                >
-                  <FlipHorizontal className="w-8 h-8 text-white" />
-                </button>
               </div>
             )}
           </div>
