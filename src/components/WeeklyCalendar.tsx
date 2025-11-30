@@ -2,7 +2,6 @@ import { format, subDays, isSameDay } from "date-fns";
 import { es } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Flame } from "lucide-react";
 
 interface WeeklyCalendarProps {
   selectedDate: Date;
@@ -34,9 +33,6 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, streakDays = [] }: WeeklyC
             )}
             onClick={() => onDateSelect(day)}
           >
-            {isInStreak && (
-              <Flame className="absolute top-1 right-1 w-3.5 h-3.5 text-yellow-500" />
-            )}
             <span className={cn("text-xs font-medium capitalize", isInStreak && !isSelected && "text-yellow-600")}>
               {format(day, "EEE", { locale: es })}
             </span>
