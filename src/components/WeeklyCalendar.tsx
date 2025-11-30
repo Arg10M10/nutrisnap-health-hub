@@ -23,13 +23,13 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect }: WeeklyCalendarProps) => 
             key={day.toString()}
             variant={isSelected ? "default" : "outline"}
             className={cn(
-              "flex flex-col h-20 w-full rounded-2xl transition-all duration-200 p-2",
+              "flex flex-col h-16 w-full rounded-xl transition-all duration-200 p-1",
               isSelected ? "bg-primary text-primary-foreground shadow-lg" : "bg-card text-card-foreground"
             )}
             onClick={() => onDateSelect(day)}
           >
-            <span className="text-sm font-medium capitalize">{format(day, "EEE", { locale: es })}</span>
-            <span className="text-2xl font-bold">{format(day, "d")}</span>
+            <span className="text-xs font-medium capitalize">{format(day, "EEE", { locale: es })}</span>
+            <span className="text-xl font-bold">{format(day, "d")}</span>
           </Button>
         );
       })}
