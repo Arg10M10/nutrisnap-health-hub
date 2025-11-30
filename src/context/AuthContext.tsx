@@ -51,41 +51,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const getSession = async () => {
-      try {
-        setLoading(true);
-        const { data: { session } } = await supabase.auth.getSession();
-        setSession(session);
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
-        if (currentUser) {
-          await fetchProfile(currentUser.id);
-        }
-      } catch (error) {
-        console.error("Error in getSession:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getSession();
+    setLoading(true);
 
     const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      try {
-        setLoading(true);
-        const currentUser = session?.user ?? null;
-        setSession(session);
-        setUser(currentUser);
-        if (currentUser) {
-          await fetchProfile(currentUser.id);
-        } else {
-          setProfile(null);
-        }
-      } catch (error) {
-        console.error("Error in onAuthStateChange:", error);
-      } finally {
-        setLoading(false);
+      setSession(session);
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+
+      if (currentUser) {
+        await fetchProfile(currentUser.id);
+      } else {
+        setProfile(null);
       }
+      
+      setLoading(false);
     });
 
     return () => {
