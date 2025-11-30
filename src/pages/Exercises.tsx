@@ -93,7 +93,7 @@ const exercises: Record<string, Record<string, Exercise[]>> = {
     ],
     "flexibility": [
       { name: "Estiramientos en silla", duration: 15, calories: 35, intensity: "Muy Baja" },
-      { name "Movilidad articular", duration: 20, calories: 45, intensity: "Muy Baja" },
+      { name: "Movilidad articular", duration: 20, calories: 45, intensity: "Muy Baja" },
     ],
     "low-impact": [
       { name: "Caminar lento", duration: 20, calories: 70, intensity: "Muy Baja" },
