@@ -151,7 +151,7 @@ const Login = () => {
       />
 
       {/* Encabezado */}
-      <header className="absolute left-0 right-0 top-0 flex items-center justify-between px-6 py-4">
+      <header className="absolute left-0 right-0 top-0 flex items-center justify-center px-6 py-4">
         <div className="flex items-center gap-2">
           <Leaf className="w-6 h-6 text-primary" />
           <span className="text-lg font-bold tracking-widest uppercase text-gray-700">
