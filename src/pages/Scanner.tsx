@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, ComponentType } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { cn } from "@/lib/utils";
-import { BarcodeScanner } from "react-zxing";
+// import { BarcodeScanner } from "react-zxing"; // Removed static import
 
 type ScannerState = "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -32,6 +32,7 @@ const Scanner = () => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const navigate = useNavigate();
+  const [BarcodeScanner, setBarcodeScanner] = useState<ComponentType<any> | null>(null);
 
   const stopCamera = () => {
     if (streamRef.current) {
@@ -66,6 +67,16 @@ const Scanner = () => {
       startCamera();
     } else {
       stopCamera();
+      if (!BarcodeScanner) {
+        import('react-zxing').then(module => {
+          setBarcodeScanner(() => module.BarcodeScanner);
+        }).catch(err => {
+          console.error("Failed to load BarcodeScanner component", err);
+          toast.error("No se pudo cargar el escáner de códigos de barras.");
+          setError("Error al cargar el componente del escáner.");
+          setState("error");
+        });
+      }
     }
     return () => stopCamera();
   }, [scanMode]);
@@ -206,13 +217,20 @@ const Scanner = () => {
       />
       {/* Barcode Scanner View */}
       {state === "camera" && scanMode === 'barcode' && (
-        <BarcodeScanner
-          onResult={handleBarcodeScan}
-          onError={(error) => {
-            console.error(error);
-            toast.error("Error del escáner de códigos.");
-          }}
-        />
+        BarcodeScanner ? (
+          <BarcodeScanner
+            onResult={handleBarcodeScan}
+            onError={(error) => {
+              console.error(error);
+              toast.error("Error del escáner de códigos.");
+            }}
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4">
+            <Loader2 className="w-16 h-16 text-primary animate-spin" />
+            <p className="text-primary-foreground text-lg">Cargando escáner...</p>
+          </div>
+        )
       )}
 
       {/* Captured Image Preview */}
