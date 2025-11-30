@@ -1,11 +1,13 @@
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Camera, Dumbbell, Target, Book, Leaf, TrendingUp } from "lucide-react";
+import { Camera, Dumbbell, Target, Book, Leaf, TrendingUp, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { profile, logout } = useAuth();
 
   const quickActions = [
     {
@@ -48,14 +50,12 @@ const Index = () => {
     <PageLayout>
       <div className="space-y-8">
         {/* Header */}
-        <div className="text-center space-y-3 pt-4">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Leaf className="w-10 h-10 text-primary" />
-            <h1 className="text-primary">NutriSnap</h1>
-          </div>
+        <div className="text-left space-y-1 pt-4">
           <p className="text-xl text-muted-foreground">
-            Tu compañero de salud diario
+            Hola, {profile?.full_name?.split(' ')[0] || 'Usuario'} 👋
           </p>
+          <h1 className="text-primary">Bienvenido a NutriSnap</h1>
+          <Button onClick={logout} variant="outline" size="sm" className="mt-2">Cerrar Sesión</Button>
         </div>
 
         {/* Stats Cards */}
