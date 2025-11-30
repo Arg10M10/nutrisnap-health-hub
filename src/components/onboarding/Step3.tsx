@@ -58,14 +58,14 @@ const Step3 = ({ data, update, next, prev }: Step3Props) => {
                   <FormControl>
                     <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-4">
                       {Object.entries(activityLevels).map(([key, value]) => (
-                        <FormItem key={key}>
-                          <FormControl><RadioGroupItem value={key} className="sr-only" /></FormControl>
-                          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <FormLabel className="flex items-center justify-center text-center rounded-lg border-2 border-muted bg-popover p-4 h-24 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer transition-colors">
-                              {value}
-                            </FormLabel>
-                          </motion.div>
-                        </FormItem>
+                        <motion.div key={key} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                          <FormLabel className="flex items-center justify-center text-center rounded-lg border-2 border-muted bg-popover p-4 h-24 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer transition-colors">
+                            <FormControl>
+                              <RadioGroupItem value={key} className="sr-only" />
+                            </FormControl>
+                            {value}
+                          </FormLabel>
+                        </motion.div>
                       ))}
                     </RadioGroup>
                   </FormControl>

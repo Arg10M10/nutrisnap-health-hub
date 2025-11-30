@@ -55,18 +55,16 @@ const Step2 = ({ data, update, next, prev }: Step2Props) => {
                       className="grid grid-cols-3 gap-4"
                     >
                       {["lose", "maintain", "gain"].map((goal) => (
-                        <FormItem key={goal}>
-                          <FormControl>
-                            <RadioGroupItem value={goal} className="sr-only" />
-                          </FormControl>
-                          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <FormLabel className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-6 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer transition-colors">
-                              {goal === "lose" && "Bajar"}
-                              {goal === "maintain" && "Mantenerme"}
-                              {goal === "gain" && "Subir"}
-                            </FormLabel>
-                          </motion.div>
-                        </FormItem>
+                        <motion.div key={goal} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                          <FormLabel className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-6 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer transition-colors">
+                            <FormControl>
+                              <RadioGroupItem value={goal} className="sr-only" />
+                            </FormControl>
+                            {goal === "lose" && "Bajar"}
+                            {goal === "maintain" && "Mantenerme"}
+                            {goal === "gain" && "Subir"}
+                          </FormLabel>
+                        </motion.div>
                       ))}
                     </RadioGroup>
                   </FormControl>
