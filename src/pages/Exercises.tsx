@@ -4,10 +4,12 @@ import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { exercises } from "@/data/exercises";
+import { exercises, Exercise } from "@/data/exercises";
+import ExerciseDetailDrawer from "@/components/ExerciseDetailDrawer";
 
 const Exercises = () => {
   const [age, setAge] = useState(30);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
   const recommendedExercises = exercises.filter(
     (exercise) => age >= exercise.minAge && age <= exercise.maxAge
@@ -46,7 +48,11 @@ const Exercises = () => {
             {recommendedExercises.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-2">
                 {recommendedExercises.map((exercise, i) => (
-                  <Card key={i} className="p-4">
+                  <Card 
+                    key={i} 
+                    className="p-4 cursor-pointer hover:border-primary/50 transition-colors"
+                    onClick={() => setSelectedExercise(exercise)}
+                  >
                     <div className="flex items-center gap-4">
                       <div className="p-3 bg-primary/10 rounded-lg">
                         <exercise.icon className="w-6 h-6 text-primary" />
@@ -70,6 +76,11 @@ const Exercises = () => {
           </div>
         </Card>
       </div>
+      <ExerciseDetailDrawer 
+        isOpen={!!selectedExercise} 
+        exercise={selectedExercise} 
+        onClose={() => setSelectedExercise(null)} 
+      />
     </PageLayout>
   );
 };
