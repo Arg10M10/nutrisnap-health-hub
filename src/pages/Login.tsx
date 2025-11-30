@@ -11,7 +11,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 
-// Tema personalizado para que Supabase Auth UI coincida con el nuevo diseño
+// Tema personalizado para que Supabase Auth UI coincida con el diseño claro
 const customTheme = {
   ...ThemeSupa,
   default: {
@@ -21,26 +21,11 @@ const customTheme = {
       brand: "hsl(150 70% 45%)",
       brandAccent: "hsl(150 70% 55%)",
       brandButtonText: "white",
-      defaultButtonBackground: "#18181b",
-      defaultButtonBackgroundHover: "#27272a",
-      defaultButtonBorder: "#27272a",
-      defaultButtonText: "#fafafa",
-      dividerBackground: "#27272a",
-      inputBackground: "#09090b",
-      inputBorder: "#27272a",
-      inputBorderHover: "#3f3f46",
-      inputText: "#fafafa",
-      inputLabelText: "#a1a1aa",
-      inputPlaceholder: "#52525b",
-      messageText: "#a1a1aa",
-      messageTextDanger: "#f87171",
-      anchorTextColor: "#d4d4d8",
-      anchorTextColorHover: "#fafafa",
     },
     radii: {
-      borderRadiusButton: "0.5rem",
-      buttonBorderRadius: "0.5rem",
-      inputBorderRadius: "0.5rem",
+      borderRadiusButton: "1.5rem",
+      buttonBorderRadius: "1.5rem",
+      inputBorderRadius: "1.5rem",
     },
   },
 };
@@ -85,7 +70,8 @@ const Login = () => {
           p.v = Math.random() * 0.25 + 0.05;
           p.o = Math.random() * 0.35 + 0.15;
         }
-        ctx.fillStyle = `rgba(250,250,250,${p.o})`;
+        // Partículas oscuras para fondo claro
+        ctx.fillStyle = `rgba(0,0,0,${p.o})`;
         ctx.fillRect(p.x, p.y, 0.7, 2.2);
       });
       raf = requestAnimationFrame(draw);
@@ -106,10 +92,11 @@ const Login = () => {
   }, []);
 
   return (
-    <section className="fixed inset-0 bg-zinc-950 text-zinc-50">
+    <section className="fixed inset-0 bg-gray-50 text-gray-900">
       <style>{`
         .accent-lines{position:absolute;inset:0;pointer-events:none;opacity:.7}
-        .hline,.vline{position:absolute;background:#27272a;will-change:transform,opacity}
+        /* Líneas para tema claro */
+        .hline,.vline{position:absolute;background:#e5e7eb;will-change:transform,opacity}
         .hline{left:0;right:0;height:1px;transform:scaleX(0);transform-origin:50% 50%;animation:drawX .8s cubic-bezier(.22,.61,.36,1) forwards}
         .vline{top:0;bottom:0;width:1px;transform:scaleY(0);transform-origin:50% 0%;animation:drawY .9s cubic-bezier(.22,.61,.36,1) forwards}
         .hline:nth-child(1){top:18%;animation-delay:.12s}
@@ -118,7 +105,8 @@ const Login = () => {
         .vline:nth-child(4){left:22%;animation-delay:.42s}
         .vline:nth-child(5){left:50%;animation-delay:.54s}
         .vline:nth-child(6){left:78%;animation-delay:.66s}
-        .hline::after,.vline::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(250,250,250,.24),transparent);opacity:0;animation:shimmer .9s ease-out forwards}
+        /* Brillo oscuro para fondo claro */
+        .hline::after,.vline::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,0,0,.08),transparent);opacity:0;animation:shimmer .9s ease-out forwards}
         .hline:nth-child(1)::after{animation-delay:.12s}
         .hline:nth-child(2)::after{animation-delay:.22s}
         .hline:nth-child(3)::after{animation-delay:.32s}
@@ -129,7 +117,7 @@ const Login = () => {
         @keyframes drawY{0%{transform:scaleY(0);opacity:0}60%{opacity:.95}100%{transform:scaleY(1);opacity:.7}}
         @keyframes shimmer{0%{opacity:0}35%{opacity:.25}100%{opacity:0}}
 
-        /* === Card minimal fade-up animation === */
+        /* === Animación de la tarjeta === */
         .card-animate {
           opacity: 0;
           transform: translateY(20px);
@@ -143,8 +131,8 @@ const Login = () => {
         }
       `}</style>
 
-      {/* Viñeta sutil */}
-      <div className="absolute inset-0 pointer-events-none [background:radial-gradient(80%_60%_at_50%_30%,rgba(255,255,255,0.06),transparent_60%)]" />
+      {/* Viñeta oscura para fondo claro */}
+      <div className="absolute inset-0 pointer-events-none [background:radial-gradient(80%_60%_at_50%_30%,rgba(0,0,0,0.03),transparent_60%)]" />
 
       {/* Líneas de acento animadas */}
       <div className="accent-lines">
@@ -159,14 +147,14 @@ const Login = () => {
       {/* Partículas */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full opacity-50 mix-blend-screen pointer-events-none"
+        className="absolute inset-0 w-full h-full opacity-50 mix-blend-multiply pointer-events-none"
       />
 
       {/* Encabezado */}
       <header className="absolute left-0 right-0 top-0 flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-2">
           <Leaf className="w-6 h-6 text-primary" />
-          <span className="text-lg font-bold tracking-widest uppercase text-zinc-300">
+          <span className="text-lg font-bold tracking-widest uppercase text-gray-700">
             NutriSnap
           </span>
         </div>
@@ -174,10 +162,10 @@ const Login = () => {
 
       {/* Tarjeta de inicio de sesión centrada */}
       <div className="h-full w-full grid place-items-center px-4">
-        <Card className="card-animate w-full max-w-sm border-zinc-800 bg-zinc-900/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/60">
+        <Card className="card-animate w-full max-w-sm border-gray-200 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-2xl">Bienvenido de nuevo</CardTitle>
-            <CardDescription className="text-zinc-400">
+            <CardDescription className="text-gray-500">
               Inicia sesión en tu cuenta
             </CardDescription>
           </CardHeader>
@@ -187,7 +175,7 @@ const Login = () => {
               supabaseClient={supabase}
               appearance={{ theme: customTheme }}
               providers={["google"]}
-              theme="dark"
+              theme="light"
               localization={{
                 variables: {
                   sign_in: {
