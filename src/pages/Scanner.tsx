@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   ScanLine,
   HelpCircle,
+  Zap,
   ZapOff,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -35,16 +36,27 @@ const Scanner = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const navigate = useNavigate();
   const [BarcodeScanner, setBarcodeScanner] = useState<ComponentType<any> | null>(null);
+  const [isFlashOn, setIsFlashOn] = useState(false);
+  const [hasFlash, setHasFlash] = useState(false);
 
   const stopCamera = () => {
     if (streamRef.current) {
+      // Turn off flash before stopping the camera
+      if (isFlashOn) {
+        const videoTrack = streamRef.current.getVideoTracks()[0];
+        if (videoTrack && videoTrack.getCapabilities().torch) {
+          videoTrack.applyConstraints({ advanced: [{ torch: false }] });
+        }
+      }
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
+    setIsFlashOn(false);
   };
 
   const startCamera = async () => {
     setState("initializing");
+    setHasFlash(false);
     try {
       if (streamRef.current) stopCamera();
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -53,7 +65,11 @@ const Scanner = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
-        // The onCanPlay event will set the state to "camera"
+        
+        const videoTrack = stream.getVideoTracks()[0];
+        if (videoTrack && videoTrack.getCapabilities().torch) {
+          setHasFlash(true);
+        }
       }
     } catch (err) {
       console.error("Error accessing camera:", err);
@@ -87,6 +103,23 @@ const Scanner = () => {
     }
     return () => stopCamera();
   }, [scanMode]);
+
+  const toggleFlash = async () => {
+    if (!hasFlash || !streamRef.current) {
+      toast.info("Flash no disponible en este dispositivo.");
+      return;
+    }
+    const videoTrack = streamRef.current.getVideoTracks()[0];
+    try {
+      await videoTrack.applyConstraints({
+        advanced: [{ torch: !isFlashOn }],
+      });
+      setIsFlashOn(!isFlashOn);
+    } catch (err) {
+      console.error("Error toggling flash:", err);
+      toast.error("No se pudo activar el flash.");
+    }
+  };
 
   const handleBarcodeScan = (result: any) => {
     if (result) {
@@ -301,51 +334,54 @@ const Scanner = () => {
           ) : state === 'camera' ? (
             <>
               {/* Scan Mode Selector */}
-              <div className="flex items-center justify-center gap-2 bg-black/50 p-1 rounded-2xl backdrop-blur-sm">
+              <div className="flex items-center justify-center gap-4 w-full">
                 <Button
                   onClick={() => setScanMode("food")}
                   variant="ghost"
                   className={cn(
-                    "flex items-center justify-center gap-2 rounded-xl px-6 py-3 h-16 text-base font-semibold transition-all",
+                    "flex flex-col items-center justify-center gap-2 w-28 h-28 rounded-2xl text-white transition-colors",
                     scanMode === "food"
-                      ? "bg-white text-black hover:bg-gray-200"
-                      : "bg-transparent text-white hover:bg-white/10"
+                      ? "bg-white/90 text-black"
+                      : "bg-black/50 hover:bg-black/70"
                   )}
                 >
-                  <Scan className="w-6 h-6" />
-                  Escanear comida
+                  <Scan className="w-8 h-8" />
+                  <span className="font-semibold">Comida</span>
                 </Button>
                 <Button
                   onClick={() => setScanMode("barcode")}
                   variant="ghost"
                   className={cn(
-                    "flex items-center justify-center gap-2 rounded-xl px-6 py-3 h-16 text-base font-semibold transition-all",
+                    "flex flex-col items-center justify-center gap-2 w-28 h-28 rounded-2xl text-white transition-colors",
                     scanMode === "barcode"
-                      ? "bg-white text-black hover:bg-gray-200"
-                      : "bg-transparent text-white hover:bg-white/10"
+                      ? "bg-white/90 text-black"
+                      : "bg-black/50 hover:bg-black/70"
                   )}
                 >
-                  <ScanLine className="w-6 h-6" />
-                  Código de barras
+                  <ScanLine className="w-8 h-8" />
+                  <span className="font-semibold">Código</span>
                 </Button>
               </div>
 
               {/* Action Buttons */}
               <div className="flex items-center justify-around w-full max-w-md">
                 <button
-                  onClick={() => toast.info("Flash no disponible")}
-                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                  onClick={toggleFlash}
+                  disabled={!hasFlash}
+                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
                   aria-label="Activar flash"
                 >
-                  <ZapOff className="w-8 h-8 text-white" />
+                  {isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}
                 </button>
                 
-                {scanMode === 'food' && (
+                {scanMode === 'food' ? (
                   <button
                     onClick={handleCapture}
                     className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-colors"
                     aria-label="Tomar foto"
                   />
+                ) : (
+                  <div className="w-20 h-20" /> // Placeholder
                 )}
                 
                 <button
