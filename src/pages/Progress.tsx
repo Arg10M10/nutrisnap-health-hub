@@ -9,6 +9,7 @@ import { Flame, ScanLine } from "lucide-react";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
 import { useNutrition } from "@/context/NutritionContext";
+import ManualFoodEntry from "@/components/ManualFoodEntry";
 
 const Progress = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -91,6 +92,11 @@ const Progress = () => {
               <p className="text-muted-foreground">No hay escaneos para este día.</p>
             </Card>
           )}
+        </div>
+
+        {/* Manual Food Entry */}
+        <div className="space-y-4">
+          <ManualFoodEntry />
         </div>
       </div>
     </PageLayout>

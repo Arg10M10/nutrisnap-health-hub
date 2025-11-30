@@ -1,45 +1,84 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Heart, Bookmark, PlusCircle, CheckCircle, Sunrise, Sun, Coffee, Moon } from "lucide-react";
+import { BookOpen, Heart, Bookmark, PlusCircle, CheckCircle, Sunrise, Sun, Coffee, Moon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { diets, Diet } from "@/data/diets";
 import DietDetailDrawer from "@/components/DietDetailDrawer";
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Diets = () => {
-  const [savedDiets, setSavedDiets] = useLocalStorage<number[]>("nutrisnap-saved-diets", []);
-  const [activeDietId, setActiveDietId] = useLocalStorage<number | null>("nutrisnap-active-diet", null);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [selectedDiet, setSelectedDiet] = useState<Diet | null>(null);
+
+  const { data: userDiets, isLoading } = useQuery({
+    queryKey: ['userDiets', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .from('user_diets')
+        .select('saved_diet_ids, active_diet_id')
+        .eq('user_id', user.id)
+        .single();
+      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+        throw new Error(error.message);
+      }
+      return data || { saved_diet_ids: [], active_diet_id: null };
+    },
+    enabled: !!user,
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (updatedDiets: { saved_diet_ids: number[], active_diet_id: number | null }) => {
+      if (!user) throw new Error("User not found");
+      const { error } = await supabase.from('user_diets').upsert({
+        user_id: user.id,
+        ...updatedDiets,
+      }, { onConflict: 'user_id' });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userDiets', user?.id] });
+    },
+    onError: (error) => {
+      toast.error("No se pudo guardar el cambio.", { description: error.message });
+    },
+  });
+
+  const savedDiets = userDiets?.saved_diet_ids || [];
+  const activeDietId = userDiets?.active_diet_id || null;
 
   const handleToggleSave = (e: React.MouseEvent, dietId: number, dietName: string) => {
     e.stopPropagation();
+    let newSavedDiets = [...savedDiets];
+    let newActiveDietId = activeDietId;
+
     if (savedDiets.includes(dietId)) {
-      setSavedDiets(savedDiets.filter((id) => id !== dietId));
+      newSavedDiets = savedDiets.filter((id) => id !== dietId);
       toast.success(`${dietName} eliminada de tus dietas`);
       if (activeDietId === dietId) {
-        setActiveDietId(null);
+        newActiveDietId = null;
       }
     } else {
-      setSavedDiets([...savedDiets, dietId]);
-      toast.success(`${dietName} guardada`, {
-        icon: <Heart className="text-primary" />,
-      });
+      newSavedDiets.push(dietId);
+      toast.success(`${dietName} guardada`, { icon: <Heart className="text-primary" /> });
     }
+    mutation.mutate({ saved_diet_ids: newSavedDiets, active_diet_id: newActiveDietId });
   };
 
   const handleSetActive = (e: React.MouseEvent, dietId: number) => {
     e.stopPropagation();
     const diet = diets.find((d) => d.id === dietId);
     if (diet) {
-      setActiveDietId(dietId);
-      toast.success(`¡Has empezado la dieta ${diet.name}!`, {
-        icon: <CheckCircle className="text-primary" />,
-      });
+      mutation.mutate({ saved_diet_ids: savedDiets, active_diet_id: dietId });
+      toast.success(`¡Has empezado la dieta ${diet.name}!`, { icon: <CheckCircle className="text-primary" /> });
     }
   };
 
@@ -55,6 +94,10 @@ const Diets = () => {
       </div>
     </div>
   );
+
+  if (isLoading) {
+    return <PageLayout><div className="flex justify-center mt-10"><Loader2 className="w-8 h-8 animate-spin" /></div></PageLayout>;
+  }
 
   return (
     <PageLayout>
@@ -117,7 +160,7 @@ const Diets = () => {
                       ))}
                     </div>
                   </div>
-                  <Button onClick={(e) => handleToggleSave(e, diet.id, diet.name)} variant={isSaved ? "default" : "outline"} className="w-full h-12 text-base">
+                  <Button onClick={(e) => handleToggleSave(e, diet.id, diet.name)} variant={isSaved ? "default" : "outline"} className="w-full h-12 text-base" disabled={mutation.isPending}>
                     {isSaved ? (<><Heart className="mr-2 w-5 h-5 fill-current" /> Guardado</>) : (<><Heart className="mr-2 w-5 h-5" /> Guardar Dieta</>)}
                   </Button>
                 </Card>
@@ -143,10 +186,10 @@ const Diets = () => {
                       </div>
                     </div>
                     <div className="flex gap-2 mt-4">
-                      <Button onClick={(e) => handleToggleSave(e, diet.id, diet.name)} variant="outline" className="w-full h-12 text-base">
+                      <Button onClick={(e) => handleToggleSave(e, diet.id, diet.name)} variant="outline" className="w-full h-12 text-base" disabled={mutation.isPending}>
                         <Heart className="mr-2 w-5 h-5" /> Quitar
                       </Button>
-                      <Button onClick={(e) => handleSetActive(e, diet.id)} disabled={isActive} className="w-full h-12 text-base">
+                      <Button onClick={(e) => handleSetActive(e, diet.id)} disabled={isActive || mutation.isPending} className="w-full h-12 text-base">
                         {isActive ? (<><CheckCircle className="mr-2 w-5 h-5" /> En Curso</>) : (<><PlusCircle className="mr-2 w-5 h-5" /> Empezar</>)}
                       </Button>
                     </div>

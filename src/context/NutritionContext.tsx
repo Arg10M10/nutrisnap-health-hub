@@ -24,7 +24,7 @@ interface DailyIntake {
 type IntakeHistory = Record<string, DailyIntake>; // Key is "yyyy-MM-dd"
 
 interface NutritionState {
-  addAnalysis: (result: AnalysisResult, imageUrl: string) => void;
+  addAnalysis: (result: AnalysisResult, imageUrl?: string) => void;
   getDataForDate: (date: Date) => { intake: DailyIntake; analyses: RecentAnalysis[] };
 }
 
@@ -42,7 +42,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const [intakeHistory, setIntakeHistory] = useLocalStorage<IntakeHistory>('nutrisnap-intake-history', {});
   const [recentAnalyses, setRecentAnalyses] = useLocalStorage<RecentAnalysis[]>('nutrisnap-recent-analyses', []);
 
-  const addAnalysis = (result: AnalysisResult, imageUrl: string) => {
+  const addAnalysis = (result: AnalysisResult, imageUrl = '/placeholder.svg') => {
     const caloriesValue = parseNutrientValue(result.calories);
     const proteinValue = parseNutrientValue(result.protein);
     const carbsValue = parseNutrientValue(result.carbs);
