@@ -37,25 +37,46 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   };
 
   useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    const initializeSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
 
-      if (session?.user) {
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("id, full_name")
-          .eq("id", session.user.id)
-          .single();
-        setProfile(profileData);
-      } else {
-        setProfile(null);
+        if (currentUser) {
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("id, full_name")
+            .eq("id", currentUser.id)
+            .single();
+          setProfile(profileData);
+        }
+      } catch (error) {
+        console.error("Error initializing session:", error);
+      } finally {
+        setLoading(false);
       }
-      
-      setLoading(false);
-    });
+    };
+
+    initializeSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("id, full_name")
+            .eq("id", session.user.id)
+            .single();
+          setProfile(profileData);
+        } else {
+          setProfile(null);
+        }
+      }
+    );
 
     return () => {
       subscription.unsubscribe();
