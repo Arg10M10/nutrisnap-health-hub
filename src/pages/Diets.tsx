@@ -35,6 +35,7 @@ const Diets = () => {
     const diet = diets.find((d) => d.id === dietId);
     if (diet) {
       setActiveDietId(dietId);
+      setSelectedDiet(diet); // <-- This line opens the drawer automatically
       toast.success(`¡Has empezado la dieta ${diet.name}!`, {
         icon: <CheckCircle className="text-primary" />,
       });
