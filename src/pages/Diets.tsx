@@ -8,10 +8,11 @@ import { BookOpen, Heart, Bookmark, PlusCircle, CheckCircle } from "lucide-react
 import { toast } from "sonner";
 import { diets, Diet } from "@/data/diets";
 import DietDetailDrawer from "@/components/DietDetailDrawer";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Diets = () => {
-  const [savedDiets, setSavedDiets] = useState<number[]>([]);
-  const [activeDietId, setActiveDietId] = useState<number | null>(null);
+  const [savedDiets, setSavedDiets] = useLocalStorage<number[]>("nutrisnap-saved-diets", []);
+  const [activeDietId, setActiveDietId] = useLocalStorage<number | null>("nutrisnap-active-diet", null);
   const [selectedDiet, setSelectedDiet] = useState<Diet | null>(null);
 
   const handleToggleSave = (e: React.MouseEvent, dietId: number, dietName: string) => {
