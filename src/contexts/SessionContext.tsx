@@ -39,48 +39,28 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   };
 
   useEffect(() => {
-    const fetchUserSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        setSession(session);
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
 
-        if (currentUser) {
-          const { data: profileData } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", currentUser.id)
-            .single();
-          setProfile(profileData);
-        } else {
-          setProfile(null);
-        }
-      } catch (e) {
-        console.error("Error al obtener la sesión:", e);
-      } finally {
-        setLoading(false);
+      if (session?.user) {
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+        setProfile(profileData);
+      } else {
+        setProfile(null);
       }
-    };
-
-    fetchUserSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          const { data: profileData } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single();
-          setProfile(profileData);
-        } else {
-          setProfile(null);
-        }
-      }
-    );
+      
+      // This is the key: the listener fires on page load.
+      // After it runs for the first time, we know the initial auth state,
+      // so we can safely stop the loading indicator.
+      setLoading(false);
+    });
 
     return () => {
       subscription.unsubscribe();
