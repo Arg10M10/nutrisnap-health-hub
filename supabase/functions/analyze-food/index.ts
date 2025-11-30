@@ -8,6 +8,24 @@ const corsHeaders = {
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${GEMINI_API_KEY}`;
 
+// Helper function to safely parse JSON, cleaning it if necessary
+const safeParseJson = (text: string) => {
+  try {
+    // First, try to parse it directly
+    return JSON.parse(text);
+  } catch {
+    // If it fails, try to clean it up by removing markdown fences
+    const cleanedText = text.replace(/```json\n/g, "").replace(/\n```/g, "").trim();
+    try {
+      return JSON.parse(cleanedText);
+    } catch (e) {
+      console.error("Failed to parse JSON even after cleaning:", e);
+      console.error("Original text:", text);
+      return null;
+    }
+  }
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -15,6 +33,12 @@ serve(async (req) => {
 
   try {
     const { imageData } = await req.json();
+    if (!imageData) {
+      return new Response(JSON.stringify({ error: "No se proporcionó ninguna imagen." }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400,
+      });
+    }
     const base64Image = imageData.split(",")[1];
 
     const prompt = `
@@ -65,8 +89,20 @@ serve(async (req) => {
     }
 
     const responseData = await geminiResponse.json();
+
+    // Robust check for valid response
+    if (!responseData.candidates || responseData.candidates.length === 0) {
+      console.error("Respuesta de la IA inválida o bloqueada:", responseData);
+      const blockReason = responseData.promptFeedback?.blockReason || "desconocida";
+      throw new Error(`La IA no pudo procesar la imagen (motivo: ${blockReason}). Intenta con otra foto.`);
+    }
+
     const jsonText = responseData.candidates[0].content.parts[0].text;
-    const analysisResult = JSON.parse(jsonText);
+    const analysisResult = safeParseJson(jsonText);
+
+    if (!analysisResult) {
+      throw new Error("La IA devolvió una respuesta en un formato inesperado. No se pudo procesar.");
+    }
 
     return new Response(JSON.stringify(analysisResult), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
