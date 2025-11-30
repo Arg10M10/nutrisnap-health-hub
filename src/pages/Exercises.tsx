@@ -2,8 +2,8 @@ import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
 import { Dumbbell, Clock, Flame, HeartPulse, PersonStanding, RefreshCw } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 type Step = "age" | "condition" | "results";
 type Exercise = {
@@ -12,13 +12,6 @@ type Exercise = {
   calories: number;
   intensity: string;
 };
-
-const ageGroups = [
-  { range: "18-30", label: "18-30 años", icon: "💪" },
-  { range: "31-50", label: "31-50 años", icon: "🏃" },
-  { range: "51-65", label: "51-65 años", icon: "🚶" },
-  { range: "65+", label: "65+ años", icon: "🧘" },
-];
 
 const conditions = [
   { id: "weight-loss", label: "Perder Peso", icon: Flame },
@@ -104,11 +97,20 @@ const exercises: Record<string, Record<string, Exercise[]>> = {
 
 const Exercises = () => {
   const [step, setStep] = useState<Step>("age");
-  const [selectedAge, setSelectedAge] = useState<string | null>(null);
+  const [age, setAge] = useState(30);
+  const [selectedAgeRange, setSelectedAgeRange] = useState<string | null>(null);
   const [selectedCondition, setSelectedCondition] = useState<string | null>(null);
 
-  const handleSelectAge = (ageRange: string) => {
-    setSelectedAge(ageRange);
+  const getAgeRange = (currentAge: number): string => {
+    if (currentAge <= 30) return "18-30";
+    if (currentAge <= 50) return "31-50";
+    if (currentAge <= 65) return "51-65";
+    return "65+";
+  };
+
+  const handleAgeSubmit = () => {
+    const ageRange = getAgeRange(age);
+    setSelectedAgeRange(ageRange);
     setStep("condition");
   };
 
@@ -119,29 +121,34 @@ const Exercises = () => {
 
   const handleReset = () => {
     setStep("age");
-    setSelectedAge(null);
+    setSelectedAgeRange(null);
     setSelectedCondition(null);
+    setAge(30);
   };
 
   const renderStep = () => {
     switch (step) {
       case "age":
         return (
-          <div className="space-y-4 animate-in fade-in-50 duration-300">
-            <h2 className="text-foreground text-center">Paso 1: Tu edad</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {ageGroups.map((group) => (
-                <Button
-                  key={group.range}
-                  variant="outline"
-                  className="h-28 flex-col gap-2 text-base"
-                  onClick={() => handleSelectAge(group.range)}
-                >
-                  <span className="text-4xl">{group.icon}</span>
-                  {group.label}
-                </Button>
-              ))}
+          <div className="space-y-8 animate-in fade-in-50 duration-300">
+            <div className="text-center space-y-2">
+              <h2 className="text-foreground">Paso 1: ¿Cuál es tu edad?</h2>
+              <p className="text-muted-foreground">Desliza para seleccionar tu edad.</p>
             </div>
+            <div className="flex flex-col items-center gap-4 py-4">
+              <span className="text-6xl font-bold text-primary">{age}</span>
+              <Slider
+                defaultValue={[age]}
+                max={80}
+                min={18}
+                step={1}
+                onValueChange={(value) => setAge(value[0])}
+                className="w-full max-w-sm"
+              />
+            </div>
+            <Button onClick={handleAgeSubmit} className="w-full h-12 text-base">
+              Siguiente
+            </Button>
           </div>
         );
       case "condition":
@@ -164,7 +171,7 @@ const Exercises = () => {
           </div>
         );
       case "results":
-        const recommended = (selectedAge && selectedCondition && exercises[selectedAge]?.[selectedCondition]) || [];
+        const recommended = (selectedAgeRange && selectedCondition && exercises[selectedAgeRange]?.[selectedCondition]) || [];
         return (
           <div className="space-y-4 animate-in fade-in-50 duration-300">
             <div className="flex justify-between items-center">
