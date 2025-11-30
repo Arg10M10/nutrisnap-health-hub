@@ -1,8 +1,8 @@
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useMemo } from 'react';
 import { toast } from 'sonner';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
-import { format, isSameDay } from 'date-fns';
+import { format, isSameDay, subDays } from 'date-fns';
 
 export interface RecentAnalysis extends AnalysisResult {
   id: string;
@@ -26,6 +26,8 @@ type IntakeHistory = Record<string, DailyIntake>; // Key is "yyyy-MM-dd"
 interface NutritionState {
   addAnalysis: (result: AnalysisResult, imageUrl?: string) => void;
   getDataForDate: (date: Date) => { intake: DailyIntake; analyses: RecentAnalysis[] };
+  streak: number;
+  streakDays: string[];
 }
 
 const NutritionContext = createContext<NutritionState | undefined>(undefined);
@@ -41,6 +43,26 @@ const parseNutrientValue = (value: string): number => {
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const [intakeHistory, setIntakeHistory] = useLocalStorage<IntakeHistory>('nutrisnap-intake-history', {});
   const [recentAnalyses, setRecentAnalyses] = useLocalStorage<RecentAnalysis[]>('nutrisnap-recent-analyses', []);
+
+  const streakData = useMemo(() => {
+    let currentStreak = 0;
+    const daysInStreak: string[] = [];
+    const today = new Date();
+
+    for (let i = 0; i < 365; i++) { // Check up to a year back
+      const dateToCheck = subDays(today, i);
+      const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+      const intakeForDay = intakeHistory[dateKey];
+
+      if (intakeForDay && intakeForDay.calories > 0) {
+        currentStreak++;
+        daysInStreak.push(dateKey);
+      } else {
+        break; // Streak is broken
+      }
+    }
+    return { streak: currentStreak, streakDays: daysInStreak };
+  }, [intakeHistory]);
 
   const addAnalysis = (result: AnalysisResult, imageUrl = '/placeholder.svg') => {
     const caloriesValue = parseNutrientValue(result.calories);
@@ -86,7 +108,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <NutritionContext.Provider value={{ addAnalysis, getDataForDate }}>
+    <NutritionContext.Provider value={{ addAnalysis, getDataForDate, ...streakData }}>
       {children}
     </NutritionContext.Provider>
   );

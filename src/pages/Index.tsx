@@ -14,7 +14,7 @@ import WeeklyCalendar from "@/components/WeeklyCalendar";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { getDataForDate } = useNutrition();
+  const { getDataForDate, streak, streakDays } = useNutrition();
   const { intake, analyses } = getDataForDate(selectedDate);
 
   const dailyGoals = {
@@ -70,7 +70,15 @@ const Index = () => {
           </Link>
         </header>
 
-        <WeeklyCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+        <WeeklyCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} streakDays={streakDays} />
+
+        <Card className="p-4 flex justify-between items-center">
+          <div>
+            <p className="text-muted-foreground">Racha Actual</p>
+            <p className="text-4xl font-bold text-foreground">{streak} {streak === 1 ? 'día' : 'días'}</p>
+          </div>
+          <Flame className="w-12 h-12 text-yellow-500" />
+        </Card>
 
         <Card className="p-6 flex justify-between items-center bg-gradient-to-br from-primary/10 to-secondary/10">
           <div>
