@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
-  Camera,
   Scan,
   RefreshCw,
   Loader2,
@@ -188,44 +187,61 @@ const Scanner = () => {
 
       {/* UI Controls */}
       <div className="absolute inset-0 flex flex-col justify-between p-6 pointer-events-none">
+        {/* Top Bar */}
         {state !== "captured" && (
-          <div className="flex justify-end pointer-events-auto">
-            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70">
+          <div className="flex justify-between items-center w-full pointer-events-auto">
+            <div className="w-10"></div> {/* Spacer */}
+            <h2 className="text-xl font-bold text-white">Escáner</h2>
+            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-10 h-10">
               <X className="w-6 h-6 text-white" />
             </Button>
           </div>
         )}
 
+        {/* Bottom Controls */}
         {state === "camera" && (
           <div className="flex flex-col items-center gap-6 pointer-events-auto">
-            <div className="bg-black/50 rounded-full p-1 flex gap-1">
+            <div className="flex items-center gap-4">
               <Button
                 onClick={() => setScanMode("food")}
-                variant={scanMode === "food" ? "default" : "ghost"}
-                className="rounded-full text-white"
+                variant="ghost"
+                className={cn(
+                  "rounded-full px-6 h-12 text-base font-semibold transition-colors",
+                  scanMode === "food"
+                    ? "bg-white text-black hover:bg-gray-200"
+                    : "bg-black/40 text-white hover:bg-black/60"
+                )}
               >
                 Comida
               </Button>
               <Button
                 onClick={() => toast.info("Próximamente", { description: "El escaneo de código de barras estará disponible pronto." })}
                 variant="ghost"
-                className="rounded-full text-white/70"
+                className="rounded-full px-6 h-12 text-base font-semibold bg-black/40 text-white/70 hover:bg-black/60"
               >
                 Código de Barras
               </Button>
             </div>
             <div className="flex items-center justify-around w-full">
-              <Button variant="ghost" size="icon" className="w-16 h-16" onClick={handleUploadClick}>
+              <button
+                onClick={handleUploadClick}
+                className="w-16 h-16 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                aria-label="Subir imagen"
+              >
                 <ImageIcon className="w-8 h-8 text-white" />
-              </Button>
+              </button>
               <button
                 onClick={handleCapture}
-                className="w-20 h-20 rounded-full border-4 border-white bg-white/30 active:bg-white/50 transition-colors"
+                className="w-20 h-20 rounded-full border-4 border-white bg-white active:bg-gray-200 transition-colors"
                 aria-label="Tomar foto"
               />
-              <Button variant="ghost" size="icon" className="w-16 h-16" onClick={() => toast.info("Próximamente", { description: "La función para cambiar de cámara estará disponible pronto." })}>
+              <button
+                onClick={() => toast.info("Próximamente", { description: "La función para cambiar de cámara estará disponible pronto." })}
+                className="w-16 h-16 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                aria-label="Cambiar cámara"
+              >
                 <FlipHorizontal className="w-8 h-8 text-white" />
-              </Button>
+              </button>
             </div>
           </div>
         )}
