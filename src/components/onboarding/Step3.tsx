@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dumbbell } from "lucide-react";
 
+const MotionFormLabel = motion(FormLabel);
+
 const formSchema = z.object({
   activity_level: z.enum(["sedentary", "light", "moderate", "active"], { required_error: "Por favor, selecciona tu nivel de actividad." }),
   exercise_days_per_week: z.string().min(1, "Selecciona los días de ejercicio."),
@@ -58,14 +60,17 @@ const Step3 = ({ data, update, next, prev }: Step3Props) => {
                   <FormControl>
                     <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-4">
                       {Object.entries(activityLevels).map(([key, value]) => (
-                        <motion.div key={key} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                          <FormLabel className="flex items-center justify-center text-center rounded-lg border-2 border-muted bg-popover p-4 h-24 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer transition-colors">
-                            <FormControl>
-                              <RadioGroupItem value={key} className="sr-only" />
-                            </FormControl>
-                            {value}
-                          </FormLabel>
-                        </motion.div>
+                        <MotionFormLabel
+                          key={key}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center justify-center text-center rounded-lg border-2 border-muted bg-popover p-4 h-24 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer transition-colors"
+                        >
+                          <FormControl>
+                            <RadioGroupItem value={key} className="sr-only" />
+                          </FormControl>
+                          {value}
+                        </MotionFormLabel>
                       ))}
                     </RadioGroup>
                   </FormControl>
