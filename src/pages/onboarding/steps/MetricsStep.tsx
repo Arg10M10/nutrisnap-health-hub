@@ -11,6 +11,12 @@ interface MetricsStepProps {
   setHeight: (height: number) => void;
 }
 
+const formatHeightImperial = (totalInches: number): string => {
+  const feet = Math.floor(totalInches / 12);
+  const inches = totalInches % 12;
+  return `${feet}' ${inches}"`;
+};
+
 export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHeight }: MetricsStepProps) => {
   return (
     <div className="space-y-6">
@@ -28,11 +34,12 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
       <div className="space-y-4">
         <NumberPicker
           label="Altura"
-          unit={units === 'metric' ? 'cm' : 'in'}
+          unit={units === 'metric' ? 'cm' : ''}
           value={height}
           onValueChange={setHeight}
           min={units === 'metric' ? 120 : 48}
           max={units === 'metric' ? 220 : 84}
+          displayFormatter={units === 'imperial' ? formatHeightImperial : undefined}
         />
         <NumberPicker
           label="Peso"

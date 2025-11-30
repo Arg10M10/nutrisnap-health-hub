@@ -11,20 +11,32 @@ interface NumberPickerProps {
   min: number;
   max: number;
   step?: number;
+  displayFormatter?: (value: number) => string;
 }
 
-export const NumberPicker = ({ value, onValueChange, label, unit, min, max, step = 1 }: NumberPickerProps) => {
+export const NumberPicker = ({
+  value,
+  onValueChange,
+  label,
+  unit,
+  min,
+  max,
+  step = 1,
+  displayFormatter,
+}: NumberPickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(value ?? min);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const numbers = Array.from({ length: (max - min) / step + 1 }, (_, i) => min + i * step);
 
+  const formatValue = displayFormatter ?? ((val: number) => val.toString());
+
   useEffect(() => {
     if (isOpen && scrollContainerRef.current) {
       const selectedElement = scrollContainerRef.current.querySelector(`[data-value="${internalValue}"]`);
       if (selectedElement) {
-        selectedElement.scrollIntoView({ block: 'center' });
+        selectedElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
       }
     }
   }, [isOpen, internalValue]);
@@ -44,7 +56,7 @@ export const NumberPicker = ({ value, onValueChange, label, unit, min, max, step
       >
         <span className="flex-1 text-muted-foreground">{label}</span>
         <span className="font-semibold text-foreground">
-          {value !== null ? `${value} ${unit}` : 'Seleccionar'}
+          {value !== null ? `${formatValue(value)} ${unit}`.trim() : 'Seleccionar'}
         </span>
       </Button>
 
@@ -70,7 +82,7 @@ export const NumberPicker = ({ value, onValueChange, label, unit, min, max, step
                     internalValue === num ? 'text-primary' : 'text-muted-foreground'
                   )}
                 >
-                  {num}
+                  {formatValue(num)}
                 </div>
               ))}
             </div>
