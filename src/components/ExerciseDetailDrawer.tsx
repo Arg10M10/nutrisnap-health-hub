@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Exercise } from "@/data/exercises";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Info, Timer, ListSteps } from "lucide-react";
+import { Info, Timer, ListOrdered } from "lucide-react";
 
 interface ExerciseDetailDrawerProps {
   exercise: Exercise | null;
@@ -54,7 +54,7 @@ const ExerciseDetailDrawer = ({ exercise, isOpen, onClose }: ExerciseDetailDrawe
 
               <div>
                 <h3 className="font-semibold text-xl mb-3 text-primary flex items-center gap-2">
-                  <ListSteps className="w-6 h-6" /> ¿Cómo hacerlo?
+                  <ListOrdered className="w-6 h-6" /> ¿Cómo hacerlo?
                 </h3>
                 <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                   {exercise.howToDoIt.map((step, index) => (
