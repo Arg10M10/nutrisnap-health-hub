@@ -13,7 +13,7 @@ import ManualFoodEntry from "@/components/ManualFoodEntry";
 
 const Progress = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { getDataForDate } = useNutrition();
+  const { getDataForDate, streakDays } = useNutrition();
 
   // Data for the selected day's scan history
   const { analyses } = getDataForDate(selectedDate);
@@ -41,7 +41,7 @@ const Progress = () => {
           </p>
         </div>
 
-        <WeeklyCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+        <WeeklyCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} streakDays={streakDays} />
 
         {/* Calorie Chart */}
         <Card>

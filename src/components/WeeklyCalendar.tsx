@@ -7,10 +7,10 @@ import { Flame } from "lucide-react";
 interface WeeklyCalendarProps {
   selectedDate: Date;
   onDateSelect: (date: Date) => void;
-  streakDays: string[];
+  streakDays?: string[];
 }
 
-const WeeklyCalendar = ({ selectedDate, onDateSelect, streakDays }: WeeklyCalendarProps) => {
+const WeeklyCalendar = ({ selectedDate, onDateSelect, streakDays = [] }: WeeklyCalendarProps) => {
   const today = new Date();
   const weekDays = Array.from({ length: 7 })
     .map((_, i) => subDays(today, i))
