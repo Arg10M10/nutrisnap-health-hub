@@ -39,9 +39,9 @@ const Index = () => {
   ];
 
   const stats = [
-    { label: "Calorías Hoy", value: "1,450", icon: TrendingUp },
-    { label: "Misiones", value: "3/5", icon: Target },
-    { label: "Racha", value: "7 días", icon: Leaf },
+    { label: "Calorías Hoy", value: "0", icon: TrendingUp },
+    { label: "Misiones", value: "0/5", icon: Target },
+    { label: "Racha", value: "0 días", icon: Leaf },
   ];
 
   return (

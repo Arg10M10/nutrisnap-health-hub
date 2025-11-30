@@ -65,22 +65,10 @@ const Scanner = () => {
         <Card className="p-6 space-y-4">
           <h3 className="text-foreground">Últimos Escaneos</h3>
           <div className="space-y-3">
-            {[
-              { name: "Manzana", calories: 95, time: "Hace 2h" },
-              { name: "Ensalada", calories: 150, time: "Ayer" },
-              { name: "Pollo asado", calories: 285, time: "Hace 2 días" },
-            ].map((item, i) => (
-              <div key={i} className="flex justify-between items-center p-4 bg-muted rounded-xl">
-                <div>
-                  <p className="font-semibold text-foreground">{item.name}</p>
-                  <p className="text-sm text-muted-foreground">{item.time}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-primary">{item.calories}</p>
-                  <p className="text-xs text-muted-foreground">calorías</p>
-                </div>
-              </div>
-            ))}
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No hay escaneos recientes.</p>
+              <p className="text-sm text-muted-foreground">Usa el escáner para empezar.</p>
+            </div>
           </div>
         </Card>
       </div>
