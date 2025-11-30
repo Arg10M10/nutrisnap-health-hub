@@ -13,16 +13,15 @@ import {
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
+import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { cn } from "@/lib/utils";
 
-type ScannerState = "camera" | "captured" | "loading" | "result" | "error";
+type ScannerState = "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
 
 const Scanner = () => {
   const [state, setState] = useState<ScannerState>("camera");
   const [scanMode, setScanMode] = useState<ScanMode>("food");
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -110,9 +109,7 @@ const Scanner = () => {
       return data as AnalysisResult;
     },
     onSuccess: (data) => {
-      setAnalysisResult(data);
-      setState("result");
-      toast.success("¡Análisis completado!");
+      navigate('/analysis-result', { state: { result: data, image: capturedImage } });
     },
     onError: (err) => {
       console.error("Analysis error:", err);
@@ -132,7 +129,6 @@ const Scanner = () => {
   };
 
   const handleReset = () => {
-    setAnalysisResult(null);
     setCapturedImage(null);
     setError(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -143,22 +139,24 @@ const Scanner = () => {
 
   return (
     <div className="fixed inset-0 bg-black text-white z-50">
+      {/* Camera View */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
         className={cn(
-          "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
-          state === "camera" ? "opacity-100" : "opacity-0 pointer-events-none"
+          "absolute inset-0 w-full h-full object-cover",
+          state !== "camera" && "hidden"
         )}
       />
+      {/* Captured Image Preview */}
       {capturedImage && (
         <img
           src={capturedImage}
           alt="Comida capturada"
           className={cn(
             "absolute inset-0 w-full h-full object-cover",
-            state !== "camera" ? "opacity-100" : "opacity-0 pointer-events-none"
+            state !== "captured" && "hidden"
           )}
         />
       )}
@@ -168,14 +166,6 @@ const Scanner = () => {
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4">
           <Loader2 className="w-16 h-16 text-primary animate-spin" />
           <p className="text-primary-foreground text-lg">Analizando...</p>
-        </div>
-      )}
-      {state === "result" && analysisResult && (
-        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-4 space-y-6">
-          <FoodAnalysisCard result={analysisResult} />
-          <Button onClick={handleReset} size="lg" className="w-full max-w-sm h-14 text-lg">
-            <RefreshCw className="mr-2 w-6 h-6" /> Escanear de Nuevo
-          </Button>
         </div>
       )}
       {state === "error" && (
@@ -191,15 +181,15 @@ const Scanner = () => {
       {/* UI Controls */}
       <div className="absolute inset-0 flex flex-col justify-between p-6 pointer-events-none">
         {/* Top Bar */}
-        {state !== "captured" && (
-          <div className="flex justify-between items-center w-full pointer-events-auto">
-            <div className="w-10"></div> {/* Spacer */}
-            <h2 className="text-xl font-bold text-white">Escáner</h2>
-            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-10 h-10">
-              <X className="w-6 h-6 text-white" />
-            </Button>
-          </div>
-        )}
+        <div className="flex justify-between items-center w-full pointer-events-auto">
+          <div className="w-10"></div> {/* Spacer */}
+          <h2 className="text-xl font-bold text-white drop-shadow-md">
+            {state === 'captured' ? 'Confirmar Foto' : 'Escáner'}
+          </h2>
+          <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-10 h-10">
+            <X className="w-6 h-6 text-white" />
+          </Button>
+        </div>
 
         {/* Bottom Controls */}
         {state === "camera" && (

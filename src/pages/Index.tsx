@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
@@ -6,9 +5,11 @@ import { Flame, Leaf, Beef, Wheat, Droplets, ScanLine } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MacroProgressCircle from "@/components/MacroProgressCircle";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
+import { useNutrition } from "@/context/NutritionContext";
 
 const Index = () => {
-  // Define daily goals (can be moved to a context or user profile later)
+  const { intake, recentAnalyses } = useNutrition();
+
   const dailyGoals = {
     calories: 2000,
     protein: 90,
@@ -16,36 +17,24 @@ const Index = () => {
     fats: 65,
   };
 
-  // State for current intake, starting at 0
-  const [currentIntake, setCurrentIntake] = useState({
-    calories: 0,
-    protein: 0,
-    carbs: 0,
-    fats: 0,
-  });
-
-  // State for recent items, starting empty
-  const [recentItems, setRecentItems] = useState<any[]>([]);
-
-  // Calculations
-  const caloriesRemaining = dailyGoals.calories - currentIntake.calories;
-  const calorieProgress = (currentIntake.calories / dailyGoals.calories) * 100;
+  const caloriesRemaining = dailyGoals.calories - intake.calories;
+  const calorieProgress = (intake.calories / dailyGoals.calories) * 100;
   
-  const proteinProgress = (currentIntake.protein / dailyGoals.protein) * 100;
-  const proteinText = currentIntake.protein > dailyGoals.protein ? "exceso" : "restante";
+  const proteinProgress = (intake.protein / dailyGoals.protein) * 100;
+  const proteinText = intake.protein > dailyGoals.protein ? "exceso" : "restante";
 
-  const carbsProgress = (currentIntake.carbs / dailyGoals.carbs) * 100;
-  const carbsText = currentIntake.carbs > dailyGoals.carbs ? "exceso" : "restante";
+  const carbsProgress = (intake.carbs / dailyGoals.carbs) * 100;
+  const carbsText = intake.carbs > dailyGoals.carbs ? "exceso" : "restante";
 
-  const fatsProgress = (currentIntake.fats / dailyGoals.fats) * 100;
-  const fatsText = currentIntake.fats > dailyGoals.fats ? "exceso" : "restante";
+  const fatsProgress = (intake.fats / dailyGoals.fats) * 100;
+  const fatsText = intake.fats > dailyGoals.fats ? "exceso" : "restante";
 
   const macroCards = [
     {
       value: proteinProgress,
       color: "#ef4444",
       icon: <Beef className="w-6 h-6 text-red-500" />,
-      current: currentIntake.protein,
+      current: intake.protein,
       label: "Proteína",
       status: proteinText,
     },
@@ -53,7 +42,7 @@ const Index = () => {
       value: carbsProgress,
       color: "#f97316",
       icon: <Wheat className="w-6 h-6 text-orange-500" />,
-      current: currentIntake.carbs,
+      current: intake.carbs,
       label: "Carbs",
       status: carbsText,
     },
@@ -61,7 +50,7 @@ const Index = () => {
       value: fatsProgress,
       color: "#3b82f6",
       icon: <Droplets className="w-6 h-6 text-blue-500" />,
-      current: currentIntake.fats,
+      current: intake.fats,
       label: "Grasas",
       status: fatsText,
     },
@@ -70,7 +59,6 @@ const Index = () => {
   return (
     <PageLayout>
       <div className="space-y-6">
-        {/* Header */}
         <header className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Leaf className="w-8 h-8 text-primary" />
@@ -78,7 +66,6 @@ const Index = () => {
           </div>
         </header>
 
-        {/* Date Tabs */}
         <Tabs defaultValue="today" className="w-full">
           <TabsList className="grid w-full grid-cols-2 h-12">
             <TabsTrigger value="today" className="text-base">Hoy</TabsTrigger>
@@ -86,7 +73,6 @@ const Index = () => {
           </TabsList>
         </Tabs>
 
-        {/* Main Calorie Card */}
         <Card className="p-6 flex justify-between items-center bg-gradient-to-br from-primary/10 to-secondary/10">
           <div>
             <p className="text-muted-foreground text-lg">Calorías restantes</p>
@@ -100,7 +86,6 @@ const Index = () => {
           </div>
         </Card>
 
-        {/* Macronutrient Cards */}
         <div className="grid grid-cols-3 gap-4">
           {macroCards.map((macro, index) => (
             <motion.div key={index} whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
@@ -110,19 +95,27 @@ const Index = () => {
                   <div className="absolute inset-0 flex items-center justify-center">{macro.icon}</div>
                 </div>
                 <p className="text-xl font-bold text-foreground">{macro.current}g</p>
-                <p className="text-sm text-muted-foreground">{macro.label} ({macro.status})</p>
+                <p className="text-sm text-muted-foreground">{macro.label}</p>
               </Card>
             </motion.div>
           ))}
         </div>
 
-        {/* Recent Analysis */}
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold">Análisis Recientes</h2>
-          {recentItems.length > 0 ? (
+          {recentAnalyses.length > 0 ? (
             <div className="space-y-3">
-              {recentItems.map((item, index) => (
-                <RecentAnalysisCard key={index} {...item} />
+              {recentAnalyses.map((item) => (
+                <RecentAnalysisCard 
+                  key={item.id} 
+                  imageUrl={item.imageUrl}
+                  foodName={item.foodName}
+                  time={item.timestamp}
+                  calories={item.caloriesValue}
+                  protein={item.proteinValue}
+                  carbs={item.carbsValue}
+                  fats={item.fatsValue}
+                />
               ))}
             </div>
           ) : (

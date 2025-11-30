@@ -1,11 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Droplets, HeartPulse } from "lucide-react";
+import { Flame, Droplets, HeartPulse, Beef, Wheat } from "lucide-react";
 
 export type AnalysisResult = {
   foodName: string;
   calories: string;
   sugars: string;
+  protein: string;
+  carbs: string;
+  fats: string;
   healthRating: 'Saludable' | 'Moderado' | 'Evitar';
   reason: string;
 };
@@ -38,10 +41,27 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
             <p className="text-lg font-bold text-foreground">{result.calories}</p>
             <p className="text-sm text-muted-foreground">Calorías</p>
           </div>
-          <div className="p-4 bg-muted rounded-lg">
-            <Droplets className="w-6 h-6 mx-auto text-primary mb-1" />
+           <div className="p-4 bg-muted rounded-lg">
+            <Droplets className="w-6 h-6 mx-auto text-blue-400 mb-1" />
             <p className="text-lg font-bold text-foreground">{result.sugars}</p>
             <p className="text-sm text-muted-foreground">Azúcares</p>
+          </div>
+        </div>
+         <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="p-3 bg-muted rounded-lg">
+            <Beef className="w-5 h-5 mx-auto text-red-500 mb-1" />
+            <p className="font-bold text-foreground">{result.protein}</p>
+            <p className="text-xs text-muted-foreground">Proteína</p>
+          </div>
+          <div className="p-3 bg-muted rounded-lg">
+            <Wheat className="w-5 h-5 mx-auto text-orange-500 mb-1" />
+            <p className="font-bold text-foreground">{result.carbs}</p>
+            <p className="text-xs text-muted-foreground">Carbs</p>
+          </div>
+          <div className="p-3 bg-muted rounded-lg">
+            <Droplets className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
+            <p className="font-bold text-foreground">{result.fats}</p>
+            <p className="text-xs text-muted-foreground">Grasas</p>
           </div>
         </div>
         <div>

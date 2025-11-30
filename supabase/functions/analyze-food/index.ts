@@ -6,7 +6,7 @@ const corsHeaders = {
 };
 
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${GEMINI_API_KEY}`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -24,9 +24,12 @@ serve(async (req) => {
       {
         "foodName": "Nombre del plato o comida principal",
         "calories": "Estimación de calorías (ej. '350-450 kcal')",
+        "protein": "Estimación de proteínas (ej. '20-25g')",
+        "carbs": "Estimación de carbohidratos (ej. '30-40g')",
+        "fats": "Estimación de grasas (ej. '15-20g')",
         "sugars": "Estimación de azúcares (ej. '10-15g')",
         "healthRating": "Clasificación de salud ('Saludable', 'Moderado', o 'Evitar')",
-        "reason": "Una breve explicación de por qué le diste esa clasificación."
+        "reason": "Una breve explicación (máximo 20 palabras) de por qué le diste esa clasificación."
       }
     `;
 
@@ -44,6 +47,9 @@ serve(async (req) => {
           ],
         },
       ],
+       "generationConfig": {
+        "responseMimeType": "application/json",
+      }
     };
 
     const geminiResponse = await fetch(GEMINI_API_URL, {
@@ -60,10 +66,7 @@ serve(async (req) => {
 
     const responseData = await geminiResponse.json();
     const jsonText = responseData.candidates[0].content.parts[0].text;
-    
-    // Limpiar el texto para asegurarse de que es un JSON válido
-    const cleanedJson = jsonText.replace(/```json/g, "").replace(/```/g, "").trim();
-    const analysisResult = JSON.parse(cleanedJson);
+    const analysisResult = JSON.parse(jsonText);
 
     return new Response(JSON.stringify(analysisResult), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
