@@ -11,6 +11,13 @@ import { Link } from 'react-router-dom';
 
 const Logo = () => <Leaf className="w-12 h-12 text-primary" />;
 
+const GoogleIcon = () => (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4">
+    <title>Google</title>
+    <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.62 2.04-4.82 2.04-5.82 0-9.6-4.16-9.6-9.6s3.78-9.6 9.6-9.6c2.93 0 5.32 1.15 6.92 2.68L22 2.92C19.43 1.12 16.25 0 12.48 0 5.88 0 .02 5.82.02 12.54s5.86 12.54 12.46 12.54c3.33 0 6.08-1.06 8.04-3.02 2.05-2.05 2.98-5.08 2.98-8.58 0-.77-.08-1.48-.2-2.16H12.48z" fill="currentColor"/>
+  </svg>
+);
+
 export default function Login() {
   const [isSignUp, setIsSignUp] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -60,6 +67,17 @@ export default function Login() {
     setLoading(false);
   };
 
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+    });
+    if (error) {
+      toast.error(error.message);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <div className="w-full max-w-md">
@@ -75,7 +93,7 @@ export default function Login() {
               </p>
             </div>
           </CardHeader>
-          <CardContent className="space-y-6 px-8">
+          <CardContent className="px-8">
             <form onSubmit={handleAuthAction} className="space-y-6">
               {isSignUp && (
                 <div className="grid grid-cols-2 gap-4">
@@ -136,8 +154,25 @@ export default function Login() {
                 {isSignUp ? 'Crear cuenta gratis' : 'Iniciar Sesión'}
               </Button>
             </form>
+            
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">
+                  O
+                </span>
+              </div>
+            </div>
+
+            <Button variant="outline" className="w-full" onClick={signInWithGoogle} disabled={loading}>
+              <GoogleIcon />
+              Continuar con Google
+            </Button>
+
           </CardContent>
-          <CardFooter className="flex justify-center border-t !py-4">
+          <CardFooter className="flex justify-center border-t !py-4 mt-6">
             <p className="text-center text-sm text-muted-foreground">
               {isSignUp ? '¿Ya tienes una cuenta?' : '¿No tienes una cuenta?'}
               <Button variant="link" className="pl-1" onClick={() => setIsSignUp(!isSignUp)}>
