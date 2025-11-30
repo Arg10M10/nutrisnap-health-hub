@@ -1,38 +1,42 @@
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-
 interface MacroProgressCircleProps {
   value: number;
   color: string;
   size?: 'large' | 'small';
 }
 
-const MacroProgressCircle = ({ value, color, size = 'small' }: MacroProgressCircleProps) => {
+const MacroProgressCircle = ({ value, color }: MacroProgressCircleProps) => {
   const cappedValue = Math.min(Math.max(value, 0), 100);
-  const data = [
-    { name: 'value', value: cappedValue },
-    { name: 'empty', value: 100 - cappedValue },
-  ];
+  const radius = 45;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (cappedValue / 100) * circumference;
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <PieChart>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          dataKey="value"
-          innerRadius={'70%'}
-          outerRadius={'100%'}
-          startAngle={90}
-          endAngle={-270}
-          paddingAngle={0}
-          cornerRadius={50}
-        >
-          <Cell fill={color} stroke={color} />
-          <Cell fill="hsl(var(--muted))" stroke="hsl(var(--muted))" />
-        </Pie>
-      </PieChart>
-    </ResponsiveContainer>
+    <svg className="w-full h-full" viewBox="0 0 100 100">
+      <circle
+        stroke="hsl(var(--muted))"
+        strokeWidth="10"
+        fill="transparent"
+        r={radius}
+        cx="50"
+        cy="50"
+      />
+      <circle
+        stroke={color}
+        strokeWidth="10"
+        strokeLinecap="round"
+        fill="transparent"
+        r={radius}
+        cx="50"
+        cy="50"
+        style={{
+          strokeDasharray: circumference,
+          strokeDashoffset: offset,
+          transform: 'rotate(-90deg)',
+          transformOrigin: '50% 50%',
+          transition: 'stroke-dashoffset 0.3s ease-in-out',
+        }}
+      />
+    </svg>
   );
 };
 
