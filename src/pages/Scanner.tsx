@@ -15,7 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { cn } from "@/lib/utils";
-import { BarcodeScanner } from "react-zxing";
+import BarcodeScanner from "react-zxing";
 
 type ScannerState = "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
