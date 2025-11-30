@@ -2,7 +2,7 @@ import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Flame, Leaf, Beef, Wheat, Droplets } from "lucide-react";
+import { Flame, Leaf, Beef, Wheat, Droplets, ScanLine } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MacroProgressCircle from "@/components/MacroProgressCircle";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
@@ -24,26 +24,8 @@ const Index = () => {
     fats: 0,
   });
 
-  const recentItems = [
-    {
-      imageUrl: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=2080&auto=format&fit=crop",
-      foodName: "Ensalada Fresca",
-      time: "12:57pm",
-      calories: 253,
-      protein: 12,
-      carbs: 10,
-      fats: 15,
-    },
-    {
-      imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1981&auto=format&fit=crop",
-      foodName: "Pizza de Pepperoni",
-      time: "11:31am",
-      calories: 455,
-      protein: 20,
-      carbs: 45,
-      fats: 22,
-    },
-  ];
+  // State for recent items, starting empty
+  const [recentItems, setRecentItems] = useState<any[]>([]);
 
   // Calculations
   const caloriesRemaining = dailyGoals.calories - currentIntake.calories;
@@ -134,11 +116,19 @@ const Index = () => {
         {/* Recent Analysis */}
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold">Análisis Recientes</h2>
-          <div className="space-y-3">
-            {recentItems.map((item, index) => (
-              <RecentAnalysisCard key={index} {...item} />
-            ))}
-          </div>
+          {recentItems.length > 0 ? (
+            <div className="space-y-3">
+              {recentItems.map((item, index) => (
+                <RecentAnalysisCard key={index} {...item} />
+              ))}
+            </div>
+          ) : (
+            <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
+              <ScanLine className="w-12 h-12 text-muted-foreground/50" />
+              <p className="text-muted-foreground">No has analizado nada hoy.</p>
+              <p className="text-sm text-muted-foreground">¡Usa el escáner para empezar!</p>
+            </Card>
+          )}
         </div>
       </div>
     </PageLayout>
