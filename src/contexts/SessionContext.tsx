@@ -4,9 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type Profile = {
   id: string;
-  full_name: string;
-  onboarding_completed: boolean;
-  [key: string]: any;
+  full_name: string | null;
 };
 
 interface SessionContextValue {
@@ -48,7 +46,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
       if (session?.user) {
         const { data: profileData } = await supabase
           .from("profiles")
-          .select("*")
+          .select("id, full_name")
           .eq("id", session.user.id)
           .single();
         setProfile(profileData);
@@ -56,9 +54,6 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         setProfile(null);
       }
       
-      // This is the key: the listener fires on page load.
-      // After it runs for the first time, we know the initial auth state,
-      // so we can safely stop the loading indicator.
       setLoading(false);
     });
 

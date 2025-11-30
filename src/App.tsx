@@ -12,7 +12,6 @@ import Missions from "./pages/Missions";
 import Diets from "./pages/Diets";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
-import Onboarding from "./pages/Onboarding";
 import SplashScreen from "./components/SplashScreen";
 
 const queryClient = new QueryClient();
@@ -32,7 +31,7 @@ const App = () => (
 );
 
 const AppContent = () => {
-  const { session, profile, loading } = useSession();
+  const { session, loading } = useSession();
   const location = useLocation();
 
   if (loading) {
@@ -48,15 +47,6 @@ const AppContent = () => {
     );
   }
 
-  if (profile && !profile.onboarding_completed) {
-    return (
-      <Routes>
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route path="*" element={<Navigate to="/onboarding" replace />} />
-      </Routes>
-    );
-  }
-
   return (
     <Routes>
       <Route path="/" element={<Index />} />
@@ -65,7 +55,6 @@ const AppContent = () => {
       <Route path="/missions" element={<Missions />} />
       <Route path="/diets" element={<Diets />} />
       <Route path="/login" element={<Navigate to="/" replace />} />
-      <Route path="/onboarding" element={<Navigate to="/" replace />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
