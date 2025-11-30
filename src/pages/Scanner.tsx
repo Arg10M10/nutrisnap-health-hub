@@ -9,7 +9,7 @@ import {
   AlertTriangle,
   X,
   Image as ImageIcon,
-  CameraReverse,
+  FlipHorizontal,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
@@ -223,8 +223,8 @@ const Scanner = () => {
                 className="w-20 h-20 rounded-full border-4 border-white bg-white/30 active:bg-white/50 transition-colors"
                 aria-label="Tomar foto"
               />
-              <Button variant="ghost" size="icon" className="w-16 h-16">
-                <CameraReverse className="w-8 h-8 text-white" />
+              <Button variant="ghost" size="icon" className="w-16 h-16" onClick={() => toast.info("Próximamente", { description: "La función para cambiar de cámara estará disponible pronto." })}>
+                <FlipHorizontal className="w-8 h-8 text-white" />
               </Button>
             </div>
           </div>
