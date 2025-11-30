@@ -1,36 +1,43 @@
 import { useState, useRef, useEffect } from "react";
-import PageLayout from "@/components/PageLayout";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Camera, Scan, RefreshCw, Loader2, AlertTriangle, Upload } from "lucide-react";
+import {
+  Camera,
+  Scan,
+  RefreshCw,
+  Loader2,
+  AlertTriangle,
+  X,
+  Image as ImageIcon,
+  CameraReverse,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
+import { cn } from "@/lib/utils";
 
-type ScannerState = "idle" | "camera" | "captured" | "loading" | "result" | "error";
+type ScannerState = "camera" | "captured" | "loading" | "result" | "error";
+type ScanMode = "food" | "barcode";
 
 const Scanner = () => {
-  const [state, setState] = useState<ScannerState>("idle");
+  const [state, setState] = useState<ScannerState>("camera");
+  const [scanMode, setScanMode] = useState<ScanMode>("food");
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
-
   const streamRef = useRef<MediaStream | null>(null);
+  const navigate = useNavigate();
 
   const stopCamera = () => {
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
   };
-
-  useEffect(() => {
-    return () => stopCamera();
-  }, []);
 
   const startCamera = async () => {
     try {
@@ -52,6 +59,11 @@ const Scanner = () => {
       setState("error");
     }
   };
+
+  useEffect(() => {
+    startCamera();
+    return () => stopCamera();
+  }, []);
 
   const handleCapture = () => {
     if (videoRef.current && canvasRef.current) {
@@ -121,88 +133,118 @@ const Scanner = () => {
   };
 
   const handleReset = () => {
-    stopCamera();
     setAnalysisResult(null);
     setCapturedImage(null);
     setError(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-    setState("idle");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    startCamera();
   };
 
+  const handleClose = () => navigate(-1);
+
   return (
-    <PageLayout>
-      <div className="space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-primary">Escanear Comida</h1>
-          <p className="text-muted-foreground text-lg">
-            Toma una foto de tu comida para obtener un análisis nutricional
-          </p>
-        </div>
-
-        <Card className="aspect-square bg-muted rounded-3xl flex items-center justify-center overflow-hidden relative">
-          {state === "idle" && (
-            <div className="text-center space-y-4 p-4">
-              <div className="flex items-center justify-center gap-8 text-muted-foreground">
-                <Camera className="w-20 h-20" />
-                <Upload className="w-20 h-20" />
-              </div>
-              <p className="text-lg text-muted-foreground">Usa tu cámara o sube una foto</p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button onClick={startCamera} size="lg"><Camera className="mr-2 w-5 h-5" /> Activar Cámara</Button>
-                <Button onClick={handleUploadClick} size="lg" variant="outline"><Upload className="mr-2 w-5 h-5" /> Subir Foto</Button>
-              </div>
-            </div>
-          )}
-          {(state === "camera" || state === "captured") && (
-            <video ref={videoRef} autoPlay playsInline className={`w-full h-full object-cover ${state === 'camera' ? 'block' : 'hidden'}`} />
-          )}
-          {state === "captured" && capturedImage && (
-            <img src={capturedImage} alt="Captured food" className="w-full h-full object-cover" />
-          )}
-          {state === "loading" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4">
-              <Loader2 className="w-16 h-16 text-primary animate-spin" />
-              <p className="text-primary-foreground text-lg">Analizando...</p>
-            </div>
-          )}
-          {state === "result" && analysisResult && (
-             <div className="w-full h-full p-4 bg-background flex items-center justify-center">
-                <img src={capturedImage!} alt="Analyzed food" className="absolute inset-0 w-full h-full object-cover opacity-10" />
-                <div className="relative z-10 w-full">
-                    <FoodAnalysisCard result={analysisResult} />
-                </div>
-             </div>
-          )}
-          {state === "error" && (
-            <div className="text-center space-y-4 p-4">
-              <AlertTriangle className="w-24 h-24 text-destructive mx-auto" />
-              <p className="text-destructive-foreground font-semibold">{error}</p>
-            </div>
-          )}
-        </Card>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept="image/*"
-          className="hidden"
+    <div className="fixed inset-0 bg-black text-white z-50">
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        className={cn(
+          "w-full h-full object-cover transition-opacity duration-300",
+          state === "camera" ? "opacity-100" : "opacity-0"
+        )}
+      />
+      {capturedImage && (
+        <img
+          src={capturedImage}
+          alt="Comida capturada"
+          className="w-full h-full object-cover"
         />
-        <canvas ref={canvasRef} className="hidden" />
+      )}
 
-        <div className="space-y-3">
-          {state === "camera" && <Button onClick={handleCapture} size="lg" className="w-full h-16 text-lg rounded-2xl"><Camera className="mr-2 w-6 h-6" /> Tomar Foto</Button>}
-          {state === "captured" && (
-            <div className="grid grid-cols-2 gap-3">
-              <Button onClick={handleReset} variant="outline" size="lg" className="h-16 text-lg rounded-2xl"><RefreshCw className="mr-2 w-6 h-6" /> Repetir</Button>
-              <Button onClick={handleAnalyze} size="lg" className="h-16 text-lg rounded-2xl"><Scan className="mr-2 w-6 h-6" /> Analizar</Button>
-            </div>
-          )}
-          {(state === "result" || state === "error") && <Button onClick={handleReset} size="lg" className="w-full h-16 text-lg rounded-2xl"><RefreshCw className="mr-2 w-6 h-6" /> Escanear de Nuevo</Button>}
+      {/* Overlays for different states */}
+      {state === "loading" && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4">
+          <Loader2 className="w-16 h-16 text-primary animate-spin" />
+          <p className="text-primary-foreground text-lg">Analizando...</p>
         </div>
+      )}
+      {state === "result" && analysisResult && (
+        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-4 space-y-6">
+          <FoodAnalysisCard result={analysisResult} />
+          <Button onClick={handleReset} size="lg" className="w-full max-w-sm h-14 text-lg">
+            <RefreshCw className="mr-2 w-6 h-6" /> Escanear de Nuevo
+          </Button>
+        </div>
+      )}
+      {state === "error" && (
+        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-4 text-center space-y-6">
+          <AlertTriangle className="w-24 h-24 text-destructive" />
+          <p className="text-xl font-semibold">{error}</p>
+          <Button onClick={handleReset} size="lg" className="w-full max-w-sm h-14 text-lg">
+            <RefreshCw className="mr-2 w-6 h-6" /> Intentar de Nuevo
+          </Button>
+        </div>
+      )}
+
+      {/* UI Controls */}
+      <div className="absolute inset-0 flex flex-col justify-between p-6 pointer-events-none">
+        {state !== "captured" && (
+          <div className="flex justify-end pointer-events-auto">
+            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70">
+              <X className="w-6 h-6 text-white" />
+            </Button>
+          </div>
+        )}
+
+        {state === "camera" && (
+          <div className="flex flex-col items-center gap-6 pointer-events-auto">
+            <div className="bg-black/50 rounded-full p-1 flex gap-1">
+              <Button
+                onClick={() => setScanMode("food")}
+                variant={scanMode === "food" ? "default" : "ghost"}
+                className="rounded-full text-white"
+              >
+                Comida
+              </Button>
+              <Button
+                onClick={() => toast.info("Próximamente", { description: "El escaneo de código de barras estará disponible pronto." })}
+                variant="ghost"
+                className="rounded-full text-white/70"
+              >
+                Código de Barras
+              </Button>
+            </div>
+            <div className="flex items-center justify-around w-full">
+              <Button variant="ghost" size="icon" className="w-16 h-16" onClick={handleUploadClick}>
+                <ImageIcon className="w-8 h-8 text-white" />
+              </Button>
+              <button
+                onClick={handleCapture}
+                className="w-20 h-20 rounded-full border-4 border-white bg-white/30 active:bg-white/50 transition-colors"
+                aria-label="Tomar foto"
+              />
+              <Button variant="ghost" size="icon" className="w-16 h-16">
+                <CameraReverse className="w-8 h-8 text-white" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {state === "captured" && (
+          <div className="grid grid-cols-2 gap-4 pointer-events-auto">
+            <Button onClick={handleReset} variant="secondary" size="lg" className="h-16 text-lg rounded-2xl">
+              <RefreshCw className="mr-2 w-6 h-6" /> Repetir
+            </Button>
+            <Button onClick={handleAnalyze} size="lg" className="h-16 text-lg rounded-2xl">
+              <Scan className="mr-2 w-6 h-6" /> Analizar
+            </Button>
+          </div>
+        )}
       </div>
-    </PageLayout>
+
+      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
+      <canvas ref={canvasRef} className="hidden" />
+    </div>
   );
 };
 
