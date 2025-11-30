@@ -1,14 +1,14 @@
-import { Input } from '@/components/ui/input';
+import { NumberPicker } from '@/components/onboarding/NumberPicker';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface MetricsStepProps {
   units: 'metric' | 'imperial';
   setUnits: (units: 'metric' | 'imperial') => void;
-  weight: string;
-  setWeight: (weight: string) => void;
-  height: string;
-  setHeight: (height: string) => void;
+  weight: number | null;
+  setWeight: (weight: number) => void;
+  height: number | null;
+  setHeight: (height: number) => void;
 }
 
 export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHeight }: MetricsStepProps) => {
@@ -25,15 +25,23 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
         </div>
       </RadioGroup>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="height" className="text-lg">Altura ({units === 'metric' ? 'cm' : 'in'})</Label>
-          <Input id="height" type="number" value={height} onChange={(e) => setHeight(e.target.value)} className="h-14 text-lg text-center" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="weight" className="text-lg">Peso ({units === 'metric' ? 'kg' : 'lbs'})</Label>
-          <Input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} className="h-14 text-lg text-center" />
-        </div>
+      <div className="space-y-4">
+        <NumberPicker
+          label="Altura"
+          unit={units === 'metric' ? 'cm' : 'in'}
+          value={height}
+          onValueChange={setHeight}
+          min={units === 'metric' ? 120 : 48}
+          max={units === 'metric' ? 220 : 84}
+        />
+        <NumberPicker
+          label="Peso"
+          unit={units === 'metric' ? 'kg' : 'lbs'}
+          value={weight}
+          onValueChange={setWeight}
+          min={units === 'metric' ? 30 : 65}
+          max={units === 'metric' ? 200 : 440}
+        />
       </div>
     </div>
   );

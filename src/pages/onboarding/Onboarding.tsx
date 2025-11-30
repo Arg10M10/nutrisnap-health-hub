@@ -21,14 +21,14 @@ const Onboarding = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    gender: null,
-    age: '',
-    experience: null,
+    gender: null as string | null,
+    age: null as number | null,
+    experience: null as string | null,
     units: 'metric' as 'metric' | 'imperial',
-    weight: '',
-    height: '',
+    weight: null as number | null,
+    height: null as number | null,
     dob: null as Date | null,
-    goal: null,
+    goal: null as string | null,
   });
 
   const updateFormData = (field: string, value: any) => {
@@ -42,11 +42,11 @@ const Onboarding = () => {
         .from('profiles')
         .update({
           gender: formData.gender,
-          age: parseInt(formData.age),
+          age: formData.age,
           previous_apps_experience: formData.experience,
           units: formData.units,
-          weight: parseFloat(formData.weight),
-          height: parseFloat(formData.height),
+          weight: formData.weight,
+          height: formData.height,
           date_of_birth: formData.dob ? formData.dob.toISOString().split('T')[0] : null,
           goal: formData.goal,
           onboarding_completed: true,
@@ -90,7 +90,7 @@ const Onboarding = () => {
       title: '¿Cuál es tu edad?',
       description: 'Tu edad nos ayuda a calcular tus necesidades calóricas.',
       content: <AgeStep age={formData.age} setAge={(v) => updateFormData('age', v)} />,
-      canContinue: !!formData.age && parseInt(formData.age) > 0,
+      canContinue: formData.age !== null && formData.age > 0,
     },
     {
       title: '¿Has probado otras apps?',
@@ -106,7 +106,7 @@ const Onboarding = () => {
                   weight={formData.weight} setWeight={(v) => updateFormData('weight', v)}
                   height={formData.height} setHeight={(v) => updateFormData('height', v)}
                 />,
-      canContinue: !!formData.weight && !!formData.height,
+      canContinue: formData.weight !== null && formData.height !== null,
     },
     {
       title: '¿Cuándo naciste?',
