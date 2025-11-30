@@ -40,7 +40,7 @@ const Exercises = () => {
   return (
     <PageLayout>
       <div className="space-y-6">
-        <div className="text-center space-y-2 animate-fade-in">
+        <div className="text-center space-y-2">
           <h1 className="text-primary">Ejercicios</h1>
           <p className="text-muted-foreground text-lg">
             Selecciona tu grupo de edad para ver ejercicios recomendados
@@ -48,29 +48,24 @@ const Exercises = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {ageGroups.map((group, i) => (
+          {ageGroups.map((group) => (
             <Button
               key={group.range}
               variant={selectedAge === group.range ? "default" : "outline"}
-              className="h-24 flex-col gap-2 text-base animate-scale-in transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              style={{ animationDelay: `${i * 0.1}s` }}
+              className="h-24 flex-col gap-2 text-base"
               onClick={() => setSelectedAge(group.range)}
             >
-              <span className="text-3xl transition-transform duration-300 hover:scale-110">{group.icon}</span>
+              <span className="text-3xl">{group.icon}</span>
               {group.label}
             </Button>
           ))}
         </div>
 
         {selectedAge && (
-          <div className="space-y-4">
-            <h2 className="text-foreground animate-fade-in">Ejercicios Recomendados</h2>
+          <div className="space-y-4 animate-in fade-in-50 duration-300">
+            <h2 className="text-foreground">Ejercicios Recomendados</h2>
             {exercises[selectedAge as keyof typeof exercises].map((exercise, i) => (
-              <Card 
-                key={i} 
-                className="p-6 animate-fade-in-up transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
+              <Card key={i} className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-foreground mb-2">{exercise.name}</h3>
@@ -78,7 +73,7 @@ const Exercises = () => {
                       {exercise.intensity}
                     </span>
                   </div>
-                  <Dumbbell className="w-8 h-8 text-primary transition-transform duration-300 hover:rotate-12" />
+                  <Dumbbell className="w-8 h-8 text-primary" />
                 </div>
                 <div className="flex gap-6 text-muted-foreground">
                   <div className="flex items-center gap-2">
@@ -86,7 +81,7 @@ const Exercises = () => {
                     <span className="text-base">{exercise.duration} min</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Flame className="w-5 h-5 transition-transform duration-300 hover:scale-110" />
+                    <Flame className="w-5 h-5" />
                     <span className="text-base">{exercise.calories} cal</span>
                   </div>
                 </div>

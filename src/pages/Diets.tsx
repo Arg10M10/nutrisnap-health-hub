@@ -61,36 +61,32 @@ const Diets = () => {
   return (
     <PageLayout>
       <div className="space-y-6">
-        <div className="text-center space-y-2 animate-fade-in">
+        <div className="text-center space-y-2">
           <h1 className="text-primary">Tipos de Dietas</h1>
           <p className="text-muted-foreground text-lg">
             Descubre y guarda las dietas que más te convengan
           </p>
         </div>
 
-        <Card className="p-6 bg-gradient-to-br from-secondary/10 to-primary/10 border-secondary/20 animate-scale-in transition-all duration-300 hover:shadow-xl">
+        <Card className="p-6 bg-gradient-to-br from-secondary/10 to-primary/10 border-secondary/20">
           <div className="flex items-center gap-3 mb-2">
-            <Bookmark className="w-6 h-6 text-secondary transition-transform duration-300 hover:scale-110" />
+            <Bookmark className="w-6 h-6 text-secondary" />
             <h3 className="text-foreground">Mis Dietas Guardadas</h3>
           </div>
-          <p className="text-2xl font-bold text-secondary animate-bounce-in" style={{ animationDelay: "0.2s" }}>
+          <p className="text-2xl font-bold text-secondary">
             {savedDiets.length} {savedDiets.length === 1 ? "dieta" : "dietas"}
           </p>
         </Card>
 
         <div className="space-y-4">
-          <h2 className="text-foreground animate-fade-in">Explora Dietas</h2>
-          {diets.map((diet, index) => {
+          <h2 className="text-foreground">Explora Dietas</h2>
+          {diets.map((diet) => {
             const isSaved = savedDiets.includes(diet.id);
             return (
-              <Card 
-                key={diet.id} 
-                className="p-6 animate-fade-in-up transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
+              <Card key={diet.id} className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-4xl transition-transform duration-300 hover:scale-125 hover:rotate-12">{diet.icon}</span>
+                    <span className="text-4xl">{diet.icon}</span>
                     <div>
                       <h3 className="text-foreground mb-1">{diet.name}</h3>
                       <p className="text-base text-muted-foreground">
@@ -109,7 +105,7 @@ const Diets = () => {
                     {diet.benefits.map((benefit, i) => (
                       <span
                         key={i}
-                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
+                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
                       >
                         {benefit}
                       </span>
@@ -120,16 +116,16 @@ const Diets = () => {
                 <Button
                   onClick={() => handleToggleSave(diet.id, diet.name)}
                   variant={isSaved ? "default" : "outline"}
-                  className="w-full h-12 text-base transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  className="w-full h-12 text-base"
                 >
                   {isSaved ? (
                     <>
-                      <Heart className="mr-2 w-5 h-5 fill-current animate-bounce-in" />
+                      <Heart className="mr-2 w-5 h-5 fill-current" />
                       Guardado
                     </>
                   ) : (
                     <>
-                      <Heart className="mr-2 w-5 h-5 transition-transform duration-300 hover:scale-110" />
+                      <Heart className="mr-2 w-5 h-5" />
                       Guardar Dieta
                     </>
                   )}

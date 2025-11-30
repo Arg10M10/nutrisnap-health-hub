@@ -67,38 +67,37 @@ const Missions = () => {
   return (
     <PageLayout>
       <div className="space-y-6">
-        <div className="text-center space-y-2 animate-fade-in">
+        <div className="text-center space-y-2">
           <h1 className="text-primary">Misiones Saludables</h1>
           <p className="text-muted-foreground text-lg">
             Completa tus misiones diarias
           </p>
         </div>
 
-        <Card className="p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20 animate-scale-in transition-all duration-300 hover:shadow-xl">
+        <Card className="p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-foreground mb-1">Progreso Diario</h3>
-              <p className="text-3xl font-bold text-primary animate-bounce-in" style={{ animationDelay: "0.2s" }}>
+              <p className="text-3xl font-bold text-primary">
                 {earnedPoints}/{totalPoints}
               </p>
               <p className="text-sm text-muted-foreground">puntos</p>
             </div>
-            <Trophy className="w-16 h-16 text-primary transition-transform duration-300 hover:scale-110 hover:rotate-12" />
+            <Trophy className="w-16 h-16 text-primary" />
           </div>
-          <Progress value={progress} className="h-3 transition-all duration-500" />
+          <Progress value={progress} className="h-3" />
         </Card>
 
         <div className="space-y-4">
-          <h2 className="text-foreground animate-fade-in">Misiones de Hoy</h2>
-          {missions.map((mission, i) => {
+          <h2 className="text-foreground">Misiones de Hoy</h2>
+          {missions.map((mission) => {
             const isCompleted = completedMissions.includes(mission.id);
             return (
               <Card
                 key={mission.id}
-                className={`p-6 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] animate-fade-in-up ${
+                className={`p-6 transition-all ${
                   isCompleted ? "bg-primary/5 border-primary/30" : ""
                 }`}
-                style={{ animationDelay: `${i * 0.1}s` }}
               >
                 <div className="flex items-start gap-4">
                   <Checkbox
@@ -106,21 +105,21 @@ const Missions = () => {
                     onCheckedChange={() =>
                       handleToggleMission(mission.id, mission.points)
                     }
-                    className="mt-1 w-6 h-6 transition-transform duration-300 hover:scale-110"
+                    className="mt-1 w-6 h-6"
                   />
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-3xl transition-transform duration-300 hover:scale-125">{mission.icon}</span>
+                        <span className="text-3xl">{mission.icon}</span>
                         <h3
-                          className={`text-foreground transition-all duration-300 ${
+                          className={`text-foreground ${
                             isCompleted ? "line-through text-muted-foreground" : ""
                           }`}
                         >
                           {mission.title}
                         </h3>
                       </div>
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-primary/10 text-primary transition-transform duration-300 hover:scale-110">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-primary/10 text-primary">
                         +{mission.points}
                       </span>
                     </div>

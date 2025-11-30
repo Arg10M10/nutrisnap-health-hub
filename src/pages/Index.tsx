@@ -48,12 +48,12 @@ const Index = () => {
     <PageLayout>
       <div className="space-y-8">
         {/* Header */}
-        <div className="text-center space-y-3 pt-4 animate-fade-in">
+        <div className="text-center space-y-3 pt-4">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Leaf className="w-10 h-10 text-primary animate-bounce-in" />
-            <h1 className="text-primary animate-fade-in-up">NutriSnap</h1>
+            <Leaf className="w-10 h-10 text-primary" />
+            <h1 className="text-primary">NutriSnap</h1>
           </div>
-          <p className="text-xl text-muted-foreground animate-fade-in" style={{ animationDelay: "0.1s" }}>
+          <p className="text-xl text-muted-foreground">
             Tu compañero de salud diario
           </p>
         </div>
@@ -61,12 +61,8 @@ const Index = () => {
         {/* Stats Cards */}
         <div className="grid grid-cols-3 gap-3">
           {stats.map((stat, i) => (
-            <Card 
-              key={i} 
-              className="p-4 text-center animate-scale-in transition-all duration-300 hover:scale-105 hover:shadow-lg" 
-              style={{ animationDelay: `${i * 0.1}s` }}
-            >
-              <stat.icon className="w-6 h-6 text-primary mx-auto mb-2 transition-transform duration-300 hover:scale-110" />
+            <Card key={i} className="p-4 text-center">
+              <stat.icon className="w-6 h-6 text-primary mx-auto mb-2" />
               <p className="text-2xl font-bold text-foreground mb-1">{stat.value}</p>
               <p className="text-xs text-muted-foreground">{stat.label}</p>
             </Card>
@@ -75,20 +71,19 @@ const Index = () => {
 
         {/* Quick Actions */}
         <div className="space-y-4">
-          <h2 className="text-foreground animate-fade-in">Acciones Rápidas</h2>
+          <h2 className="text-foreground">Acciones Rápidas</h2>
           <div className="grid gap-4">
             {quickActions.map((action, i) => (
               <Button
                 key={i}
                 variant="outline"
-                className="h-auto p-0 overflow-hidden animate-fade-in-up"
-                style={{ animationDelay: `${(i + 3) * 0.1}s` }}
+                className="h-auto p-0 overflow-hidden"
                 onClick={() => navigate(action.path)}
               >
-                <Card className="w-full p-6 border-0 shadow-none hover:bg-muted/50 transition-all duration-300 hover:shadow-lg">
+                <Card className="w-full p-6 border-0 shadow-none hover:bg-muted/50 transition-colors">
                   <div className="flex items-center gap-4">
-                    <div className={`p-4 rounded-2xl ${action.color} transition-transform duration-300 hover:scale-110`}>
-                      <action.icon className="w-8 h-8 transition-transform duration-300" />
+                    <div className={`p-4 rounded-2xl ${action.color}`}>
+                      <action.icon className="w-8 h-8" />
                     </div>
                     <div className="text-left flex-1">
                       <h3 className="text-foreground mb-1">{action.title}</h3>
@@ -104,9 +99,9 @@ const Index = () => {
         </div>
 
         {/* Daily Tip */}
-        <Card className="p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20 animate-fade-in-up transition-all duration-300 hover:shadow-lg" style={{ animationDelay: "0.7s" }}>
+        <Card className="p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20">
           <div className="flex items-start gap-3">
-            <div className="text-3xl animate-bounce-in" style={{ animationDelay: "0.8s" }}>💡</div>
+            <div className="text-3xl">💡</div>
             <div>
               <h3 className="text-foreground mb-2">Consejo del Día</h3>
               <p className="text-base text-muted-foreground">
