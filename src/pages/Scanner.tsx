@@ -301,46 +301,60 @@ const Scanner = () => {
           ) : state === 'camera' ? (
             <>
               {/* Scan Mode Selector */}
-              <div className="flex items-center justify-center gap-2 bg-black/30 p-1 rounded-full backdrop-blur-sm">
+              <div className="flex items-center justify-center gap-2 bg-black/50 p-1 rounded-2xl backdrop-blur-sm">
                 <Button
                   onClick={() => setScanMode("food")}
                   variant="ghost"
                   className={cn(
-                    "rounded-full px-6 h-12 text-base font-semibold transition-colors",
-                    scanMode === "food" ? "bg-white text-black hover:bg-gray-200" : "text-white hover:bg-white/10"
+                    "flex items-center justify-center gap-2 rounded-xl px-6 py-3 h-16 text-base font-semibold transition-all",
+                    scanMode === "food"
+                      ? "bg-white text-black hover:bg-gray-200"
+                      : "bg-transparent text-white hover:bg-white/10"
                   )}
                 >
+                  <Scan className="w-6 h-6" />
                   Escanear comida
                 </Button>
                 <Button
                   onClick={() => setScanMode("barcode")}
                   variant="ghost"
                   className={cn(
-                    "rounded-full px-6 h-12 text-base font-semibold transition-colors",
-                    scanMode === "barcode" ? "bg-white text-black hover:bg-gray-200" : "text-white hover:bg-white/10"
+                    "flex items-center justify-center gap-2 rounded-xl px-6 py-3 h-16 text-base font-semibold transition-all",
+                    scanMode === "barcode"
+                      ? "bg-white text-black hover:bg-gray-200"
+                      : "bg-transparent text-white hover:bg-white/10"
                   )}
                 >
+                  <ScanLine className="w-6 h-6" />
                   Código de barras
                 </Button>
               </div>
 
               {/* Action Buttons */}
               <div className="flex items-center justify-around w-full max-w-md">
-                <Button variant="ghost" size="icon" onClick={() => toast.info("Flash no disponible")} className="rounded-full bg-black/50 hover:bg-black/70 w-16 h-16">
-                  <ZapOff className="w-7 h-7 text-white" />
-                </Button>
+                <button
+                  onClick={() => toast.info("Flash no disponible")}
+                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                  aria-label="Activar flash"
+                >
+                  <ZapOff className="w-8 h-8 text-white" />
+                </button>
                 
                 {scanMode === 'food' && (
                   <button
                     onClick={handleCapture}
-                    className="w-20 h-20 rounded-full border-4 border-black bg-white active:bg-gray-200 transition-colors ring-4 ring-white/30"
+                    className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-colors"
                     aria-label="Tomar foto"
                   />
                 )}
                 
-                <Button variant="ghost" size="icon" onClick={handleUploadClick} className="rounded-full bg-black/50 hover:bg-black/70 w-16 h-16">
-                  <ImageIcon className="w-7 h-7 text-white" />
-                </Button>
+                <button
+                  onClick={handleUploadClick}
+                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                  aria-label="Subir imagen"
+                >
+                  <ImageIcon className="w-8 h-8 text-white" />
+                </button>
               </div>
             </>
           ) : null}
