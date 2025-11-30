@@ -14,6 +14,7 @@ import Progress from "./pages/Progress";
 import Diets from "./pages/Diets";
 import NotFound from "./pages/NotFound";
 import AnalysisResultPage from "@/pages/AnalysisResult";
+import BarcodeResultPage from "@/pages/BarcodeResult";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Onboarding from "./pages/onboarding/Onboarding";
@@ -55,6 +56,7 @@ const AppRoutes = () => {
       <Route path="/progress" element={<Progress />} />
       <Route path="/diets" element={<Diets />} />
       <Route path="/analysis-result" element={<AnalysisResultPage />} />
+      <Route path="/barcode-result" element={<BarcodeResultPage />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

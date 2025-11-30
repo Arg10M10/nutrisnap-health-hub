@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { cn } from "@/lib/utils";
+import { BarcodeScanner } from "react-zxing";
 
 type ScannerState = "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -61,9 +62,21 @@ const Scanner = () => {
   };
 
   useEffect(() => {
-    startCamera();
+    if (scanMode === 'food') {
+      startCamera();
+    } else {
+      stopCamera();
+    }
     return () => stopCamera();
-  }, []);
+  }, [scanMode]);
+
+  const handleBarcodeScan = (result: any) => {
+    if (result) {
+      const barcode = result.getText();
+      toast.success(`Código de barras detectado: ${barcode}`);
+      navigate('/barcode-result', { state: { barcode } });
+    }
+  };
 
   const handleCapture = () => {
     if (videoRef.current && canvasRef.current) {
@@ -90,7 +103,7 @@ const Scanner = () => {
       canvas.height = height;
       const context = canvas.getContext("2d");
       context?.drawImage(video, 0, 0, width, height);
-      const imageData = canvas.toDataURL("image/jpeg", 0.8); // Compress to 80% quality
+      const imageData = canvas.toDataURL("image/jpeg", 0.8);
       setCapturedImage(imageData);
       stopCamera();
       setState("captured");
@@ -171,23 +184,37 @@ const Scanner = () => {
     setCapturedImage(null);
     setError(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
-    startCamera();
+    if (scanMode === 'food') {
+      startCamera();
+    }
   };
 
   const handleClose = () => navigate(-1);
 
   return (
     <div className="fixed inset-0 bg-black text-white z-50">
-      {/* Camera View */}
+      {/* Camera View for Food */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
         className={cn(
           "absolute inset-0 w-full h-full object-cover",
-          state !== "camera" && "hidden"
+          state !== "camera" || scanMode !== 'food',
+          "hidden"
         )}
       />
+      {/* Barcode Scanner View */}
+      {state === "camera" && scanMode === 'barcode' && (
+        <BarcodeScanner
+          onResult={handleBarcodeScan}
+          onError={(error) => {
+            console.error(error);
+            toast.error("Error del escáner de códigos.");
+          }}
+        />
+      )}
+
       {/* Captured Image Preview */}
       {capturedImage && (
         <img
@@ -247,34 +274,41 @@ const Scanner = () => {
                 Comida
               </Button>
               <Button
-                onClick={() => toast.info("Próximamente", { description: "El escaneo de código de barras estará disponible pronto." })}
+                onClick={() => setScanMode("barcode")}
                 variant="ghost"
-                className="rounded-full px-6 h-12 text-base font-semibold bg-black/40 text-white/70 hover:bg-black/60"
+                className={cn(
+                  "rounded-full px-6 h-12 text-base font-semibold transition-colors",
+                  scanMode === "barcode"
+                    ? "bg-white text-black hover:bg-gray-200"
+                    : "bg-black/40 text-white hover:bg-black/60"
+                )}
               >
                 Código de Barras
               </Button>
             </div>
-            <div className="flex items-center justify-around w-full">
-              <button
-                onClick={handleUploadClick}
-                className="w-16 h-16 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
-                aria-label="Subir imagen"
-              >
-                <ImageIcon className="w-8 h-8 text-white" />
-              </button>
-              <button
-                onClick={handleCapture}
-                className="w-20 h-20 rounded-full border-4 border-white bg-white active:bg-gray-200 transition-colors"
-                aria-label="Tomar foto"
-              />
-              <button
-                onClick={() => toast.info("Próximamente", { description: "La función para cambiar de cámara estará disponible pronto." })}
-                className="w-16 h-16 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
-                aria-label="Cambiar cámara"
-              >
-                <FlipHorizontal className="w-8 h-8 text-white" />
-              </button>
-            </div>
+            {scanMode === 'food' && (
+              <div className="flex items-center justify-around w-full">
+                <button
+                  onClick={handleUploadClick}
+                  className="w-16 h-16 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                  aria-label="Subir imagen"
+                >
+                  <ImageIcon className="w-8 h-8 text-white" />
+                </button>
+                <button
+                  onClick={handleCapture}
+                  className="w-20 h-20 rounded-full border-4 border-white bg-white active:bg-gray-200 transition-colors"
+                  aria-label="Tomar foto"
+                />
+                <button
+                  onClick={() => toast.info("Próximamente", { description: "La función para cambiar de cámara estará disponible pronto." })}
+                  className="w-16 h-16 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                  aria-label="Cambiar cámara"
+                >
+                  <FlipHorizontal className="w-8 h-8 text-white" />
+                </button>
+              </div>
+            )}
           </div>
         )}
 
