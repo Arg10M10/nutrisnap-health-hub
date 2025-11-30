@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,33 @@ const Index = () => {
   const fatsProgress = (currentIntake.fats / dailyGoals.fats) * 100;
   const fatsText = currentIntake.fats > dailyGoals.fats ? "exceso" : "restante";
 
+  const macroCards = [
+    {
+      value: proteinProgress,
+      color: "#ef4444",
+      icon: <Beef className="w-6 h-6 text-red-500" />,
+      current: currentIntake.protein,
+      label: "Proteína",
+      status: proteinText,
+    },
+    {
+      value: carbsProgress,
+      color: "#f97316",
+      icon: <Wheat className="w-6 h-6 text-orange-500" />,
+      current: currentIntake.carbs,
+      label: "Carbs",
+      status: carbsText,
+    },
+    {
+      value: fatsProgress,
+      color: "#3b82f6",
+      icon: <Droplets className="w-6 h-6 text-blue-500" />,
+      current: currentIntake.fats,
+      label: "Grasas",
+      status: fatsText,
+    },
+  ];
+
   return (
     <PageLayout>
       <div className="space-y-6">
@@ -78,39 +106,18 @@ const Index = () => {
 
         {/* Macronutrient Cards */}
         <div className="grid grid-cols-3 gap-4">
-          {/* Protein */}
-          <Card className="p-4 text-center space-y-2">
-            <div className="w-16 h-16 mx-auto relative">
-              <MacroProgressCircle value={proteinProgress} color="#ef4444" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Beef className="w-6 h-6 text-red-500" />
-              </div>
-            </div>
-            <p className="text-xl font-bold text-foreground">{currentIntake.protein}g</p>
-            <p className="text-sm text-muted-foreground">Proteína ({proteinText})</p>
-          </Card>
-          {/* Carbs */}
-          <Card className="p-4 text-center space-y-2">
-            <div className="w-16 h-16 mx-auto relative">
-              <MacroProgressCircle value={carbsProgress} color="#f97316" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Wheat className="w-6 h-6 text-orange-500" />
-              </div>
-            </div>
-            <p className="text-xl font-bold text-foreground">{currentIntake.carbs}g</p>
-            <p className="text-sm text-muted-foreground">Carbs ({carbsText})</p>
-          </Card>
-          {/* Fats */}
-          <Card className="p-4 text-center space-y-2">
-            <div className="w-16 h-16 mx-auto relative">
-              <MacroProgressCircle value={fatsProgress} color="#3b82f6" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Droplets className="w-6 h-6 text-blue-500" />
-              </div>
-            </div>
-            <p className="text-xl font-bold text-foreground">{currentIntake.fats}g</p>
-            <p className="text-sm text-muted-foreground">Grasas ({fatsText})</p>
-          </Card>
+          {macroCards.map((macro, index) => (
+            <motion.div key={index} whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
+              <Card className="p-4 text-center space-y-2 h-full">
+                <div className="w-16 h-16 mx-auto relative">
+                  <MacroProgressCircle value={macro.value} color={macro.color} />
+                  <div className="absolute inset-0 flex items-center justify-center">{macro.icon}</div>
+                </div>
+                <p className="text-xl font-bold text-foreground">{macro.current}g</p>
+                <p className="text-sm text-muted-foreground">{macro.label} ({macro.status})</p>
+              </Card>
+            </motion.div>
+          ))}
         </div>
 
         {/* Recent Analysis */}

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -53,30 +54,20 @@ const Step2 = ({ data, update, next, prev }: Step2Props) => {
                       defaultValue={field.value}
                       className="grid grid-cols-3 gap-4"
                     >
-                      <FormItem>
-                        <FormControl>
-                          <RadioGroupItem value="lose" className="sr-only" />
-                        </FormControl>
-                        <FormLabel className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary">
-                          Bajar de peso
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem>
-                        <FormControl>
-                          <RadioGroupItem value="maintain" className="sr-only" />
-                        </FormControl>
-                        <FormLabel className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary">
-                          Mantenerme
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem>
-                        <FormControl>
-                          <RadioGroupItem value="gain" className="sr-only" />
-                        </FormControl>
-                        <FormLabel className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary">
-                          Subir de peso
-                        </FormLabel>
-                      </FormItem>
+                      {["lose", "maintain", "gain"].map((goal) => (
+                        <FormItem key={goal}>
+                          <FormControl>
+                            <RadioGroupItem value={goal} className="sr-only" />
+                          </FormControl>
+                          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                            <FormLabel className="flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-6 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer transition-colors">
+                              {goal === "lose" && "Bajar"}
+                              {goal === "maintain" && "Mantenerme"}
+                              {goal === "gain" && "Subir"}
+                            </FormLabel>
+                          </motion.div>
+                        </FormItem>
+                      ))}
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />

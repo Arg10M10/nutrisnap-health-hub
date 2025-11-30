@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -31,6 +32,13 @@ const Step3 = ({ data, update, next, prev }: Step3Props) => {
     next();
   }
 
+  const activityLevels = {
+    sedentary: "Poco o nada",
+    light: "Ligero",
+    moderate: "Moderado",
+    active: "Muy activo",
+  };
+
   return (
     <Card className="w-full">
       <CardHeader className="text-center">
@@ -48,23 +56,17 @@ const Step3 = ({ data, update, next, prev }: Step3Props) => {
                 <FormItem className="space-y-3">
                   <FormLabel>Nivel de actividad diaria</FormLabel>
                   <FormControl>
-                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="space-y-2">
-                      <FormItem>
-                        <FormControl><RadioGroupItem value="sedentary" className="sr-only" /></FormControl>
-                        <FormLabel className="flex justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"><span>Poco o nada activo</span></FormLabel>
-                      </FormItem>
-                      <FormItem>
-                        <FormControl><RadioGroupItem value="light" className="sr-only" /></FormControl>
-                        <FormLabel className="flex justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"><span>Ligeramente activo</span></FormLabel>
-                      </FormItem>
-                      <FormItem>
-                        <FormControl><RadioGroupItem value="moderate" className="sr-only" /></FormControl>
-                        <FormLabel className="flex justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"><span>Moderadamente activo</span></FormLabel>
-                      </FormItem>
-                      <FormItem>
-                        <FormControl><RadioGroupItem value="active" className="sr-only" /></FormControl>
-                        <FormLabel className="flex justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"><span>Muy activo</span></FormLabel>
-                      </FormItem>
+                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-4">
+                      {Object.entries(activityLevels).map(([key, value]) => (
+                        <FormItem key={key}>
+                          <FormControl><RadioGroupItem value={key} className="sr-only" /></FormControl>
+                          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                            <FormLabel className="flex items-center justify-center text-center rounded-lg border-2 border-muted bg-popover p-4 h-24 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary cursor-pointer transition-colors">
+                              {value}
+                            </FormLabel>
+                          </motion.div>
+                        </FormItem>
+                      ))}
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
