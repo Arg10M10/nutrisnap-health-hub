@@ -115,13 +115,13 @@ const Index = () => {
               {analyses.map((item) => (
                 <RecentAnalysisCard 
                   key={item.id} 
-                  imageUrl={item.imageUrl}
-                  foodName={item.foodName}
-                  time={format(new Date(item.timestamp), 'p', { locale: es })}
-                  calories={item.caloriesValue}
-                  protein={item.proteinValue}
-                  carbs={item.carbsValue}
-                  fats={item.fatsValue}
+                  imageUrl={item.image_url}
+                  foodName={item.food_name}
+                  time={format(new Date(item.created_at), 'p', { locale: es })}
+                  calories={item.calories_value}
+                  protein={item.protein_value}
+                  carbs={item.carbs_value}
+                  fats={item.fats_value}
                 />
               ))}
             </div>
