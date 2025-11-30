@@ -163,7 +163,7 @@ const Diets = () => {
                             <h4 className="font-semibold text-foreground text-lg">Ejemplo de menú diario</h4>
                             <MealPlanItem icon={Sunrise} meal="Desayuno" food={diet.sampleMealPlan.breakfast} />
                             <MealPlanItem icon={Sun} meal="Comida" food={diet.sampleMealPlan.lunch} />
-                            <MealPlan-item icon={Coffee} meal="Merienda" food={diet.sampleMealPlan.snack} />
+                            <MealPlanItem icon={Coffee} meal="Merienda" food={diet.sampleMealPlan.snack} />
                             <MealPlanItem icon={Moon} meal="Cena" food={diet.sampleMealPlan.dinner} />
                           </div>
                         </motion.div>
