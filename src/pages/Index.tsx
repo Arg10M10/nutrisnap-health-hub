@@ -2,9 +2,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { Link } from "react-router-dom";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
-import { Flame, Leaf, Beef, Wheat, Droplets, ScanLine } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Flame, Leaf, Beef, Wheat, Droplets, ScanLine, Settings } from "lucide-react";
 import MacroProgressCircle from "@/components/MacroProgressCircle";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import { useNutrition } from "@/context/NutritionContext";
@@ -61,6 +63,11 @@ const Index = () => {
             <Leaf className="w-8 h-8 text-primary" />
             <h1 className="text-primary text-3xl">NutriSnap</h1>
           </div>
+          <Link to="/settings">
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <Settings className="w-6 h-6 text-muted-foreground" />
+            </Button>
+          </Link>
         </header>
 
         <WeeklyCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
