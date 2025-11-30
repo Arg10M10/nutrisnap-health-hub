@@ -1,0 +1,79 @@
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${GEMINI_API_KEY}`;
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  try {
+    const { imageData } = await req.json();
+    const base64Image = imageData.split(",")[1];
+
+    const prompt = `
+      Analiza la imagen de esta comida y proporciona una estimación de sus valores nutricionales.
+      Responde únicamente con un objeto JSON válido, sin ningún texto adicional antes o después.
+      El objeto JSON debe tener la siguiente estructura:
+      {
+        "foodName": "Nombre del plato o comida principal",
+        "calories": "Estimación de calorías (ej. '350-450 kcal')",
+        "sugars": "Estimación de azúcares (ej. '10-15g')",
+        "healthRating": "Clasificación de salud ('Saludable', 'Moderado', o 'Evitar')",
+        "reason": "Una breve explicación de por qué le diste esa clasificación."
+      }
+    `;
+
+    const requestBody = {
+      contents: [
+        {
+          parts: [
+            { text: prompt },
+            {
+              inline_data: {
+                mime_type: "image/jpeg",
+                data: base64Image,
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    const geminiResponse = await fetch(GEMINI_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!geminiResponse.ok) {
+      const errorBody = await geminiResponse.text();
+      console.error("Error from Gemini API:", errorBody);
+      throw new Error(`Error en la API de IA: ${geminiResponse.statusText}`);
+    }
+
+    const responseData = await geminiResponse.json();
+    const jsonText = responseData.candidates[0].content.parts[0].text;
+    
+    // Limpiar el texto para asegurarse de que es un JSON válido
+    const cleanedJson = jsonText.replace(/```json/g, "").replace(/```/g, "").trim();
+    const analysisResult = JSON.parse(cleanedJson);
+
+    return new Response(JSON.stringify(analysisResult), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Error en la función Edge:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
+  }
+});
