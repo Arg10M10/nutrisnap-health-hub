@@ -14,13 +14,15 @@ const BottomNav = () => {
   const NavItem = ({ item }: { item: typeof navItems[0] }) => (
     <NavLink
       to={item.path}
-      className="flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg transition-colors min-w-[60px]"
+      className="flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg transition-colors flex-shrink-0 w-1/5"
       activeClassName="bg-primary/10 text-primary"
     >
       {({ isActive }) => (
         <>
-          <item.icon className={cn("w-6 h-6", isActive ? "text-primary" : "text-muted-foreground")} />
-          <span className={cn("text-xs font-medium", isActive ? "text-primary" : "text-muted-foreground")}>
+          {/* Usamos tamaño en píxeles para evitar que escale con la accesibilidad */}
+          <item.icon className={cn("w-[24px] h-[24px]", isActive ? "text-primary" : "text-muted-foreground")} />
+          {/* Tamaño de fuente y altura de línea fijos */}
+          <span className={cn("text-[12px] leading-tight font-medium", isActive ? "text-primary" : "text-muted-foreground")}>
             {item.label}
           </span>
         </>
@@ -42,25 +44,20 @@ const BottomNav = () => {
           </Link>
         </div>
 
-        {/* Fondo de la barra de navegación */}
-        <div className="bg-card border-t border-border h-20">
-          <div className="flex justify-around items-center h-full px-2">
-            {/* Enlaces de la izquierda */}
-            <div className="flex justify-around w-full">
-              {navItems.slice(0, 2).map((item) => (
-                <NavItem key={item.path} item={item} />
-              ))}
-            </div>
+        {/* Fondo de la barra de navegación con altura fija y scroll horizontal */}
+        <div className="bg-card border-t border-border h-[70px] max-h-[70px]">
+          {/* Contenedor scrollable que oculta la barra de scroll */}
+          <div className="flex justify-around items-center h-full px-2 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+            {navItems.slice(0, 2).map((item) => (
+              <NavItem key={item.path} item={item} />
+            ))}
 
-            {/* Espaciador para el FAB */}
+            {/* Espaciador para el FAB, también con flex-shrink-0 */}
             <div className="w-20 flex-shrink-0" />
 
-            {/* Enlaces de la derecha */}
-            <div className="flex justify-around w-full">
-              {navItems.slice(2, 4).map((item) => (
-                <NavItem key={item.path} item={item} />
-              ))}
-            </div>
+            {navItems.slice(2, 4).map((item) => (
+              <NavItem key={item.path} item={item} />
+            ))}
           </div>
         </div>
       </div>
