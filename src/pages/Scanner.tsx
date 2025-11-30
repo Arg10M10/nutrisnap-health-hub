@@ -15,15 +15,14 @@ import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { cn } from "@/lib/utils";
-// import { BarcodeScanner } from "react-zxing"; // Removed static import
 
-type ScannerState = "camera" | "captured" | "loading" | "error";
+type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
 
 const MAX_DIMENSION = 1024; // Max width/height for the image
 
 const Scanner = () => {
-  const [state, setState] = useState<ScannerState>("camera");
+  const [state, setState] = useState<ScannerState>("initializing");
   const [scanMode, setScanMode] = useState<ScanMode>("food");
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -42,6 +41,7 @@ const Scanner = () => {
   };
 
   const startCamera = async () => {
+    setState("initializing");
     try {
       if (streamRef.current) stopCamera();
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -197,6 +197,8 @@ const Scanner = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
     if (scanMode === 'food') {
       startCamera();
+    } else {
+      setState('camera');
     }
   };
 
@@ -246,6 +248,12 @@ const Scanner = () => {
       )}
 
       {/* Overlays for different states */}
+      {state === "initializing" && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4">
+          <Loader2 className="w-16 h-16 text-primary animate-spin" />
+          <p className="text-primary-foreground text-lg">Iniciando cámara...</p>
+        </div>
+      )}
       {state === "loading" && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4">
           <Loader2 className="w-16 h-16 text-primary animate-spin" />
