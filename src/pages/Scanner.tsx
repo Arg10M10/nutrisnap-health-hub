@@ -339,7 +339,7 @@ const Scanner = () => {
                   onClick={() => setScanMode("food")}
                   variant="ghost"
                   className={cn(
-                    "flex flex-col items-center justify-center gap-2 w-28 h-28 rounded-2xl text-white transition-colors",
+                    "flex flex-col items-center justify-center gap-2 w-28 h-24 rounded-2xl text-white transition-colors",
                     scanMode === "food"
                       ? "bg-white/90 text-black"
                       : "bg-black/50 hover:bg-black/70"
@@ -352,7 +352,7 @@ const Scanner = () => {
                   onClick={() => setScanMode("barcode")}
                   variant="ghost"
                   className={cn(
-                    "flex flex-col items-center justify-center gap-2 w-28 h-28 rounded-2xl text-white transition-colors",
+                    "flex flex-col items-center justify-center gap-2 w-28 h-24 rounded-2xl text-white transition-colors",
                     scanMode === "barcode"
                       ? "bg-white/90 text-black"
                       : "bg-black/50 hover:bg-black/70"
