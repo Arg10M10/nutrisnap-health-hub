@@ -5,10 +5,10 @@ interface RecentAnalysisCardProps {
   imageUrl: string | null;
   foodName: string;
   time: string;
-  calories: number | null;
-  protein: number | null;
-  carbs: number | null;
-  fats: number | null;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
 }
 
 const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs, fats }: RecentAnalysisCardProps) => {
@@ -23,19 +23,19 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <Flame className="w-4 h-4 text-primary" />
-            <span>{calories || 0} kcal</span>
+            <span>{calories} kcal</span>
           </div>
           <div className="flex items-center gap-1">
             <Beef className="w-4 h-4 text-red-500" />
-            <span>{protein || 0}g</span>
+            <span>{protein}g</span>
           </div>
           <div className="flex items-center gap-1">
             <Wheat className="w-4 h-4 text-orange-500" />
-            <span>{carbs || 0}g</span>
+            <span>{carbs}g</span>
           </div>
           <div className="flex items-center gap-1">
             <Droplets className="w-4 h-4 text-blue-500" />
-            <span>{fats || 0}g</span>
+            <span>{fats}g</span>
           </div>
         </div>
       </div>

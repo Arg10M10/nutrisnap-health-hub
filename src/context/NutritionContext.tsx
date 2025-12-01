@@ -4,25 +4,25 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
-import { format, isSameDay, subDays, parseISO } from 'date-fns';
+import { format, isSameDay, subDays, parseISO, startOfDay, endOfDay } from 'date-fns';
 
 export interface FoodEntry {
   id: string;
   created_at: string;
   food_name: string;
-  image_url: string | null;
-  calories: string | null;
-  protein: string | null;
-  carbs: string | null;
-  fats: string | null;
-  sugars: string | null;
-  health_rating: 'Saludable' | 'Moderado' | 'Evitar' | null;
-  reason: string | null;
-  calories_value: number | null;
-  protein_value: number | null;
-  carbs_value: number | null;
-  fats_value: number | null;
-  sugars_value: number | null;
+  image_url: string;
+  calories: string;
+  protein: string;
+  carbs: string;
+  fats: string;
+  sugars: string;
+  health_rating: 'Saludable' | 'Moderado' | 'Evitar';
+  reason: string;
+  calories_value: number;
+  protein_value: number;
+  carbs_value: number;
+  fats_value: number;
+  sugars_value: number;
 }
 
 export interface WaterEntry {
@@ -59,7 +59,7 @@ interface NutritionState {
 
 const NutritionContext = createContext<NutritionState | undefined>(undefined);
 
-const parseNutrientValue = (value: string | null): number => {
+const parseNutrientValue = (value: string): number => {
   if (!value) return 0;
   const numbers = value.match(/\d+/g)?.map(Number) || [];
   if (numbers.length === 0) return 0;
@@ -80,7 +80,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: rawFoodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
+  const { data: foodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
     queryKey: ['food_entries', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -91,7 +91,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     enabled: !!user,
   });
 
-  const { data: rawWaterEntries = [], isLoading: isWaterLoading } = useQuery<WaterEntry[]>({
+  const { data: waterEntries = [], isLoading: isWaterLoading } = useQuery<WaterEntry[]>({
     queryKey: ['water_entries', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -101,10 +101,6 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     },
     enabled: !!user,
   });
-
-  // Sanitize entries by filtering out any with invalid dates
-  const foodEntries = useMemo(() => rawFoodEntries.filter(e => e.created_at && !isNaN(parseISO(e.created_at).getTime())), [rawFoodEntries]);
-  const waterEntries = useMemo(() => rawWaterEntries.filter(e => e.created_at && !isNaN(parseISO(e.created_at).getTime())), [rawWaterEntries]);
 
   const addEntryMutation = useMutation({
     mutationFn: async (newEntry: Omit<FoodEntry, 'id' | 'created_at' | 'user_id'>) => {
