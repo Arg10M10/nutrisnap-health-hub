@@ -8,7 +8,9 @@ interface SugarsCardProps {
 }
 
 const SugarsCard = ({ current, goal }: SugarsCardProps) => {
-  const percentage = goal > 0 ? (current / goal) * 100 : 0;
+  const currentVal = current || 0;
+  const goalVal = goal || 0;
+  const percentage = goalVal > 0 ? (currentVal / goalVal) * 100 : 0;
   const color = percentage > 100 ? "#ef4444" : "#a855f7";
 
   return (
@@ -19,7 +21,7 @@ const SugarsCard = ({ current, goal }: SugarsCardProps) => {
           <Candy className="w-6 h-6 text-purple-500" />
         </div>
       </div>
-      <p className="text-xl font-bold text-foreground">{current.toFixed(0)}g</p>
+      <p className="text-xl font-bold text-foreground">{currentVal.toFixed(0)}g</p>
       <p className="text-sm text-muted-foreground">Azúcares</p>
     </Card>
   );

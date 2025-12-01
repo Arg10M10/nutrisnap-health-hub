@@ -8,14 +8,16 @@ interface CaloriesCardProps {
 }
 
 const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
-  const percentage = goal > 0 ? (current / goal) * 100 : 0;
-  const remaining = goal - current;
+  const currentVal = current || 0;
+  const goalVal = goal || 0;
+  const percentage = goalVal > 0 ? (currentVal / goalVal) * 100 : 0;
+  const remaining = goalVal - currentVal;
 
   return (
     <Card className="h-full">
       <CardContent className="flex items-center justify-between h-full p-6">
         <div className="space-y-2">
-          <p className="text-5xl font-bold text-foreground">{current.toFixed(0)}</p>
+          <p className="text-5xl font-bold text-foreground">{currentVal.toFixed(0)}</p>
           <p className="text-muted-foreground">
             {remaining >= 0 ? `${remaining.toFixed(0)} kcal restantes` : `${Math.abs(remaining).toFixed(0)} kcal sobre la meta`}
           </p>
