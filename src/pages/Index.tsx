@@ -32,13 +32,17 @@ const Index = () => {
     setCurrent(api.selectedScrollSnap());
 
     const onSelect = () => {
-      setCurrent(api.selectedScrollSnap());
+      if (api) {
+        setCurrent(api.selectedScrollSnap());
+      }
     };
 
     api.on("select", onSelect);
 
     return () => {
-      api.off("select", onSelect);
+      if (api) {
+        api.off("select", onSelect);
+      }
     };
   }, [api]);
 
