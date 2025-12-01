@@ -86,7 +86,15 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       if (!user) return [];
       const { data, error } = await supabase.from('food_entries').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
       if (error) throw new Error(error.message);
-      return data || [];
+
+      // Polyfill for backward compatibility: ensure old entries have default sugar values.
+      const polyfilledData = (data || []).map(entry => ({
+        ...entry,
+        sugars: entry.sugars ?? '0g',
+        sugars_value: entry.sugars_value ?? 0,
+      }));
+
+      return polyfilledData;
     },
     enabled: !!user,
   });
