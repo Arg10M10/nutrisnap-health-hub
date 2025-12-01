@@ -50,7 +50,6 @@ const Scanner = () => {
 
   const stopCamera = () => {
     if (streamRef.current) {
-      // Turn off flash before stopping the camera
       if (isFlashOn) {
         const videoTrack = streamRef.current.getVideoTracks()[0];
         if (videoTrack && videoTrack.getCapabilities().torch) {
@@ -74,7 +73,6 @@ const Scanner = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
-        
         const videoTrack = stream.getVideoTracks()[0];
         if (videoTrack && videoTrack.getCapabilities().torch) {
           setHasFlash(true);
@@ -142,7 +140,6 @@ const Scanner = () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      
       const { videoWidth, videoHeight } = video;
       let width = videoWidth;
       let height = videoHeight;
@@ -183,7 +180,6 @@ const Scanner = () => {
         img.onload = () => {
           const canvas = canvasRef.current;
           if (!canvas) return;
-
           let { width, height } = img;
           if (width > height) {
             if (width > MAX_DIMENSION) {
@@ -196,7 +192,6 @@ const Scanner = () => {
               height = MAX_DIMENSION;
             }
           }
-
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext("2d");
@@ -255,9 +250,8 @@ const Scanner = () => {
 
   return (
     <div className="fixed inset-0 bg-black text-white z-50 flex flex-col">
-      {/* Camera Viewport */}
-      <main className="flex-1 relative bg-black">
-        {/* Video for Food Scan */}
+      {/* BACKGROUND: Camera/Image View */}
+      <div className="absolute inset-0 z-10">
         {scanMode === 'food' && (
           <video
             ref={videoRef}
@@ -270,7 +264,6 @@ const Scanner = () => {
             )}
           />
         )}
-        {/* Barcode Scanner */}
         {scanMode === 'barcode' && state === 'camera' && BarcodeScanner && (
           <BarcodeScanner
             onResult={handleBarcodeScan}
@@ -280,7 +273,6 @@ const Scanner = () => {
             }}
           />
         )}
-        {/* Captured Image Preview */}
         {capturedImage && state === 'captured' && (
           <img
             src={capturedImage}
@@ -288,39 +280,11 @@ const Scanner = () => {
             className="w-full h-full object-cover"
           />
         )}
-        {/* Viewfinder overlay */}
-        {scanMode === 'food' && state === 'camera' && <Viewfinder />}
-      </main>
+      </div>
 
-      {/* Overlays for states */}
-      {state === "initializing" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
-          <Loader2 className="w-16 h-16 text-primary animate-spin" />
-          <p className="text-white text-lg">
-            {scanMode === 'food' ? 'Iniciando cámara...' : 'Cargando escáner...'}
-          </p>
-        </div>
-      )}
-      {state === "loading" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
-          <Loader2 className="w-16 h-16 text-primary animate-spin" />
-          <p className="text-white text-lg">Analizando...</p>
-        </div>
-      )}
-      {state === "error" && (
-        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-4 text-center space-y-6 z-30">
-          <AlertTriangle className="w-24 h-24 text-destructive" />
-          <p className="text-xl font-semibold">{error}</p>
-          <Button onClick={handleReset} size="lg" className="w-full max-w-sm h-14 text-lg">
-            <RefreshCw className="mr-2 w-6 h-6" /> Intentar de Nuevo
-          </Button>
-        </div>
-      )}
-
-      {/* UI Controls Overlay */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-between p-4 pointer-events-none">
-        {/* Top Bar */}
-        <header className="flex justify-between items-center w-full pointer-events-auto">
+      {/* FOREGROUND: UI Controls and Viewfinder */}
+      <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
+        <header className="flex justify-between items-center w-full p-4 pointer-events-auto">
           <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
             <X className="w-7 h-7 text-white" />
           </Button>
@@ -350,8 +314,11 @@ const Scanner = () => {
           </AlertDialog>
         </header>
 
-        {/* Bottom Controls */}
-        <footer className="flex flex-col items-center gap-6 w-full pointer-events-auto">
+        <div className="flex-1 relative">
+          {scanMode === 'food' && state === 'camera' && <Viewfinder />}
+        </div>
+
+        <footer className="flex flex-col items-center gap-6 w-full p-4 pointer-events-auto">
           {state === 'captured' ? (
             <div className="grid grid-cols-2 gap-4 w-full max-w-md">
               <Button onClick={handleReset} variant="secondary" size="lg" className="h-16 text-lg rounded-2xl">
@@ -363,7 +330,6 @@ const Scanner = () => {
             </div>
           ) : state === 'camera' ? (
             <>
-              {/* Scan Mode Selector */}
               <div className="flex items-center justify-center gap-4 w-full">
                 <Button
                   onClick={() => setScanMode("food")}
@@ -392,8 +358,6 @@ const Scanner = () => {
                   <span className="font-semibold">Código</span>
                 </Button>
               </div>
-
-              {/* Action Buttons */}
               <div className="flex items-center justify-around w-full max-w-md">
                 <button
                   onClick={toggleFlash}
@@ -403,7 +367,6 @@ const Scanner = () => {
                 >
                   {isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}
                 </button>
-                
                 {scanMode === 'food' ? (
                   <button
                     onClick={handleCapture}
@@ -411,9 +374,8 @@ const Scanner = () => {
                     aria-label="Tomar foto"
                   />
                 ) : (
-                  <div className="w-20 h-20" /> // Placeholder
+                  <div className="w-20 h-20" />
                 )}
-                
                 <button
                   onClick={handleUploadClick}
                   className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
@@ -426,6 +388,31 @@ const Scanner = () => {
           ) : null}
         </footer>
       </div>
+
+      {/* STATE OVERLAYS */}
+      {state === "initializing" && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
+          <Loader2 className="w-16 h-16 text-primary animate-spin" />
+          <p className="text-white text-lg">
+            {scanMode === 'food' ? 'Iniciando cámara...' : 'Cargando escáner...'}
+          </p>
+        </div>
+      )}
+      {state === "loading" && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
+          <Loader2 className="w-16 h-16 text-primary animate-spin" />
+          <p className="text-white text-lg">Analizando...</p>
+        </div>
+      )}
+      {state === "error" && (
+        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-4 text-center space-y-6 z-30">
+          <AlertTriangle className="w-24 h-24 text-destructive" />
+          <p className="text-xl font-semibold">{error}</p>
+          <Button onClick={handleReset} size="lg" className="w-full max-w-sm h-14 text-lg">
+            <RefreshCw className="mr-2 w-6 h-6" /> Intentar de Nuevo
+          </Button>
+        </div>
+      )}
 
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
       <canvas ref={canvasRef} className="hidden" />
