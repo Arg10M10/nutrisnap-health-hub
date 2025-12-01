@@ -10,19 +10,19 @@ export interface FoodEntry {
   id: string;
   created_at: string;
   food_name: string;
-  image_url: string;
-  calories: string;
-  protein: string;
-  carbs: string;
-  fats: string;
-  sugars: string;
+  image_url: string | null;
+  calories: string | null;
+  protein: string | null;
+  carbs: string | null;
+  fats: string | null;
+  sugars: string | null;
   health_rating: 'Saludable' | 'Moderado' | 'Evitar';
-  reason: string;
-  calories_value: number;
-  protein_value: number;
-  carbs_value: number;
-  fats_value: number;
-  sugars_value: number;
+  reason: string | null;
+  calories_value: number | null;
+  protein_value: number | null;
+  carbs_value: number | null;
+  fats_value: number | null;
+  sugars_value: number | null;
 }
 
 export interface WaterEntry {
@@ -59,7 +59,7 @@ interface NutritionState {
 
 const NutritionContext = createContext<NutritionState | undefined>(undefined);
 
-const parseNutrientValue = (value: string): number => {
+const parseNutrientValue = (value: string | null): number => {
   if (!value) return 0;
   const numbers = value.match(/\d+/g)?.map(Number) || [];
   if (numbers.length === 0) return 0;
