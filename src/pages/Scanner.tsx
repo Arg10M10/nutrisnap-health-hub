@@ -54,17 +54,15 @@ const Scanner = () => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    let timer: ReturnType<typeof setInterval>;
+    let timer: ReturnType<typeof setInterval> | undefined;
     if (state === 'loading') {
       setProgress(0);
-      // Simulate progress climbing to 95%
       timer = setInterval(() => {
         setProgress(prev => {
           if (prev >= 95) {
-            clearInterval(timer);
+            if (timer) clearInterval(timer);
             return 95;
           }
-          // Add a bit of randomness to the increment
           const increment = Math.random() * 10;
           return Math.min(prev + increment, 95);
         });
@@ -72,7 +70,7 @@ const Scanner = () => {
     }
 
     return () => {
-      clearInterval(timer);
+      if (timer) clearInterval(timer);
     };
   }, [state]);
 
