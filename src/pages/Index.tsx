@@ -13,6 +13,7 @@ import HealthScoreCard from "@/components/HealthScoreCard";
 import WaterTrackerCard from "@/components/WaterTrackerCard";
 import SugarsCard from "@/components/SugarsCard";
 import MacroCard from "@/components/MacroCard";
+import CaloriesCard from "@/components/CaloriesCard";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -70,73 +71,57 @@ const Index = () => {
 
         <Carousel className="w-full" opts={{ align: "start" }}>
           <CarouselContent>
-            <CarouselItem className="basis-1/2 md:basis-1/3">
-              <div className="p-1 h-[180px]">
-                <MacroCard
-                  value={(intake.calories / dailyGoals.calories) * 100}
-                  color="hsl(var(--primary))"
-                  icon={<Flame className="w-6 h-6 text-primary" />}
-                  current={intake.calories}
-                  unit="kcal"
-                  label="Calorías"
-                />
+            {/* Page 1: Main Macros */}
+            <CarouselItem>
+              <div className="p-1 h-[360px] flex flex-col gap-2">
+                <div className="flex-[2]">
+                  <CaloriesCard current={intake.calories} goal={dailyGoals.calories} />
+                </div>
+                <div className="flex-1 grid grid-cols-3 gap-2">
+                  <MacroCard
+                    value={(intake.protein / dailyGoals.protein) * 100}
+                    color="#ef4444"
+                    icon={<Beef className="w-6 h-6 text-red-500" />}
+                    current={intake.protein}
+                    unit="g"
+                    label="Proteína"
+                  />
+                  <MacroCard
+                    value={(intake.carbs / dailyGoals.carbs) * 100}
+                    color="#f97316"
+                    icon={<Wheat className="w-6 h-6 text-orange-500" />}
+                    current={intake.carbs}
+                    unit="g"
+                    label="Carbs"
+                  />
+                  <MacroCard
+                    value={(intake.fats / dailyGoals.fats) * 100}
+                    color="#3b82f6"
+                    icon={<Droplets className="w-6 h-6 text-blue-500" />}
+                    current={intake.fats}
+                    unit="g"
+                    label="Grasas"
+                  />
+                </div>
               </div>
             </CarouselItem>
-            <CarouselItem className="basis-1/2 md:basis-1/3">
-              <div className="p-1 h-[180px]">
-                <MacroCard
-                  value={(intake.protein / dailyGoals.protein) * 100}
-                  color="#ef4444"
-                  icon={<Beef className="w-6 h-6 text-red-500" />}
-                  current={intake.protein}
-                  unit="g"
-                  label="Proteína"
-                />
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-1/2 md:basis-1/3">
-              <div className="p-1 h-[180px]">
-                <MacroCard
-                  value={(intake.carbs / dailyGoals.carbs) * 100}
-                  color="#f97316"
-                  icon={<Wheat className="w-6 h-6 text-orange-500" />}
-                  current={intake.carbs}
-                  unit="g"
-                  label="Carbs"
-                />
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-1/2 md:basis-1/3">
-              <div className="p-1 h-[180px]">
-                <MacroCard
-                  value={(intake.fats / dailyGoals.fats) * 100}
-                  color="#3b82f6"
-                  icon={<Droplets className="w-6 h-6 text-blue-500" />}
-                  current={intake.fats}
-                  unit="g"
-                  label="Grasas"
-                />
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-1/2 md:basis-1/3">
-              <div className="p-1 h-[180px]">
-                <SugarsCard current={intake.sugars} goal={dailyGoals.sugars} />
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-1/2 md:basis-1/3">
-              <div className="p-1 h-[180px]">
-                <HealthScoreCard score={healthScore} />
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-1/2 md:basis-1/3">
-              <div className="p-1 h-[180px]">
-                <WaterTrackerCard
-                  count={waterIntake}
-                  goal={dailyGoals.water}
-                  onAdd={() => addWaterGlass(selectedDate)}
-                  onRemove={() => removeWaterGlass(selectedDate)}
-                  isUpdating={isWaterUpdating}
-                />
+
+            {/* Page 2: Secondary Metrics */}
+            <CarouselItem>
+               <div className="p-1 h-[360px] flex flex-col gap-2">
+                <div className="flex-1 grid grid-cols-2 gap-2">
+                  <SugarsCard current={intake.sugars} goal={dailyGoals.sugars} />
+                  <HealthScoreCard score={healthScore} />
+                </div>
+                <div className="flex-1">
+                  <WaterTrackerCard
+                    count={waterIntake}
+                    goal={dailyGoals.water}
+                    onAdd={() => addWaterGlass(selectedDate)}
+                    onRemove={() => removeWaterGlass(selectedDate)}
+                    isUpdating={isWaterUpdating}
+                  />
+                </div>
               </div>
             </CarouselItem>
           </CarouselContent>
