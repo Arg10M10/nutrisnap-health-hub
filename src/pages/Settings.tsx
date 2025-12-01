@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Edit } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import EditProfileDrawer from "@/components/EditProfileDrawer";
 
 const ProfileItem = ({ label, value }: { label: string, value: string | number | null | undefined }) => (
   <div className="flex justify-between items-center border-b py-3">
@@ -14,6 +17,7 @@ const ProfileItem = ({ label, value }: { label: string, value: string | number |
 
 const Settings = () => {
   const { profile, loading } = useAuth();
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
 
   const goalLabels: { [key: string]: string } = {
     lose_weight: 'Perder peso',
@@ -31,9 +35,14 @@ const Settings = () => {
       </header>
       <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         <Card>
-          <CardHeader>
-            <CardTitle>Tu Perfil</CardTitle>
-            <CardDescription>Esta es la información que nos proporcionaste durante el registro.</CardDescription>
+          <CardHeader className="flex flex-row items-start justify-between">
+            <div>
+              <CardTitle>Tu Perfil</CardTitle>
+              <CardDescription>Esta es la información que nos proporcionaste.</CardDescription>
+            </div>
+            <Button variant="outline" size="icon" onClick={() => setIsEditDrawerOpen(true)}>
+              <Edit className="w-4 h-4" />
+            </Button>
           </CardHeader>
           <CardContent>
             {loading ? (
@@ -66,6 +75,7 @@ const Settings = () => {
           </CardContent>
         </Card>
       </main>
+      <EditProfileDrawer isOpen={isEditDrawerOpen} onClose={() => setIsEditDrawerOpen(false)} />
     </div>
   );
 };
