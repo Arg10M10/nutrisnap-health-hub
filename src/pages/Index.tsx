@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { Link } from "react-router-dom";
 import PageLayout from "@/components/PageLayout";
@@ -23,6 +23,17 @@ const Index = () => {
     carbs: 220,
     fats: 65,
   };
+
+  const weeklyCalorieData = useMemo(() => {
+    const data: { [key: string]: number } = {};
+    for (let i = 0; i < 7; i++) {
+      const day = subDays(new Date(), i);
+      const dayKey = format(day, 'yyyy-MM-dd');
+      const { intake } = getDataForDate(day);
+      data[dayKey] = intake.calories;
+    }
+    return data;
+  }, [getDataForDate, streakDays]);
 
   const caloriesRemaining = dailyGoals.calories - intake.calories;
   const calorieProgress = (intake.calories / dailyGoals.calories) * 100;
@@ -70,7 +81,11 @@ const Index = () => {
           </Link>
         </header>
 
-        <WeeklyCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} streakDays={streakDays} />
+        <WeeklyCalendar 
+          selectedDate={selectedDate} 
+          onDateSelect={setSelectedDate} 
+          weeklyCalorieData={weeklyCalorieData}
+        />
 
         <Card className="p-4 flex justify-between items-center">
           <div>
