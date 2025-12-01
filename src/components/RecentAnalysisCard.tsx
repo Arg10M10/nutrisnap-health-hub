@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Flame, Beef, Wheat, Droplets } from "lucide-react";
 
 interface RecentAnalysisCardProps {
-  imageUrl: string;
+  imageUrl: string | null;
   foodName: string;
   time: string;
   calories: number;
@@ -14,7 +14,7 @@ interface RecentAnalysisCardProps {
 const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs, fats }: RecentAnalysisCardProps) => {
   return (
     <Card className="p-4 flex items-center gap-4">
-      <img src={imageUrl} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
+      <img src={imageUrl || '/placeholder.svg'} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
       <div className="flex-1">
         <div className="flex justify-between items-start mb-2">
           <h4 className="font-semibold text-foreground">{foodName}</h4>
