@@ -27,23 +27,11 @@ const Index = () => {
     if (!api) {
       return;
     }
-
     setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap());
-
-    const onSelect = () => {
-      if (api) {
-        setCurrent(api.selectedScrollSnap());
-      }
-    };
-
-    api.on("select", onSelect);
-
-    return () => {
-      if (api) {
-        api.off("select", onSelect);
-      }
-    };
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
   }, [api]);
 
   const dailyGoals = {
