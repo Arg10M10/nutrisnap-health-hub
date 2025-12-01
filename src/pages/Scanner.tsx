@@ -13,6 +13,15 @@ import {
   Zap,
   ZapOff,
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -315,9 +324,30 @@ const Scanner = () => {
           <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
             <X className="w-7 h-7 text-white" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => toast.info("Ayuda", { description: "Apunta la cámara a tu comida y presiona el botón para analizarla." })} className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
-            <HelpCircle className="w-7 h-7 text-white" />
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
+                <HelpCircle className="w-7 h-7 text-white" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>¿Cómo funciona el escáner?</AlertDialogTitle>
+                <AlertDialogDescription className="space-y-3 pt-2">
+                  <p>
+                    <strong>Modo Comida:</strong> Centra tu plato en el recuadro y toma una foto. Nuestra IA analizará la imagen para darte una estimación de sus valores nutricionales.
+                  </p>
+                  <p>
+                    <strong>Modo Código:</strong> Apunta la cámara al código de barras de un producto. Buscaremos en nuestra base de datos para darte su información nutricional exacta.
+                  </p>
+                  <p>
+                    ¡También puedes subir una foto desde tu galería usando el icono de imagen!
+                  </p>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogAction>Entendido</AlertDialogAction>
+            </AlertDialogContent>
+          </AlertDialog>
         </header>
 
         {/* Bottom Controls */}
