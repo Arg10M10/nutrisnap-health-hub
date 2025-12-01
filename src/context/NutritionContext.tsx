@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
-import { format, isSameDay, subDays, parseISO, startOfDay, endOfDay } from 'date-fns';
+import { format, isSameDay, subDays, parseISO } from 'date-fns';
 
 export interface FoodEntry {
   id: string;
@@ -59,7 +59,7 @@ interface NutritionState {
 
 const NutritionContext = createContext<NutritionState | undefined>(undefined);
 
-const parseNutrientValue = (value: string): number => {
+const parseNutrientValue = (value: string | null): number => {
   if (!value) return 0;
   const numbers = value.match(/\d+/g)?.map(Number) || [];
   if (numbers.length === 0) return 0;
@@ -80,7 +80,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: foodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
+  const { data: rawFoodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
     queryKey: ['food_entries', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -91,7 +91,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     enabled: !!user,
   });
 
-  const { data: waterEntries = [], isLoading: isWaterLoading } = useQuery<WaterEntry[]>({
+  const { data: rawWaterEntries = [], isLoading: isWaterLoading } = useQuery<WaterEntry[]>({
     queryKey: ['water_entries', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -101,6 +101,10 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     },
     enabled: !!user,
   });
+
+  // Sanitize entries by filtering out any with invalid dates
+  const foodEntries = useMemo(() => rawFoodEntries.filter(e => e.created_at && !isNaN(parseISO(e.created_at).getTime())), [rawFoodEntries]);
+  const waterEntries = useMemo(() => rawWaterEntries.filter(e => e.created_at && !isNaN(parseISO(e.created_at).getTime())), [rawWaterEntries]);
 
   const addEntryMutation = useMutation({
     mutationFn: async (newEntry: Omit<FoodEntry, 'id' | 'created_at' | 'user_id'>) => {
