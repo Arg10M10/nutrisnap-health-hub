@@ -9,6 +9,7 @@ import { Flame, ScanLine } from "lucide-react";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import { useNutrition } from "@/context/NutritionContext";
 import ManualFoodEntry from "@/components/ManualFoodEntry";
+import BmiCalculator from "@/components/BmiCalculator";
 
 const Progress = () => {
   const { getDataForDate } = useNutrition();
@@ -36,6 +37,8 @@ const Progress = () => {
             Visualiza tus hábitos y avances a lo largo del tiempo.
           </p>
         </div>
+
+        <BmiCalculator />
 
         {/* Calorie Chart */}
         <Card>
