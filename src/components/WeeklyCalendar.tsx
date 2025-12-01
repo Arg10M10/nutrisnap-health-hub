@@ -1,13 +1,62 @@
 import { format, subDays, isSameDay, isToday as checkIsToday } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import MiniProgressCircle from "./MiniProgressCircle";
 
-interface WeeklyCalendarProps {
-  selectedDate: Date;
-  onDateSelect: (date: Date) => void;
-  weeklyCalorieData: { [key: string]: number };
+interface DayCircleProps {
+  percentage: number;
+  progressColor: string;
+  trackColor: string;
+  dayNumber: string;
 }
+
+const DayCircle = ({ percentage, progressColor, trackColor, dayNumber }: DayCircleProps) => {
+  const size = 36;
+  const strokeWidth = 2.5;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  // Ensure offset doesn't go below 0
+  const offset = Math.max(0, circumference - (percentage / 100) * circumference);
+
+  return (
+    <div className="w-9 h-9 relative">
+      <svg className="w-full h-full" viewBox={`0 0 ${size} ${size}`}>
+        {/* Track */}
+        <circle
+          stroke={trackColor}
+          strokeWidth={strokeWidth}
+          fill="transparent"
+          r={radius}
+          cx={size / 2}
+          cy={size / 2}
+        />
+        {/* Progress */}
+        {percentage > 0 && (
+          <circle
+            stroke={progressColor}
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            fill="transparent"
+            r={radius}
+            cx={size / 2}
+            cy={size / 2}
+            style={{
+              strokeDasharray: circumference,
+              strokeDashoffset: offset,
+              transform: 'rotate(-90deg)',
+              transformOrigin: '50% 50%',
+              transition: 'stroke-dashoffset 0.3s ease-in-out',
+            }}
+          />
+        )}
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="font-bold text-sm text-foreground">
+          {dayNumber}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData }: WeeklyCalendarProps) => {
   const today = new Date();
@@ -33,6 +82,13 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData }: Weekl
           progressColor = '#f97316'; // Orange/Yellow
         }
 
+        let trackColor = 'hsl(var(--border))';
+        if (isSelected) {
+          trackColor = 'hsl(var(--foreground))';
+        } else if (isToday) {
+          trackColor = 'hsl(var(--destructive))';
+        }
+
         return (
           <button
             key={day.toString()}
@@ -42,18 +98,12 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData }: Weekl
             <span className="text-xs capitalize font-medium text-muted-foreground">
               {format(day, "EEE", { locale: es })}
             </span>
-            <div className={cn(
-              "w-9 h-9 relative rounded-full border-2",
-              isSelected ? "border-foreground" :
-              isToday && !isSelected ? "border-destructive" : "border-transparent"
-            )}>
-              <MiniProgressCircle value={percentage} color={progressColor} size={32} />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-bold text-sm text-foreground">
-                  {format(day, "d")}
-                </span>
-              </div>
-            </div>
+            <DayCircle 
+              percentage={percentage}
+              progressColor={progressColor}
+              trackColor={trackColor}
+              dayNumber={format(day, "d")}
+            />
           </button>
         );
       })}
