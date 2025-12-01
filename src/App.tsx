@@ -13,7 +13,6 @@ import Exercises from "./pages/Exercises";
 import Progress from "./pages/Progress";
 import Diets from "./pages/Diets";
 import NotFound from "./pages/NotFound";
-import AnalysisResultPage from "@/pages/AnalysisResult";
 import BarcodeResultPage from "@/pages/BarcodeResult";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
@@ -55,7 +54,6 @@ const AppRoutes = () => {
       <Route path="/exercises" element={<Exercises />} />
       <Route path="/progress" element={<Progress />} />
       <Route path="/diets" element={<Diets />} />
-      <Route path="/analysis-result" element={<AnalysisResultPage />} />
       <Route path="/barcode-result" element={<BarcodeResultPage />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="*" element={<NotFound />} />

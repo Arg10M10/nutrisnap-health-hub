@@ -28,6 +28,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { cn } from "@/lib/utils";
 import Viewfinder from "@/components/Viewfinder";
+import { useNutrition } from "@/context/NutritionContext";
+import AnalysisResultDrawer from "@/components/AnalysisResultDrawer";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -47,6 +49,8 @@ const Scanner = () => {
   const [BarcodeScanner, setBarcodeScanner] = useState<ComponentType<any> | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [hasFlash, setHasFlash] = useState(false);
+  const { addAnalysis } = useNutrition();
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
 
   const stopCamera = () => {
     if (streamRef.current) {
@@ -216,7 +220,8 @@ const Scanner = () => {
       return data as AnalysisResult;
     },
     onSuccess: (data) => {
-      navigate('/analysis-result', { state: { result: data, image: capturedImage } });
+      setState("captured");
+      setAnalysisResult(data);
     },
     onError: (err) => {
       console.error("Analysis error:", err);
@@ -246,6 +251,19 @@ const Scanner = () => {
     }
   };
 
+  const handleSaveAnalysis = () => {
+    if (analysisResult && capturedImage) {
+      addAnalysis(analysisResult, capturedImage);
+      setAnalysisResult(null);
+      handleReset();
+    }
+  };
+
+  const handleDrawerClose = () => {
+    setAnalysisResult(null);
+    handleReset();
+  };
+
   const handleClose = () => navigate(-1);
 
   return (
@@ -273,7 +291,7 @@ const Scanner = () => {
             }}
           />
         )}
-        {capturedImage && state === 'captured' && (
+        {capturedImage && (state === 'captured' || state === 'loading') && (
           <img
             src={capturedImage}
             alt="Comida capturada"
@@ -413,6 +431,13 @@ const Scanner = () => {
           </Button>
         </div>
       )}
+
+      <AnalysisResultDrawer
+        isOpen={!!analysisResult}
+        result={analysisResult}
+        onClose={handleDrawerClose}
+        onSave={handleSaveAnalysis}
+      />
 
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
       <canvas ref={canvasRef} className="hidden" />
