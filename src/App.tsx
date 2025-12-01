@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NutritionProvider } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Loader2 } from "lucide-react";
+import ScrollToTop from "@/components/ScrollToTop";
 
 import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
@@ -65,6 +66,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
           <NutritionProvider>
             <Toaster />
