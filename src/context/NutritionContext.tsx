@@ -4,9 +4,8 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
-import { format, isSameDay, subDays, parseISO } from 'date-fns';
+import { format, isSameDay, subDays, parseISO, startOfDay, endOfDay } from 'date-fns';
 
-// This is now the shape of our data from the Supabase table
 export interface FoodEntry {
   id: string;
   created_at: string;
@@ -17,12 +16,19 @@ export interface FoodEntry {
   carbs: string;
   fats: string;
   sugars: string;
-  health_rating: string;
+  health_rating: 'Saludable' | 'Moderado' | 'Evitar';
   reason: string;
   calories_value: number;
   protein_value: number;
   carbs_value: number;
   fats_value: number;
+  sugars_value: number;
+}
+
+export interface WaterEntry {
+  id: string;
+  created_at: string;
+  glasses: number;
 }
 
 interface DailyIntake {
@@ -30,11 +36,22 @@ interface DailyIntake {
   protein: number;
   carbs: number;
   fats: number;
+  sugars: number;
+}
+
+interface DailyData {
+  intake: DailyIntake;
+  analyses: FoodEntry[];
+  healthScore: number;
+  waterIntake: number;
 }
 
 interface NutritionState {
   addAnalysis: (result: AnalysisResult, imageUrl?: string) => void;
-  getDataForDate: (date: Date) => { intake: DailyIntake; analyses: FoodEntry[] };
+  getDataForDate: (date: Date) => DailyData;
+  addWaterGlass: (date: Date) => void;
+  removeWaterGlass: (date: Date) => void;
+  isWaterUpdating: boolean;
   streak: number;
   streakDays: string[];
   isLoading: boolean;
@@ -50,19 +67,35 @@ const parseNutrientValue = (value: string): number => {
   return (numbers[0] + numbers[1]) / 2;
 };
 
+const healthRatingToScore = (rating: FoodEntry['health_rating']): number => {
+  switch (rating) {
+    case 'Saludable': return 100;
+    case 'Moderado': return 60;
+    case 'Evitar': return 20;
+    default: return 50;
+  }
+};
+
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: foodEntries = [], isLoading } = useQuery<FoodEntry[]>({
+  const { data: foodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
     queryKey: ['food_entries', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      const { data, error } = await supabase
-        .from('food_entries')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+      const { data, error } = await supabase.from('food_entries').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+      if (error) throw new Error(error.message);
+      return data || [];
+    },
+    enabled: !!user,
+  });
+
+  const { data: waterEntries = [], isLoading: isWaterLoading } = useQuery<WaterEntry[]>({
+    queryKey: ['water_entries', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase.from('water_entries').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
       if (error) throw new Error(error.message);
       return data || [];
     },
@@ -75,12 +108,27 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       const { error } = await supabase.from('food_entries').insert({ ...newEntry, user_id: user.id });
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] }); },
+    onError: (error) => { toast.error('No se pudo guardar el análisis.', { description: error.message }); },
+  });
+
+  const waterMutation = useMutation({
+    mutationFn: async ({ action, date }: { action: 'add' | 'remove', date: Date }) => {
+      if (!user) throw new Error('User not found');
+      if (action === 'add') {
+        const { error } = await supabase.from('water_entries').insert({ user_id: user.id, glasses: 1, created_at: date.toISOString() });
+        if (error) throw error;
+      } else {
+        const entriesForDay = waterEntries.filter(e => isSameDay(parseISO(e.created_at), date));
+        if (entriesForDay.length > 0) {
+          const lastEntry = entriesForDay[0];
+          const { error } = await supabase.from('water_entries').delete().eq('id', lastEntry.id);
+          if (error) throw error;
+        }
+      }
     },
-    onError: (error) => {
-      toast.error('No se pudo guardar el análisis.', { description: error.message });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['water_entries', user?.id] }); },
+    onError: (error) => { toast.error('No se pudo actualizar el agua.', { description: error.message }); },
   });
 
   const addAnalysis = (result: AnalysisResult, imageUrl = '/placeholder.svg') => {
@@ -98,34 +146,45 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       protein_value: parseNutrientValue(result.protein),
       carbs_value: parseNutrientValue(result.carbs),
       fats_value: parseNutrientValue(result.fats),
+      sugars_value: parseNutrientValue(result.sugars),
     };
     addEntryMutation.mutate(newEntry);
     toast.success(`${result.foodName} añadido a tu diario.`);
   };
 
-  const getDataForDate = (date: Date) => {
-    const analyses = foodEntries.filter(entry => isSameDay(parseISO(entry.created_at), date));
-    const intake = analyses.reduce(
+  const addWaterGlass = (date: Date) => waterMutation.mutate({ action: 'add', date });
+  const removeWaterGlass = (date: Date) => waterMutation.mutate({ action: 'remove', date });
+
+  const getDataForDate = (date: Date): DailyData => {
+    const dailyFood = foodEntries.filter(entry => isSameDay(parseISO(entry.created_at), date));
+    const dailyWater = waterEntries.filter(entry => isSameDay(parseISO(entry.created_at), date));
+
+    const intake = dailyFood.reduce(
       (acc, entry) => ({
         calories: acc.calories + (entry.calories_value || 0),
         protein: acc.protein + (entry.protein_value || 0),
         carbs: acc.carbs + (entry.carbs_value || 0),
         fats: acc.fats + (entry.fats_value || 0),
+        sugars: acc.sugars + (entry.sugars_value || 0),
       }),
-      { calories: 0, protein: 0, carbs: 0, fats: 0 }
+      { calories: 0, protein: 0, carbs: 0, fats: 0, sugars: 0 }
     );
-    return { intake, analyses };
+
+    const healthScore = dailyFood.length > 0
+      ? dailyFood.reduce((acc, entry) => acc + healthRatingToScore(entry.health_rating), 0) / dailyFood.length
+      : 0;
+
+    const waterIntake = dailyWater.reduce((acc, entry) => acc + entry.glasses, 0);
+
+    return { intake, analyses: dailyFood, healthScore, waterIntake };
   };
 
   const streakData = useMemo(() => {
     if (!foodEntries.length) return { streak: 0, streakDays: [] };
-
     const entryDays = new Set(foodEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
-    
     let currentStreak = 0;
     const daysInStreak: string[] = [];
     const today = new Date();
-
     for (let i = 0; i < 365; i++) {
       const dateToCheck = subDays(today, i);
       const dateKey = format(dateToCheck, 'yyyy-MM-dd');
@@ -140,7 +199,15 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   }, [foodEntries]);
 
   return (
-    <NutritionContext.Provider value={{ addAnalysis, getDataForDate, ...streakData, isLoading }}>
+    <NutritionContext.Provider value={{
+      addAnalysis,
+      getDataForDate,
+      addWaterGlass,
+      removeWaterGlass,
+      isWaterUpdating: waterMutation.isPending,
+      ...streakData,
+      isLoading: isFoodLoading || isWaterLoading
+    }}>
       {children}
     </NutritionContext.Provider>
   );

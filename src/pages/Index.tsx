@@ -1,27 +1,31 @@
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { Link } from "react-router-dom";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Flame, Leaf, Beef, Wheat, Droplets, ScanLine, Settings } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Flame, Leaf, Beef, Wheat, Droplets, ScanLine, Settings, Candy } from "lucide-react";
 import MacroProgressCircle from "@/components/MacroProgressCircle";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import { useNutrition } from "@/context/NutritionContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
+import HealthScoreCard from "@/components/HealthScoreCard";
+import WaterTrackerCard from "@/components/WaterTrackerCard";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { getDataForDate, streak, streakDays } = useNutrition();
-  const { intake, analyses } = getDataForDate(selectedDate);
+  const { getDataForDate, streak, streakDays, addWaterGlass, removeWaterGlass, isWaterUpdating } = useNutrition();
+  const { intake, analyses, healthScore, waterIntake } = getDataForDate(selectedDate);
 
   const dailyGoals = {
     calories: 2000,
     protein: 90,
     carbs: 220,
     fats: 65,
+    sugars: 30,
+    water: 8,
   };
 
   const weeklyCalorieData = useMemo(() => {
@@ -35,35 +39,14 @@ const Index = () => {
     return data;
   }, [getDataForDate, streakDays]);
 
-  const caloriesRemaining = dailyGoals.calories - intake.calories;
-  const calorieProgress = (intake.calories / dailyGoals.calories) * 100;
-  
-  const proteinProgress = (intake.protein / dailyGoals.protein) * 100;
-  const carbsProgress = (intake.carbs / dailyGoals.carbs) * 100;
-  const fatsProgress = (intake.fats / dailyGoals.fats) * 100;
-
-  const macroCards = [
-    {
-      value: proteinProgress,
-      color: "#ef4444",
-      icon: <Beef className="w-6 h-6 text-red-500" />,
-      current: intake.protein,
-      label: "Proteína",
-    },
-    {
-      value: carbsProgress,
-      color: "#f97316",
-      icon: <Wheat className="w-6 h-6 text-orange-500" />,
-      current: intake.carbs,
-      label: "Carbs",
-    },
-    {
-      value: fatsProgress,
-      color: "#3b82f6",
-      icon: <Droplets className="w-6 h-6 text-blue-500" />,
-      current: intake.fats,
-      label: "Grasas",
-    },
+  const metricCards = [
+    { type: 'macro', value: (intake.calories / dailyGoals.calories) * 100, color: "hsl(var(--primary))", icon: <Flame className="w-6 h-6 text-primary" />, current: intake.calories, unit: 'kcal', label: "Calorías" },
+    { type: 'macro', value: (intake.protein / dailyGoals.protein) * 100, color: "#ef4444", icon: <Beef className="w-6 h-6 text-red-500" />, current: intake.protein, unit: 'g', label: "Proteína" },
+    { type: 'macro', value: (intake.carbs / dailyGoals.carbs) * 100, color: "#f97316", icon: <Wheat className="w-6 h-6 text-orange-500" />, current: intake.carbs, unit: 'g', label: "Carbs" },
+    { type: 'macro', value: (intake.fats / dailyGoals.fats) * 100, color: "#3b82f6", icon: <Droplets className="w-6 h-6 text-blue-500" />, current: intake.fats, unit: 'g', label: "Grasas" },
+    { type: 'macro', value: (intake.sugars / dailyGoals.sugars) * 100, color: "#a855f7", icon: <Candy className="w-6 h-6 text-purple-500" />, current: intake.sugars, unit: 'g', label: "Azúcares" },
+    { type: 'health', score: healthScore },
+    { type: 'water', count: waterIntake, goal: dailyGoals.water },
   ];
 
   return (
@@ -95,33 +78,38 @@ const Index = () => {
           <Flame className="w-12 h-12 text-yellow-500" />
         </Card>
 
-        <Card className="p-6 flex justify-between items-center bg-gradient-to-br from-primary/10 to-secondary/10">
-          <div>
-            <p className="text-muted-foreground text-lg">Calorías restantes</p>
-            <p className="text-5xl font-bold text-foreground">{caloriesRemaining}</p>
-          </div>
-          <div className="w-24 h-24 relative">
-            <MacroProgressCircle value={calorieProgress} color="hsl(var(--primary))" size="large" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Flame className="w-8 h-8 text-primary" />
-            </div>
-          </div>
-        </Card>
-
-        <div className="grid grid-cols-3 gap-4">
-          {macroCards.map((macro, index) => (
-            <motion.div key={index} whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
-              <Card className="p-4 text-center space-y-2 h-full">
-                <div className="w-16 h-16 mx-auto relative">
-                  <MacroProgressCircle value={macro.value} color={macro.color} />
-                  <div className="absolute inset-0 flex items-center justify-center">{macro.icon}</div>
+        <Carousel className="w-full" opts={{ align: "start" }}>
+          <CarouselContent>
+            {metricCards.map((metric, index) => (
+              <CarouselItem key={index} className="basis-1/2 md:basis-1/3 lg:basis-1/4">
+                <div className="p-1 h-full">
+                  {metric.type === 'macro' && (
+                    <Card className="p-4 text-center space-y-2 h-full flex flex-col justify-between">
+                      <div className="w-16 h-16 mx-auto relative">
+                        <MacroProgressCircle value={metric.value} color={metric.color} />
+                        <div className="absolute inset-0 flex items-center justify-center">{metric.icon}</div>
+                      </div>
+                      <p className="text-xl font-bold text-foreground">{metric.current.toFixed(0)}{metric.unit}</p>
+                      <p className="text-sm text-muted-foreground">{metric.label}</p>
+                    </Card>
+                  )}
+                  {metric.type === 'health' && <HealthScoreCard score={metric.score} />}
+                  {metric.type === 'water' && (
+                    <WaterTrackerCard 
+                      count={metric.count} 
+                      goal={metric.goal} 
+                      onAdd={() => addWaterGlass(selectedDate)}
+                      onRemove={() => removeWaterGlass(selectedDate)}
+                      isUpdating={isWaterUpdating}
+                    />
+                  )}
                 </div>
-                <p className="text-xl font-bold text-foreground">{macro.current}g</p>
-                <p className="text-sm text-muted-foreground">{macro.label}</p>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="hidden sm:flex" />
+          <CarouselNext className="hidden sm:flex" />
+        </Carousel>
 
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold">Análisis del Día</h2>
