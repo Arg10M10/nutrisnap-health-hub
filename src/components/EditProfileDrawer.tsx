@@ -21,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Loader2 } from 'lucide-react';
 
 const profileSchema = z.object({
@@ -30,7 +29,6 @@ const profileSchema = z.object({
   gender: z.string().min(1, "El género es requerido."),
   date_of_birth: z.string().min(1, "La fecha de nacimiento es requerida."),
   goal: z.string().min(1, "El objetivo es requerido."),
-  units: z.enum(['metric', 'imperial']),
   height: z.coerce.number().min(1, "La altura es requerida."),
   weight: z.coerce.number().min(1, "El peso es requerido."),
   previous_apps_experience: z.string().min(1, "La experiencia es requerida."),
@@ -56,7 +54,6 @@ const EditProfileDrawer = ({ isOpen, onClose }: EditProfileDrawerProps) => {
         gender: profile.gender || '',
         date_of_birth: profile.date_of_birth || '',
         goal: profile.goal || '',
-        units: (profile.units as 'metric' | 'imperial') || 'metric',
         height: profile.height || 0,
         weight: profile.weight || 0,
         previous_apps_experience: profile.previous_apps_experience || '',
@@ -78,7 +75,7 @@ const EditProfileDrawer = ({ isOpen, onClose }: EditProfileDrawerProps) => {
           date_of_birth: values.date_of_birth,
           age: age,
           goal: values.goal,
-          units: values.units,
+          units: 'metric',
           height: values.height,
           weight: values.weight,
           previous_apps_experience: values.previous_apps_experience,
@@ -141,20 +138,12 @@ const EditProfileDrawer = ({ isOpen, onClose }: EditProfileDrawerProps) => {
                   </SelectContent>
                 </Select><FormMessage /></FormItem>
               )} />
-              <FormField control={form.control} name="units" render={({ field }) => (
-                <FormItem><FormLabel>Unidades</FormLabel><FormControl>
-                  <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
-                    <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="metric" /></FormControl><FormLabel className="font-normal">Métrico</FormLabel></FormItem>
-                    <FormItem className="flex items-center space-x-2"><FormControl><RadioGroupItem value="imperial" /></FormControl><FormLabel className="font-normal">Imperial</FormLabel></FormItem>
-                  </RadioGroup>
-                </FormControl><FormMessage /></FormItem>
-              )} />
               <div className="grid grid-cols-2 gap-4">
                 <FormField control={form.control} name="height" render={({ field }) => (
-                  <FormItem><FormLabel>Altura ({form.watch('units') === 'metric' ? 'cm' : 'in'})</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Altura (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="weight" render={({ field }) => (
-                  <FormItem><FormLabel>Peso ({form.watch('units') === 'metric' ? 'kg' : 'lbs'})</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Peso (kg)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
               </div>
               <FormField control={form.control} name="previous_apps_experience" render={({ field }) => (

@@ -24,7 +24,7 @@ const Onboarding = () => {
     gender: null as string | null,
     age: null as number | null,
     experience: null as string | null,
-    units: 'metric' as 'metric' | 'imperial',
+    units: 'metric' as 'metric',
     weight: null as number | null,
     height: null as number | null,
     dob: null as Date | null,
@@ -102,7 +102,6 @@ const Onboarding = () => {
       title: 'Tus medidas',
       description: 'Introduce tu peso y altura para un seguimiento preciso.',
       content: <MetricsStep 
-                  units={formData.units} setUnits={(v) => updateFormData('units', v)}
                   weight={formData.weight} setWeight={(v) => updateFormData('weight', v)}
                   height={formData.height} setHeight={(v) => updateFormData('height', v)}
                 />,
