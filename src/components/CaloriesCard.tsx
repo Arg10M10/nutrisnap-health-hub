@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent } from "@/components/ui/card";
 import { Flame } from "lucide-react";
+import MacroProgressCircle from "./MacroProgressCircle";
 
 interface CaloriesCardProps {
   current: number;
@@ -9,24 +9,22 @@ interface CaloriesCardProps {
 
 const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
   const percentage = goal > 0 ? (current / goal) * 100 : 0;
+  const remaining = goal - current;
 
   return (
-    <Card className="h-full flex flex-col justify-between">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center justify-between">
-          <span className="flex items-center gap-2 text-lg">
-            <Flame className="w-5 h-5 text-primary" />
-            Calorías
-          </span>
-          <span className="text-sm text-muted-foreground">
-            Meta: {goal}
-          </span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Card className="h-full">
+      <CardContent className="flex items-center justify-between h-full p-6">
         <div className="space-y-2">
-          <p className="text-4xl font-bold text-foreground">{current.toFixed(0)} <span className="text-lg font-normal text-muted-foreground">kcal</span></p>
-          <Progress value={percentage} />
+          <p className="text-5xl font-bold text-foreground">{current.toFixed(0)}</p>
+          <p className="text-muted-foreground">
+            {remaining >= 0 ? `${remaining.toFixed(0)} kcal restantes` : `${Math.abs(remaining).toFixed(0)} kcal sobre la meta`}
+          </p>
+        </div>
+        <div className="w-24 h-24 relative">
+          <MacroProgressCircle value={percentage} color="hsl(var(--primary))" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Flame className="w-8 h-8 text-primary" />
+          </div>
         </div>
       </CardContent>
     </Card>
