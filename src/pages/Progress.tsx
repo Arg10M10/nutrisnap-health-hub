@@ -38,8 +38,6 @@ const Progress = () => {
           </p>
         </div>
 
-        <BmiCalculator />
-
         {/* Calorie Chart */}
         <Card>
           <CardHeader>
@@ -95,6 +93,8 @@ const Progress = () => {
         <div className="space-y-4">
           <ManualFoodEntry />
         </div>
+
+        <BmiCalculator size="small" />
       </div>
     </PageLayout>
   );

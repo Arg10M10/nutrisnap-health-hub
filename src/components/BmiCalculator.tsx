@@ -36,15 +36,20 @@ const calculateBmi = (weight: number | null, height: number | null) => {
   return { bmi: parseFloat(bmi.toFixed(1)), category, badgeClasses, position };
 };
 
-const BmiCalculator = () => {
+interface BmiCalculatorProps {
+  size?: 'small' | 'large';
+}
+
+const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
   const { profile } = useAuth();
   const { bmi, category, badgeClasses, position } = calculateBmi(profile?.weight, profile?.height);
+  const isSmall = size === 'small';
 
   if (!profile?.weight || !profile?.height) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className={cn("flex items-center gap-2", isSmall && "text-lg")}>
             <TrendingUp className="w-6 h-6 text-primary" />
             Tu IMC
           </CardTitle>
@@ -68,7 +73,7 @@ const BmiCalculator = () => {
   return (
     <Card>
       <CardHeader className="flex-row items-start justify-between pb-2">
-        <CardTitle>Tu IMC</CardTitle>
+        <CardTitle className={cn(isSmall && "text-lg")}>Tu IMC</CardTitle>
         <Tooltip>
           <TooltipTrigger asChild>
             <HelpCircle className="w-5 h-5 text-muted-foreground cursor-help" />
@@ -78,12 +83,12 @@ const BmiCalculator = () => {
           </TooltipContent>
         </Tooltip>
       </CardHeader>
-      <CardContent className="space-y-6 pt-4">
-        <div className="flex items-baseline gap-4 flex-wrap">
-          <p className="text-6xl font-bold text-foreground">{bmi}</p>
+      <CardContent className={cn("pt-4", isSmall ? "space-y-4" : "space-y-6")}>
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <p className={cn("font-bold text-foreground", isSmall ? "text-4xl" : "text-6xl")}>{bmi}</p>
           <div className="flex items-center gap-2">
-            <p className="text-muted-foreground">Tu peso es</p>
-            <span className={cn("inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold", badgeClasses)}>
+            <p className={cn("text-muted-foreground", isSmall ? "text-sm" : "")}>Tu peso es</p>
+            <span className={cn("inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold", badgeClasses, isSmall && "text-xs px-2")}>
               {category}
             </span>
           </div>
