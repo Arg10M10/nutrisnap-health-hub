@@ -51,28 +51,6 @@ const Scanner = () => {
   const [hasFlash, setHasFlash] = useState(false);
   const { addAnalysis } = useNutrition();
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    let timer: ReturnType<typeof setInterval> | undefined;
-    if (state === 'loading') {
-      setProgress(0);
-      timer = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 95) {
-            if (timer) clearInterval(timer);
-            return 95;
-          }
-          const increment = Math.random() * 10;
-          return Math.min(prev + increment, 95);
-        });
-      }, 200);
-    }
-
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [state]);
 
   const stopCamera = () => {
     if (streamRef.current) {
@@ -442,7 +420,6 @@ const Scanner = () => {
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
           <Loader2 className="w-16 h-16 text-primary animate-spin" />
           <p className="text-white text-lg">Analizando...</p>
-          <p className="text-white text-3xl font-bold">{`${Math.floor(progress)}%`}</p>
         </div>
       )}
       {state === "error" && (
