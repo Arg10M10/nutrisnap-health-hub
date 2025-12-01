@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { format, subDays, startOfWeek } from "date-fns";
+import { useMemo } from "react";
+import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import PageLayout from "@/components/PageLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -7,20 +7,16 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Flame, ScanLine } from "lucide-react";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
-import WeeklyCalendar from "@/components/WeeklyCalendar";
 import { useNutrition } from "@/context/NutritionContext";
 import ManualFoodEntry from "@/components/ManualFoodEntry";
 
 const Progress = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const { getDataForDate, streakDays } = useNutrition();
+  const { getDataForDate } = useNutrition();
+  const today = new Date();
 
-  // Data for the selected day's scan history
-  const { analyses } = getDataForDate(selectedDate);
+  const { analyses } = getDataForDate(today);
 
-  // Data for the weekly chart
   const chartData = useMemo(() => {
-    const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 }); // Monday
     return Array.from({ length: 7 }).map((_, i) => {
       const day = subDays(new Date(), i);
       const { intake } = getDataForDate(day);
@@ -29,7 +25,7 @@ const Progress = () => {
         calories: intake.calories || 0,
       };
     }).reverse();
-  }, [selectedDate, getDataForDate]);
+  }, [getDataForDate]);
 
   return (
     <PageLayout>
@@ -40,8 +36,6 @@ const Progress = () => {
             Visualiza tus hábitos y avances a lo largo del tiempo.
           </p>
         </div>
-
-        <WeeklyCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} streakDays={streakDays} />
 
         {/* Calorie Chart */}
         <Card>
@@ -65,11 +59,11 @@ const Progress = () => {
           </CardContent>
         </Card>
 
-        {/* Recent Scans for the selected day */}
+        {/* Recent Scans for today */}
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold flex items-center gap-2">
             <ScanLine className="w-7 h-7" />
-            Historial del Día
+            Historial de Hoy
           </h2>
           {analyses.length > 0 ? (
             <div className="space-y-3">
@@ -89,7 +83,7 @@ const Progress = () => {
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
               <ScanLine className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground">No hay escaneos para este día.</p>
+              <p className="text-muted-foreground">No hay escaneos para hoy.</p>
             </Card>
           )}
         </div>

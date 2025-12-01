@@ -1,6 +1,5 @@
-import { format, subDays, isSameDay } from "date-fns";
+import { format, subDays, isSameDay, isToday as checkIsToday } from "date-fns";
 import { es } from "date-fns/locale";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface WeeklyCalendarProps {
@@ -16,30 +15,39 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, streakDays = [] }: WeeklyC
     .reverse();
 
   return (
-    <div className="flex justify-between gap-2">
+    <div className="grid grid-cols-7 gap-1 p-1 bg-muted rounded-2xl">
       {weekDays.map((day) => {
         const isSelected = isSameDay(day, selectedDate);
+        const isToday = checkIsToday(day);
         const dayKey = format(day, 'yyyy-MM-dd');
         const isInStreak = streakDays.includes(dayKey);
 
         return (
-          <Button
+          <button
             key={day.toString()}
-            variant={isSelected ? "default" : "outline"}
-            className={cn(
-              "relative flex flex-col h-16 w-full rounded-xl transition-all duration-200 p-1",
-              isSelected ? "bg-primary text-primary-foreground shadow-lg" : "bg-card text-card-foreground",
-              isInStreak && !isSelected && "bg-yellow-400/10 border-yellow-500/30"
-            )}
             onClick={() => onDateSelect(day)}
+            className={cn(
+              "flex flex-col items-center justify-center gap-2 py-2 rounded-xl transition-all duration-200",
+              (isSelected || isInStreak) && "bg-card shadow"
+            )}
           >
-            <span className={cn("text-xs font-medium capitalize", isInStreak && !isSelected && "text-yellow-600")}>
+            <span className={cn(
+              "text-xs capitalize font-medium",
+              isSelected || isInStreak ? "text-foreground" : "text-muted-foreground"
+            )}>
               {format(day, "EEE", { locale: es })}
             </span>
-            <span className={cn("text-xl font-bold", isInStreak && !isSelected && "text-yellow-600")}>
-              {format(day, "d")}
-            </span>
-          </Button>
+            <div className={cn(
+              "w-8 h-8 flex items-center justify-center rounded-full border-2",
+              isSelected ? "border-foreground" :
+              isInStreak ? "border-green-500" :
+              isToday ? "border-destructive" : "border-transparent"
+            )}>
+              <span className="font-bold text-sm text-foreground">
+                {format(day, "d")}
+              </span>
+            </div>
+          </button>
         );
       })}
     </div>
