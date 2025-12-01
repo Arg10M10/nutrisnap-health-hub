@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refetching, setRefetching] = useState(false);
   const navigate = useNavigate();
 
   const fetchProfile = async (userId: string) => {
@@ -80,7 +81,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const refetchProfile = async () => {
     if (user) {
+      setRefetching(true);
       await fetchProfile(user.id);
+      setRefetching(false);
     }
   };
 
@@ -88,7 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     session,
     user,
     profile,
-    loading,
+    loading: loading || refetching,
     signOut,
     refetchProfile,
   };
