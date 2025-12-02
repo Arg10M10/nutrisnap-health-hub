@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, PlusCircle, Scan, SearchX } from "lucide-react";
 import { useNutrition } from "@/context/NutritionContext";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import ManualFoodEntry from '@/components/ManualFoodEntry';
 import BarcodeAnalysisCard from '@/components/BarcodeAnalysisCard';
@@ -68,7 +68,6 @@ const BarcodeResultPage = () => {
       protein: `${productData.nutrients.protein.toFixed(1)}g`,
       carbs: `${productData.nutrients.carbs.toFixed(1)}g`,
       fats: `${productData.nutrients.fats.toFixed(1)}g`,
-      sugars: `${productData.nutrients.sugars.toFixed(1)}g`,
       healthRating: ratingData.healthRating,
       reason: ratingData.reason,
     };

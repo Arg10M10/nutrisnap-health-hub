@@ -27,7 +27,6 @@ serve(async (req) => {
       - Calorías: ${nutrients.calories || 'N/A'} kcal
       - Proteínas: ${nutrients.protein || 'N/A'} g
       - Carbohidratos: ${nutrients.carbs || 'N/A'} g
-      - Azúcares: ${nutrients.sugars || 'N/A'} g
       - Grasas: ${nutrients.fats || 'N/A'} g
 
       Proporciona una clasificación de salud y una breve razón.

@@ -5,7 +5,6 @@ import { Flame, Droplets, HeartPulse, Beef, Wheat } from "lucide-react";
 export type AnalysisResult = {
   foodName: string;
   calories: string;
-  sugars: string;
   protein: string;
   carbs: string;
   fats: string;
@@ -35,16 +34,11 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4 text-center">
+        <div className="grid grid-cols-1 gap-4 text-center">
           <div className="p-4 bg-muted rounded-lg">
             <Flame className="w-6 h-6 mx-auto text-primary mb-1" />
             <p className="text-lg font-bold text-foreground">{result.calories}</p>
             <p className="text-sm text-muted-foreground">Calorías</p>
-          </div>
-           <div className="p-4 bg-muted rounded-lg">
-            <Droplets className="w-6 h-6 mx-auto text-blue-400 mb-1" />
-            <p className="text-lg font-bold text-foreground">{result.sugars}</p>
-            <p className="text-sm text-muted-foreground">Azúcares</p>
           </div>
         </div>
          <div className="grid grid-cols-3 gap-2 text-center">

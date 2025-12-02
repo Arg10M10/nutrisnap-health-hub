@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
-import { format, isSameDay, subDays, parseISO, startOfDay, endOfDay } from 'date-fns';
+import { format, isSameDay, subDays, parseISO } from 'date-fns';
 
 export interface FoodEntry {
   id: string;
@@ -15,14 +15,12 @@ export interface FoodEntry {
   protein: string | null;
   carbs: string | null;
   fats: string | null;
-  sugars: string | null;
   health_rating: 'Saludable' | 'Moderado' | 'Evitar';
   reason: string | null;
   calories_value: number | null;
   protein_value: number | null;
   carbs_value: number | null;
   fats_value: number | null;
-  sugars_value: number | null;
 }
 
 export interface WaterEntry {
@@ -36,7 +34,6 @@ interface DailyIntake {
   protein: number;
   carbs: number;
   fats: number;
-  sugars: number;
 }
 
 interface DailyData {
@@ -86,15 +83,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       if (!user) return [];
       const { data, error } = await supabase.from('food_entries').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
       if (error) throw new Error(error.message);
-
-      // Polyfill for backward compatibility: ensure old entries have default sugar values.
-      const polyfilledData = (data || []).map(entry => ({
-        ...entry,
-        sugars: entry.sugars ?? '0g',
-        sugars_value: entry.sugars_value ?? 0,
-      }));
-
-      return polyfilledData;
+      return data || [];
     },
     enabled: !!user,
   });
@@ -147,14 +136,12 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       protein: result.protein || '0g',
       carbs: result.carbs || '0g',
       fats: result.fats || '0g',
-      sugars: result.sugars || '0g',
       health_rating: result.healthRating,
       reason: result.reason,
       calories_value: parseNutrientValue(result.calories),
       protein_value: parseNutrientValue(result.protein),
       carbs_value: parseNutrientValue(result.carbs),
       fats_value: parseNutrientValue(result.fats),
-      sugars_value: parseNutrientValue(result.sugars),
     };
     addEntryMutation.mutate(newEntry);
     toast.success(`${result.foodName} añadido a tu diario.`);
@@ -173,9 +160,8 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         protein: acc.protein + (entry.protein_value || 0),
         carbs: acc.carbs + (entry.carbs_value || 0),
         fats: acc.fats + (entry.fats_value || 0),
-        sugars: acc.sugars + (entry.sugars_value || 0),
       }),
-      { calories: 0, protein: 0, carbs: 0, fats: 0, sugars: 0 }
+      { calories: 0, protein: 0, carbs: 0, fats: 0 }
     );
 
     const healthScore = dailyFood.length > 0

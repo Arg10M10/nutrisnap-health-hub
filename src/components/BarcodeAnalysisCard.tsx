@@ -7,7 +7,6 @@ interface Nutrient {
   protein: number;
   carbs: number;
   fats: number;
-  sugars: number;
 }
 
 interface BarcodeAnalysisCardProps {
@@ -60,7 +59,6 @@ const BarcodeAnalysisCard = ({ name, brands, imageUrl, servingSize, nutrients, r
             <NutrientRow label="Calorías" value={nutrients.calories} unit="kcal" />
             <NutrientRow label="Proteína" value={nutrients.protein} unit="g" />
             <NutrientRow label="Carbohidratos" value={nutrients.carbs} unit="g" />
-            <NutrientRow label="Azúcares" value={nutrients.sugars} unit="g" />
             <NutrientRow label="Grasas" value={nutrients.fats} unit="g" />
           </div>
           <p className="text-xs text-muted-foreground mt-2">Tamaño de porción sugerido: {servingSize}</p>

@@ -11,9 +11,9 @@ import { useNutrition } from "@/context/NutritionContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
 import HealthScoreCard from "@/components/HealthScoreCard";
 import WaterTrackerCard from "@/components/WaterTrackerCard";
-import SugarsCard from "@/components/SugarsCard";
 import MacroCard from "@/components/MacroCard";
 import CaloriesCard from "@/components/CaloriesCard";
+import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -39,7 +39,6 @@ const Index = () => {
     protein: 90,
     carbs: 220,
     fats: 65,
-    sugars: 30,
     water: 8,
   };
 
@@ -133,10 +132,7 @@ const Index = () => {
               <CarouselItem>
                  <div className="p-1 h-[360px] flex flex-col gap-2">
                   <div className="flex-1 grid grid-cols-2 gap-2">
-                    <SugarsCard current={intake.sugars} goal={dailyGoals.sugars} />
                     <HealthScoreCard score={healthScore} />
-                  </div>
-                  <div className="flex-1">
                     <WaterTrackerCard
                       count={waterIntake}
                       goal={dailyGoals.water}
