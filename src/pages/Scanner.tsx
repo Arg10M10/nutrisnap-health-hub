@@ -52,6 +52,15 @@ const Scanner = () => {
   const { addAnalysis } = useNutrition();
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
 
+  useEffect(() => {
+    // Lock body scroll when scanner is active
+    document.body.style.overflow = 'hidden';
+    // Restore body scroll on component unmount
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const stopCamera = () => {
     if (streamRef.current) {
       if (isFlashOn) {
