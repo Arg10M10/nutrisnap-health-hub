@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
 
 export interface Profile {
   id: string;
@@ -34,10 +33,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [refetching, setRefetching] = useState(false);
-  const navigate = useNavigate();
+  const [profileLoading, setProfileLoading] = useState(false);
 
   const fetchProfile = async (userId: string) => {
+    setProfileLoading(true);
     const { data: userProfile, error } = await supabase
       .from('profiles')
       .select('*')
@@ -49,41 +48,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } else {
       setProfile(userProfile);
     }
+    setProfileLoading(false);
   };
 
   useEffect(() => {
-    // We rely solely on onAuthStateChange, which fires immediately
-    // with the current session state, preventing race conditions.
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    // First, check for an existing session on initial load.
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-
-      if (currentUser) {
-        await fetchProfile(currentUser.id);
-      } else {
-        setProfile(null);
-      }
-      // The listener has fired, so we know the initial session state.
-      // We can now stop loading.
-      setLoading(false);
+      setUser(session?.user ?? null);
+      setLoading(false); // Initial auth check is done.
     });
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
+    // Then, set up a listener for future auth state changes.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  // Fetch profile whenever the user object changes (e.g., on login)
+  useEffect(() => {
+    if (user) {
+      fetchProfile(user.id);
+    } else {
+      setProfile(null);
+    }
+  }, [user]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    navigate('/login');
+    // The onAuthStateChange listener will handle navigation implicitly
   };
 
   const refetchProfile = async () => {
     if (user) {
-      setRefetching(true);
       await fetchProfile(user.id);
-      setRefetching(false);
     }
   };
 
@@ -91,7 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     session,
     user,
     profile,
-    loading: loading || refetching,
+    loading: loading || profileLoading,
     signOut,
     refetchProfile,
   };

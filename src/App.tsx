@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NutritionProvider } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import { Loader2 } from "lucide-react";
 
 import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
@@ -17,6 +16,7 @@ import BarcodeResultPage from "@/pages/BarcodeResult";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Onboarding from "./pages/onboarding/Onboarding";
+import SplashScreen from "./pages/SplashScreen";
 
 const queryClient = new QueryClient();
 
@@ -24,11 +24,7 @@ const AppRoutes = () => {
   const { session, profile, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
-      </div>
-    );
+    return <SplashScreen />;
   }
 
   if (!session) {
