@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 export default function Login() {
   const [loading, setLoading] = useState(false);
 
-  const signInWithProvider = async (provider: 'google' | 'apple') => {
+  const signInWithProvider = async (provider: 'google') => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -47,20 +47,6 @@ export default function Login() {
                 <>
                   <img src="/google-logo.png" alt="Google logo" className="mr-3 h-6 w-6" />
                   Continuar con Google
-                </>
-              )}
-            </Button>
-            <Button 
-              className="w-full h-16 text-lg rounded-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200" 
-              onClick={() => signInWithProvider('apple')} 
-              disabled={loading}
-            >
-              {loading ? (
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              ) : (
-                <>
-                  <img src="/apple-logo.png" alt="Apple logo" className="mr-3 h-7 w-7" />
-                  Continuar con Apple
                 </>
               )}
             </Button>
