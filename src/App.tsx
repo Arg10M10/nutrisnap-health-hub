@@ -16,6 +16,8 @@ import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Onboarding from "./pages/onboarding/Onboarding";
 import SplashScreen from "./pages/SplashScreen";
+import Exercise from "./pages/Exercise";
+import Running from "./pages/exercise/Running";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +52,8 @@ const AppRoutes = () => {
       <Route path="/diets" element={<Diets />} />
       <Route path="/barcode-result" element={<BarcodeResultPage />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/exercise" element={<Exercise />} />
+      <Route path="/exercise/running" element={<Running />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

@@ -27,14 +27,12 @@ const BottomNav = () => {
     {
       icon: Dumbbell,
       label: "Registrar Ejercicio",
-      action: () => toast.info("Próximamente", { description: "La función de registro de ejercicios estará disponible pronto." }),
+      action: () => navigate("/exercise"),
     },
   ];
 
   const handleMenuAction = (action: () => void) => {
     setIsMenuOpen(false);
-    // Add a small delay to ensure the drawer has started closing before navigating.
-    // This prevents a race condition that could leave the body scroll locked.
     setTimeout(() => {
       action();
     }, 100);
