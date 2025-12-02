@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,11 @@ const Index = () => {
     return data;
   }, [getDataForDate, streakDays]);
 
+  const cardVariants = {
+    active: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
+    inactive: { opacity: 0.6, scale: 0.95, transition: { duration: 0.5, ease: "easeOut" } },
+  };
+
   return (
     <PageLayout>
       <div className="space-y-6">
@@ -92,67 +98,71 @@ const Index = () => {
         </Card>
 
         <div>
-          <Carousel className="w-full" opts={{ align: "start" }} setApi={setApi}>
+          <Carousel className="w-full" opts={{ align: "start", duration: 40 }} setApi={setApi}>
             <CarouselContent>
               {/* Page 1: Main Macros */}
               <CarouselItem>
-                <div className="p-1 h-[360px] flex flex-col gap-2">
-                  <div className="flex-[2]">
-                    <CaloriesCard current={intake.calories} goal={dailyGoals.calories} />
+                <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
+                  <div className="p-1 h-[360px] flex flex-col gap-2">
+                    <div className="flex-[2]">
+                      <CaloriesCard current={intake.calories} goal={dailyGoals.calories} />
+                    </div>
+                    <div className="flex-1 grid grid-cols-3 gap-2">
+                      <MacroCard
+                        value={getSafePercentage(intake.protein, dailyGoals.protein)}
+                        color="#ef4444"
+                        icon={<Beef className="w-6 h-6 text-red-500" />}
+                        current={intake.protein}
+                        unit="g"
+                        label="Proteína"
+                      />
+                      <MacroCard
+                        value={getSafePercentage(intake.carbs, dailyGoals.carbs)}
+                        color="#f97316"
+                        icon={<Wheat className="w-6 h-6 text-orange-500" />}
+                        current={intake.carbs}
+                        unit="g"
+                        label="Carbs"
+                      />
+                      <MacroCard
+                        value={getSafePercentage(intake.fats, dailyGoals.fats)}
+                        color="#3b82f6"
+                        icon={<Droplets className="w-6 h-6 text-blue-500" />}
+                        current={intake.fats}
+                        unit="g"
+                        label="Grasas"
+                      />
+                    </div>
                   </div>
-                  <div className="flex-1 grid grid-cols-3 gap-2">
-                    <MacroCard
-                      value={getSafePercentage(intake.protein, dailyGoals.protein)}
-                      color="#ef4444"
-                      icon={<Beef className="w-6 h-6 text-red-500" />}
-                      current={intake.protein}
-                      unit="g"
-                      label="Proteína"
-                    />
-                    <MacroCard
-                      value={getSafePercentage(intake.carbs, dailyGoals.carbs)}
-                      color="#f97316"
-                      icon={<Wheat className="w-6 h-6 text-orange-500" />}
-                      current={intake.carbs}
-                      unit="g"
-                      label="Carbs"
-                    />
-                    <MacroCard
-                      value={getSafePercentage(intake.fats, dailyGoals.fats)}
-                      color="#3b82f6"
-                      icon={<Droplets className="w-6 h-6 text-blue-500" />}
-                      current={intake.fats}
-                      unit="g"
-                      label="Grasas"
-                    />
-                  </div>
-                </div>
+                </motion.div>
               </CarouselItem>
 
               {/* Page 2: Secondary Metrics */}
               <CarouselItem>
-                 <div className="p-1 h-[360px] flex flex-col gap-2">
-                  <div className="flex-1 grid grid-cols-2 gap-2">
-                    <HealthScoreCard score={healthScore} />
-                    <WaterTrackerCard
-                      count={waterIntake}
-                      goal={dailyGoals.water}
-                      onAdd={() => addWaterGlass(selectedDate)}
-                      onRemove={() => removeWaterGlass(selectedDate)}
-                      isUpdating={isWaterUpdating}
-                    />
+                <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
+                  <div className="p-1 h-[360px] flex flex-col gap-2">
+                    <div className="flex-1 grid grid-cols-2 gap-2">
+                      <HealthScoreCard score={healthScore} />
+                      <WaterTrackerCard
+                        count={waterIntake}
+                        goal={dailyGoals.water}
+                        onAdd={() => addWaterGlass(selectedDate)}
+                        onRemove={() => removeWaterGlass(selectedDate)}
+                        isUpdating={isWaterUpdating}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <MacroCard
+                          value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
+                          color="#a855f7"
+                          icon={<Sparkles className="w-6 h-6 text-purple-500" />}
+                          current={intake.sugars}
+                          unit="g"
+                          label="Azúcares"
+                      />
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <MacroCard
-                        value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
-                        color="#a855f7"
-                        icon={<Sparkles className="w-6 h-6 text-purple-500" />}
-                        current={intake.sugars}
-                        unit="g"
-                        label="Azúcares"
-                    />
-                  </div>
-                </div>
+                </motion.div>
               </CarouselItem>
             </CarouselContent>
           </Carousel>
