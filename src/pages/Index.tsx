@@ -64,8 +64,8 @@ const Index = () => {
   }, [getDataForDate, streakDays]);
 
   const cardVariants = {
-    active: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
-    inactive: { opacity: 0.6, scale: 0.95, transition: { duration: 0.5, ease: "easeOut" } },
+    active: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
+    inactive: { opacity: 0.6, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } },
   };
 
   return (
@@ -98,7 +98,7 @@ const Index = () => {
         </Card>
 
         <div>
-          <Carousel className="w-full" opts={{ align: "start", duration: 40 }} setApi={setApi}>
+          <Carousel className="w-full" opts={{ align: "start", duration: 20 }} setApi={setApi}>
             <CarouselContent>
               {/* Page 1: Main Macros */}
               <CarouselItem>
