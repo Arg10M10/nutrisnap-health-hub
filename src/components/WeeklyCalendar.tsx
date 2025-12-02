@@ -58,6 +58,12 @@ const DayCircle = ({ percentage, progressColor, trackColor, dayNumber }: DayCirc
   );
 };
 
+interface WeeklyCalendarProps {
+    selectedDate: Date;
+    onDateSelect: (date: Date) => void;
+    weeklyCalorieData: { [key: string]: number };
+}
+
 const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData }: WeeklyCalendarProps) => {
   const today = new Date();
   const weekDays = Array.from({ length: 7 })
@@ -86,7 +92,7 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData }: Weekl
         if (isSelected) {
           trackColor = 'hsl(var(--foreground))';
         } else if (isToday) {
-          trackColor = 'hsl(var(--destructive))';
+          trackColor = 'hsl(var(--foreground))';
         }
 
         return (
