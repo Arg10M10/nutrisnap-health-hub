@@ -6,7 +6,7 @@ import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-import { Flame, Leaf, ScanLine, Settings, Beef, Wheat, Droplets } from "lucide-react";
+import { Flame, Leaf, ScanLine, Settings, Beef, Wheat, Droplets, Sparkles } from "lucide-react";
 import { useNutrition } from "@/context/NutritionContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
 import HealthScoreCard from "@/components/HealthScoreCard";
@@ -40,6 +40,7 @@ const Index = () => {
     carbs: 220,
     fats: 65,
     water: 8,
+    sugars: 25,
   };
 
   const getSafePercentage = (current?: number | null, goal?: number | null) => {
@@ -99,7 +100,7 @@ const Index = () => {
                   <div className="flex-[2]">
                     <CaloriesCard current={intake.calories} goal={dailyGoals.calories} />
                   </div>
-                  <div className="flex-1 grid grid-cols-3 gap-2">
+                  <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-2">
                     <MacroCard
                       value={getSafePercentage(intake.protein, dailyGoals.protein)}
                       color="#ef4444"
@@ -123,6 +124,14 @@ const Index = () => {
                       current={intake.fats}
                       unit="g"
                       label="Grasas"
+                    />
+                    <MacroCard
+                      value={getSafePercentage(0, dailyGoals.sugars)}
+                      color="#a855f7"
+                      icon={<Sparkles className="w-6 h-6 text-purple-500" />}
+                      current={0}
+                      unit="g"
+                      label="Azúcares"
                     />
                   </div>
                 </div>
