@@ -1,4 +1,4 @@
-import { Home, Dumbbell, LineChart, Book, Plus } from "lucide-react";
+import { Home, Settings, LineChart, Book, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { cn } from "@/lib/utils";
@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const BottomNav = () => {
   const navItems = [
     { icon: Home, label: "Inicio", path: "/" },
-    { icon: Dumbbell, label: "Ejercicios", path: "/exercises" },
+    { icon: Settings, label: "Configuración", path: "/settings" },
     { icon: LineChart, label: "Progreso", path: "/progress" },
     { icon: Book, label: "Dietas", path: "/diets" },
   ];
