@@ -55,7 +55,7 @@ const BottomNav = () => {
 
   return (
     <Drawer open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-      <nav className="fixed bottom-0 left-0 right-0 z-50">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 p-4">
         <div className="relative max-w-2xl mx-auto">
           <DrawerTrigger asChild>
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2">
@@ -71,8 +71,8 @@ const BottomNav = () => {
             </div>
           </DrawerTrigger>
 
-          <div className="bg-card border-t border-border h-[65px] max-h-[65px]">
-            <div className="flex justify-around items-center h-full px-2 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+          <div className="bg-card border border-border h-[65px] rounded-full shadow-lg">
+            <div className="flex justify-around items-center h-full px-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
               {navItems.slice(0, 2).map((item) => (
                 <NavItem key={item.path} item={item} />
               ))}
