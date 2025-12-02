@@ -144,10 +144,10 @@ const Index = () => {
                   </div>
                   <div className="flex-1">
                     <MacroCard
-                        value={getSafePercentage(0, dailyGoals.sugars)}
+                        value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
                         color="#a855f7"
                         icon={<Sparkles className="w-6 h-6 text-purple-500" />}
-                        current={0}
+                        current={intake.sugars}
                         unit="g"
                         label="Azúcares"
                     />
@@ -184,6 +184,7 @@ const Index = () => {
                   protein={item.protein_value}
                   carbs={item.carbs_value}
                   fats={item.fats_value}
+                  sugars={item.sugars_value}
                 />
               ))}
             </div>

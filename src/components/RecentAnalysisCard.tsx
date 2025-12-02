@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Flame, Beef, Wheat, Droplets } from "lucide-react";
+import { Flame, Beef, Wheat, Droplets, Sparkles } from "lucide-react";
 
 interface RecentAnalysisCardProps {
   imageUrl: string | null;
@@ -9,9 +9,10 @@ interface RecentAnalysisCardProps {
   protein: number | null;
   carbs: number | null;
   fats: number | null;
+  sugars: number | null;
 }
 
-const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs, fats }: RecentAnalysisCardProps) => {
+const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs, fats, sugars }: RecentAnalysisCardProps) => {
   return (
     <Card className="p-4 flex items-center gap-4">
       <img src={imageUrl || '/placeholder.svg'} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
@@ -36,6 +37,10 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
           <div className="flex items-center gap-1">
             <Droplets className="w-4 h-4 text-blue-500" />
             <span>{fats ?? 0}g</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Sparkles className="w-4 h-4 text-purple-500" />
+            <span>{sugars ?? 0}g</span>
           </div>
         </div>
       </div>

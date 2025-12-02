@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Droplets, HeartPulse, Beef, Wheat } from "lucide-react";
+import { Flame, Droplets, HeartPulse, Beef, Wheat, Sparkles } from "lucide-react";
 
 export type AnalysisResult = {
   foodName: string;
@@ -8,6 +8,7 @@ export type AnalysisResult = {
   protein: string;
   carbs: string;
   fats: string;
+  sugars: string;
   healthRating: 'Saludable' | 'Moderado' | 'Evitar';
   reason: string;
 };
@@ -41,7 +42,7 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
             <p className="text-sm text-muted-foreground">Calorías</p>
           </div>
         </div>
-         <div className="grid grid-cols-3 gap-2 text-center">
+         <div className="grid grid-cols-2 gap-2 text-center">
           <div className="p-3 bg-muted rounded-lg">
             <Beef className="w-5 h-5 mx-auto text-red-500 mb-1" />
             <p className="font-bold text-foreground">{result.protein}</p>
@@ -56,6 +57,11 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
             <Droplets className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
             <p className="font-bold text-foreground">{result.fats}</p>
             <p className="text-xs text-muted-foreground">Grasas</p>
+          </div>
+          <div className="p-3 bg-muted rounded-lg">
+            <Sparkles className="w-5 h-5 mx-auto text-purple-500 mb-1" />
+            <p className="font-bold text-foreground">{result.sugars}</p>
+            <p className="text-xs text-muted-foreground">Azúcares</p>
           </div>
         </div>
         <div>

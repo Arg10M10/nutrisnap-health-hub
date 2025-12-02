@@ -78,6 +78,7 @@ const Progress = () => {
                   protein={item.protein_value}
                   carbs={item.carbs_value}
                   fats={item.fats_value}
+                  sugars={item.sugars_value}
                 />
               ))}
             </div>

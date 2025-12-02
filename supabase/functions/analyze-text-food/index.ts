@@ -52,6 +52,7 @@ serve(async (req) => {
         "protein": "Estimación de proteínas (ej. '20-25g')",
         "carbs": "Estimación de carbohidratos (ej. '30-40g')",
         "fats": "Estimación de grasas (ej. '15-20g')",
+        "sugars": "Estimación de azúcares (ej. '5-10g')",
         "healthRating": "Clasificación de salud ('Saludable', 'Moderado', o 'Evitar')",
         "reason": "Una breve explicación (máximo 20 palabras) de por qué le diste esa clasificación."
       }
