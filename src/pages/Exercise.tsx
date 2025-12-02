@@ -3,10 +3,10 @@ import { toast } from 'sonner';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import PageLayout from '@/components/PageLayout';
-import { Run, Bike, Dumbbell, Weight } from 'lucide-react';
+import { Footprints, Bike, Dumbbell, Weight } from 'lucide-react';
 
 const exercises = [
-  { name: 'Correr', icon: Run, path: '/exercise/running', enabled: true },
+  { name: 'Correr', icon: Footprints, path: '/exercise/running', enabled: true },
   { name: 'Ciclismo', icon: Bike, path: '#', enabled: false },
   { name: 'Pesas', icon: Dumbbell, path: '#', enabled: false },
   { name: 'Otro', icon: Weight, path: '#', enabled: false },

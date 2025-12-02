@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Loader2, Run } from 'lucide-react';
+import { ArrowLeft, Loader2, Footprints } from 'lucide-react';
 import { IntensitySelector, Intensity } from '@/components/exercise/IntensitySelector';
 import { DurationSlider } from '@/components/exercise/DurationSlider';
 import { motion } from 'framer-motion';
@@ -88,7 +88,7 @@ const Running = () => {
           <ArrowLeft className="w-6 h-6" />
         </Button>
         <div className="flex items-center gap-2">
-          <Run className="w-7 h-7 text-primary" />
+          <Footprints className="w-7 h-7 text-primary" />
           <h1 className="text-2xl font-bold text-primary">Registrar Carrera</h1>
         </div>
       </header>
