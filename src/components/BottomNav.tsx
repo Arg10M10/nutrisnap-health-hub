@@ -3,9 +3,9 @@ import { Home, Settings, LineChart, Book, Plus, Scan, Dumbbell } from "lucide-re
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Drawer, DrawerContent, DrawerTrigger, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,59 +54,22 @@ const BottomNav = () => {
   );
 
   return (
-    <>
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsMenuOpen(false)}
-            className="fixed inset-0 bg-black/60 z-40"
-          />
-        )}
-      </AnimatePresence>
+    <Drawer open={isMenuOpen} onOpenChange={setIsMenuOpen}>
       <nav className="fixed bottom-0 left-0 right-0 z-50">
         <div className="relative max-w-2xl mx-auto">
-          <AnimatePresence>
-            {isMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                className="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-end gap-4"
+          <DrawerTrigger asChild>
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                className="flex items-center justify-center w-14 h-14 bg-primary rounded-full shadow-lg hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                aria-label="Abrir menú de acciones"
               >
-                {menuItems.map((item, index) => (
-                  <div key={index} className="flex items-center gap-3" style={{ animationDelay: `${index * 50}ms` }}>
-                    <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md">
-                      <span className="font-semibold">{item.label}</span>
-                    </div>
-                    <Button
-                      size="icon"
-                      className="w-12 h-12 rounded-full bg-card text-primary shadow-lg"
-                      onClick={() => handleMenuAction(item.action)}
-                    >
-                      <item.icon className="w-6 h-6" />
-                    </Button>
-                  </div>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <div className="absolute bottom-5 left-1/2 -translate-x-1/2">
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center justify-center w-14 h-14 bg-primary rounded-full shadow-lg hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              aria-label="Abrir menú de acciones"
-            >
-              <motion.div animate={{ rotate: isMenuOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
-                <Plus className="w-7 h-7 text-primary-foreground" />
-              </motion.div>
-            </motion.button>
-          </div>
+                <motion.div animate={{ rotate: isMenuOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
+                  <Plus className="w-7 h-7 text-primary-foreground" />
+                </motion.div>
+              </motion.button>
+            </div>
+          </DrawerTrigger>
 
           <div className="bg-card border-t border-border h-[65px] max-h-[65px]">
             <div className="flex justify-around items-center h-full px-2 overflow-x-auto [&::-webkit-scrollbar]:hidden">
@@ -121,7 +84,28 @@ const BottomNav = () => {
           </div>
         </div>
       </nav>
-    </>
+      <DrawerContent>
+        <DrawerHeader className="text-center">
+          <DrawerTitle>¿Qué quieres registrar?</DrawerTitle>
+        </DrawerHeader>
+        <div className="grid grid-cols-2 gap-4 p-4 pb-8">
+          <div
+            onClick={() => handleMenuAction(menuItems[0].action)}
+            className="flex flex-col items-center justify-center gap-3 p-6 bg-muted rounded-2xl aspect-square cursor-pointer hover:bg-muted/80 transition-colors"
+          >
+            <Scan className="w-12 h-12 text-primary" />
+            <span className="font-semibold text-center text-foreground text-lg">{menuItems[0].label}</span>
+          </div>
+          <div
+            onClick={() => handleMenuAction(menuItems[1].action)}
+            className="flex flex-col items-center justify-center gap-3 p-6 bg-muted rounded-2xl aspect-square cursor-pointer hover:bg-muted/80 transition-colors"
+          >
+            <Dumbbell className="w-12 h-12 text-primary" />
+            <span className="font-semibold text-center text-foreground text-lg">{menuItems[1].label}</span>
+          </div>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 };
 
