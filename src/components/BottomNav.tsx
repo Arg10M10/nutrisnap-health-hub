@@ -32,8 +32,12 @@ const BottomNav = () => {
   ];
 
   const handleMenuAction = (action: () => void) => {
-    action();
     setIsMenuOpen(false);
+    // Add a small delay to ensure the drawer has started closing before navigating.
+    // This prevents a race condition that could leave the body scroll locked.
+    setTimeout(() => {
+      action();
+    }, 100);
   };
 
   const NavItem = ({ item }: { item: typeof navItems[0] }) => (
