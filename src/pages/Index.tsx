@@ -100,7 +100,7 @@ const Index = () => {
                   <div className="flex-[2]">
                     <CaloriesCard current={intake.calories} goal={dailyGoals.calories} />
                   </div>
-                  <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-2">
+                  <div className="flex-1 grid grid-cols-3 gap-2">
                     <MacroCard
                       value={getSafePercentage(intake.protein, dailyGoals.protein)}
                       color="#ef4444"
@@ -125,14 +125,6 @@ const Index = () => {
                       unit="g"
                       label="Grasas"
                     />
-                    <MacroCard
-                      value={getSafePercentage(0, dailyGoals.sugars)}
-                      color="#a855f7"
-                      icon={<Sparkles className="w-6 h-6 text-purple-500" />}
-                      current={0}
-                      unit="g"
-                      label="Azúcares"
-                    />
                   </div>
                 </div>
               </CarouselItem>
@@ -148,6 +140,16 @@ const Index = () => {
                       onAdd={() => addWaterGlass(selectedDate)}
                       onRemove={() => removeWaterGlass(selectedDate)}
                       isUpdating={isWaterUpdating}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <MacroCard
+                        value={getSafePercentage(0, dailyGoals.sugars)}
+                        color="#a855f7"
+                        icon={<Sparkles className="w-6 h-6 text-purple-500" />}
+                        current={0}
+                        unit="g"
+                        label="Azúcares"
                     />
                   </div>
                 </div>
