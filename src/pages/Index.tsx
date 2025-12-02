@@ -76,11 +76,6 @@ const Index = () => {
             <Leaf className="w-8 h-8 text-primary" />
             <h1 className="text-primary text-3xl">NutriSnap</h1>
           </div>
-          <Link to="/settings">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Settings className="w-6 h-6 text-muted-foreground" />
-            </Button>
-          </Link>
         </header>
 
         <WeeklyCalendar 
