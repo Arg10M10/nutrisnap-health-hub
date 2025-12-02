@@ -38,15 +38,15 @@ type ScanMode = "food" | "barcode";
 const MAX_DIMENSION = 1024; // Max width/height for the image
 
 const pageVariants = {
-  initial: { opacity: 0 },
-  in: { opacity: 1 },
-  out: { opacity: 0 },
+  initial: { opacity: 0, x: 20 },
+  in: { opacity: 1, x: 0 },
+  out: { opacity: 0, x: -20 },
 };
 
 const pageTransition = {
   type: "tween",
   ease: "easeInOut",
-  duration: 0.15,
+  duration: 0.2,
 };
 
 const Scanner = () => {
