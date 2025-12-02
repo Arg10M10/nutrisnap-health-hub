@@ -10,7 +10,12 @@ interface SugarsCardProps {
 const SugarsCard = ({ current, goal }: SugarsCardProps) => {
   const currentVal = current || 0;
   const goalVal = goal || 0;
-  const percentage = goalVal > 0 ? (currentVal / goalVal) * 100 : 0;
+
+  let percentage = goalVal > 0 ? (currentVal / goalVal) * 100 : 0;
+  if (isNaN(percentage)) {
+    percentage = 0;
+  }
+
   const color = percentage > 100 ? "#ef4444" : "#a855f7";
 
   return (

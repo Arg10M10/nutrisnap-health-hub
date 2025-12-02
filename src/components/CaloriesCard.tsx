@@ -10,7 +10,12 @@ interface CaloriesCardProps {
 const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
   const currentVal = current || 0;
   const goalVal = goal || 0;
-  const percentage = goalVal > 0 ? (currentVal / goalVal) * 100 : 0;
+  
+  let percentage = goalVal > 0 ? (currentVal / goalVal) * 100 : 0;
+  if (isNaN(percentage)) {
+    percentage = 0;
+  }
+
   const remaining = goalVal - currentVal;
 
   return (

@@ -7,21 +7,23 @@ interface HealthScoreCardProps {
 }
 
 const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
+  const safeScore = score || 0;
+
   let color = "#22c55e"; // Green
-  if (score < 75) color = "#f97316"; // Orange
-  if (score < 50) color = "#ef4444"; // Red
+  if (safeScore < 75) color = "#f97316"; // Orange
+  if (safeScore < 50) color = "#ef4444"; // Red
 
   const getLabel = () => {
-    if (score >= 85) return "Excelente";
-    if (score >= 70) return "Bueno";
-    if (score >= 50) return "Moderado";
+    if (safeScore >= 85) return "Excelente";
+    if (safeScore >= 70) return "Bueno";
+    if (safeScore >= 50) return "Moderado";
     return "Mejorable";
   };
 
   return (
     <Card className="p-4 text-center space-y-2 h-full flex flex-col justify-between">
       <div className="w-16 h-16 mx-auto relative">
-        <MacroProgressCircle value={score} color={color} />
+        <MacroProgressCircle value={safeScore} color={color} />
         <div className="absolute inset-0 flex items-center justify-center">
           <ShieldCheck className="w-6 h-6" style={{ color }} />
         </div>

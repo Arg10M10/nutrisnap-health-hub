@@ -43,6 +43,14 @@ const Index = () => {
     water: 8,
   };
 
+  const getSafePercentage = (current?: number | null, goal?: number | null) => {
+    const currentVal = current || 0;
+    const goalVal = goal || 0;
+    if (goalVal === 0) return 0;
+    const percentage = (currentVal / goalVal) * 100;
+    return isNaN(percentage) ? 0 : percentage;
+  };
+
   const weeklyCalorieData = useMemo(() => {
     const data: { [key: string]: number } = {};
     for (let i = 0; i < 7; i++) {
@@ -94,7 +102,7 @@ const Index = () => {
                   </div>
                   <div className="flex-1 grid grid-cols-3 gap-2">
                     <MacroCard
-                      value={(intake.protein / dailyGoals.protein) * 100}
+                      value={getSafePercentage(intake.protein, dailyGoals.protein)}
                       color="#ef4444"
                       icon={<Beef className="w-6 h-6 text-red-500" />}
                       current={intake.protein}
@@ -102,7 +110,7 @@ const Index = () => {
                       label="Proteína"
                     />
                     <MacroCard
-                      value={(intake.carbs / dailyGoals.carbs) * 100}
+                      value={getSafePercentage(intake.carbs, dailyGoals.carbs)}
                       color="#f97316"
                       icon={<Wheat className="w-6 h-6 text-orange-500" />}
                       current={intake.carbs}
@@ -110,7 +118,7 @@ const Index = () => {
                       label="Carbs"
                     />
                     <MacroCard
-                      value={(intake.fats / dailyGoals.fats) * 100}
+                      value={getSafePercentage(intake.fats, dailyGoals.fats)}
                       color="#3b82f6"
                       icon={<Droplets className="w-6 h-6 text-blue-500" />}
                       current={intake.fats}
