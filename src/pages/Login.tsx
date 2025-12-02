@@ -2,68 +2,22 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Leaf, Loader2 } from "lucide-react";
+import { Leaf, Loader2 } from "lucide-react";
 import { toast } from 'sonner';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Link } from 'react-router-dom';
 
-const Logo = () => <Leaf className="w-12 h-12 text-primary" />;
+const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M19.63 12.22c0-2.85-1.8-4.44-4.38-4.44-1.64 0-3.13.94-4.25.94-.97 0-2.25-.84-3.63-.84-2.58 0-4.63 1.88-4.63 4.71 0 3.11 2.12 6.2 4.38 6.2 1.47 0 2.62-.84 3.88-.84.97 0 2.62.84 4.12.84 2.25 0 4.5-2.62 4.5-6.57zm-11.5 6.2c.84 0 1.39-.53 2.25-.53.84 0 1.64.53 2.38.53.84 0 1.5-.63 2.25-1.64-1.12-.63-2.12-1.88-2.12-3.38 0-1.5 1-2.85 2.25-3.5-.84-.84-2.12-1-3.13-1-1.25 0-2.5.74-3.38.74-.97 0-2-.74-3.25-.74-1.64 0-3.13 1.12-3.88 2.62.63.38 1.25.84 1.25 1.88 0 1.64-1.25 2.62-2.62 3.13.25.13.5.25.74.38 1.13 1.59 2.5 2.18 3.88 2.18zM15.25 6.57c.74-.84 1.25-2 1-3.13-.84.13-1.88.74-2.62 1.64-.63.74-1.25 1.88-1 3 .84.13 1.88-.63 2.62-1.51z" />
+  </svg>
+);
 
 export default function Login() {
-  const [isSignUp, setIsSignUp] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
 
-  const handleAuthAction = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    if (isSignUp) {
-      if (!firstName || !lastName) {
-        toast.error("Por favor, introduce tu nombre y apellido.");
-        setLoading(false);
-        return;
-      }
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: `${firstName} ${lastName}`,
-          },
-        },
-      });
-
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success("¡Revisa tu correo para verificar tu cuenta!");
-      }
-    } else {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success("¡Bienvenido de vuelta!");
-      }
-    }
-    setLoading(false);
-  };
-
-  const signInWithGoogle = async () => {
+  const signInWithProvider = async (provider: 'google' | 'apple') => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider,
     });
     if (error) {
       toast.error(error.message);
@@ -74,103 +28,59 @@ export default function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <div className="w-full max-w-md">
-        <Card className="border-none shadow-lg pb-0">
-          <CardHeader className="flex flex-col items-center space-y-1.5 pb-4 pt-6">
-            <Logo />
-            <div className="space-y-0.5 flex flex-col items-center">
-              <h2 className="text-2xl font-semibold text-foreground">
-                {isSignUp ? 'Crea una cuenta' : 'Inicia Sesión'}
+        <Card className="border-none shadow-lg">
+          <CardHeader className="flex flex-col items-center space-y-2.5 pb-6 pt-8">
+            <Leaf className="w-16 h-16 text-primary" />
+            <div className="space-y-1.5 flex flex-col items-center text-center">
+              <h2 className="text-3xl font-bold text-foreground">
+                Bienvenido a NutriSnap
               </h2>
-              <p className="text-muted-foreground text-center px-4">
-                {isSignUp ? '¡Bienvenido! Regístrate para empezar tu viaje saludable.' : 'Ingresa tus credenciales para continuar.'}
+              <p className="text-muted-foreground px-4">
+                Tu compañero de salud inteligente. Comienza tu viaje con un solo clic.
               </p>
             </div>
           </CardHeader>
-          <CardContent className="px-8">
-            <form onSubmit={handleAuthAction} className="space-y-6">
-              {isSignUp && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">Nombre</Label>
-                    <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Apellido</Label>
-                    <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-                  </div>
-                </div>
+          <CardContent className="px-8 space-y-4">
+            <Button 
+              variant="outline"
+              className="w-full h-16 text-lg rounded-full" 
+              onClick={() => signInWithProvider('google')} 
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <>
+                  <img src="/google-logo.png" alt="Google logo" className="mr-3 h-6 w-6" />
+                  Continuar con Google
+                </>
               )}
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Correo electrónico</Label>
-                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    className="pr-10"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                </div>
-              </div>
-
-              {isSignUp && (
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="terms" required />
-                  <label htmlFor="terms" className="text-sm text-muted-foreground">
-                    Acepto los{" "}
-                    <Link to="#" className="text-primary hover:underline">
-                      Términos
-                    </Link>
-                  </label>
-                </div>
-              )}
-
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isSignUp ? 'Crear cuenta gratis' : 'Iniciar Sesión'}
-              </Button>
-            </form>
-            
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  O
-                </span>
-              </div>
-            </div>
-
-            <Button variant="outline" className="w-full" onClick={signInWithGoogle} disabled={loading}>
-              <img src="/google-logo.png" alt="Google logo" className="mr-2 h-4 w-4" />
-              Continuar con Google
             </Button>
-
+            <Button 
+              className="w-full h-16 text-lg rounded-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200" 
+              onClick={() => signInWithProvider('apple')} 
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <>
+                  <AppleIcon className="mr-3 h-7 w-7" />
+                  Continuar con Apple
+                </>
+              )}
+            </Button>
           </CardContent>
-          <CardFooter className="flex justify-center border-t !py-4 mt-6">
-            <p className="text-center text-sm text-muted-foreground">
-              {isSignUp ? '¿Ya tienes una cuenta?' : '¿No tienes una cuenta?'}
-              <Button variant="link" className="pl-1" onClick={() => setIsSignUp(!isSignUp)}>
-                {isSignUp ? 'Inicia Sesión' : 'Regístrate'}
-              </Button>
+          <CardFooter className="flex justify-center !py-6 mt-4">
+            <p className="text-center text-xs text-muted-foreground px-4">
+              Al continuar, aceptas nuestros{" "}
+              <a href="#" className="text-primary hover:underline">
+                Términos de Servicio
+              </a>{" "}
+              y{" "}
+              <a href="#" className="text-primary hover:underline">
+                Política de Privacidad
+              </a>.
             </p>
           </CardFooter>
         </Card>
