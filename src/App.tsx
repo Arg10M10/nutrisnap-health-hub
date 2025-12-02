@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import { NutritionProvider } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
@@ -23,6 +24,7 @@ const queryClient = new QueryClient();
 
 const AppRoutes = () => {
   const { session, profile, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return <SplashScreen />;
@@ -45,17 +47,19 @@ const AppRoutes = () => {
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/scanner" element={<Scanner />} />
-      <Route path="/progress" element={<Progress />} />
-      <Route path="/diets" element={<Diets />} />
-      <Route path="/barcode-result" element={<BarcodeResultPage />} />
-      <Route path="/settings" element={<Settings />} />
-      <Route path="/exercise" element={<Exercise />} />
-      <Route path="/exercise/running" element={<Running />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Index />} />
+        <Route path="/scanner" element={<Scanner />} />
+        <Route path="/progress" element={<Progress />} />
+        <Route path="/diets" element={<Diets />} />
+        <Route path="/barcode-result" element={<BarcodeResultPage />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/exercise" element={<Exercise />} />
+        <Route path="/exercise/running" element={<Running />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
   );
 };
 

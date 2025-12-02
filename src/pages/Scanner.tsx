@@ -30,11 +30,24 @@ import { cn } from "@/lib/utils";
 import Viewfinder from "@/components/Viewfinder";
 import { useNutrition } from "@/context/NutritionContext";
 import AnalysisResultDrawer from "@/components/AnalysisResultDrawer";
+import { motion } from "framer-motion";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
 
 const MAX_DIMENSION = 1024; // Max width/height for the image
+
+const pageVariants = {
+  initial: { opacity: 0 },
+  in: { opacity: 1 },
+  out: { opacity: 0 },
+};
+
+const pageTransition = {
+  type: "tween",
+  ease: "easeInOut",
+  duration: 0.3,
+};
 
 const Scanner = () => {
   const [state, setState] = useState<ScannerState>("initializing");
@@ -276,7 +289,14 @@ const Scanner = () => {
   const handleClose = () => navigate(-1);
 
   return (
-    <div className="fixed inset-0 bg-black text-white z-50 flex flex-col">
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+      className="fixed inset-0 bg-black text-white z-50 flex flex-col"
+    >
       {/* BACKGROUND: Camera/Image View */}
       <div className="absolute inset-0 z-10">
         {scanMode === 'food' && (
@@ -450,7 +470,7 @@ const Scanner = () => {
 
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
       <canvas ref={canvasRef} className="hidden" />
-    </div>
+    </motion.div>
   );
 };
 

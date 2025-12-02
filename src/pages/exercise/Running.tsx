@@ -8,12 +8,25 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2, Run } from 'lucide-react';
 import { IntensitySelector, Intensity } from '@/components/exercise/IntensitySelector';
 import { DurationSlider } from '@/components/exercise/DurationSlider';
+import { motion } from 'framer-motion';
 
 // MET (Metabolic Equivalent of Task) values for running
 const MET_VALUES: Record<Intensity, number> = {
   'Baja': 7.0,   // Jogging
   'Media': 9.8,  // Running at a good pace
   'Alta': 12.5,  // Running fast / sprints
+};
+
+const pageVariants = {
+  initial: { opacity: 0 },
+  in: { opacity: 1 },
+  out: { opacity: 0 },
+};
+
+const pageTransition = {
+  type: "tween",
+  ease: "easeInOut",
+  duration: 0.3,
 };
 
 const Running = () => {
@@ -62,7 +75,14 @@ const Running = () => {
   const canSave = intensity !== null && duration > 0;
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+      className="flex min-h-screen flex-col bg-background"
+    >
       <header className="p-4 flex items-center gap-4 sticky top-0 bg-background/80 backdrop-blur-sm z-10 border-b">
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
           <ArrowLeft className="w-6 h-6" />
@@ -96,7 +116,7 @@ const Running = () => {
           )}
         </Button>
       </footer>
-    </div>
+    </motion.div>
   );
 };
 
