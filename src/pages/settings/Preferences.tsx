@@ -45,23 +45,28 @@ const Preferences = () => {
                       <Button
                         variant="outline"
                         className={cn(
-                          'w-full h-40 flex flex-col items-center justify-between p-3 transition-all',
+                          'w-full h-40 p-0 relative overflow-hidden group',
                           theme === option.value && 'border-primary ring-2 ring-primary',
                           option.disabled && 'opacity-50 cursor-not-allowed'
                         )}
                         onClick={() => !option.disabled && setTheme(option.value)}
                         disabled={option.disabled}
                       >
-                        <div className="w-full flex-grow rounded-md overflow-hidden bg-muted flex items-center justify-center">
-                          {option.value === 'light' ? (
-                            <img src="/light-theme-preview.png" alt="Vista previa del tema claro" className="w-full h-full object-contain" />
-                          ) : (
+                        {/* Background Content (Image or Icon) */}
+                        {option.value === 'light' ? (
+                          <img src="/light-theme-preview.png" alt="Vista previa del tema claro" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-muted">
                             <option.icon className="w-12 h-12 text-muted-foreground" />
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 pt-2">
-                          <option.icon className="w-4 h-4" />
-                          <span className="font-semibold text-sm">{option.label}</span>
+                          </div>
+                        )}
+
+                        {/* Text Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 flex h-1/2 items-end justify-center p-2 bg-gradient-to-t from-black/70 to-transparent">
+                          <div className="flex items-center gap-2 text-white">
+                            <option.icon className="w-4 h-4" />
+                            <span className="font-semibold text-sm">{option.label}</span>
+                          </div>
                         </div>
                       </Button>
                       {option.disabled && (
