@@ -151,12 +151,13 @@ const Badges = () => {
                             <Lock className="w-8 h-8 text-white" />
                           </div>
                         )}
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <CardTitle className="text-base font-semibold">{badge.name}</CardTitle>
-                        <CardDescription className="text-xs">{badge.description}</CardDescription>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-2">
+                      <CardTitle className="text-base font-semibold">{badge.name}</CardTitle>
+                      <CardDescription className="text-xs">{badge.description}</CardDescription>
+                    </CardContent>
+                  </Card>
                 );
               })}
             </div>
