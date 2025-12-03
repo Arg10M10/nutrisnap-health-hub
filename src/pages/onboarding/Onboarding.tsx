@@ -46,6 +46,7 @@ const Onboarding = () => {
           previous_apps_experience: formData.experience,
           units: formData.units,
           weight: formData.weight,
+          starting_weight: formData.weight,
           height: formData.height,
           date_of_birth: formData.dob ? formData.dob.toISOString().split('T')[0] : null,
           goal: formData.goal,

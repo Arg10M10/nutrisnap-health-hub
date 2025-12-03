@@ -15,6 +15,7 @@ export interface Profile {
   units: string | null;
   date_of_birth: string | null;
   goal: string | null;
+  starting_weight: number | null;
 }
 
 interface AuthContextType {
