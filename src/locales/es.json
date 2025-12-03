@@ -1,0 +1,17 @@
+{
+  "translation": {
+    "settings": {
+      "title": "Configuración",
+      "language": "Idioma"
+    },
+    "languages": {
+      "es": "Español",
+      "en": "Inglés",
+      "it": "Italiano",
+      "fr": "Francés"
+    },
+    "language_drawer": {
+      "title": "Seleccionar Idioma"
+    }
+  }
+}

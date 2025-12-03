@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import {
   User, Edit, HeartPulse, SlidersHorizontal, Languages, Target, Goal, Palette,
   Lightbulb, Mail, FileText, Shield, Instagram, LogOut, Trash2
@@ -16,12 +17,15 @@ import EditProfileDrawer from "@/components/EditProfileDrawer";
 import PageLayout from "@/components/PageLayout";
 import { SettingsCategory } from "@/components/settings/SettingsCategory";
 import { SettingsItem } from "@/components/settings/SettingsItem";
+import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
 import { TikTokIcon } from "@/components/icons/TikTokIcon";
 
 const Settings = () => {
   const { profile, signOut } = useAuth();
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSignOut = async () => {
     await signOut();
@@ -43,7 +47,7 @@ const Settings = () => {
     <PageLayout>
       <div className="space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-primary">Configuración</h1>
+          <h1 className="text-primary">{t('settings.title')}</h1>
           <p className="text-muted-foreground text-lg">
             Gestiona tu perfil y preferencias de la aplicación.
           </p>
@@ -69,7 +73,7 @@ const Settings = () => {
         <SettingsCategory title="Cuenta">
           <SettingsItem icon={<HeartPulse size={20} />} label="Detalles Personales" onClick={() => setIsEditDrawerOpen(true)} />
           <SettingsItem icon={<SlidersHorizontal size={20} />} label="Preferencias" onClick={() => navigate('/settings/preferences')} />
-          <SettingsItem icon={<Languages size={20} />} label="Idioma" onClick={handleNotImplemented} />
+          <SettingsItem icon={<Languages size={20} />} label={t('settings.language')} onClick={() => setIsLanguageDrawerOpen(true)} />
         </SettingsCategory>
 
         {/* Goals and Tracking Category */}
@@ -121,6 +125,7 @@ const Settings = () => {
 
       </div>
       <EditProfileDrawer isOpen={isEditDrawerOpen} onClose={() => setIsEditDrawerOpen(false)} />
+      <LanguageDrawer isOpen={isLanguageDrawerOpen} onClose={() => setIsLanguageDrawerOpen(false)} />
     </PageLayout>
   );
 };
