@@ -18,7 +18,7 @@ const Preferences = () => {
 
   const themeOptions = [
     { value: 'light', label: 'Claro', icon: Sun },
-    { value: 'dark', label: 'Oscuro', icon: Moon, disabled: true },
+    { value: 'dark', label: 'Oscuro', icon: Moon },
     { value: 'system', label: 'Sistema', icon: Monitor },
   ];
 
@@ -46,11 +46,9 @@ const Preferences = () => {
                         variant="outline"
                         className={cn(
                           'w-full h-32 p-0 relative overflow-hidden group',
-                          theme === option.value && 'border-primary ring-2 ring-primary',
-                          option.disabled && 'opacity-50 cursor-not-allowed'
+                          theme === option.value && 'border-primary ring-2 ring-primary'
                         )}
-                        onClick={() => !option.disabled && setTheme(option.value)}
-                        disabled={option.disabled}
+                        onClick={() => setTheme(option.value)}
                       >
                         {/* Background Content (Image or Icon) */}
                         {option.value === 'light' ? (
@@ -69,18 +67,8 @@ const Preferences = () => {
                           </div>
                         </div>
                       </Button>
-                      {option.disabled && (
-                        <div className="absolute top-2 right-2 text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full">
-                          Pronto
-                        </div>
-                      )}
                     </div>
                   </TooltipTrigger>
-                  {option.disabled && (
-                    <TooltipContent>
-                      <p>El tema oscuro estará disponible próximamente.</p>
-                    </TooltipContent>
-                  )}
                 </Tooltip>
               ))}
             </div>

@@ -58,6 +58,7 @@ All colors MUST be HSL.
   .dark {
     --background: 150 25% 8%;
     --foreground: 150 10% 95%;
+    --background-gradient-start: 150 25% 10%;
 
     --card: 150 20% 12%;
     --card-foreground: 150 10% 95%;

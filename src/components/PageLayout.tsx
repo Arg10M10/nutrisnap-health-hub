@@ -25,6 +25,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
+      className="dark:bg-gradient-to-b dark:from-background-gradient-start dark:to-background"
     >
       <main className="max-w-2xl mx-auto px-4 py-6">
         {children}
