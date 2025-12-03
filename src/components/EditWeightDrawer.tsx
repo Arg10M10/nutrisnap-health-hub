@@ -44,8 +44,11 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
     },
     onSuccess: async () => {
       toast.success('¡Peso actualizado con éxito!');
-      await refetchProfile();
-      queryClient.invalidateQueries({ queryKey: ['weight_history', user?.id] });
+      // Invalidate and refetch both profile and history data in parallel
+      await Promise.all([
+        refetchProfile(),
+        queryClient.invalidateQueries({ queryKey: ['weight_history', user?.id] })
+      ]);
       onClose();
     },
     onError: (error) => {
