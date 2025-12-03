@@ -1,13 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-import { Flame, Leaf, ScanLine, Settings, Beef, Wheat, Droplets, Sparkles } from "lucide-react";
+import { Flame, Leaf, ScanLine, Beef, Wheat, Droplets, Sparkles } from "lucide-react";
 import { useNutrition } from "@/context/NutritionContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
 import HealthScoreCard from "@/components/HealthScoreCard";
@@ -76,6 +74,10 @@ const Index = () => {
             <Leaf className="w-8 h-8 text-primary" />
             <h1 className="text-primary text-3xl">NutriSnap</h1>
           </div>
+          <div className="flex items-center gap-2 bg-foreground text-background px-3 py-1.5 rounded-full shadow-md">
+            <Flame className="w-5 h-5 text-orange-400 fill-current" />
+            <span className="font-bold text-sm">{streak}</span>
+          </div>
         </header>
 
         <WeeklyCalendar 
@@ -83,14 +85,6 @@ const Index = () => {
           onDateSelect={setSelectedDate} 
           weeklyCalorieData={weeklyCalorieData}
         />
-
-        <Card className="p-4 flex justify-between items-center">
-          <div>
-            <p className="text-muted-foreground">Racha Actual</p>
-            <p className="text-4xl font-bold text-foreground">{streak} {streak === 1 ? 'día' : 'días'}</p>
-          </div>
-          <Flame className="w-12 h-12 text-yellow-500" />
-        </Card>
 
         <div>
           <Carousel className="w-full" opts={{ align: "start", duration: 20 }} setApi={setApi}>
