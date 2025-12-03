@@ -7,8 +7,6 @@ import { AnimatePresence } from "framer-motion";
 import { NutritionProvider } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
-import { I18nextProvider } from "react-i18next";
-import i18n from "./lib/i18n";
 
 import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
@@ -92,24 +90,22 @@ const AppRoutes = () => {
 };
 
 const App = () => (
-  <I18nextProvider i18n={i18n}>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="system" storageKey="vite-ui-theme">
-        <TooltipProvider>
-          <BrowserRouter>
-            <ScrollToTop />
-            <AuthProvider>
-              <NutritionProvider>
-                <Toaster />
-                <Sonner />
-                <AppRoutes />
-              </NutritionProvider>
-            </AuthProvider>
-          </BrowserRouter>
-        </TooltipProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  </I18nextProvider>
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider attribute="class" defaultTheme="system" storageKey="vite-ui-theme">
+      <TooltipProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <AuthProvider>
+            <NutritionProvider>
+              <Toaster />
+              <Sonner />
+              <AppRoutes />
+            </NutritionProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
+  </QueryClientProvider>
 );
 
 export default App;

@@ -13,8 +13,6 @@ interface LanguageDrawerProps {
 const languages = [
   { code: 'es', name: 'Español' },
   { code: 'en', name: 'Inglés' },
-  { code: 'it', name: 'Italiano' },
-  { code: 'fr', name: 'Francés' },
 ];
 
 export const LanguageDrawer = ({ isOpen, onClose }: LanguageDrawerProps) => {

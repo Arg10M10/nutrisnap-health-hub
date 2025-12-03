@@ -11,12 +11,6 @@ const resources = {
   es: {
     translation: translationES,
   },
-  it: {
-    translation: translationES, // Fallback to Spanish
-  },
-  fr: {
-    translation: translationES, // Fallback to Spanish
-  },
 };
 
 i18n
