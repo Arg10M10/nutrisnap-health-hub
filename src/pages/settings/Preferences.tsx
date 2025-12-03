@@ -45,7 +45,7 @@ const Preferences = () => {
                       <Button
                         variant="outline"
                         className={cn(
-                          'w-full h-40 p-0 relative overflow-hidden group',
+                          'w-full h-32 p-0 relative overflow-hidden group',
                           theme === option.value && 'border-primary ring-2 ring-primary',
                           option.disabled && 'opacity-50 cursor-not-allowed'
                         )}
