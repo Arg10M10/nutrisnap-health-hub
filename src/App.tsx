@@ -19,8 +19,26 @@ import Onboarding from "./pages/onboarding/Onboarding";
 import SplashScreen from "./pages/SplashScreen";
 import Exercise from "./pages/Exercise";
 import Running from "./pages/exercise/Running";
+import BottomNav from "./components/BottomNav";
 
 const queryClient = new QueryClient();
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Index />} />
+        <Route path="/progress" element={<Progress />} />
+        <Route path="/diets" element={<Diets />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/exercise" element={<Exercise />} />
+        {/* Rutas sin BottomNav se manejan fuera de este componente principal */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 const AppRoutes = () => {
   const { session, profile, loading } = useAuth();
@@ -30,36 +48,40 @@ const AppRoutes = () => {
     return <SplashScreen />;
   }
 
-  if (!session) {
+  // Rutas de pantalla completa que no usan el layout principal
+  const fullScreenRoutes = {
+    "/scanner": <Scanner />,
+    "/barcode-result": <BarcodeResultPage />,
+    "/exercise/running": <Running />,
+  };
+
+  if (fullScreenRoutes[location.pathname]) {
     return (
-      <Routes>
-        <Route path="*" element={<Login />} />
-      </Routes>
+       <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/scanner" element={<Scanner />} />
+          <Route path="/barcode-result" element={<BarcodeResultPage />} />
+          <Route path="/exercise/running" element={<Running />} />
+        </Routes>
+      </AnimatePresence>
     );
+  }
+
+  if (!session) {
+    return <Login />;
   }
 
   if (!profile?.onboarding_completed) {
-    return (
-      <Routes>
-        <Route path="*" element={<Onboarding />} />
-      </Routes>
-    );
+    return <Onboarding />;
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Index />} />
-        <Route path="/scanner" element={<Scanner />} />
-        <Route path="/progress" element={<Progress />} />
-        <Route path="/diets" element={<Diets />} />
-        <Route path="/barcode-result" element={<BarcodeResultPage />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/exercise" element={<Exercise />} />
-        <Route path="/exercise/running" element={<Running />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </AnimatePresence>
+    <div className="min-h-screen bg-background">
+      <div className="pb-28">
+        <AnimatedRoutes />
+      </div>
+      <BottomNav />
+    </div>
   );
 };
 

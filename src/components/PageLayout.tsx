@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import BottomNav from "./BottomNav";
 import { motion } from "framer-motion";
 
 interface PageLayoutProps {
@@ -26,12 +25,10 @@ const PageLayout = ({ children }: PageLayoutProps) => {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
-      className="min-h-screen bg-background pb-28"
     >
       <main className="max-w-2xl mx-auto px-4 py-6">
         {children}
       </main>
-      <BottomNav />
     </motion.div>
   );
 };
