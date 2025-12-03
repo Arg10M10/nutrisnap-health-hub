@@ -46,10 +46,7 @@ const Progress = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center relative">
-            <Button variant="ghost" size="icon" className="absolute top-2 right-2" onClick={() => setIsWeightDrawerOpen(true)}>
-              <Edit className="w-4 h-4" />
-            </Button>
+          <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
             <Weight className="w-10 h-10 text-primary" />
             <p className="text-5xl font-bold text-foreground mt-2">
               {profile?.weight ? profile.weight : 'N/A'}
@@ -64,6 +61,16 @@ const Progress = () => {
             <StreakCalendar streakDays={streakDays} />
           </Card>
         </div>
+
+        <Button
+          onClick={() => setIsWeightDrawerOpen(true)}
+          variant="outline"
+          size="lg"
+          className="w-full h-14 text-lg"
+        >
+          <Edit className="mr-2 h-5 w-5" />
+          Actualizar mi peso
+        </Button>
 
         <WeightChart />
 
