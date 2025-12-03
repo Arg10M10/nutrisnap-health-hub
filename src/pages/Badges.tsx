@@ -11,6 +11,10 @@ const streakBadges = [
   { name: "Casi una Semana", description: "Mantén una racha de 6 días.", days: 6, image: "/badges/streak-6.png" },
   { name: "Doble Dígito", description: "Alcanza una racha de 10 días.", days: 10, image: "/badges/streak-10.png" },
   { name: "Un Mes de Racha", description: "¡Un mes completo! Sigue así.", days: 30, image: "/badges/streak-30.png" },
+  { name: "Dos Meses", description: "¡Dos meses de racha!", days: 60, image: "/badges/streak-60.png" },
+  { name: "Fuego Ardiente", description: "Una racha de 80 días.", days: 80, image: "/badges/streak-80.png" },
+  { name: "Club de los 100", description: "¡100 días seguidos!", days: 100, image: "/badges/streak-100.png" },
+  { name: "Imparable", description: "Una racha épica de 200 días.", days: 200, image: "/badges/streak-200.png" },
   { name: "Constancia Pura", description: "Increíble racha de 300 días.", days: 300, image: "/badges/streak-300.png" },
   { name: "Leyenda", description: "Una racha imparable de 400 días.", days: 400, image: "/badges/streak-400.png" },
   { name: "Más Allá", description: "Superaste los 500 días. ¡Wow!", days: 500, image: "/badges/streak-500.png" },
@@ -147,14 +151,12 @@ const Badges = () => {
                             <Lock className="w-8 h-8 text-white" />
                           </div>
                         )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-2">
-                      <CardTitle className="text-base font-semibold">{badge.name}</CardTitle>
-                      <CardDescription className="text-xs">{badge.description}</CardDescription>
-                    </CardContent>
-                  </Card>
-                </Card>
+                      </CardHeader>
+                      <CardContent className="p-2">
+                        <CardTitle className="text-base font-semibold">{badge.name}</CardTitle>
+                        <CardDescription className="text-xs">{badge.description}</CardDescription>
+                      </CardContent>
+                    </Card>
                 );
               })}
             </div>
