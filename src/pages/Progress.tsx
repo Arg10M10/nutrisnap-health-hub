@@ -15,6 +15,7 @@ import BmiCalculator from "@/components/BmiCalculator";
 import StreakCalendar from "@/components/StreakCalendar";
 import EditWeightDrawer from "@/components/EditWeightDrawer";
 import WeightChart from "@/components/WeightChart";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 const Progress = () => {
   const { getDataForDate, streak, streakDays } = useNutrition();
@@ -50,13 +51,13 @@ const Progress = () => {
           <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
             <Weight className="w-10 h-10 text-primary" />
             <p className="text-5xl font-bold text-foreground mt-2">
-              {profile?.weight ? profile.weight : 'N/A'}
+              <AnimatedNumber value={profile?.weight || 0} toFixed={1} />
             </p>
             <p className="text-sm text-muted-foreground">kg</p>
           </Card>
           <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
             <p className="text-5xl font-bold text-foreground">
-              {streak}
+              <AnimatedNumber value={streak} />
             </p>
             <p className="text-sm text-muted-foreground mb-3">{streak === 1 ? 'día de racha' : 'días de racha'}</p>
             <StreakCalendar streakDays={streakDays} />

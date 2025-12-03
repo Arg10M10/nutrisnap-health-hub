@@ -14,6 +14,7 @@ import WaterTrackerCard from "@/components/WaterTrackerCard";
 import MacroCard from "@/components/MacroCard";
 import CaloriesCard from "@/components/CaloriesCard";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -77,7 +78,9 @@ const Index = () => {
           </div>
           <Link to="/badges" className="flex items-center gap-2 bg-background border text-foreground px-3 py-1.5 rounded-full shadow-md transition-transform active:scale-95">
             <Flame className="w-5 h-5 text-orange-400 fill-current" />
-            <span className="font-bold text-sm">{streak}</span>
+            <span className="font-bold text-sm">
+              <AnimatedNumber value={streak} />
+            </span>
           </Link>
         </header>
 

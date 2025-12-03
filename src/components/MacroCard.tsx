@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import MacroProgressCircle from "@/components/MacroProgressCircle";
+import AnimatedNumber from "./AnimatedNumber";
 
 interface MacroCardProps {
   value: number;
@@ -19,7 +20,10 @@ const MacroCard = ({ value, color, icon, current, unit, label }: MacroCardProps)
         <MacroProgressCircle value={value} color={color} />
         <div className="absolute inset-0 flex items-center justify-center">{icon}</div>
       </div>
-      <p className="text-xl font-bold text-foreground">{currentVal.toFixed(0)}{unit}</p>
+      <p className="text-xl font-bold text-foreground">
+        <AnimatedNumber value={currentVal} />
+        {unit}
+      </p>
       <p className="text-sm text-muted-foreground">{label}</p>
     </Card>
   );
