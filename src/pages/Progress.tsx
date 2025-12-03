@@ -45,6 +45,7 @@ const Progress = () => {
           </p>
         </div>
 
+        {/* Weight & Streak Cards */}
         <div className="grid grid-cols-2 gap-4">
           <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
             <Weight className="w-10 h-10 text-primary" />
@@ -62,6 +63,7 @@ const Progress = () => {
           </Card>
         </div>
 
+        {/* Edit Weight Button */}
         <Button
           onClick={() => setIsWeightDrawerOpen(true)}
           variant="outline"
@@ -72,8 +74,35 @@ const Progress = () => {
           Actualizar mi peso
         </Button>
 
+        {/* Weight Chart */}
         <WeightChart />
 
+        {/* BMI Calculator */}
+        <BmiCalculator size="small" />
+
+        {/* Calories Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Flame className="w-6 h-6 text-primary" />
+              Consumo de Calorías
+            </CardTitle>
+            <CardDescription>Últimos 7 días</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={{}} className="h-64 w-full">
+              <BarChart data={chartData} margin={{ top: 20, right: 10, bottom: 5, left: -16 }}>
+                <CartesianGrid vertical={false} />
+                <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} className="capitalize" />
+                <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+                <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                <Bar dataKey="calories" fill="hsl(var(--primary))" radius={8} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        {/* Today's History */}
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold flex items-center gap-2">
             <ScanLine className="w-7 h-7" />
@@ -103,32 +132,10 @@ const Progress = () => {
           )}
         </div>
 
+        {/* Manual Food Entry */}
         <div className="space-y-4">
           <ManualFoodEntry />
         </div>
-
-        <BmiCalculator size="small" />
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Flame className="w-6 h-6 text-primary" />
-              Consumo de Calorías
-            </CardTitle>
-            <CardDescription>Últimos 7 días</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={{}} className="h-64 w-full">
-              <BarChart data={chartData} margin={{ top: 20, right: 10, bottom: 5, left: -16 }}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} className="capitalize" />
-                <YAxis tickLine={false} axisLine={false} tickMargin={8} />
-                <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                <Bar dataKey="calories" fill="hsl(var(--primary))" radius={8} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
       </div>
       <EditWeightDrawer 
         isOpen={isWeightDrawerOpen} 
