@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { NutritionProvider } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
+import "./lib/i18n"; // Ensure i18n is initialized
 
 import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
