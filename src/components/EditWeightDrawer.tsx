@@ -7,6 +7,9 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Loader2 } from 'lucide-react';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { weightLossBadges } from '@/data/badges';
+import BadgeNotification from './BadgeNotification';
 
 interface EditWeightDrawerProps {
   isOpen: boolean;
@@ -16,8 +19,9 @@ interface EditWeightDrawerProps {
 
 const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerProps) => {
   const [newWeight, setNewWeight] = useState(currentWeight);
-  const { user, refetchProfile } = useAuth();
+  const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
+  const [unlockedBadges, setUnlockedBadges] = useLocalStorage<string[]>('unlockedBadges', []);
 
   useEffect(() => {
     if (isOpen) {
@@ -25,18 +29,32 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
     }
   }, [isOpen, currentWeight]);
 
+  const checkWeightBadges = (updatedProfile: typeof profile) => {
+    if (updatedProfile?.goal !== 'lose_weight' || !updatedProfile.starting_weight) return;
+
+    const weightLost = updatedProfile.starting_weight - updatedProfile.weight;
+    weightLossBadges.forEach(badge => {
+      if (weightLost >= badge.kg && !unlockedBadges.includes(badge.name)) {
+        toast.custom(() => (
+          <div className="bg-card border p-4 rounded-lg shadow-lg w-full max-w-md">
+            <BadgeNotification {...badge} />
+          </div>
+        ), { duration: 5000 });
+        setUnlockedBadges(prev => [...prev, badge.name]);
+      }
+    });
+  };
+
   const mutation = useMutation({
     mutationFn: async (weight: number) => {
       if (!user) throw new Error('Usuario no encontrado.');
 
-      // 1. Update the current weight in the profiles table
       const { error: profileError } = await supabase
         .from('profiles')
         .update({ weight })
         .eq('id', user.id);
       if (profileError) throw profileError;
 
-      // 2. Add a new entry to the weight history
       const { error: historyError } = await supabase
         .from('weight_history')
         .insert({ user_id: user.id, weight });
@@ -44,11 +62,15 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
     },
     onSuccess: async () => {
       toast.success('¡Peso actualizado con éxito!');
-      // Invalidate and refetch both profile and history data in parallel
       await Promise.all([
         refetchProfile(),
         queryClient.invalidateQueries({ queryKey: ['weight_history', user?.id] })
       ]);
+      // We need to get the fresh profile data to check for badges
+      const { data: updatedProfileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      if (updatedProfileData) {
+        checkWeightBadges(updatedProfileData);
+      }
       onClose();
     },
     onError: (error) => {
