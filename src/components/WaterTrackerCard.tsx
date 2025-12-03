@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { GlassWater, Minus, Plus } from "lucide-react";
-import NumberSwitch from "./NumberSwitch";
 
 interface WaterTrackerCardProps {
   count: number;
@@ -16,9 +15,7 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
     <Card className="p-4 text-center space-y-2 h-full flex flex-col justify-between">
       <GlassWater className="w-10 h-10 mx-auto text-blue-500" />
       <div className="flex items-baseline justify-center gap-1">
-        <div className="text-3xl font-bold text-foreground">
-          <NumberSwitch number={count} />
-        </div>
+        <p className="text-3xl font-bold text-foreground">{count}</p>
         <p className="text-muted-foreground">/ {goal} vasos</p>
       </div>
       <div className="flex justify-center items-center gap-2">

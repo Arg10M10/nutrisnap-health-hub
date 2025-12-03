@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { cn } from "@/lib/utils";
 import { Lock, Flame, Award, Droplet, TrendingDown } from "lucide-react";
 import { streakBadges, waterBadges, weightLossBadges } from "@/data/badges";
-import NumberSwitch from "@/components/NumberSwitch";
 
 const Badges = () => {
   const { streak, waterStreak } = useNutrition();
@@ -33,16 +32,12 @@ const Badges = () => {
           <CardContent className="p-4 grid grid-cols-2 divide-x">
             <div className="flex flex-col items-center justify-center text-center gap-1 pr-4">
               <Flame className="w-10 h-10 text-orange-500" />
-              <div className="text-3xl font-bold text-foreground">
-                <NumberSwitch number={streak} />
-              </div>
+              <p className="text-3xl font-bold text-foreground">{streak}</p>
               <p className="text-sm text-muted-foreground">Racha de Comidas</p>
             </div>
             <div className="flex flex-col items-center justify-center text-center gap-1 pl-4">
               <Award className="w-10 h-10 text-yellow-500" />
-              <div className="text-3xl font-bold text-foreground">
-                <NumberSwitch number={totalUnlocked} />
-              </div>
+              <p className="text-3xl font-bold text-foreground">{totalUnlocked}</p>
               <p className="text-sm text-muted-foreground">Insignias Totales</p>
             </div>
           </CardContent>

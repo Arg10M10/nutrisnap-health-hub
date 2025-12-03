@@ -10,7 +10,6 @@ import { Loader2 } from 'lucide-react';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { weightLossBadges } from '@/data/badges';
 import BadgeNotification from './BadgeNotification';
-import NumberSwitch from './NumberSwitch';
 
 interface EditWeightDrawerProps {
   isOpen: boolean;
@@ -91,9 +90,7 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
         </DrawerHeader>
         <div className="px-4 py-8 space-y-8">
           <div className="text-center">
-            <div className="text-6xl font-bold text-foreground">
-              <NumberSwitch number={newWeight.toFixed(1)} />
-            </div>
+            <p className="text-6xl font-bold text-foreground">{newWeight.toFixed(1)}</p>
             <p className="text-muted-foreground">kg</p>
           </div>
           <Slider
