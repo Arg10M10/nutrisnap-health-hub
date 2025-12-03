@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Flame } from "lucide-react";
 import MacroProgressCircle from "./MacroProgressCircle";
+import NumberSwitch from "./NumberSwitch";
 
 interface CaloriesCardProps {
   current: number;
@@ -22,7 +23,9 @@ const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
     <Card className="h-full">
       <CardContent className="flex items-center justify-between h-full p-6">
         <div className="space-y-2">
-          <p className="text-5xl font-bold text-foreground">{currentVal.toFixed(0)}</p>
+          <div className="text-5xl font-bold text-foreground">
+            <NumberSwitch number={currentVal.toFixed(0)} />
+          </div>
           <p className="text-muted-foreground">
             {remaining >= 0 ? `${remaining.toFixed(0)} kcal restantes` : `${Math.abs(remaining).toFixed(0)} kcal sobre la meta`}
           </p>

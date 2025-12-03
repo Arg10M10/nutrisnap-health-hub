@@ -9,6 +9,7 @@ import { ArrowLeft, Loader2, Footprints } from 'lucide-react';
 import { IntensitySelector, Intensity } from '@/components/exercise/IntensitySelector';
 import { DurationSlider } from '@/components/exercise/DurationSlider';
 import { motion } from 'framer-motion';
+import NumberSwitch from '@/components/NumberSwitch';
 
 // MET (Metabolic Equivalent of Task) values for running
 const MET_VALUES: Record<Intensity, number> = {
@@ -112,7 +113,11 @@ const Running = () => {
           {mutation.isPending ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
           ) : (
-            `Guardar Carrera (${calculateCalories()} kcal)`
+            <div className="flex items-center justify-center gap-1.5">
+              <span>Guardar Carrera (</span>
+              <NumberSwitch number={calculateCalories()} />
+              <span> kcal)</span>
+            </div>
           )}
         </Button>
       </footer>
