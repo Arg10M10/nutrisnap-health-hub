@@ -21,6 +21,7 @@ import Exercise from "./pages/Exercise";
 import Running from "./pages/exercise/Running";
 import BottomNav from "./components/BottomNav";
 import Badges from "./pages/Badges";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +92,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
           <NutritionProvider>
             <Toaster />
