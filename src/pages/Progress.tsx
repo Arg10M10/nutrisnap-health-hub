@@ -41,32 +41,33 @@ const Progress = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <Card>
-            <CardHeader className="pb-2">
+            <CardHeader className="items-center text-center pb-2">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Weight className="w-5 h-5 text-primary" />
                 Peso Actual
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="text-center p-4 pt-0">
               <p className="text-4xl font-bold text-foreground">
-                {profile?.weight ? `${profile.weight} kg` : 'N/A'}
+                {profile?.weight ? `${profile.weight}` : 'N/A'}
               </p>
-              <p className="text-xs text-muted-foreground">Actualizado en tu perfil</p>
+              <p className="text-sm text-muted-foreground -mt-1">kg</p>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className="pb-2">
+            <CardHeader className="items-center text-center pb-2">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Flame className="w-5 h-5 text-orange-500" />
                 Racha Actual
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="text-center p-4 pt-0">
               <p className="text-4xl font-bold text-foreground">
-                {streak} {streak === 1 ? 'día' : 'días'}
+                {streak}
               </p>
+               <p className="text-sm text-muted-foreground -mt-1">{streak === 1 ? 'día' : 'días'}</p>
               <StreakCalendar streakDays={streakDays} />
             </CardContent>
           </Card>

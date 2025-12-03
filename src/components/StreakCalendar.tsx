@@ -14,7 +14,7 @@ const StreakCalendar = ({ streakDays }: StreakCalendarProps) => {
     .reverse();
 
   return (
-    <div className="grid grid-cols-7 gap-2 mt-2">
+    <div className="grid grid-cols-7 gap-1 mt-2">
       {weekDays.map((day) => {
         const dayKey = format(day, 'yyyy-MM-dd');
         const isInStreak = streakDays.includes(dayKey);
@@ -23,22 +23,22 @@ const StreakCalendar = ({ streakDays }: StreakCalendarProps) => {
         return (
           <div
             key={day.toString()}
-            className="flex flex-col items-center justify-center gap-1 py-1"
+            className="flex flex-col items-center justify-center gap-1"
           >
-            <span className="text-xs capitalize font-medium text-muted-foreground">
+            <span className="text-[10px] capitalize font-medium text-muted-foreground">
               {format(day, "EEE", { locale: es })}
             </span>
             <div
               className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200",
+                "w-full aspect-square rounded-full flex items-center justify-center transition-all duration-200",
                 isInStreak ? "bg-orange-400" : "bg-muted",
-                isToday && "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                isToday && "ring-2 ring-primary"
               )}
             >
               {isInStreak ? (
-                <Flame className="w-4 h-4 text-white fill-current" />
+                <Flame className="w-2/3 h-2/3 text-white fill-current" />
               ) : (
-                <span className="font-bold text-sm text-muted-foreground">
+                <span className="font-bold text-xs text-muted-foreground">
                   {format(day, "d")}
                 </span>
               )}
