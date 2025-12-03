@@ -86,7 +86,7 @@ const Badges = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2 text-foreground">
             <Droplet className="w-6 h-6 text-blue-500" />
-            Racha de Hidratación ({waterStreak} días)
+            Racha de Hidratación
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {waterBadges.map((badge) => {
