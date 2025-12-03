@@ -17,9 +17,9 @@ const Preferences = () => {
   const [dailyReminders, setDailyReminders] = useState(false);
 
   const themeOptions = [
-    { value: 'light', label: 'Claro', icon: Sun },
-    { value: 'dark', label: 'Oscuro', icon: Moon },
-    { value: 'system', label: 'Sistema', icon: Monitor },
+    { value: 'light', label: 'Claro', icon: Sun, image: '/light-theme-preview.png' },
+    { value: 'dark', label: 'Oscuro', icon: Moon, image: '/dark-theme-preview.png' },
+    { value: 'system', label: 'Sistema', icon: Monitor, image: '/system-theme-preview.png' },
   ];
 
   return (
@@ -50,16 +50,8 @@ const Preferences = () => {
                         )}
                         onClick={() => setTheme(option.value)}
                       >
-                        {/* Background Content (Image or Icon) */}
-                        {option.value === 'light' ? (
-                          <img src="/light-theme-preview.png" alt="Vista previa del tema claro" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-muted">
-                            <option.icon className="w-12 h-12 text-muted-foreground" />
-                          </div>
-                        )}
-
-                        {/* Text Overlay */}
+                        <img src={option.image} alt={`Vista previa del tema ${option.label.toLowerCase()}`} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                        
                         <div className="absolute bottom-0 left-0 right-0 flex h-1/2 items-end justify-center p-2 bg-gradient-to-t from-black/70 to-transparent">
                           <div className="flex items-center gap-2 text-white">
                             <option.icon className="w-4 h-4" />
