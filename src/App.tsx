@@ -7,7 +7,8 @@ import { AnimatePresence } from "framer-motion";
 import { NutritionProvider } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
-import "./lib/i18n"; // Ensure i18n is initialized
+import { I18nextProvider } from "react-i18next";
+import i18n from "./lib/i18n";
 
 import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
@@ -40,7 +41,6 @@ const AnimatedRoutes = () => {
         <Route path="/settings/preferences" element={<Preferences />} />
         <Route path="/exercise" element={<Exercise />} />
         <Route path="/badges" element={<Badges />} />
-        {/* Rutas sin BottomNav se manejan fuera de este componente principal */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
@@ -55,7 +55,6 @@ const AppRoutes = () => {
     return <SplashScreen />;
   }
 
-  // Rutas de pantalla completa que no usan el layout principal
   const fullScreenRoutes = {
     "/scanner": <Scanner />,
     "/barcode-result": <BarcodeResultPage />,
@@ -93,22 +92,24 @@ const AppRoutes = () => {
 };
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="system" storageKey="vite-ui-theme">
-      <TooltipProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <AuthProvider>
-            <NutritionProvider>
-              <Toaster />
-              <Sonner />
-              <AppRoutes />
-            </NutritionProvider>
-          </AuthProvider>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+  <I18nextProvider i18n={i18n}>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="system" storageKey="vite-ui-theme">
+        <TooltipProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <AuthProvider>
+              <NutritionProvider>
+                <Toaster />
+                <Sonner />
+                <AppRoutes />
+              </NutritionProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </I18nextProvider>
 );
 
 export default App;
