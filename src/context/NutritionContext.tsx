@@ -53,6 +53,7 @@ interface NutritionState {
   removeWaterGlass: (date: Date) => void;
   isWaterUpdating: boolean;
   streak: number;
+  waterStreak: number;
   streakDays: string[];
   isLoading: boolean;
 }
@@ -198,6 +199,23 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     return { streak: currentStreak, streakDays: daysInStreak };
   }, [foodEntries]);
 
+  const waterStreakData = useMemo(() => {
+    if (!waterEntries.length) return { waterStreak: 0 };
+    const entryDays = new Set(waterEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
+    let currentStreak = 0;
+    const today = new Date();
+    for (let i = 0; i < 365; i++) {
+      const dateToCheck = subDays(today, i);
+      const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+      if (entryDays.has(dateKey)) {
+        currentStreak++;
+      } else {
+        break;
+      }
+    }
+    return { waterStreak: currentStreak };
+  }, [waterEntries]);
+
   return (
     <NutritionContext.Provider value={{
       addAnalysis,
@@ -206,6 +224,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       removeWaterGlass,
       isWaterUpdating: waterMutation.isPending,
       ...streakData,
+      waterStreak: waterStreakData.waterStreak,
       isLoading: isFoodLoading || isWaterLoading
     }}>
       {children}
