@@ -1,0 +1,58 @@
+import PageLayout from "@/components/PageLayout";
+import { useNutrition } from "@/context/NutritionContext";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { Lock } from "lucide-react";
+
+const badges = [
+  { name: "Primer Día", description: "Registra tu primer día.", days: 1, image: "/badges/streak-1.png" },
+  { name: "Tres Seguidos", description: "Mantén una racha de 3 días.", days: 3, image: "/badges/streak-3.png" },
+  { name: "Casi una Semana", description: "Mantén una racha de 6 días.", days: 6, image: "/badges/streak-6.png" },
+  { name: "Doble Dígito", description: "Alcanza una racha de 10 días.", days: 10, image: "/badges/streak-10.png" },
+  { name: "Un Mes de Racha", description: "¡Un mes completo! Sigue así.", days: 30, image: "/badges/streak-30.png" },
+  { name: "Constancia Pura", description: "Increíble racha de 300 días.", days: 300, image: "/badges/streak-300.png" },
+  { name: "Leyenda", description: "Una racha imparable de 400 días.", days: 400, image: "/badges/streak-400.png" },
+  { name: "Más Allá", description: "Superaste los 500 días. ¡Wow!", days: 500, image: "/badges/streak-500.png" },
+];
+
+const Badges = () => {
+  const { streak } = useNutrition();
+
+  return (
+    <PageLayout>
+      <div className="space-y-6">
+        <div className="text-center space-y-2">
+          <h1 className="text-primary">Mis Insignias</h1>
+          <p className="text-muted-foreground text-lg">
+            Tus logros y rachas desbloqueadas.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {badges.map((badge) => {
+            const isUnlocked = streak >= badge.days;
+            return (
+              <Card key={badge.name} className={cn("text-center p-4 transition-all", !isUnlocked && "opacity-50 bg-muted")}>
+                <CardHeader className="p-2">
+                  <div className="relative w-24 h-24 mx-auto">
+                    <img src={badge.image} alt={badge.name} className="w-full h-full" />
+                    {!isUnlocked && (
+                      <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
+                        <Lock className="w-8 h-8 text-white" />
+                      </div>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent className="p-2">
+                  <CardTitle className="text-base font-semibold">{badge.name}</CardTitle>
+                  <CardDescription className="text-xs">{badge.description}</CardDescription>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </PageLayout>
+  );
+};
+
+export default Badges;

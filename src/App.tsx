@@ -20,6 +20,7 @@ import SplashScreen from "./pages/SplashScreen";
 import Exercise from "./pages/Exercise";
 import Running from "./pages/exercise/Running";
 import BottomNav from "./components/BottomNav";
+import Badges from "./pages/Badges";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const AnimatedRoutes = () => {
         <Route path="/diets" element={<Diets />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/exercise" element={<Exercise />} />
+        <Route path="/badges" element={<Badges />} />
         {/* Rutas sin BottomNav se manejan fuera de este componente principal */}
         <Route path="*" element={<NotFound />} />
       </Routes>

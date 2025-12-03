@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
@@ -74,10 +75,10 @@ const Index = () => {
             <Leaf className="w-8 h-8 text-primary" />
             <h1 className="text-primary text-3xl">NutriSnap</h1>
           </div>
-          <div className="flex items-center gap-2 bg-foreground text-background px-3 py-1.5 rounded-full shadow-md">
-            <Flame className="w-5 h-5 text-orange-400 fill-current" />
+          <Link to="/badges" className="flex items-center gap-2 bg-foreground text-background px-3 py-1.5 rounded-full shadow-md transition-transform active:scale-95">
+            <Flame className="w-5 h-5 text-background fill-current" />
             <span className="font-bold text-sm">{streak}</span>
-          </div>
+          </Link>
         </header>
 
         <WeeklyCalendar 
