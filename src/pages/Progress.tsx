@@ -42,34 +42,19 @@ const Progress = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Card>
-            <CardHeader className="items-center text-center pb-2">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Weight className="w-5 h-5 text-primary" />
-                Peso Actual
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center p-4 pt-0">
-              <p className="text-4xl font-bold text-foreground">
-                {profile?.weight ? `${profile.weight}` : 'N/A'}
-              </p>
-              <p className="text-sm text-muted-foreground -mt-1">kg</p>
-            </CardContent>
+          <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
+            <Weight className="w-10 h-10 text-primary" />
+            <p className="text-5xl font-bold text-foreground mt-2">
+              {profile?.weight ? profile.weight : 'N/A'}
+            </p>
+            <p className="text-sm text-muted-foreground">kg</p>
           </Card>
-          <Card>
-            <CardHeader className="items-center text-center pb-2">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Flame className="w-5 h-5 text-orange-500" />
-                Racha Actual
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center p-4 pt-0">
-              <p className="text-4xl font-bold text-foreground">
-                {streak}
-              </p>
-               <p className="text-sm text-muted-foreground -mt-1">{streak === 1 ? 'día' : 'días'}</p>
-              <StreakCalendar streakDays={streakDays} />
-            </CardContent>
+          <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
+            <p className="text-5xl font-bold text-foreground">
+              {streak}
+            </p>
+            <p className="text-sm text-muted-foreground mb-3">{streak === 1 ? 'día de racha' : 'días de racha'}</p>
+            <StreakCalendar streakDays={streakDays} />
           </Card>
         </div>
 
