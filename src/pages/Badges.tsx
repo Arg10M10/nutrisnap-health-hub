@@ -2,7 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import { useNutrition } from "@/context/NutritionContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Lock } from "lucide-react";
+import { Lock, Flame, Award } from "lucide-react";
 
 const badges = [
   { name: "Primer Día", description: "Registra tu primer día.", days: 1, image: "/badges/streak-1.png" },
@@ -17,6 +17,7 @@ const badges = [
 
 const Badges = () => {
   const { streak } = useNutrition();
+  const unlockedBadgesCount = badges.filter(badge => streak >= badge.days).length;
 
   return (
     <PageLayout>
@@ -27,6 +28,22 @@ const Badges = () => {
             Tus logros y rachas desbloqueadas.
           </p>
         </div>
+
+        <Card>
+          <CardContent className="p-4 grid grid-cols-2 divide-x">
+            <div className="flex flex-col items-center justify-center text-center gap-1 pr-4">
+              <Flame className="w-10 h-10 text-orange-500" />
+              <p className="text-3xl font-bold text-foreground">{streak}</p>
+              <p className="text-sm text-muted-foreground">Racha Actual</p>
+            </div>
+            <div className="flex flex-col items-center justify-center text-center gap-1 pl-4">
+              <Award className="w-10 h-10 text-yellow-500" />
+              <p className="text-3xl font-bold text-foreground">{unlockedBadgesCount}</p>
+              <p className="text-sm text-muted-foreground">Insignias Obtenidas</p>
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {badges.map((badge) => {
             const isUnlocked = streak >= badge.days;
