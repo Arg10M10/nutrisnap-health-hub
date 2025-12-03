@@ -45,15 +45,27 @@ const Preferences = () => {
                       <Button
                         variant="outline"
                         className={cn(
-                          'w-full h-24 flex flex-col items-center justify-center gap-2 transition-all',
+                          'w-full h-28 flex flex-col items-center justify-center gap-2 transition-all',
+                          option.value === 'light' ? 'p-0 overflow-hidden' : '',
                           theme === option.value && 'border-primary ring-2 ring-primary',
                           option.disabled && 'opacity-50 cursor-not-allowed'
                         )}
                         onClick={() => !option.disabled && setTheme(option.value)}
                         disabled={option.disabled}
                       >
-                        <option.icon className="w-8 h-8" />
-                        <span className="font-semibold">{option.label}</span>
+                        {option.value === 'light' ? (
+                          <div className="w-full h-full relative bg-muted">
+                            <img src="/light-theme-preview.png" alt="Vista previa del tema claro" className="w-full h-full object-contain p-2" />
+                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md">
+                              <span className="font-semibold text-sm">{option.label}</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <option.icon className="w-8 h-8" />
+                            <span className="font-semibold">{option.label}</span>
+                          </>
+                        )}
                       </Button>
                       {option.disabled && (
                         <div className="absolute top-2 right-2 text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full">
