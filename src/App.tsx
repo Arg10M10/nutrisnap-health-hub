@@ -93,7 +93,7 @@ const AppRoutes = () => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <ThemeProvider attribute="class" defaultTheme="system" storageKey="vite-ui-theme">
       <TooltipProvider>
         <BrowserRouter>
           <ScrollToTop />
