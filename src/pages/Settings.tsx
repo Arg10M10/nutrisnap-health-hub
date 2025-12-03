@@ -1,79 +1,122 @@
 import { useState } from "react";
-import { Loader2, Edit } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  User, Edit, HeartPulse, SlidersHorizontal, Languages, Target, Goal, Palette,
+  Lightbulb, Mail, FileText, Shield, Instagram, LogOut, Trash2
+} from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { toast } from "sonner";
 import EditProfileDrawer from "@/components/EditProfileDrawer";
 import PageLayout from "@/components/PageLayout";
-
-const ProfileItem = ({ label, value }: { label: string, value: string | number | null | undefined }) => (
-  <div className="flex justify-between items-center border-b py-3">
-    <p className="text-sm font-medium text-muted-foreground">{label}</p>
-    <p className="text-sm font-semibold text-foreground text-right">{value || 'No especificado'}</p>
-  </div>
-);
+import { SettingsCategory } from "@/components/settings/SettingsCategory";
+import { SettingsItem } from "@/components/settings/SettingsItem";
+import { TikTokIcon } from "@/components/icons/TikTokIcon";
 
 const Settings = () => {
-  const { profile, loading } = useAuth();
+  const { profile, signOut } = useAuth();
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
 
-  const goalLabels: { [key: string]: string } = {
-    lose_weight: 'Perder peso',
-    maintain_weight: 'Mantener peso',
-    gain_weight: 'Ganar peso',
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success("Has cerrado sesión.");
+  };
+
+  const handleNotImplemented = () => {
+    toast.info("Próximamente", { description: "Esta función estará disponible pronto." });
+  };
+
+  const handleDeleteAccount = () => {
+    // Placeholder for account deletion logic
+    toast.error("Función no implementada.", {
+      description: "La eliminación de la cuenta se activará en el futuro.",
+    });
   };
 
   return (
     <PageLayout>
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-primary">Configuración</h1>
           <p className="text-muted-foreground text-lg">
             Gestiona tu perfil y preferencias de la aplicación.
           </p>
         </div>
-        <Card>
-          <CardHeader className="flex flex-row items-start justify-between">
-            <div>
-              <CardTitle>Tu Perfil</CardTitle>
-              <CardDescription>Esta es la información que nos proporcionaste.</CardDescription>
+
+        {/* Profile Card */}
+        <div className="p-6 bg-card border rounded-2xl flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+              <User className="w-6 h-6 text-muted-foreground" />
             </div>
-            <Button variant="outline" size="icon" onClick={() => setIsEditDrawerOpen(true)}>
-              <Edit className="w-4 h-4" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <div className="flex justify-center items-center h-24">
-                <Loader2 className="w-6 h-6 animate-spin text-primary" />
-              </div>
-            ) : profile ? (
-              <div className="space-y-2">
-                <ProfileItem label="Nombre Completo" value={profile.full_name} />
-                <ProfileItem label="Género" value={profile.gender} />
-                <ProfileItem label="Edad" value={profile.age} />
-                <ProfileItem label="Fecha de Nacimiento" value={profile.date_of_birth ? format(new Date(profile.date_of_birth), 'PPP', { locale: es }) : 'No especificado'} />
-                <ProfileItem label="Objetivo Principal" value={profile.goal ? goalLabels[profile.goal] : 'No especificado'} />
-                <ProfileItem label="Altura" value={`${profile.height || 'N/A'} ${profile.units === 'metric' ? 'cm' : 'in'}`} />
-                <ProfileItem label="Peso" value={`${profile.weight || 'N/A'} ${profile.units === 'metric' ? 'kg' : 'lbs'}`} />
-                <ProfileItem label="Experiencia previa" value={profile.previous_apps_experience} />
-              </div>
-            ) : (
-              <p className="text-muted-foreground">No se pudo cargar la información del perfil.</p>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Acerca de NutriSnap</CardTitle>
-            <CardDescription>Información sobre la aplicación.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">Versión 1.0.0</p>
-          </CardContent>
-        </Card>
+            <div>
+              <p className="font-bold text-lg text-foreground">{profile?.full_name || "Usuario"}</p>
+              <p className="text-sm text-muted-foreground">Ver y editar perfil</p>
+            </div>
+          </div>
+          <Button variant="ghost" size="icon" onClick={() => setIsEditDrawerOpen(true)}>
+            <Edit className="w-5 h-5" />
+          </Button>
+        </div>
+
+        {/* Account Category */}
+        <SettingsCategory title="Cuenta">
+          <SettingsItem icon={<HeartPulse size={20} />} label="Detalles Personales" onClick={() => setIsEditDrawerOpen(true)} />
+          <SettingsItem icon={<SlidersHorizontal size={20} />} label="Preferencias" onClick={handleNotImplemented} />
+          <SettingsItem icon={<Languages size={20} />} label="Idioma" onClick={handleNotImplemented} />
+        </SettingsCategory>
+
+        {/* Goals and Tracking Category */}
+        <SettingsCategory title="Metas y seguimiento">
+          <SettingsItem icon={<Target size={20} />} label="Editar objetos nutricionales" onClick={handleNotImplemented} />
+          <SettingsItem icon={<Goal size={20} />} label="Objetivos y peso actual" onClick={handleNotImplemented} />
+          <SettingsItem icon={<Palette size={20} />} label="Colores de Anillos" onClick={handleNotImplemented} />
+        </SettingsCategory>
+
+        {/* Support and Legal Category */}
+        <SettingsCategory title="Soporte y Legal">
+          <SettingsItem icon={<Lightbulb size={20} />} label="Solicitar función" onClick={handleNotImplemented} />
+          <SettingsItem icon={<Mail size={20} />} label="Correo de soporte" onClick={handleNotImplemented} />
+          <SettingsItem icon={<FileText size={20} />} label="Términos y condiciones" onClick={handleNotImplemented} />
+          <SettingsItem icon={<Shield size={20} />} label="Política de privacidad" onClick={handleNotImplemented} />
+        </SettingsCategory>
+
+        {/* Social Media Category */}
+        <SettingsCategory title="Redes Sociales">
+          <SettingsItem icon={<Instagram size={20} />} label="Instagram" onClick={handleNotImplemented} />
+          <SettingsItem icon={<TikTokIcon />} label="TikTok" onClick={handleNotImplemented} />
+        </SettingsCategory>
+
+        {/* Account Actions Category */}
+        <SettingsCategory title="Acciones de Cuenta">
+          <SettingsItem icon={<LogOut size={20} />} label="Cerrar sesión" onClick={handleSignOut} />
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="w-full">
+                <SettingsItem icon={<Trash2 size={20} />} label="Eliminar la cuenta" onClick={() => {}} destructive />
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y tus datos de nuestros servidores.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                  Sí, eliminar cuenta
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </SettingsCategory>
+
       </div>
       <EditProfileDrawer isOpen={isEditDrawerOpen} onClose={() => setIsEditDrawerOpen(false)} />
     </PageLayout>
