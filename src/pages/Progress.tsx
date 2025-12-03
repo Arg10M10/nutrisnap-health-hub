@@ -5,14 +5,17 @@ import PageLayout from "@/components/PageLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Flame, ScanLine } from "lucide-react";
+import { Flame, ScanLine, Weight } from "lucide-react";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import { useNutrition } from "@/context/NutritionContext";
+import { useAuth } from "@/context/AuthContext";
 import ManualFoodEntry from "@/components/ManualFoodEntry";
 import BmiCalculator from "@/components/BmiCalculator";
+import StreakCalendar from "@/components/StreakCalendar";
 
 const Progress = () => {
-  const { getDataForDate } = useNutrition();
+  const { getDataForDate, streak, streakDays } = useNutrition();
+  const { profile } = useAuth();
   const today = new Date();
 
   const { analyses } = getDataForDate(today);
@@ -38,29 +41,37 @@ const Progress = () => {
           </p>
         </div>
 
-        {/* Calorie Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Flame className="w-6 h-6 text-primary" />
-              Consumo de Calorías
-            </CardTitle>
-            <CardDescription>Últimos 7 días</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={{}} className="h-64 w-full">
-              <BarChart data={chartData} margin={{ top: 20, right: 10, bottom: 5, left: -16 }}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} className="capitalize" />
-                <YAxis tickLine={false} axisLine={false} tickMargin={8} />
-                <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                <Bar dataKey="calories" fill="hsl(var(--primary))" radius={8} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Weight className="w-5 h-5 text-primary" />
+                Peso Actual
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-4xl font-bold text-foreground">
+                {profile?.weight ? `${profile.weight} kg` : 'N/A'}
+              </p>
+              <p className="text-xs text-muted-foreground">Actualizado en tu perfil</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Flame className="w-5 h-5 text-orange-500" />
+                Racha Actual
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-4xl font-bold text-foreground">
+                {streak} {streak === 1 ? 'día' : 'días'}
+              </p>
+              <StreakCalendar streakDays={streakDays} />
+            </CardContent>
+          </Card>
+        </div>
 
-        {/* Recent Scans for today */}
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold flex items-center gap-2">
             <ScanLine className="w-7 h-7" />
@@ -90,12 +101,32 @@ const Progress = () => {
           )}
         </div>
 
-        {/* Manual Food Entry */}
         <div className="space-y-4">
           <ManualFoodEntry />
         </div>
 
         <BmiCalculator size="small" />
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Flame className="w-6 h-6 text-primary" />
+              Consumo de Calorías
+            </CardTitle>
+            <CardDescription>Últimos 7 días</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={{}} className="h-64 w-full">
+              <BarChart data={chartData} margin={{ top: 20, right: 10, bottom: 5, left: -16 }}>
+                <CartesianGrid vertical={false} />
+                <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} className="capitalize" />
+                <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+                <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                <Bar dataKey="calories" fill="hsl(var(--primary))" radius={8} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
       </div>
     </PageLayout>
   );
