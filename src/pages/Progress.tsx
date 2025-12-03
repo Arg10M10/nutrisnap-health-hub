@@ -1,22 +1,26 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import PageLayout from "@/components/PageLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Flame, ScanLine, Weight } from "lucide-react";
+import { Flame, ScanLine, Weight, Edit } from "lucide-react";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import { useNutrition } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import ManualFoodEntry from "@/components/ManualFoodEntry";
 import BmiCalculator from "@/components/BmiCalculator";
 import StreakCalendar from "@/components/StreakCalendar";
+import EditWeightDrawer from "@/components/EditWeightDrawer";
+import WeightChart from "@/components/WeightChart";
 
 const Progress = () => {
   const { getDataForDate, streak, streakDays } = useNutrition();
   const { profile } = useAuth();
   const today = new Date();
+  const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
 
   const { analyses } = getDataForDate(today);
 
@@ -42,7 +46,10 @@ const Progress = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
+          <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center relative">
+            <Button variant="ghost" size="icon" className="absolute top-2 right-2" onClick={() => setIsWeightDrawerOpen(true)}>
+              <Edit className="w-4 h-4" />
+            </Button>
             <Weight className="w-10 h-10 text-primary" />
             <p className="text-5xl font-bold text-foreground mt-2">
               {profile?.weight ? profile.weight : 'N/A'}
@@ -57,6 +64,8 @@ const Progress = () => {
             <StreakCalendar streakDays={streakDays} />
           </Card>
         </div>
+
+        <WeightChart />
 
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold flex items-center gap-2">
@@ -114,6 +123,11 @@ const Progress = () => {
           </CardContent>
         </Card>
       </div>
+      <EditWeightDrawer 
+        isOpen={isWeightDrawerOpen} 
+        onClose={() => setIsWeightDrawerOpen(false)} 
+        currentWeight={profile?.weight || 70}
+      />
     </PageLayout>
   );
 };
