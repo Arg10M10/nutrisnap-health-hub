@@ -1,16 +1,18 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { format, subDays } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Line, LineChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { TrendingDown, Loader2 } from "lucide-react";
 
+const GOAL_RATE_KG_PER_WEEK = 0.5; // Tasa de cambio de peso saludable
+
 const WeightChart = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: ['weight_history', user?.id],
     queryFn: async () => {
@@ -19,8 +21,7 @@ const WeightChart = () => {
         .from('weight_history')
         .select('weight, created_at')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: true })
-        .limit(30);
+        .order('created_at', { ascending: true });
       if (error) throw error;
       return data;
     },
@@ -28,27 +29,31 @@ const WeightChart = () => {
   });
 
   const chartData = useMemo(() => {
-    const formattedData = data?.map(entry => ({
-      date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
-      weight: entry.weight,
-    })) || [];
-
-    if (formattedData.length === 1) {
-      const singleEntry = formattedData[0];
-      const today = new Date();
-      const todayStr = format(today, 'd MMM', { locale: es });
-
-      if (singleEntry.date !== todayStr) {
-        return [singleEntry, { date: todayStr, weight: singleEntry.weight }];
-      } else {
-        const yesterday = subDays(today, 1);
-        const yesterdayStr = format(yesterday, 'd MMM', { locale: es });
-        return [{ date: yesterdayStr, weight: singleEntry.weight }, singleEntry];
-      }
+    if (!data || data.length === 0 || !profile?.starting_weight || !profile.goal) {
+      return [];
     }
-    
-    return formattedData;
-  }, [data]);
+
+    const firstEntryDate = new Date(data[0].created_at);
+    let ratePerDay = (GOAL_RATE_KG_PER_WEEK / 7);
+
+    if (profile.goal === 'lose_weight') {
+      ratePerDay = -ratePerDay;
+    } else if (profile.goal === 'maintain_weight') {
+      ratePerDay = 0;
+    }
+
+    return data.map(entry => {
+      const currentDate = new Date(entry.created_at);
+      const daysSinceStart = differenceInDays(currentDate, firstEntryDate);
+      const goalWeight = profile.starting_weight + (daysSinceStart * ratePerDay);
+      
+      return {
+        date: format(currentDate, 'd MMM', { locale: es }),
+        'Peso Real': entry.weight,
+        'Peso Objetivo': parseFloat(goalWeight.toFixed(1)),
+      };
+    });
+  }, [data, profile]);
 
   return (
     <Card>
@@ -57,7 +62,7 @@ const WeightChart = () => {
           <TrendingDown className="w-6 h-6 text-primary" />
           Progreso de Peso
         </CardTitle>
-        <CardDescription>Últimos 30 registros</CardDescription>
+        <CardDescription>Tu peso real comparado con tu trayectoria objetivo.</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -66,12 +71,14 @@ const WeightChart = () => {
           </div>
         ) : chartData.length > 0 ? (
           <ChartContainer config={{}} className="h-64 w-full">
-            <LineChart data={chartData} margin={{ top: 20, right: 10, bottom: 5, left: -16 }}>
+            <LineChart data={chartData} margin={{ top: 20, right: 20, bottom: 5, left: -16 }}>
               <CartesianGrid vertical={false} />
               <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
               <YAxis tickLine={false} axisLine={false} tickMargin={8} domain={['dataMin - 2', 'dataMax + 2']} />
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-              <Line type="monotone" dataKey="weight" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+              <Legend />
+              <Line type="monotone" dataKey="Peso Real" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} />
+              <Line type="monotone" dataKey="Peso Objetivo" stroke="hsl(var(--muted-foreground))" strokeWidth={2} strokeDasharray="3 3" dot={false} />
             </LineChart>
           </ChartContainer>
         ) : (
