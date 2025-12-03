@@ -45,7 +45,7 @@ const Preferences = () => {
                       <Button
                         variant="outline"
                         className={cn(
-                          'w-full h-32 flex flex-col items-center justify-start gap-3 p-3 transition-all',
+                          'w-full aspect-square flex flex-col items-center justify-start gap-2 p-3 transition-all',
                           theme === option.value && 'border-primary ring-2 ring-primary',
                           option.disabled && 'opacity-50 cursor-not-allowed'
                         )}
@@ -56,10 +56,10 @@ const Preferences = () => {
                           {option.value === 'light' ? (
                             <img src="/light-theme-preview.png" alt="Vista previa del tema claro" className="w-full h-full object-contain" />
                           ) : (
-                            <option.icon className="w-8 h-8" />
+                            <option.icon className="w-10 h-10" />
                           )}
                         </div>
-                        <span className="font-semibold">{option.label}</span>
+                        <span className="font-semibold text-sm">{option.label}</span>
                       </Button>
                       {option.disabled && (
                         <div className="absolute top-2 right-2 text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full">
