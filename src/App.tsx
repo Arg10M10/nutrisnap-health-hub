@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { NutritionProvider } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
@@ -14,6 +15,7 @@ import Diets from "./pages/Diets";
 import NotFound from "./pages/NotFound";
 import BarcodeResultPage from "@/pages/BarcodeResult";
 import Settings from "./pages/Settings";
+import Preferences from "./pages/settings/Preferences";
 import Login from "./pages/Login";
 import Onboarding from "./pages/onboarding/Onboarding";
 import SplashScreen from "./pages/SplashScreen";
@@ -34,6 +36,7 @@ const AnimatedRoutes = () => {
         <Route path="/progress" element={<Progress />} />
         <Route path="/diets" element={<Diets />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/settings/preferences" element={<Preferences />} />
         <Route path="/exercise" element={<Exercise />} />
         <Route path="/badges" element={<Badges />} />
         {/* Rutas sin BottomNav se manejan fuera de este componente principal */}
@@ -90,18 +93,20 @@ const AppRoutes = () => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <AuthProvider>
-          <NutritionProvider>
-            <Toaster />
-            <Sonner />
-            <AppRoutes />
-          </NutritionProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <TooltipProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <AuthProvider>
+            <NutritionProvider>
+              <Toaster />
+              <Sonner />
+              <AppRoutes />
+            </NutritionProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   User, Edit, HeartPulse, SlidersHorizontal, Languages, Target, Goal, Palette,
   Lightbulb, Mail, FileText, Shield, Instagram, LogOut, Trash2
@@ -20,6 +21,7 @@ import { TikTokIcon } from "@/components/icons/TikTokIcon";
 const Settings = () => {
   const { profile, signOut } = useAuth();
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     await signOut();
@@ -66,7 +68,7 @@ const Settings = () => {
         {/* Account Category */}
         <SettingsCategory title="Cuenta">
           <SettingsItem icon={<HeartPulse size={20} />} label="Detalles Personales" onClick={() => setIsEditDrawerOpen(true)} />
-          <SettingsItem icon={<SlidersHorizontal size={20} />} label="Preferencias" onClick={handleNotImplemented} />
+          <SettingsItem icon={<SlidersHorizontal size={20} />} label="Preferencias" onClick={() => navigate('/settings/preferences')} />
           <SettingsItem icon={<Languages size={20} />} label="Idioma" onClick={handleNotImplemented} />
         </SettingsCategory>
 
