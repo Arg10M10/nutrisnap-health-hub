@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
@@ -28,10 +28,26 @@ const WeightChart = () => {
   });
 
   const chartData = useMemo(() => {
-    return data?.map(entry => ({
+    const formattedData = data?.map(entry => ({
       date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
       weight: entry.weight,
     })) || [];
+
+    if (formattedData.length === 1) {
+      const singleEntry = formattedData[0];
+      const today = new Date();
+      const todayStr = format(today, 'd MMM', { locale: es });
+
+      if (singleEntry.date !== todayStr) {
+        return [singleEntry, { date: todayStr, weight: singleEntry.weight }];
+      } else {
+        const yesterday = subDays(today, 1);
+        const yesterdayStr = format(yesterday, 'd MMM', { locale: es });
+        return [{ date: yesterdayStr, weight: singleEntry.weight }, singleEntry];
+      }
+    }
+    
+    return formattedData;
   }, [data]);
 
   return (
@@ -48,7 +64,7 @@ const WeightChart = () => {
           <div className="flex justify-center items-center h-64">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
-        ) : chartData.length > 1 ? (
+        ) : chartData.length > 0 ? (
           <ChartContainer config={{}} className="h-64 w-full">
             <LineChart data={chartData} margin={{ top: 20, right: 10, bottom: 5, left: -16 }}>
               <CartesianGrid vertical={false} />
@@ -60,8 +76,8 @@ const WeightChart = () => {
           </ChartContainer>
         ) : (
           <div className="text-center text-muted-foreground h-64 flex flex-col justify-center items-center">
-            <p>No hay suficientes datos para mostrar una gráfica.</p>
-            <p className="text-sm">Registra tu peso al menos dos veces para ver tu progreso.</p>
+            <p>No hay datos de peso registrados.</p>
+            <p className="text-sm">Registra tu peso para empezar a ver tu progreso.</p>
           </div>
         )}
       </CardContent>
