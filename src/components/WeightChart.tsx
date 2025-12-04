@@ -10,8 +10,6 @@ import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { TrendingDown, Loader2 } from "lucide-react";
 
-const GOAL_RATE_KG_PER_WEEK = 0.5; // Healthy weight change rate
-
 const WeightChart = () => {
   const { user, profile } = useAuth();
   const { t } = useTranslation();
@@ -31,28 +29,43 @@ const WeightChart = () => {
   });
 
   const chartData = useMemo(() => {
-    if (!data || data.length === 0 || !profile?.starting_weight || !profile.goal) {
+    if (!data || data.length === 0 || !profile?.starting_weight || !profile.goal || !profile.goal_weight) {
       return [];
     }
 
     const firstEntryDate = new Date(data[0].created_at);
-    let ratePerDay = (GOAL_RATE_KG_PER_WEEK / 7);
+    const weeklyRate = profile?.weekly_rate || 0.5;
+    const totalWeightToChange = profile.starting_weight - profile.goal_weight;
 
-    if (profile.goal === 'lose_weight') {
-      ratePerDay = -ratePerDay;
-    } else if (profile.goal === 'maintain_weight') {
-      ratePerDay = 0;
+    if (weeklyRate === 0 || totalWeightToChange === 0) {
+      return data.map(entry => ({
+        date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
+        [t('progress.weight_progress_actual')]: entry.weight,
+        [t('progress.weight_progress_goal')]: profile.starting_weight,
+      }));
+    }
+
+    const totalWeeks = Math.abs(totalWeightToChange / weeklyRate);
+    const totalDays = totalWeeks * 7;
+
+    if (totalDays === 0) {
+      return data.map(entry => ({
+        date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
+        [t('progress.weight_progress_actual')]: entry.weight,
+        [t('progress.weight_progress_goal')]: profile.goal_weight,
+      }));
     }
 
     return data.map(entry => {
       const currentDate = new Date(entry.created_at);
       const daysSinceStart = differenceInDays(currentDate, firstEntryDate);
-      const goalWeight = profile.starting_weight + (daysSinceStart * ratePerDay);
+      const expectedWeightChange = (totalWeightToChange / totalDays) * daysSinceStart;
+      const goalWeightOnDate = profile.starting_weight - expectedWeightChange;
       
       return {
         date: format(currentDate, 'd MMM', { locale: es }),
         [t('progress.weight_progress_actual')]: entry.weight,
-        [t('progress.weight_progress_goal')]: parseFloat(goalWeight.toFixed(1)),
+        [t('progress.weight_progress_goal')]: parseFloat(goalWeightOnDate.toFixed(1)),
       };
     });
   }, [data, profile, t]);

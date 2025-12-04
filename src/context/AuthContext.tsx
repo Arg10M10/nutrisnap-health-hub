@@ -22,6 +22,7 @@ export interface Profile {
   goal_carbs: number | null;
   goal_fats: number | null;
   goal_sugars: number | null;
+  weekly_rate: number | null;
 }
 
 interface AuthContextType {
