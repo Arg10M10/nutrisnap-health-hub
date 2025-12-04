@@ -1,17 +1,13 @@
 {
-  "translation": {
-    "settings": {
-      "title": "Settings",
-      "language": "Language"
-    },
-    "languages": {
-      "es": "Spanish",
-      "en": "English",
-      "it": "Italian",
-      "fr": "French"
-    },
-    "language_drawer": {
-      "title": "Select Language"
-    }
+  "settings": {
+    "title": "Settings",
+    "language": "Language"
+  },
+  "languages": {
+    "es": "Spanish",
+    "en": "English"
+  },
+  "language_drawer": {
+    "title": "Select Language"
   }
 }
