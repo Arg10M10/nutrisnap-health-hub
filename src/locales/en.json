@@ -219,6 +219,11 @@
     "weight_unit": "kg",
     "save": "Save"
   },
+  "edit_goal_weight": {
+    "title": "Update Goal Weight",
+    "weight_unit": "kg",
+    "save": "Save"
+  },
   "toasts": {
     "coming_soon_title": "Coming Soon",
     "coming_soon_desc": "This feature will be available soon.",

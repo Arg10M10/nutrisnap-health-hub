@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Edit } from 'lucide-react';
 import EditProfileDrawer from '@/components/EditProfileDrawer';
+import EditGoalWeightDrawer from '@/components/EditGoalWeightDrawer';
 
 const InfoRow = ({ label, value, onEdit }: { label: string; value: string | number | null; onEdit: () => void }) => (
   <div className="flex items-center justify-between py-4">
@@ -27,6 +28,7 @@ const WeightGoal = () => {
   const { t } = useTranslation();
   const { profile } = useAuth();
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [isGoalDrawerOpen, setIsGoalDrawerOpen] = useState(false);
 
   const formattedDob = profile?.date_of_birth 
     ? format(new Date(profile.date_of_birth), 'P', { locale: es })
@@ -48,7 +50,7 @@ const WeightGoal = () => {
               <p className="text-muted-foreground">{t('weight_goal.title')}</p>
               <p className="text-2xl font-bold text-foreground">{profile?.goal_weight || '-'} kg</p>
             </div>
-            <Button onClick={() => navigate('/settings/ai-suggestions')}>{t('weight_goal.change_button')}</Button>
+            <Button onClick={() => setIsGoalDrawerOpen(true)}>{t('weight_goal.change_button')}</Button>
           </CardContent>
         </Card>
 
@@ -62,6 +64,11 @@ const WeightGoal = () => {
         </Card>
       </div>
       <EditProfileDrawer isOpen={isEditDrawerOpen} onClose={() => setIsEditDrawerOpen(false)} />
+      <EditGoalWeightDrawer 
+        isOpen={isGoalDrawerOpen} 
+        onClose={() => setIsGoalDrawerOpen(false)} 
+        currentGoalWeight={profile?.goal_weight || 70}
+      />
     </PageLayout>
   );
 };

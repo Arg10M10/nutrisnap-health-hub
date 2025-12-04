@@ -219,6 +219,11 @@
     "weight_unit": "kg",
     "save": "Guardar"
   },
+  "edit_goal_weight": {
+    "title": "Actualizar Peso Objetivo",
+    "weight_unit": "kg",
+    "save": "Guardar"
+  },
   "toasts": {
     "coming_soon_title": "Próximamente",
     "coming_soon_desc": "Esta función estará disponible pronto.",
