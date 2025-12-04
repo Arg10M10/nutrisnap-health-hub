@@ -16,10 +16,10 @@ import { Utensils, Loader2 } from 'lucide-react';
 import { AnalysisResult } from './FoodAnalysisCard';
 
 const formSchema = z.object({
-  foodName: z.string().min(2, { message: 'El nombre debe tener al menos 2 caracteres.' }),
+  foodName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   description: z.string().optional(),
-  portionSize: z.enum(['pequeño', 'mediano', 'grande'], {
-    required_error: 'Debes seleccionar un tamaño de porción.',
+  portionSize: z.enum(['small', 'medium', 'large'], {
+    required_error: 'You must select a portion size.',
   }),
 });
 
@@ -43,11 +43,11 @@ const ManualFoodEntry = () => {
     },
     onSuccess: (data) => {
       addAnalysis(data);
-      toast.success('Análisis completado y añadido al diario.');
+      toast.success('Analysis complete and added to diary.');
       form.reset();
     },
     onError: (error) => {
-      toast.error('Error en el análisis', {
+      toast.error('Error in analysis', {
         description: error.message,
       });
     },
@@ -62,7 +62,7 @@ const ManualFoodEntry = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Utensils className="w-6 h-6" />
-          Añadir Comida Manualmente
+          Add Food Manually
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -73,9 +73,9 @@ const ManualFoodEntry = () => {
               name="foodName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nombre de la comida</FormLabel>
+                  <FormLabel>Food Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Ej: Ensalada César con pollo" {...field} />
+                    <Input placeholder="e.g., Caesar salad with chicken" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -86,9 +86,9 @@ const ManualFoodEntry = () => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Descripción (opcional)</FormLabel>
+                  <FormLabel>Description (optional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Añade detalles para ayudar a la IA (ingredientes, método de cocción, etc.)" {...field} />
+                    <Textarea placeholder="Add details to help the AI (ingredients, cooking method, etc.)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -99,7 +99,7 @@ const ManualFoodEntry = () => {
               name="portionSize"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tamaño de la porción</FormLabel>
+                  <FormLabel>Portion Size</FormLabel>
                   <FormControl>
                     <ToggleGroup
                       type="single"
@@ -108,9 +108,9 @@ const ManualFoodEntry = () => {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <ToggleGroupItem value="pequeño" className="h-12">Pequeño</ToggleGroupItem>
-                      <ToggleGroupItem value="mediano" className="h-12">Mediano</ToggleGroupItem>
-                      <ToggleGroupItem value="grande" className="h-12">Grande</ToggleGroupItem>
+                      <ToggleGroupItem value="small" className="h-12">Small</ToggleGroupItem>
+                      <ToggleGroupItem value="medium" className="h-12">Medium</ToggleGroupItem>
+                      <ToggleGroupItem value="large" className="h-12">Large</ToggleGroupItem>
                     </ToggleGroup>
                   </FormControl>
                   <FormMessage />
@@ -119,7 +119,7 @@ const ManualFoodEntry = () => {
             />
             <Button type="submit" className="w-full" disabled={mutation.isPending}>
               {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Analizar y Añadir
+              Analyze and Add
             </Button>
           </form>
         </Form>

@@ -9,7 +9,7 @@ export const DurationSlider = ({ value, onValueChange }: DurationSliderProps) =>
   return (
     <div className="space-y-4">
       <div className="text-center">
-        <p className="text-muted-foreground">Duración</p>
+        <p className="text-muted-foreground">Duration</p>
         <p className="text-4xl font-bold text-foreground">{value} min</p>
       </div>
       <Slider

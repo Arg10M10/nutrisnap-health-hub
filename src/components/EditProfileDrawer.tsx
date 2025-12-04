@@ -24,14 +24,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2 } from 'lucide-react';
 
 const profileSchema = z.object({
-  firstName: z.string().min(1, "El nombre es requerido."),
-  lastName: z.string().min(1, "El apellido es requerido."),
-  gender: z.string().min(1, "El género es requerido."),
-  date_of_birth: z.string().min(1, "La fecha de nacimiento es requerida."),
-  goal: z.string().min(1, "El objetivo es requerido."),
-  height: z.coerce.number().min(1, "La altura es requerida."),
-  weight: z.coerce.number().min(1, "El peso es requerido."),
-  previous_apps_experience: z.string().min(1, "La experiencia es requerida."),
+  firstName: z.string().min(1, "First name is required."),
+  lastName: z.string().min(1, "Last name is required."),
+  gender: z.string().min(1, "Gender is required."),
+  date_of_birth: z.string().min(1, "Date of birth is required."),
+  goal: z.string().min(1, "Goal is required."),
+  height: z.coerce.number().min(1, "Height is required."),
+  weight: z.coerce.number().min(1, "Weight is required."),
+  previous_apps_experience: z.string().min(1, "Experience is required."),
 });
 
 interface EditProfileDrawerProps {
@@ -85,11 +85,11 @@ const EditProfileDrawer = ({ isOpen, onClose }: EditProfileDrawerProps) => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success('¡Perfil actualizado con éxito!');
+      toast.success('Profile updated successfully!');
       onClose();
     },
     onError: (error) => {
-      toast.error('Hubo un error al actualizar tu perfil.', { description: error.message });
+      toast.error('There was an error updating your profile.', { description: error.message });
     },
   });
 
@@ -101,67 +101,67 @@ const EditProfileDrawer = ({ isOpen, onClose }: EditProfileDrawerProps) => {
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent className="max-h-[90vh]">
         <DrawerHeader className="text-left">
-          <DrawerTitle>Editar Perfil</DrawerTitle>
-          <DrawerDescription>Realiza los cambios que necesites y guárdalos.</DrawerDescription>
+          <DrawerTitle>Edit Profile</DrawerTitle>
+          <DrawerDescription>Make the changes you need and save them.</DrawerDescription>
         </DrawerHeader>
         <div className="overflow-y-auto px-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <FormField control={form.control} name="firstName" render={({ field }) => (
-                  <FormItem><FormLabel>Nombre</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>First Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="lastName" render={({ field }) => (
-                  <FormItem><FormLabel>Apellido</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Last Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
               </div>
               <FormField control={form.control} name="date_of_birth" render={({ field }) => (
-                <FormItem><FormLabel>Fecha de Nacimiento</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>Date of Birth</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="gender" render={({ field }) => (
-                <FormItem><FormLabel>Género</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl><SelectTrigger><SelectValue placeholder="Selecciona tu género" /></SelectTrigger></FormControl>
+                <FormItem><FormLabel>Gender</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl><SelectTrigger><SelectValue placeholder="Select your gender" /></SelectTrigger></FormControl>
                   <SelectContent>
-                    <SelectItem value="Femenino">Femenino</SelectItem>
-                    <SelectItem value="Masculino">Masculino</SelectItem>
-                    <SelectItem value="Prefiero no decirlo">Prefiero no decirlo</SelectItem>
+                    <SelectItem value="Female">Female</SelectItem>
+                    <SelectItem value="Male">Male</SelectItem>
+                    <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
                   </SelectContent>
                 </Select><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="goal" render={({ field }) => (
-                <FormItem><FormLabel>Objetivo Principal</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl><SelectTrigger><SelectValue placeholder="Selecciona tu objetivo" /></SelectTrigger></FormControl>
+                <FormItem><FormLabel>Main Goal</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl><SelectTrigger><SelectValue placeholder="Select your goal" /></SelectTrigger></FormControl>
                   <SelectContent>
-                    <SelectItem value="lose_weight">Perder peso</SelectItem>
-                    <SelectItem value="maintain_weight">Mantener peso</SelectItem>
-                    <SelectItem value="gain_weight">Ganar peso</SelectItem>
+                    <SelectItem value="lose_weight">Lose weight</SelectItem>
+                    <SelectItem value="maintain_weight">Maintain weight</SelectItem>
+                    <SelectItem value="gain_weight">Gain weight</SelectItem>
                   </SelectContent>
                 </Select><FormMessage /></FormItem>
               )} />
               <div className="grid grid-cols-2 gap-4">
                 <FormField control={form.control} name="height" render={({ field }) => (
-                  <FormItem><FormLabel>Altura (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Height (cm)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="weight" render={({ field }) => (
-                  <FormItem><FormLabel>Peso (kg)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>Weight (kg)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
               </div>
               <FormField control={form.control} name="previous_apps_experience" render={({ field }) => (
-                <FormItem><FormLabel>Experiencia Previa</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl><SelectTrigger><SelectValue placeholder="Selecciona tu experiencia" /></SelectTrigger></FormControl>
+                <FormItem><FormLabel>Previous Experience</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl><SelectTrigger><SelectValue placeholder="Select your experience" /></SelectTrigger></FormControl>
                   <SelectContent>
-                    <SelectItem value="Sí, he usado varias">Sí, he usado varias</SelectItem>
-                    <SelectItem value="Sí, una o dos">Sí, una o dos</SelectItem>
-                    <SelectItem value="No, esta es mi primera vez">No, esta es mi primera vez</SelectItem>
+                    <SelectItem value="Yes, I've used several">Yes, I've used several</SelectItem>
+                    <SelectItem value="Yes, one or two">Yes, one or two</SelectItem>
+                    <SelectItem value="No, this is my first time">No, this is my first time</SelectItem>
                   </SelectContent>
                 </Select><FormMessage /></FormItem>
               )} />
               <DrawerFooter className="flex-row gap-2 px-0">
                 <Button type="submit" size="lg" className="flex-1" disabled={mutation.isPending}>
                   {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Guardar Cambios
+                  Save Changes
                 </Button>
-                <DrawerClose asChild><Button variant="outline" size="lg" className="flex-1">Cancelar</Button></DrawerClose>
+                <DrawerClose asChild><Button variant="outline" size="lg" className="flex-1">Cancel</Button></DrawerClose>
               </DrawerFooter>
             </form>
           </Form>

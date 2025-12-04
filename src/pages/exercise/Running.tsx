@@ -12,9 +12,9 @@ import { motion } from 'framer-motion';
 
 // MET (Metabolic Equivalent of Task) values for running
 const MET_VALUES: Record<Intensity, number> = {
-  'Baja': 7.0,   // Jogging
-  'Media': 9.8,  // Running at a good pace
-  'Alta': 12.5,  // Running fast / sprints
+  'Low': 7.0,   // Jogging
+  'Medium': 9.8,  // Running at a good pace
+  'High': 12.5,  // Running fast / sprints
 };
 
 const pageVariants = {
@@ -44,7 +44,7 @@ const Running = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!user || !intensity) throw new Error('Faltan datos para el registro.');
+      if (!user || !intensity) throw new Error('Missing data for logging.');
       
       const calories_burned = calculateCalories();
 
@@ -60,13 +60,13 @@ const Running = () => {
       return { calories_burned };
     },
     onSuccess: ({ calories_burned }) => {
-      toast.success('¡Carrera registrada!', {
-        description: `Has quemado aproximadamente ${calories_burned} calorías.`,
+      toast.success('Run logged!', {
+        description: `You've burned approximately ${calories_burned} calories.`,
       });
       navigate('/');
     },
     onError: (error) => {
-      toast.error('No se pudo registrar el ejercicio.', {
+      toast.error('Could not log exercise.', {
         description: error.message,
       });
     },
@@ -89,16 +89,16 @@ const Running = () => {
         </Button>
         <div className="flex items-center gap-2">
           <Footprints className="w-7 h-7 text-primary" />
-          <h1 className="text-2xl font-bold text-primary">Registrar Carrera</h1>
+          <h1 className="text-2xl font-bold text-primary">Log Run</h1>
         </div>
       </header>
       <main className="flex-1 p-4 pb-28 space-y-8">
         <section>
-          <h2 className="text-xl font-semibold mb-4 text-foreground">1. Elige la intensidad</h2>
+          <h2 className="text-xl font-semibold mb-4 text-foreground">1. Choose intensity</h2>
           <IntensitySelector selectedIntensity={intensity} onSelectIntensity={setIntensity} />
         </section>
         <section>
-          <h2 className="text-xl font-semibold mb-4 text-foreground">2. Ajusta la duración</h2>
+          <h2 className="text-xl font-semibold mb-4 text-foreground">2. Adjust duration</h2>
           <DurationSlider value={duration} onValueChange={setDuration} />
         </section>
       </main>
@@ -112,7 +112,7 @@ const Running = () => {
           {mutation.isPending ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
           ) : (
-            `Guardar Carrera (${calculateCalories()} kcal)`
+            `Save Run (${calculateCalories()} kcal)`
           )}
         </Button>
       </footer>

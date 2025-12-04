@@ -6,24 +6,24 @@ import PageLayout from '@/components/PageLayout';
 import { Footprints, Bike, Dumbbell, Weight } from 'lucide-react';
 
 const exercises = [
-  { name: 'Correr', icon: Footprints, path: '/exercise/running', enabled: true },
-  { name: 'Ciclismo', icon: Bike, path: '#', enabled: false },
-  { name: 'Pesas', icon: Dumbbell, path: '#', enabled: false },
-  { name: 'Otro', icon: Weight, path: '#', enabled: false },
+  { name: 'Running', icon: Footprints, path: '/exercise/running', enabled: true },
+  { name: 'Cycling', icon: Bike, path: '#', enabled: false },
+  { name: 'Weights', icon: Dumbbell, path: '#', enabled: false },
+  { name: 'Other', icon: Weight, path: '#', enabled: false },
 ];
 
 const Exercise = () => {
   const handleDisabledClick = () => {
-    toast.info('Próximamente', { description: 'Esta función estará disponible pronto.' });
+    toast.info('Coming Soon', { description: 'This feature will be available soon.' });
   };
 
   return (
     <PageLayout>
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-primary">Registrar Ejercicio</h1>
+          <h1 className="text-primary">Log Exercise</h1>
           <p className="text-muted-foreground text-lg">
-            Selecciona la actividad que realizaste para añadirla a tu diario.
+            Select the activity you performed to add it to your diary.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4">

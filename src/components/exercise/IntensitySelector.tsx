@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, Flame, Zap, Wind } from 'lucide-react';
 
-export type Intensity = 'Baja' | 'Media' | 'Alta';
+export type Intensity = 'Low' | 'Medium' | 'High';
 
 interface IntensitySelectorProps {
   selectedIntensity: Intensity | null;
@@ -12,25 +12,25 @@ interface IntensitySelectorProps {
 
 const intensityOptions = [
   {
-    name: 'Baja' as Intensity,
-    description: 'Ritmo suave y constante.',
-    example: 'Caminata rápida, trote ligero.',
+    name: 'Low' as Intensity,
+    description: 'Gentle, steady pace.',
+    example: 'Brisk walk, light jog.',
     icon: Wind,
     color: 'text-blue-500',
     borderColor: 'border-blue-500',
   },
   {
-    name: 'Media' as Intensity,
-    description: 'Aumenta tu ritmo cardíaco.',
-    example: 'Correr a un ritmo cómodo.',
+    name: 'Medium' as Intensity,
+    description: 'Increases your heart rate.',
+    example: 'Running at a comfortable pace.',
     icon: Zap,
     color: 'text-orange-500',
     borderColor: 'border-orange-500',
   },
   {
-    name: 'Alta' as Intensity,
-    description: 'Esfuerzo máximo, intervalos.',
-    example: 'Sprints, correr en cuestas.',
+    name: 'High' as Intensity,
+    description: 'Maximum effort, intervals.',
+    example: 'Sprints, hill running.',
     icon: Flame,
     color: 'text-red-500',
     borderColor: 'border-red-500',

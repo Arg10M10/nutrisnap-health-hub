@@ -17,9 +17,9 @@ const Preferences = () => {
   const [dailyReminders, setDailyReminders] = useState(false);
 
   const themeOptions = [
-    { value: 'light', label: 'Claro', icon: Sun, image: '/light-theme-preview.png' },
-    { value: 'dark', label: 'Oscuro', icon: Moon, image: '/dark-theme-preview.png' },
-    { value: 'system', label: 'Sistema', icon: Monitor, image: '/system-theme-preview.png' },
+    { value: 'light', label: 'Light', icon: Sun, image: '/light-theme-preview.png' },
+    { value: 'dark', label: 'Dark', icon: Moon, image: '/dark-theme-preview.png' },
+    { value: 'system', label: 'System', icon: Monitor, image: '/system-theme-preview.png' },
   ];
 
   return (
@@ -29,12 +29,12 @@ const Preferences = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
             <ArrowLeft className="w-6 h-6" />
           </Button>
-          <h1 className="text-2xl font-bold text-primary">Preferencias</h1>
+          <h1 className="text-2xl font-bold text-primary">Preferences</h1>
         </header>
 
         <Card>
           <CardHeader>
-            <CardTitle>Tema de la Aplicación</CardTitle>
+            <CardTitle>App Theme</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-4">
@@ -50,7 +50,7 @@ const Preferences = () => {
                         )}
                         onClick={() => setTheme(option.value)}
                       >
-                        <img src={option.image} alt={`Vista previa del tema ${option.label.toLowerCase()}`} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                        <img src={option.image} alt={`${option.label} theme preview`} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                         
                         <div className="absolute bottom-0 left-0 right-0 flex h-1/2 items-end justify-center p-2 bg-gradient-to-t from-black/70 to-transparent">
                           <div className="flex items-center gap-2 text-white">
@@ -69,16 +69,16 @@ const Preferences = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Notificaciones y Alertas</CardTitle>
+            <CardTitle>Notifications & Alerts</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <Label htmlFor="badge-celebrations" className="font-semibold text-base">
-                  Celebraciones de Insignias
+                  Badge Celebrations
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Muestra una animación al desbloquear una nueva insignia.
+                  Show an animation when unlocking a new badge.
                 </p>
               </div>
               <Switch
@@ -90,10 +90,10 @@ const Preferences = () => {
             <div className="flex items-center justify-between">
               <div>
                 <Label htmlFor="daily-reminders" className="font-semibold text-base">
-                  Recordatorios Diarios
+                  Daily Reminders
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Recibe un recordatorio para registrar tus comidas.
+                  Receive a reminder to log your meals.
                 </p>
               </div>
               <Switch
