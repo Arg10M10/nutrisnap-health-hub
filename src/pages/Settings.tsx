@@ -79,7 +79,7 @@ const Settings = () => {
         <SettingsCategory title={t('settings.goals.title')}>
           <SettingsItem icon={<Target size={20} />} label={t('settings.goals.editNutrition')} onClick={() => navigate('/settings/nutritional-goals')} />
           <SettingsItem icon={<Goal size={20} />} label={t('settings.goals.editWeight')} onClick={() => navigate('/settings/weight-goal')} />
-          <SettingsItem icon={<Palette size={20} />} label={t('settings.goals.ringColors')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<Palette size={20} />} label={t('settings.goals.ringColors')} onClick={() => navigate('/settings/ring-colors')} />
         </SettingsCategory>
 
         {/* Support and Legal Category */}

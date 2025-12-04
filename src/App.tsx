@@ -27,6 +27,7 @@ import Badges from "./pages/Badges";
 import ScrollToTop from "./components/ScrollToTop";
 import AISuggestions from "./pages/settings/AISuggestions";
 import WeightGoal from "./pages/settings/WeightGoal";
+import RingColors from "./pages/settings/RingColors";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const AppRoutes = () => {
     "/settings/nutritional-goals",
     "/settings/ai-suggestions",
     "/settings/weight-goal",
+    "/settings/ring-colors",
   ];
 
   if (fullScreenRoutes.includes(location.pathname)) {
@@ -76,6 +78,7 @@ const AppRoutes = () => {
           <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
           <Route path="/settings/ai-suggestions" element={<AISuggestions />} />
           <Route path="/settings/weight-goal" element={<WeightGoal />} />
+          <Route path="/settings/ring-colors" element={<RingColors />} />
         </Routes>
       </AnimatePresence>
     );

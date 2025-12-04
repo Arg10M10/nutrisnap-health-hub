@@ -238,5 +238,17 @@
     "height": "Height",
     "dob": "Date of birth",
     "gender": "Gender"
+  },
+  "ring_colors": {
+    "title": "Ring Colors",
+    "subtitle": "On the homepage calendar, the colored rings around each date show how close you were to your daily calorie goal:",
+    "green_title": "Green",
+    "green_desc": "Up to 100 calories over your goal.",
+    "yellow_title": "Yellow",
+    "yellow_desc": "100-200 calories over your goal.",
+    "red_title": "Red",
+    "red_desc": "More than 200 calories over your goal.",
+    "dotted_title": "Dotted",
+    "dotted_desc": "No meals were logged on that day."
   }
 }

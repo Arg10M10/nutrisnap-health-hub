@@ -92,6 +92,7 @@ const Index = () => {
           selectedDate={selectedDate} 
           onDateSelect={setSelectedDate} 
           weeklyCalorieData={weeklyCalorieData}
+          calorieGoal={dailyGoals.calories}
         />
 
         <div>

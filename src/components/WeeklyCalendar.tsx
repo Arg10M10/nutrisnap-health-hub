@@ -7,46 +7,58 @@ interface DayCircleProps {
   progressColor: string;
   trackColor: string;
   dayNumber: string;
+  isDotted?: boolean;
 }
 
-const DayCircle = ({ percentage, progressColor, trackColor, dayNumber }: DayCircleProps) => {
+const DayCircle = ({ percentage, progressColor, trackColor, dayNumber, isDotted = false }: DayCircleProps) => {
   const size = 36;
   const strokeWidth = 2.5;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  // Ensure offset doesn't go below 0
   const offset = Math.max(0, circumference - (percentage / 100) * circumference);
 
   return (
     <div className="w-9 h-9 relative">
       <svg className="w-full h-full" viewBox={`0 0 ${size} ${size}`}>
-        {/* Track */}
-        <circle
-          stroke={trackColor}
-          strokeWidth={strokeWidth}
-          fill="transparent"
-          r={radius}
-          cx={size / 2}
-          cy={size / 2}
-        />
-        {/* Progress */}
-        {percentage > 0 && (
+        {isDotted ? (
           <circle
-            stroke={progressColor}
+            stroke={trackColor}
             strokeWidth={strokeWidth}
-            strokeLinecap="round"
+            strokeDasharray="2 4"
             fill="transparent"
             r={radius}
             cx={size / 2}
             cy={size / 2}
-            style={{
-              strokeDasharray: circumference,
-              strokeDashoffset: offset,
-              transform: 'rotate(-90deg)',
-              transformOrigin: '50% 50%',
-              transition: 'stroke-dashoffset 0.3s ease-in-out',
-            }}
           />
+        ) : (
+          <>
+            <circle
+              stroke={trackColor}
+              strokeWidth={strokeWidth}
+              fill="transparent"
+              r={radius}
+              cx={size / 2}
+              cy={size / 2}
+            />
+            {percentage > 0 && (
+              <circle
+                stroke={progressColor}
+                strokeWidth={strokeWidth}
+                strokeLinecap="round"
+                fill="transparent"
+                r={radius}
+                cx={size / 2}
+                cy={size / 2}
+                style={{
+                  strokeDasharray: circumference,
+                  strokeDashoffset: offset,
+                  transform: 'rotate(-90deg)',
+                  transformOrigin: '50% 50%',
+                  transition: 'stroke-dashoffset 0.3s ease-in-out',
+                }}
+              />
+            )}
+          </>
         )}
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
@@ -62,15 +74,14 @@ interface WeeklyCalendarProps {
     selectedDate: Date;
     onDateSelect: (date: Date) => void;
     weeklyCalorieData: { [key: string]: number };
+    calorieGoal: number;
 }
 
-const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData }: WeeklyCalendarProps) => {
+const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorieGoal }: WeeklyCalendarProps) => {
   const today = new Date();
   const weekDays = Array.from({ length: 7 })
     .map((_, i) => subDays(today, i))
     .reverse();
-
-  const calorieGoal = 2000;
 
   return (
     <div className="grid grid-cols-7 gap-2 p-2 bg-muted rounded-2xl">
@@ -78,15 +89,19 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData }: Weekl
         const isSelected = isSameDay(day, selectedDate);
         const isToday = checkIsToday(day);
         const dayKey = format(day, 'yyyy-MM-dd');
+        
         const calories = weeklyCalorieData[dayKey] || 0;
-        const percentage = calorieGoal > 0 ? (calories / calorieGoal) * 100 : 0;
+        const hasData = calories > 0;
+        const difference = calories - calorieGoal;
 
         let progressColor = 'hsl(var(--primary))'; // Green
-        if (percentage > 100) {
+        if (difference > 200) {
           progressColor = 'hsl(var(--destructive))'; // Red
-        } else if (percentage > 75) {
-          progressColor = '#f97316'; // Orange/Yellow
+        } else if (difference > 100) {
+          progressColor = '#f59e0b'; // Yellow/Amber
         }
+
+        const percentage = calorieGoal > 0 ? (calories / calorieGoal) * 100 : 0;
 
         let trackColor = 'hsl(var(--border))';
         if (isSelected) {
@@ -105,10 +120,11 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData }: Weekl
               {format(day, "EEE", { locale: es })}
             </span>
             <DayCircle 
-              percentage={percentage}
+              percentage={hasData ? percentage : 0}
               progressColor={progressColor}
               trackColor={trackColor}
               dayNumber={format(day, "d")}
+              isDotted={!hasData}
             />
           </button>
         );

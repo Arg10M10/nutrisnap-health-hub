@@ -238,5 +238,17 @@
     "height": "Altura",
     "dob": "Fecha de nacimiento",
     "gender": "Género"
+  },
+  "ring_colors": {
+    "title": "Colores de los Anillos",
+    "subtitle": "En el calendario de inicio, los anillos de colores alrededor de cada fecha muestran qué tan cerca estuviste de tu objetivo diario de calorías:",
+    "green_title": "Verde",
+    "green_desc": "Hasta 100 calorías por encima de tu objetivo.",
+    "yellow_title": "Amarillo",
+    "yellow_desc": "100-200 calorías por encima de tu objetivo.",
+    "red_title": "Rojo",
+    "red_desc": "Más de 200 calorías por encima de tu objetivo.",
+    "dotted_title": "Punteado",
+    "dotted_desc": "No se registraron comidas ese día."
   }
 }
