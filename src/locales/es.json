@@ -167,7 +167,16 @@
     "save_action": "Guardar Pesas ({{calories}} kcal)",
     "saved_toast_title": "¡Entrenamiento guardado!",
     "saved_toast_desc": "Has quemado aproximadamente {{calories}} kcal.",
-    "error_toast_title": "No se pudo registrar el entrenamiento."
+    "error_toast_title": "No se pudo registrar el entrenamiento.",
+    "intensity_low": "Baja",
+    "intensity_low_desc": "Pesos ligeros y técnica cómoda.",
+    "intensity_low_example": "Circuito ligero, bandas elásticas.",
+    "intensity_medium": "Media",
+    "intensity_medium_desc": "Esfuerzo moderado con series desafiantes.",
+    "intensity_medium_example": "Superseries, peso moderado.",
+    "intensity_high": "Alta",
+    "intensity_high_desc": "Levantamientos pesados o HIIT con pesas.",
+    "intensity_high_example": "Series al fallo, compuestos pesados."
   },
   "write_exercise": {
     "title": "Escribir Ejercicio",

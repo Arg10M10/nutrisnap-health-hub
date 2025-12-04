@@ -9,32 +9,33 @@ export type Intensity = 'Low' | 'Medium' | 'High';
 interface IntensitySelectorProps {
   selectedIntensity: Intensity | null;
   onSelectIntensity: (intensity: Intensity) => void;
+  translationBase?: 'running' | 'weights';
 }
 
-export const IntensitySelector = ({ selectedIntensity, onSelectIntensity }: IntensitySelectorProps) => {
+export const IntensitySelector = ({ selectedIntensity, onSelectIntensity, translationBase = 'running' }: IntensitySelectorProps) => {
   const { t } = useTranslation();
 
   const intensityOptions = [
     {
       name: 'Low' as Intensity,
-      description: t('running.intensity_low_desc'),
-      example: t('running.intensity_low_example'),
+      description: t(`${translationBase}.intensity_low_desc` as any),
+      example: t(`${translationBase}.intensity_low_example` as any),
       icon: Wind,
       color: 'text-blue-500',
       borderColor: 'border-blue-500',
     },
     {
       name: 'Medium' as Intensity,
-      description: t('running.intensity_medium_desc'),
-      example: t('running.intensity_medium_example'),
+      description: t(`${translationBase}.intensity_medium_desc` as any),
+      example: t(`${translationBase}.intensity_medium_example` as any),
       icon: Zap,
       color: 'text-orange-500',
       borderColor: 'border-orange-500',
     },
     {
       name: 'High' as Intensity,
-      description: t('running.intensity_high_desc'),
-      example: t('running.intensity_high_example'),
+      description: t(`${translationBase}.intensity_high_desc` as any),
+      example: t(`${translationBase}.intensity_high_example` as any),
       icon: Flame,
       color: 'text-red-500',
       borderColor: 'border-red-500',
@@ -57,7 +58,7 @@ export const IntensitySelector = ({ selectedIntensity, onSelectIntensity }: Inte
             <div className="flex items-center gap-4">
               <option.icon className={cn('w-8 h-8 flex-shrink-0', option.color)} />
               <div className="flex-1">
-                <h3 className="font-semibold text-lg text-foreground">{t(`running.intensity_${option.name.toLowerCase()}` as any)}</h3>
+                <h3 className="font-semibold text-lg text-foreground">{t(`${translationBase}.intensity_${option.name.toLowerCase()}` as any)}</h3>
                 <p className="text-sm text-muted-foreground">{option.description}</p>
                 <p className="text-xs text-muted-foreground/80 italic">{option.example}</p>
               </div>

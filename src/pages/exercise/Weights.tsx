@@ -95,7 +95,7 @@ const Weights = () => {
       <main className="flex-1 p-4 pb-28 space-y-8">
         <section>
           <h2 className="text-xl font-semibold mb-4 text-foreground">{t('running.choose_intensity')}</h2>
-          <IntensitySelector selectedIntensity={intensity} onSelectIntensity={setIntensity} />
+          <IntensitySelector selectedIntensity={intensity} onSelectIntensity={setIntensity} translationBase="weights" />
         </section>
         <section>
           <h2 className="text-xl font-semibold mb-4 text-foreground">{t('running.adjust_duration')}</h2>

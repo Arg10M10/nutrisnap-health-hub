@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/card';
 import PageLayout from '@/components/PageLayout';
-import { Footprints, Bike, Dumbbell, Weight, FileText, Pencil } from 'lucide-react';
+import { Footprints, Dumbbell, FileText, Pencil } from 'lucide-react';
 
 const Exercise = () => {
   const { t } = useTranslation();
@@ -13,8 +13,6 @@ const Exercise = () => {
     { name: t('exercise.weights'), icon: Dumbbell, path: '/exercise/weights', enabled: true },
     { name: t('write_exercise.title'), icon: FileText, path: '/exercise/write', enabled: true },
     { name: t('manual_exercise.title'), icon: Pencil, path: '/exercise/manual', enabled: true },
-    { name: t('exercise.cycling'), icon: Bike, path: '#', enabled: false },
-    { name: t('exercise.other'), icon: Weight, path: '#', enabled: false },
   ];
 
   const handleDisabledClick = () => {
