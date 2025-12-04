@@ -65,7 +65,7 @@ const Onboarding = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success('¡Todo listo! Bienvenido a NutriSnap.');
+      toast.success('¡Todo listo! Bienvenido a Calorel.');
       navigate('/');
     },
     onError: (error) => {
@@ -124,13 +124,13 @@ const Onboarding = () => {
     },
     {
       title: '¿Cuál es tu objetivo principal?',
-      description: 'Elige qué quieres lograr con NutriSnap.',
+      description: 'Elige qué quieres lograr con Calorel.',
       content: <GoalStep goal={formData.goal} setGoal={(v) => updateFormData('goal', v)} />,
       canContinue: !!formData.goal,
     },
     {
       title: '¡Estás a un paso!',
-      description: 'Con NutriSnap, estás en el camino correcto hacia tus metas.',
+      description: 'Con Calorel, estás en el camino correcto hacia tus metas.',
       content: <FinalStep />,
       canContinue: true,
       continueText: 'Finalizar y empezar',

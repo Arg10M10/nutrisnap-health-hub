@@ -27,7 +27,7 @@ export default function Login() {
             <Leaf className="w-16 h-16 text-primary" />
             <div className="space-y-1.5 flex flex-col items-center text-center">
               <h2 className="text-3xl font-bold text-foreground">
-                Welcome to NutriSnap
+                Welcome to Calorel
               </h2>
               <p className="text-muted-foreground px-4">
                 Your smart health companion. Start your journey with a single click.

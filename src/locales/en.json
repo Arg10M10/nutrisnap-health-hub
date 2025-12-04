@@ -59,7 +59,7 @@
     "log_exercise": "Log Exercise"
   },
   "home": {
-    "title": "NutriSnap",
+    "title": "Calorel",
     "kcal_remaining": "{{count}} kcal remaining",
     "kcal_over": "{{count}} kcal over",
     "protein": "Protein",
