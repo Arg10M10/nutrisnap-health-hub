@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Flame, Leaf, ScanLine, Beef, Wheat, Droplets, Sparkles } from "lucide-react";
 import { useNutrition } from "@/context/NutritionContext";
+import { useAuth } from "@/context/AuthContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
 import HealthScoreCard from "@/components/HealthScoreCard";
 import WaterTrackerCard from "@/components/WaterTrackerCard";
@@ -19,6 +20,7 @@ import AnimatedNumber from "@/components/AnimatedNumber";
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { getDataForDate, streak, streakDays, addWaterGlass, removeWaterGlass, isWaterUpdating } = useNutrition();
+  const { profile } = useAuth();
   const { intake, analyses, healthScore, waterIntake } = getDataForDate(selectedDate);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -36,12 +38,12 @@ const Index = () => {
   }, [api]);
 
   const dailyGoals = {
-    calories: 2000,
-    protein: 90,
-    carbs: 220,
-    fats: 65,
+    calories: profile?.goal_calories || 2000,
+    protein: profile?.goal_protein || 90,
+    carbs: profile?.goal_carbs || 220,
+    fats: profile?.goal_fats || 65,
     water: 8,
-    sugars: 25,
+    sugars: profile?.goal_sugars || 25,
   };
 
   const getSafePercentage = (current?: number | null, goal?: number | null) => {

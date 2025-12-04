@@ -16,6 +16,11 @@ export interface Profile {
   date_of_birth: string | null;
   goal: string | null;
   starting_weight: number | null;
+  goal_calories: number | null;
+  goal_protein: number | null;
+  goal_carbs: number | null;
+  goal_fats: number | null;
+  goal_sugars: number | null;
 }
 
 interface AuthContextType {

@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import BarcodeResultPage from "@/pages/BarcodeResult";
 import Settings from "./pages/Settings";
 import Preferences from "./pages/settings/Preferences";
+import NutritionalGoals from "./pages/settings/NutritionalGoals";
 import Login from "./pages/Login";
 import Onboarding from "./pages/onboarding/Onboarding";
 import SplashScreen from "./pages/SplashScreen";
@@ -37,6 +38,7 @@ const AnimatedRoutes = () => {
         <Route path="/diets" element={<Diets />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/settings/preferences" element={<Preferences />} />
+        <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
         <Route path="/exercise" element={<Exercise />} />
         <Route path="/badges" element={<Badges />} />
         <Route path="*" element={<NotFound />} />
