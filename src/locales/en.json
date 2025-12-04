@@ -15,7 +15,7 @@
     "goals": {
       "title": "Goals & Tracking",
       "editNutrition": "Edit nutritional goals",
-      "editWeight": "Current goals and weight",
+      "editWeight": "Goals and current weight",
       "ringColors": "Ring Colors"
     },
     "support": {
@@ -225,5 +225,13 @@
     "sign_out_success": "Signed out successfully.",
     "delete_not_implemented_title": "Function not implemented.",
     "delete_not_implemented_desc": "Account deletion will be enabled in the future."
+  },
+  "weight_goal": {
+    "title": "Goal Weight",
+    "change_button": "Change goal",
+    "current_weight": "Current weight",
+    "height": "Height",
+    "dob": "Date of birth",
+    "gender": "Gender"
   }
 }

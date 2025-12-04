@@ -83,6 +83,7 @@ const AISuggestions = () => {
           goal_carbs: suggestions.carbs,
           goal_fats: suggestions.fats,
           goal_sugars: suggestions.sugars,
+          goal_weight: values.goalWeight,
         })
         .eq('id', user.id);
       if (updateError) throw updateError;

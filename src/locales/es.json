@@ -225,5 +225,13 @@
     "sign_out_success": "Sesión cerrada con éxito.",
     "delete_not_implemented_title": "Función no implementada.",
     "delete_not_implemented_desc": "La eliminación de la cuenta se habilitará en el futuro."
+  },
+  "weight_goal": {
+    "title": "Peso objetivo",
+    "change_button": "Cambiar objetivo",
+    "current_weight": "Peso actual",
+    "height": "Altura",
+    "dob": "Fecha de nacimiento",
+    "gender": "Género"
   }
 }

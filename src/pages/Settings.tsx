@@ -78,7 +78,7 @@ const Settings = () => {
         {/* Goals and Tracking Category */}
         <SettingsCategory title={t('settings.goals.title')}>
           <SettingsItem icon={<Target size={20} />} label={t('settings.goals.editNutrition')} onClick={() => navigate('/settings/nutritional-goals')} />
-          <SettingsItem icon={<Goal size={20} />} label={t('settings.goals.editWeight')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<Goal size={20} />} label={t('settings.goals.editWeight')} onClick={() => navigate('/settings/weight-goal')} />
           <SettingsItem icon={<Palette size={20} />} label={t('settings.goals.ringColors')} onClick={handleNotImplemented} />
         </SettingsCategory>
 

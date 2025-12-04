@@ -15,6 +15,7 @@ export interface Profile {
   units: string | null;
   date_of_birth: string | null;
   goal: string | null;
+  goal_weight: number | null;
   starting_weight: number | null;
   goal_calories: number | null;
   goal_protein: number | null;
