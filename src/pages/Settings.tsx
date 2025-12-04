@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
   User, Edit, HeartPulse, SlidersHorizontal, Languages, Target, Goal, Palette,
-  Lightbulb, Mail, FileText, Shield, Instagram, LogOut, Trash2, Loader2
+  Lightbulb, Mail, FileText, Shield, Instagram, LogOut, Trash2, Loader2, ChevronRight
 } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -21,6 +21,7 @@ import { SettingsCategory } from "@/components/settings/SettingsCategory";
 import { SettingsItem } from "@/components/settings/SettingsItem";
 import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
 import { TikTokIcon } from "@/components/icons/TikTokIcon";
+import UserAvatar from "@/components/UserAvatar";
 
 const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
@@ -46,17 +47,14 @@ const Settings = () => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // Try to open Gmail app first using known URL schemes; if it fails, fallback to mailto:
   const openGmailCompose = () => {
     const to = encodeURIComponent(SUPPORT_EMAIL);
     const schemes = [
-      `googlegmail://co?to=${to}`, // common Gmail scheme
-      `gmail://co?to=${to}`,       // alternative Gmail scheme
+      `googlegmail://co?to=${to}`,
+      `gmail://co?to=${to}`,
     ];
 
-    // Attempt to open a custom URL scheme. If it doesn't succeed, after timeout we fallback to mailto.
     const tryOpenScheme = (url: string) => {
-      // Create an anchor and click it to improve chance of opening on some mobile browsers
       const a = document.createElement('a');
       a.href = url;
       a.style.display = 'none';
@@ -71,11 +69,10 @@ const Settings = () => {
       try {
         tryOpenScheme(schemes[1]);
       } catch (e2) {
-        // ignore, will fallback below
+        // fallback
       }
     }
 
-    // Fallback: open default mail client (mailto) after a short delay
     setTimeout(() => {
       window.location.href = `mailto:${SUPPORT_EMAIL}`;
     }, 700);
@@ -114,20 +111,19 @@ const Settings = () => {
         </div>
 
         {/* Profile Card */}
-        <div className="p-6 bg-card border rounded-2xl flex items-center justify-between">
+        <button
+          onClick={() => navigate('/settings/edit-profile')}
+          className="w-full p-6 bg-card border rounded-2xl flex items-center justify-between text-left transition-colors hover:bg-muted/50"
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-              <User className="w-6 h-6 text-muted-foreground" />
-            </div>
+            <UserAvatar name={profile?.full_name} color={profile?.avatar_color} className="w-12 h-12" />
             <div>
               <p className="font-bold text-lg text-foreground">{profile?.full_name || t('settings.profileCard.namePlaceholder')}</p>
               <p className="text-sm text-muted-foreground">{t('settings.profileCard.viewAndEdit')}</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => setIsEditDrawerOpen(true)}>
-            <Edit className="w-5 h-5" />
-          </Button>
-        </div>
+          <ChevronRight className="w-5 h-5 text-muted-foreground" />
+        </button>
 
         {/* Account Category */}
         <SettingsCategory title={t('settings.account.title')}>

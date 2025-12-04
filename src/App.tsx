@@ -32,6 +32,7 @@ import AISuggestions from "./pages/settings/AISuggestions";
 import WeightGoal from "./pages/settings/WeightGoal";
 import RingColors from "./pages/settings/RingColors";
 import RequestFeature from "./pages/settings/RequestFeature";
+import EditProfile from "./pages/settings/EditProfile";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ const AppRoutes = () => {
     "/settings/weight-goal",
     "/settings/ring-colors",
     "/settings/request-feature",
+    "/settings/edit-profile",
   ];
 
   if (fullScreenRoutes.includes(location.pathname)) {
@@ -91,6 +93,7 @@ const AppRoutes = () => {
           <Route path="/settings/weight-goal" element={<WeightGoal />} />
           <Route path="/settings/ring-colors" element={<RingColors />} />
           <Route path="/settings/request-feature" element={<RequestFeature />} />
+          <Route path="/settings/edit-profile" element={<EditProfile />} />
         </Routes>
       </AnimatePresence>
     );
