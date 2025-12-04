@@ -221,9 +221,10 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
     const caloriesBurned = dailyExercise.reduce((acc, entry) => acc + (entry.calories_burned || 0), 0);
 
+    // Cambiado: sumamos las calorías de ejercicio en lugar de restarlas
     const intake = {
       ...foodIntake,
-      calories: foodIntake.calories - caloriesBurned,
+      calories: foodIntake.calories + caloriesBurned,
     };
 
     const healthScore = dailyFood.length > 0
