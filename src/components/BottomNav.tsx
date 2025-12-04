@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, Settings, LineChart, Book, Plus, Scan, Dumbbell, FileText, Pencil } from "lucide-react";
+import { Home, Settings, LineChart, Book, Plus, Scan, Dumbbell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
@@ -21,10 +21,7 @@ const BottomNav = () => {
 
   const menuItems = [
     { icon: Scan, label: t('bottom_nav.scan_food'), action: () => navigate("/scanner") },
-    { icon: Dumbbell, label: t('bottom_nav.log_run'), action: () => navigate("/exercise/running") },
-    { icon: Dumbbell, label: t('bottom_nav.log_weights'), action: () => navigate("/exercise/weights") },
-    { icon: FileText, label: t('bottom_nav.write_exercise'), action: () => navigate("/exercise/write") },
-    { icon: Pencil, label: t('bottom_nav.manual_exercise'), action: () => navigate("/exercise/manual") },
+    { icon: Dumbbell, label: t('bottom_nav.log_exercise'), action: () => navigate("/exercise") },
   ];
 
   const handleMenuAction = (action: () => void) => {
