@@ -20,7 +20,7 @@ import PageLayout from "@/components/PageLayout";
 import { SettingsCategory } from "@/components/settings/SettingsCategory";
 import { SettingsItem } from "@/components/settings/SettingsItem";
 import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
-import { TikTokIcon } from "@/components/icons/TikTokIcon";
+import { TikTokIcon } from "@/components/icons/FlagIcon";
 
 const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
@@ -46,9 +46,39 @@ const Settings = () => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  // Try to open Gmail app first using known URL schemes; if it fails, fallback to mailto:
   const openGmailCompose = () => {
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(SUPPORT_EMAIL)}`;
-    window.open(gmailUrl, "_blank", "noopener,noreferrer");
+    const to = encodeURIComponent(SUPPORT_EMAIL);
+    const schemes = [
+      `googlegmail://co?to=${to}`, // common Gmail scheme
+      `gmail://co?to=${to}`,       // alternative Gmail scheme
+    ];
+
+    // Attempt to open a custom URL scheme. If it doesn't succeed, after timeout we fallback to mailto.
+    const tryOpenScheme = (url: string) => {
+      // Create an anchor and click it to improve chance of opening on some mobile browsers
+      const a = document.createElement('a');
+      a.href = url;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+
+    try {
+      tryOpenScheme(schemes[0]);
+    } catch (e) {
+      try {
+        tryOpenScheme(schemes[1]);
+      } catch (e2) {
+        // ignore, will fallback below
+      }
+    }
+
+    // Fallback: open default mail client (mailto) after a short delay
+    setTimeout(() => {
+      window.location.href = `mailto:${SUPPORT_EMAIL}`;
+    }, 700);
   };
 
   const deleteAccountMutation = useMutation({
