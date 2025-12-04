@@ -28,7 +28,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import Viewfinder from "@/components/Viewfinder";
 import { useAuth } from "@/context/AuthContext";
-import { motion } from "framer-motion";
+import { motion, Transition } from "framer-motion";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -41,7 +41,7 @@ const pageVariants = {
   out: { opacity: 0, x: -20 },
 };
 
-const pageTransition = {
+const pageTransition: Transition = {
   type: "tween",
   ease: "easeInOut",
   duration: 0.2,
@@ -74,8 +74,8 @@ const Scanner = () => {
     if (streamRef.current) {
       if (isFlashOn) {
         const videoTrack = streamRef.current.getVideoTracks()[0];
-        if (videoTrack && videoTrack.getCapabilities().torch) {
-          videoTrack.applyConstraints({ advanced: [{ torch: false }] });
+        if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
+          videoTrack.applyConstraints({ advanced: [{ torch: false } as any] });
         }
       }
       streamRef.current.getTracks().forEach((track) => track.stop());
@@ -96,7 +96,7 @@ const Scanner = () => {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
         const videoTrack = stream.getVideoTracks()[0];
-        if (videoTrack && videoTrack.getCapabilities().torch) {
+        if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
           setHasFlash(true);
         }
       }
@@ -117,8 +117,8 @@ const Scanner = () => {
       stopCamera();
       setState('initializing');
       if (!BarcodeScanner) {
-        import('react-zxing').then(module => {
-          setBarcodeScanner(() => module.BarcodeScanner);
+        import('react-zxing').then(({ BarcodeScanner }) => {
+          setBarcodeScanner(() => BarcodeScanner);
           setState('camera');
         }).catch(err => {
           console.error("Failed to load BarcodeScanner component", err);
@@ -141,7 +141,7 @@ const Scanner = () => {
     const videoTrack = streamRef.current.getVideoTracks()[0];
     try {
       await videoTrack.applyConstraints({
-        advanced: [{ torch: !isFlashOn }],
+        advanced: [{ torch: !isFlashOn } as any],
       });
       setIsFlashOn(!isFlashOn);
     } catch (err) {

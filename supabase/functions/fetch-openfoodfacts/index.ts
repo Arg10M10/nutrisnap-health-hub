@@ -47,6 +47,7 @@ serve(async (req) => {
         fats: nutriments.fat_100g || 0,
         carbs: nutriments.carbohydrates_100g || 0,
         protein: nutriments.proteins_100g || 0,
+        sugars: nutriments.sugars_100g || 0,
       }
     };
     

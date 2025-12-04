@@ -9,7 +9,8 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Flame, ScanLine, Weight, Edit } from "lucide-react";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
-import { useNutrition } from "@/context/NutritionContext";
+import RecentExerciseCard from "@/components/RecentExerciseCard";
+import { useNutrition, FoodEntry, ExerciseEntry } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import ManualFoodEntry from "@/components/ManualFoodEntry";
 import BmiCalculator from "@/components/BmiCalculator";
@@ -17,6 +18,7 @@ import StreakCalendar from "@/components/StreakCalendar";
 import EditWeightDrawer from "@/components/EditWeightDrawer";
 import WeightChart from "@/components/WeightChart";
 import AnimatedNumber from "@/components/AnimatedNumber";
+import AnalysisDetailDrawer from "@/components/AnalysisDetailDrawer";
 
 const Progress = () => {
   const { getDataForDate, streak, streakDays } = useNutrition();
@@ -24,6 +26,7 @@ const Progress = () => {
   const { t } = useTranslation();
   const today = new Date();
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
+  const [selectedAnalysis, setSelectedAnalysis] = useState<FoodEntry | null>(null);
 
   const { analyses } = getDataForDate(today);
 
@@ -113,19 +116,28 @@ const Progress = () => {
           </h2>
           {analyses.length > 0 ? (
             <div className="space-y-3">
-              {analyses.map((item) => (
-                <RecentAnalysisCard 
-                  key={item.id}
-                  imageUrl={item.image_url}
-                  foodName={item.food_name}
-                  time={format(new Date(item.created_at), 'p', { locale: es })}
-                  calories={item.calories_value}
-                  protein={item.protein_value}
-                  carbs={item.carbs_value}
-                  fats={item.fats_value}
-                  sugars={item.sugars_value}
-                />
-              ))}
+              {analyses.map((item) => {
+                if ('food_name' in item) {
+                  return (
+                    <RecentAnalysisCard
+                      key={item.id}
+                      imageUrl={item.image_url}
+                      foodName={item.food_name}
+                      time={format(new Date(item.created_at), 'p', { locale: es })}
+                      calories={item.calories_value}
+                      protein={item.protein_value}
+                      carbs={item.carbs_value}
+                      fats={item.fats_value}
+                      sugars={item.sugars_value}
+                      status={item.status}
+                      onClick={() => setSelectedAnalysis(item)}
+                    />
+                  );
+                } else if ('exercise_type' in item) {
+                  return <RecentExerciseCard key={item.id} entry={item as ExerciseEntry} />;
+                }
+                return null;
+              })}
             </div>
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
@@ -144,6 +156,11 @@ const Progress = () => {
         isOpen={isWeightDrawerOpen} 
         onClose={() => setIsWeightDrawerOpen(false)} 
         currentWeight={profile?.weight || 70}
+      />
+      <AnalysisDetailDrawer
+        entry={selectedAnalysis}
+        isOpen={!!selectedAnalysis}
+        onClose={() => setSelectedAnalysis(null)}
       />
     </PageLayout>
   );

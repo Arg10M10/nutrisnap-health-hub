@@ -31,7 +31,7 @@ const RecentExerciseCard = ({ entry }: RecentExerciseCardProps) => {
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <Flame className="w-4 h-4 text-destructive" />
-            <span className="font-semibold text-destructive">-{entry.calories_burned} kcal</span>
+            <span className="font-semibold text-destructive">{entry.calories_burned} kcal</span>
           </div>
           <p>{entry.duration_minutes} min</p>
           <p className="capitalize">{t(`running.intensity_${entry.intensity}` as any)}</p>

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageLayout from "@/components/PageLayout";
@@ -70,7 +70,7 @@ const Index = () => {
     return data;
   }, [getDataForDate, streakDays]);
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     active: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
     inactive: { opacity: 0.6, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } },
   };

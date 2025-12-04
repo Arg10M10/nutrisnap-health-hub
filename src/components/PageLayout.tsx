@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { motion, Transition } from "framer-motion";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -11,7 +11,7 @@ const pageVariants = {
   out: { opacity: 0, scale: 0.99 },
 };
 
-const pageTransition = {
+const pageTransition: Transition = {
   type: "tween",
   ease: "easeOut",
   duration: 0.15,

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2, Footprints } from 'lucide-react';
 import { IntensitySelector, Intensity } from '@/components/exercise/IntensitySelector';
 import { DurationSlider } from '@/components/exercise/DurationSlider';
-import { motion } from 'framer-motion';
+import { motion, Transition } from 'framer-motion';
 
 // MET (Metabolic Equivalent of Task) values for running
 const MET_VALUES: Record<Intensity, number> = {
@@ -24,7 +24,7 @@ const pageVariants = {
   out: { opacity: 0, x: -20 },
 };
 
-const pageTransition = {
+const pageTransition: Transition = {
   type: "tween",
   ease: "easeInOut",
   duration: 0.2,
@@ -34,6 +34,7 @@ const Running = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [intensity, setIntensity] = useState<Intensity | null>(null);
   const [duration, setDuration] = useState(30);
 
@@ -62,6 +63,7 @@ const Running = () => {
       return { calories_burned };
     },
     onSuccess: ({ calories_burned }) => {
+      queryClient.invalidateQueries({ queryKey: ['exercise_entries', user?.id] });
       toast.success('Run logged!', {
         description: `You've burned approximately ${calories_burned} calories.`,
       });

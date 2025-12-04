@@ -31,11 +31,11 @@ const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
           <p className="text-muted-foreground">
             {remaining >= 0 ? (
               <>
-                <AnimatedNumber value={remaining} /> {t('home.kcal_remaining', { count: '' }).trim()}
+                <AnimatedNumber value={remaining} /> {t('home.kcal_remaining', { count: remaining }).replace(String(remaining), '').trim()}
               </>
             ) : (
               <>
-                <AnimatedNumber value={Math.abs(remaining)} /> {t('home.kcal_over', { count: '' }).trim()}
+                <AnimatedNumber value={Math.abs(remaining)} /> {t('home.kcal_over', { count: Math.abs(remaining) }).replace(String(Math.abs(remaining)), '').trim()}
               </>
             )}
           </p>

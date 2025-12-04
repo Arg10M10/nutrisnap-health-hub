@@ -128,6 +128,27 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     enabled: !!user,
   });
 
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('food_entries_changes')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'food_entries', filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          if (payload.new.status === 'completed' || payload.new.status === 'failed') {
+            queryClient.invalidateQueries({ queryKey: ['food_entries', user.id] });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, queryClient]);
+
   const addEntryMutation = useMutation({
     mutationFn: async (newEntry: Omit<FoodEntry, 'id' | 'created_at' | 'user_id'>) => {
       if (!user) throw new Error('User not found');
