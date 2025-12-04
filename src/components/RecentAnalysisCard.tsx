@@ -1,6 +1,8 @@
+import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Flame, Beef, Wheat, Droplets, Sparkles, Loader2, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 interface RecentAnalysisCardProps {
   imageUrl: string | null;
@@ -20,6 +22,43 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
   const hasFailed = status === 'failed';
   const isClickable = status === 'completed';
 
+  // Progreso simulado mientras la IA procesa
+  const [progress, setProgress] = useState<number>(isProcessing ? 0 : 100);
+  const timerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    // Reiniciar segun status
+    if (isProcessing) {
+      setProgress(0);
+      // Incrementos suaves hasta ~95% mientras llega el resultado real
+      timerRef.current = window.setInterval(() => {
+        setProgress((p) => {
+          const next = p + Math.floor(Math.random() * 7) + 4; // +4..+10
+          return Math.min(next, 95);
+        });
+      }, 500);
+    } else if (status === 'completed') {
+      setProgress(100);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    } else if (hasFailed) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      setProgress(0);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [isProcessing, hasFailed, status]);
+
   return (
     <Card 
       className={cn("p-4 flex items-center gap-4 relative transition-colors", isClickable && "cursor-pointer hover:bg-muted/50")} 
@@ -28,8 +67,15 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
       <div className="relative w-20 h-20 flex-shrink-0">
         <img src={imageUrl || '/placeholder.svg'} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
         {isProcessing && (
-          <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
-            <Loader2 className="w-6 h-6 text-white animate-spin" />
+          <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center p-2">
+            <div className="w-full">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Loader2 className="w-4 h-4 text-white animate-spin" />
+                <span className="text-white text-sm font-medium">Analizando...</span>
+              </div>
+              <Progress value={progress} className="h-2" />
+              <div className="text-center mt-1 text-white text-xs font-semibold">{progress}%</div>
+            </div>
           </div>
         )}
         {hasFailed && (
@@ -44,7 +90,9 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
           <span className="text-xs text-muted-foreground">{time}</span>
         </div>
         {isProcessing ? (
-          <p className="text-sm text-muted-foreground">La IA está analizando tu comida...</p>
+          <div className="text-sm text-muted-foreground">
+            La IA está analizando tu comida... {progress}%
+          </div>
         ) : hasFailed ? (
           <p className="text-sm text-destructive">El análisis ha fallado. Por favor, inténtalo de nuevo.</p>
         ) : (
