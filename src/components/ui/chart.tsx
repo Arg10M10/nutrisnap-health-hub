@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tooltip as RechartsTooltip, type TooltipProps } from "recharts";
+import { Tooltip as RechartsTooltip } from "recharts";
 import { cn } from "@/lib/utils";
 
 export type ChartConfig = Record<
@@ -44,23 +44,33 @@ export function ChartTooltip(props: any) {
   return <RechartsTooltip {...props} />;
 }
 
-export interface ChartTooltipContentProps<TValue = any, NameType = any>
-  extends TooltipProps<TValue, NameType> {
+export interface ChartTooltipContentProps {
   className?: string;
   hideIndicator?: boolean;
   labelClassName?: string;
   labelFormatter?: (label: string | number) => React.ReactNode;
   formatter?: (
-    value: TValue,
-    name: NameType,
+    value: number | string | ReadonlyArray<number | string>,
+    name: string | number,
     item: any,
     index: number
   ) => React.ReactNode;
   color?: string;
   name?: string;
+
+  // Minimal fields Recharts passes to content renderer
+  active?: boolean;
+  label?: string | number;
+  payload?: Array<{
+    color?: string;
+    name?: string | number;
+    value?: number | string | ReadonlyArray<number | string>;
+    dataKey?: string;
+    payload?: any;
+  }>;
 }
 
-export function ChartTooltipContent<TValue = any, NameType = any>({
+export function ChartTooltipContent({
   active,
   payload,
   className,
@@ -69,7 +79,7 @@ export function ChartTooltipContent<TValue = any, NameType = any>({
   labelFormatter,
   labelClassName,
   formatter,
-}: ChartTooltipContentProps<TValue, NameType>) {
+}: ChartTooltipContentProps) {
   if (!active || !payload || payload.length === 0) {
     return null;
   }
@@ -77,8 +87,8 @@ export function ChartTooltipContent<TValue = any, NameType = any>({
   const title =
     label !== undefined && label !== null
       ? labelFormatter
-        ? labelFormatter(label as any)
-        : (label as any)
+        ? labelFormatter(label)
+        : label
       : null;
 
   return (
@@ -91,7 +101,7 @@ export function ChartTooltipContent<TValue = any, NameType = any>({
           const dotColor =
             entry.color || entry.payload?.stroke || "hsl(var(--foreground))";
           const name = entry.name ?? entry.dataKey;
-          const value = entry.value as TValue;
+          const value = entry.value;
           const content = formatter
             ? formatter(value, name, entry, index)
             : (value as any);
