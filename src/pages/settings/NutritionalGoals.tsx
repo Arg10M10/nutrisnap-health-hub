@@ -8,7 +8,7 @@ import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ArrowLeft, Loader2 } from 'lucide-react';
-import { GoalSlider } from '@/components/settings/GoalSlider';
+import { GoalInput } from '@/components/settings/GoalInput';
 
 const NutritionalGoals = () => {
   const navigate = useNavigate();
@@ -75,14 +75,49 @@ const NutritionalGoals = () => {
         <Card>
           <CardHeader>
             <CardTitle>Daily Goals</CardTitle>
-            <CardDescription>Adjust the sliders to set your daily nutritional targets.</CardDescription>
+            <CardDescription>Set your daily nutritional targets manually.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-8">
-            <GoalSlider label="Calories" value={goals.calories} onValueChange={(v) => handleGoalChange('calories', v)} min={1000} max={4000} step={50} unit="kcal" />
-            <GoalSlider label="Protein" value={goals.protein} onValueChange={(v) => handleGoalChange('protein', v)} min={20} max={200} step={5} unit="g" />
-            <GoalSlider label="Carbohydrates" value={goals.carbs} onValueChange={(v) => handleGoalChange('carbs', v)} min={50} max={400} step={10} unit="g" />
-            <GoalSlider label="Fats" value={goals.fats} onValueChange={(v) => handleGoalChange('fats', v)} min={20} max={150} step={5} unit="g" />
-            <GoalSlider label="Sugars" value={goals.sugars} onValueChange={(v) => handleGoalChange('sugars', v)} min={10} max={100} step={5} unit="g" />
+            <div className="flex justify-center">
+              <GoalInput
+                label="Calories"
+                value={goals.calories}
+                unit="kcal"
+                onChange={(v) => handleGoalChange('calories', v)}
+                color="text-primary"
+                size="large"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-8">
+              <GoalInput
+                label="Protein"
+                value={goals.protein}
+                unit="g"
+                onChange={(v) => handleGoalChange('protein', v)}
+                color="text-red-500"
+              />
+              <GoalInput
+                label="Carbs"
+                value={goals.carbs}
+                unit="g"
+                onChange={(v) => handleGoalChange('carbs', v)}
+                color="text-orange-500"
+              />
+              <GoalInput
+                label="Fats"
+                value={goals.fats}
+                unit="g"
+                onChange={(v) => handleGoalChange('fats', v)}
+                color="text-blue-500"
+              />
+              <GoalInput
+                label="Sugars"
+                value={goals.sugars}
+                unit="g"
+                onChange={(v) => handleGoalChange('sugars', v)}
+                color="text-purple-500"
+              />
+            </div>
           </CardContent>
         </Card>
       </div>
