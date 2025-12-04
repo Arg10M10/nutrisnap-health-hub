@@ -7,9 +7,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, Loader2 } from 'lucide-react';
-import { GoalInput } from '@/components/settings/GoalInput';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { ArrowLeft, Loader2, Flame, Beef, Wheat, Droplets, Sparkles, Wand2 } from 'lucide-react';
+import { GoalRow } from '@/components/settings/GoalRow';
 
 const NutritionalGoals = () => {
   const navigate = useNavigate();
@@ -56,17 +56,29 @@ const NutritionalGoals = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success('Nutritional goals updated!');
+      toast.success(t('nutritional_goals.save_success'));
       navigate(-1);
     },
     onError: (error) => {
-      toast.error('Could not update goals.', { description: error.message });
+      toast.error(t('nutritional_goals.save_error'), { description: error.message });
     },
   });
 
+  const handleAISuggestions = () => {
+    toast.info(t('toasts.coming_soon_title'), { description: t('toasts.coming_soon_desc') });
+  };
+
+  const goalsConfig = [
+    { id: 'calories', label: t('nutritional_goals.calories'), unit: 'kcal', icon: <Flame className="w-5 h-5 text-white" />, color: 'bg-primary' },
+    { id: 'protein', label: t('nutritional_goals.protein'), unit: 'g', icon: <Beef className="w-5 h-5 text-white" />, color: 'bg-red-500' },
+    { id: 'carbs', label: t('nutritional_goals.carbs'), unit: 'g', icon: <Wheat className="w-5 h-5 text-white" />, color: 'bg-orange-500' },
+    { id: 'fats', label: t('nutritional_goals.fats'), unit: 'g', icon: <Droplets className="w-5 h-5 text-white" />, color: 'bg-blue-500' },
+    { id: 'sugars', label: t('nutritional_goals.sugars'), unit: 'g', icon: <Sparkles className="w-5 h-5 text-white" />, color: 'bg-purple-500' },
+  ];
+
   return (
     <PageLayout>
-      <div className="space-y-8 pb-24">
+      <div className="space-y-8">
         <header className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
             <ArrowLeft className="w-6 h-6" />
@@ -79,63 +91,33 @@ const NutritionalGoals = () => {
             <CardTitle>{t('nutritional_goals.daily_goals')}</CardTitle>
             <CardDescription>{t('nutritional_goals.subtitle')}</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-8">
-            <div className="flex justify-center">
-              <GoalInput
-                label={t('nutritional_goals.calories')}
-                value={goals.calories}
-                unit="kcal"
-                onChange={(v) => handleGoalChange('calories', v)}
-                color="text-primary"
-                size="large"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-8">
-              <GoalInput
-                label={t('nutritional_goals.protein')}
-                value={goals.protein}
-                unit="g"
-                onChange={(v) => handleGoalChange('protein', v)}
-                color="text-red-500"
-              />
-              <GoalInput
-                label={t('nutritional_goals.carbs')}
-                value={goals.carbs}
-                unit="g"
-                onChange={(v) => handleGoalChange('carbs', v)}
-                color="text-orange-500"
-              />
-              <GoalInput
-                label={t('nutritional_goals.fats')}
-                value={goals.fats}
-                unit="g"
-                onChange={(v) => handleGoalChange('fats', v)}
-                color="text-blue-500"
-              />
-              <GoalInput
-                label={t('nutritional_goals.sugars')}
-                value={goals.sugars}
-                unit="g"
-                onChange={(v) => handleGoalChange('sugars', v)}
-                color="text-purple-500"
-              />
+          <CardContent className="p-0">
+            <div className="divide-y px-6">
+              {goalsConfig.map((goal) => (
+                <GoalRow
+                  key={goal.id}
+                  icon={goal.icon}
+                  label={goal.label}
+                  value={goals[goal.id as keyof typeof goals]}
+                  unit={goal.unit}
+                  onChange={(v) => handleGoalChange(goal.id as keyof typeof goals, v)}
+                  color={goal.color}
+                />
+              ))}
             </div>
           </CardContent>
+          <CardFooter className="flex flex-col sm:flex-row gap-2 pt-6">
+             <Button variant="outline" size="lg" className="w-full h-14 text-lg" onClick={handleAISuggestions}>
+                <Wand2 className="mr-2 h-5 w-5" />
+                {t('nutritional_goals.ai_suggestions')}
+             </Button>
+             <Button size="lg" className="w-full h-14 text-lg" disabled={mutation.isPending} onClick={() => mutation.mutate()}>
+                {mutation.isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                {t('nutritional_goals.save')}
+             </Button>
+          </CardFooter>
         </Card>
       </div>
-      <footer className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-sm border-t">
-        <div className="max-w-2xl mx-auto">
-          <Button
-            size="lg"
-            className="w-full h-14 text-lg"
-            disabled={mutation.isPending}
-            onClick={() => mutation.mutate()}
-          >
-            {mutation.isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-            {t('nutritional_goals.save')}
-          </Button>
-        </div>
-      </footer>
     </PageLayout>
   );
 };

@@ -176,7 +176,10 @@
     "carbs": "Carbohidratos",
     "fats": "Grasas",
     "sugars": "Azúcares",
-    "save": "Guardar Metas"
+    "save": "Guardar Metas",
+    "ai_suggestions": "Sugerencias de la IA",
+    "save_success": "¡Metas nutricionales actualizadas!",
+    "save_error": "No se pudieron actualizar las metas."
   },
   "bmi_calculator": {
     "title": "Tu IMC",

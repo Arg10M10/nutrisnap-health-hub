@@ -176,7 +176,10 @@
     "carbs": "Carbs",
     "fats": "Fats",
     "sugars": "Sugars",
-    "save": "Save Goals"
+    "save": "Save Goals",
+    "ai_suggestions": "AI Suggestions",
+    "save_success": "Nutritional goals updated!",
+    "save_error": "Could not update goals."
   },
   "bmi_calculator": {
     "title": "Your BMI",
