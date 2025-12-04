@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import PageLayout from "@/components/PageLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Flame, ScanLine, Weight, Edit } from "lucide-react";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
@@ -97,13 +97,15 @@ const Progress = () => {
           </CardHeader>
           <CardContent>
             <ChartContainer config={{}} className="h-64 w-full">
-              <BarChart data={chartData} margin={{ top: 20, right: 10, bottom: 5, left: -16 }}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} className="capitalize" />
-                <YAxis tickLine={false} axisLine={false} tickMargin={8} />
-                <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                <Bar dataKey="calories" fill="hsl(var(--primary))" radius={8} />
-              </BarChart>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 20, right: 10, bottom: 5, left: -16 }}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} className="capitalize" />
+                  <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+                  <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                  <Bar dataKey="calories" fill="hsl(var(--primary))" radius={8} />
+                </BarChart>
+              </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
         </Card>
