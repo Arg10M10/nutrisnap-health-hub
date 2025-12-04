@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
@@ -22,6 +23,7 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
   const [newWeight, setNewWeight] = useState(currentWeight);
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [unlockedBadges, setUnlockedBadges] = useLocalStorage<string[]>('unlockedBadges', []);
 
   useEffect(() => {
@@ -87,14 +89,14 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle className="text-center">Actualizar Peso</DrawerTitle>
+          <DrawerTitle className="text-center">{t('edit_weight.title')}</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 py-8 space-y-8">
           <div className="text-center">
             <p className="text-6xl font-bold text-foreground">
               <AnimatedNumber value={newWeight} toFixed={1} />
             </p>
-            <p className="text-muted-foreground">kg</p>
+            <p className="text-muted-foreground">{t('edit_weight.weight_unit')}</p>
           </div>
           <Slider
             value={[newWeight]}
@@ -107,7 +109,7 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
         <DrawerFooter>
           <Button size="lg" onClick={handleSave} disabled={mutation.isPending}>
             {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Guardar
+            {t('edit_weight.save')}
           </Button>
         </DrawerFooter>
       </DrawerContent>

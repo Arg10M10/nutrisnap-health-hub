@@ -1,29 +1,31 @@
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import PageLayout from '@/components/PageLayout';
 import { Footprints, Bike, Dumbbell, Weight } from 'lucide-react';
 
-const exercises = [
-  { name: 'Running', icon: Footprints, path: '/exercise/running', enabled: true },
-  { name: 'Cycling', icon: Bike, path: '#', enabled: false },
-  { name: 'Weights', icon: Dumbbell, path: '#', enabled: false },
-  { name: 'Other', icon: Weight, path: '#', enabled: false },
-];
-
 const Exercise = () => {
+  const { t } = useTranslation();
+
+  const exercises = [
+    { name: t('exercise.running'), icon: Footprints, path: '/exercise/running', enabled: true },
+    { name: t('exercise.cycling'), icon: Bike, path: '#', enabled: false },
+    { name: t('exercise.weights'), icon: Dumbbell, path: '#', enabled: false },
+    { name: t('exercise.other'), icon: Weight, path: '#', enabled: false },
+  ];
+
   const handleDisabledClick = () => {
-    toast.info('Coming Soon', { description: 'This feature will be available soon.' });
+    toast.info(t('toasts.coming_soon_title'), { description: t('toasts.coming_soon_desc') });
   };
 
   return (
     <PageLayout>
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-primary">Log Exercise</h1>
+          <h1 className="text-primary">{t('exercise.title')}</h1>
           <p className="text-muted-foreground text-lg">
-            Select the activity you performed to add it to your diary.
+            {t('exercise.subtitle')}
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4">

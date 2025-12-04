@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { CheckCircle2, Flame, Zap, Wind } from 'lucide-react';
 
 export type Intensity = 'Low' | 'Medium' | 'High';
@@ -10,34 +11,36 @@ interface IntensitySelectorProps {
   onSelectIntensity: (intensity: Intensity) => void;
 }
 
-const intensityOptions = [
-  {
-    name: 'Low' as Intensity,
-    description: 'Gentle, steady pace.',
-    example: 'Brisk walk, light jog.',
-    icon: Wind,
-    color: 'text-blue-500',
-    borderColor: 'border-blue-500',
-  },
-  {
-    name: 'Medium' as Intensity,
-    description: 'Increases your heart rate.',
-    example: 'Running at a comfortable pace.',
-    icon: Zap,
-    color: 'text-orange-500',
-    borderColor: 'border-orange-500',
-  },
-  {
-    name: 'High' as Intensity,
-    description: 'Maximum effort, intervals.',
-    example: 'Sprints, hill running.',
-    icon: Flame,
-    color: 'text-red-500',
-    borderColor: 'border-red-500',
-  },
-];
-
 export const IntensitySelector = ({ selectedIntensity, onSelectIntensity }: IntensitySelectorProps) => {
+  const { t } = useTranslation();
+
+  const intensityOptions = [
+    {
+      name: 'Low' as Intensity,
+      description: t('running.intensity_low_desc'),
+      example: t('running.intensity_low_example'),
+      icon: Wind,
+      color: 'text-blue-500',
+      borderColor: 'border-blue-500',
+    },
+    {
+      name: 'Medium' as Intensity,
+      description: t('running.intensity_medium_desc'),
+      example: t('running.intensity_medium_example'),
+      icon: Zap,
+      color: 'text-orange-500',
+      borderColor: 'border-orange-500',
+    },
+    {
+      name: 'High' as Intensity,
+      description: t('running.intensity_high_desc'),
+      example: t('running.intensity_high_example'),
+      icon: Flame,
+      color: 'text-red-500',
+      borderColor: 'border-red-500',
+    },
+  ];
+
   return (
     <div className="space-y-4">
       {intensityOptions.map((option) => {
@@ -54,7 +57,7 @@ export const IntensitySelector = ({ selectedIntensity, onSelectIntensity }: Inte
             <div className="flex items-center gap-4">
               <option.icon className={cn('w-8 h-8 flex-shrink-0', option.color)} />
               <div className="flex-1">
-                <h3 className="font-semibold text-lg text-foreground">{option.name}</h3>
+                <h3 className="font-semibold text-lg text-foreground">{t(`running.intensity_${option.name.toLowerCase()}` as any)}</h3>
                 <p className="text-sm text-muted-foreground">{option.description}</p>
                 <p className="text-xs text-muted-foreground/80 italic">{option.example}</p>
               </div>

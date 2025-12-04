@@ -29,17 +29,16 @@ const Settings = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    toast.success(t('settings.signOutSuccess'));
+    toast.success(t('toasts.sign_out_success'));
   };
 
   const handleNotImplemented = () => {
-    toast.info("Coming Soon", { description: "This feature will be available soon." });
+    toast.info(t('toasts.coming_soon_title'), { description: t('toasts.coming_soon_desc') });
   };
 
   const handleDeleteAccount = () => {
-    // Placeholder for account deletion logic
-    toast.error("Function not implemented.", {
-      description: "Account deletion will be enabled in the future.",
+    toast.error(t('toasts.delete_not_implemented_title'), {
+      description: t('toasts.delete_not_implemented_desc'),
     });
   };
 

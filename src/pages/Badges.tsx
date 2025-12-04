@@ -1,6 +1,7 @@
 import PageLayout from "@/components/PageLayout";
 import { useNutrition } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Lock, Flame, Award, Droplet, TrendingDown } from "lucide-react";
@@ -9,6 +10,7 @@ import { streakBadges, waterBadges, weightLossBadges } from "@/data/badges";
 const Badges = () => {
   const { streak, waterStreak } = useNutrition();
   const { profile } = useAuth();
+  const { t } = useTranslation();
 
   const weightLost = profile?.starting_weight && profile.weight ? profile.starting_weight - profile.weight : 0;
 
@@ -22,9 +24,9 @@ const Badges = () => {
     <PageLayout>
       <div className="space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-primary">My Badges</h1>
+          <h1 className="text-primary">{t('badges.title')}</h1>
           <p className="text-muted-foreground text-lg">
-            Your unlocked achievements and streaks.
+            {t('badges.subtitle')}
           </p>
         </div>
 
@@ -33,12 +35,12 @@ const Badges = () => {
             <div className="flex flex-col items-center justify-center text-center gap-1 pr-4">
               <Flame className="w-10 h-10 text-orange-500" />
               <p className="text-3xl font-bold text-foreground">{streak}</p>
-              <p className="text-sm text-muted-foreground">Meal Streak</p>
+              <p className="text-sm text-muted-foreground">{t('badges.meal_streak')}</p>
             </div>
             <div className="flex flex-col items-center justify-center text-center gap-1 pl-4">
               <Award className="w-10 h-10 text-yellow-500" />
               <p className="text-3xl font-bold text-foreground">{totalUnlocked}</p>
-              <p className="text-sm text-muted-foreground">Total Badges</p>
+              <p className="text-sm text-muted-foreground">{t('badges.total_badges')}</p>
             </div>
           </CardContent>
         </Card>
@@ -46,7 +48,7 @@ const Badges = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2 text-foreground">
             <Flame className="w-6 h-6 text-orange-500" />
-            Meal Streak
+            {t('badges.meal_streak')}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {streakBadges.map((badge) => {
@@ -76,7 +78,7 @@ const Badges = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2 text-foreground">
             <Droplet className="w-6 h-6 text-blue-500" />
-            Hydration Streak
+            {t('badges.hydration_streak')}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {waterBadges.map((badge) => {
@@ -107,7 +109,7 @@ const Badges = () => {
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold flex items-center gap-2 text-foreground">
               <TrendingDown className="w-6 h-6 text-green-500" />
-              Weight Loss
+              {t('badges.weight_loss')}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {weightLossBadges.map((badge) => {

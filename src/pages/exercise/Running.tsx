@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
@@ -32,6 +33,7 @@ const pageTransition = {
 const Running = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
+  const { t } = useTranslation();
   const [intensity, setIntensity] = useState<Intensity | null>(null);
   const [duration, setDuration] = useState(30);
 
@@ -89,16 +91,16 @@ const Running = () => {
         </Button>
         <div className="flex items-center gap-2">
           <Footprints className="w-7 h-7 text-primary" />
-          <h1 className="text-2xl font-bold text-primary">Log Run</h1>
+          <h1 className="text-2xl font-bold text-primary">{t('running.title')}</h1>
         </div>
       </header>
       <main className="flex-1 p-4 pb-28 space-y-8">
         <section>
-          <h2 className="text-xl font-semibold mb-4 text-foreground">1. Choose intensity</h2>
+          <h2 className="text-xl font-semibold mb-4 text-foreground">{t('running.choose_intensity')}</h2>
           <IntensitySelector selectedIntensity={intensity} onSelectIntensity={setIntensity} />
         </section>
         <section>
-          <h2 className="text-xl font-semibold mb-4 text-foreground">2. Adjust duration</h2>
+          <h2 className="text-xl font-semibold mb-4 text-foreground">{t('running.adjust_duration')}</h2>
           <DurationSlider value={duration} onValueChange={setDuration} />
         </section>
       </main>
@@ -112,7 +114,7 @@ const Running = () => {
           {mutation.isPending ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
           ) : (
-            `Save Run (${calculateCalories()} kcal)`
+            t('running.save_run', { calories: calculateCalories() })
           )}
         </Button>
       </footer>

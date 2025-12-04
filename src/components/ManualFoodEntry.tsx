@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useNutrition } from '@/context/NutritionContext';
 import { toast } from 'sonner';
@@ -25,6 +25,7 @@ const formSchema = z.object({
 
 const ManualFoodEntry = () => {
   const { addAnalysis } = useNutrition();
+  const { t } = useTranslation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,7 +63,7 @@ const ManualFoodEntry = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Utensils className="w-6 h-6" />
-          Add Food Manually
+          {t('manual_food.title')}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -73,9 +74,9 @@ const ManualFoodEntry = () => {
               name="foodName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Food Name</FormLabel>
+                  <FormLabel>{t('manual_food.name_label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Caesar salad with chicken" {...field} />
+                    <Input placeholder={t('manual_food.name_placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -86,9 +87,9 @@ const ManualFoodEntry = () => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (optional)</FormLabel>
+                  <FormLabel>{t('manual_food.desc_label')}</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Add details to help the AI (ingredients, cooking method, etc.)" {...field} />
+                    <Textarea placeholder={t('manual_food.desc_placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -99,7 +100,7 @@ const ManualFoodEntry = () => {
               name="portionSize"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Portion Size</FormLabel>
+                  <FormLabel>{t('manual_food.portion_label')}</FormLabel>
                   <FormControl>
                     <ToggleGroup
                       type="single"
@@ -108,9 +109,9 @@ const ManualFoodEntry = () => {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <ToggleGroupItem value="small" className="h-12">Small</ToggleGroupItem>
-                      <ToggleGroupItem value="medium" className="h-12">Medium</ToggleGroupItem>
-                      <ToggleGroupItem value="large" className="h-12">Large</ToggleGroupItem>
+                      <ToggleGroupItem value="small" className="h-12">{t('manual_food.portion_small')}</ToggleGroupItem>
+                      <ToggleGroupItem value="medium" className="h-12">{t('manual_food.portion_medium')}</ToggleGroupItem>
+                      <ToggleGroupItem value="large" className="h-12">{t('manual_food.portion_large')}</ToggleGroupItem>
                     </ToggleGroup>
                   </FormControl>
                   <FormMessage />
@@ -119,7 +120,7 @@ const ManualFoodEntry = () => {
             />
             <Button type="submit" className="w-full" disabled={mutation.isPending}>
               {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Analyze and Add
+              {t('manual_food.submit')}
             </Button>
           </form>
         </Form>

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Diet } from "@/data/diets";
 import { Check, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface DietDetailDrawerProps {
   diet: Diet | null;
@@ -18,6 +19,7 @@ interface DietDetailDrawerProps {
 }
 
 const DietDetailDrawer = ({ diet, isOpen, onClose }: DietDetailDrawerProps) => {
+  const { t } = useTranslation();
   if (!diet) return null;
 
   return (
@@ -37,7 +39,7 @@ const DietDetailDrawer = ({ diet, isOpen, onClose }: DietDetailDrawerProps) => {
           <div className="px-6 pb-6 space-y-6">
             <div>
               <h3 className="font-semibold text-xl mb-3 text-primary flex items-center gap-2">
-                <Check className="w-6 h-6" /> Qué comer
+                <Check className="w-6 h-6" /> {t('diets.drawer_eat')}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {diet.foodsToEat.map((food) => (
@@ -50,7 +52,7 @@ const DietDetailDrawer = ({ diet, isOpen, onClose }: DietDetailDrawerProps) => {
 
             <div>
               <h3 className="font-semibold text-xl mb-3 text-destructive flex items-center gap-2">
-                <X className="w-6 h-6" /> Qué evitar
+                <X className="w-6 h-6" /> {t('diets.drawer_avoid')}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {diet.foodsToAvoid.map((food) => (
@@ -64,7 +66,7 @@ const DietDetailDrawer = ({ diet, isOpen, onClose }: DietDetailDrawerProps) => {
         </div>
 
         <DrawerFooter className="pt-4 border-t flex-shrink-0">
-          <Button onClick={onClose} size="lg">Cerrar</Button>
+          <Button onClick={onClose} size="lg">{t('diets.drawer_close')}</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

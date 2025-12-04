@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { GlassWater, Minus, Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import AnimatedNumber from "./AnimatedNumber";
 
 interface WaterTrackerCardProps {
@@ -12,6 +13,7 @@ interface WaterTrackerCardProps {
 }
 
 const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTrackerCardProps) => {
+  const { t } = useTranslation();
   return (
     <Card className="p-4 text-center space-y-2 h-full flex flex-col justify-between">
       <GlassWater className="w-10 h-10 mx-auto text-blue-500" />
@@ -19,7 +21,7 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
         <p className="text-3xl font-bold text-foreground">
           <AnimatedNumber value={count} />
         </p>
-        <p className="text-muted-foreground">/ {goal} glasses</p>
+        <p className="text-muted-foreground">{t('home.water_tracker_glasses', { goal })}</p>
       </div>
       <div className="flex justify-center items-center gap-2">
         <Button variant="outline" size="icon" onClick={onRemove} disabled={count === 0 || isUpdating}>

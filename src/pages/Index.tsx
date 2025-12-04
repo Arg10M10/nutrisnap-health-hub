@@ -3,6 +3,7 @@ import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
@@ -25,6 +26,7 @@ const Index = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!api) {
@@ -76,7 +78,7 @@ const Index = () => {
         <header className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Leaf className="w-8 h-8 text-primary" />
-            <h1 className="text-primary text-3xl">NutriSnap</h1>
+            <h1 className="text-primary text-3xl">{t('home.title')}</h1>
           </div>
           <Link to="/badges" className="flex items-center gap-2 bg-background border text-foreground px-3 py-1.5 rounded-full shadow-md transition-transform active:scale-95">
             <Flame className="w-5 h-5 text-orange-400 fill-current" />
@@ -109,7 +111,7 @@ const Index = () => {
                         icon={<Beef className="w-6 h-6 text-red-500" />}
                         current={intake.protein}
                         unit="g"
-                        label="Protein"
+                        label={t('home.protein')}
                       />
                       <MacroCard
                         value={getSafePercentage(intake.carbs, dailyGoals.carbs)}
@@ -117,7 +119,7 @@ const Index = () => {
                         icon={<Wheat className="w-6 h-6 text-orange-500" />}
                         current={intake.carbs}
                         unit="g"
-                        label="Carbs"
+                        label={t('home.carbs')}
                       />
                       <MacroCard
                         value={getSafePercentage(intake.fats, dailyGoals.fats)}
@@ -125,7 +127,7 @@ const Index = () => {
                         icon={<Droplets className="w-6 h-6 text-blue-500" />}
                         current={intake.fats}
                         unit="g"
-                        label="Fats"
+                        label={t('home.fats')}
                       />
                     </div>
                   </div>
@@ -153,7 +155,7 @@ const Index = () => {
                           icon={<Sparkles className="w-6 h-6 text-purple-500" />}
                           current={intake.sugars}
                           unit="g"
-                          label="Sugars"
+                          label={t('home.sugars')}
                       />
                     </div>
                   </div>
@@ -176,7 +178,7 @@ const Index = () => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-foreground text-2xl font-semibold">Today's Analysis</h2>
+          <h2 className="text-foreground text-2xl font-semibold">{t('home.todays_analysis')}</h2>
           {analyses.length > 0 ? (
             <div className="space-y-3">
               {analyses.map((item) => (
@@ -196,8 +198,8 @@ const Index = () => {
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
               <ScanLine className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground">No data for this day.</p>
-              <p className="text-sm text-muted-foreground">Use the scanner to start logging!</p>
+              <p className="text-muted-foreground">{t('home.no_data')}</p>
+              <p className="text-sm text-muted-foreground">{t('home.start_logging')}</p>
             </Card>
           )}
         </div>

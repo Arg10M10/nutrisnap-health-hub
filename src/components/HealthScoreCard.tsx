@@ -1,12 +1,14 @@
 import { Card } from "@/components/ui/card";
 import MacroProgressCircle from "@/components/MacroProgressCircle";
 import { ShieldCheck } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface HealthScoreCardProps {
   score: number; // Score from 0 to 100
 }
 
 const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
+  const { t } = useTranslation();
   const safeScore = score || 0;
 
   let color = "#22c55e"; // Green
@@ -14,10 +16,10 @@ const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
   if (safeScore < 50) color = "#ef4444"; // Red
 
   const getLabel = () => {
-    if (safeScore >= 85) return "Excellent";
-    if (safeScore >= 70) return "Good";
-    if (safeScore >= 50) return "Fair";
-    return "Improvable";
+    if (safeScore >= 85) return t('home.health_score_excellent');
+    if (safeScore >= 70) return t('home.health_score_good');
+    if (safeScore >= 50) return t('home.health_score_fair');
+    return t('home.health_score_improvable');
   };
 
   return (
@@ -29,7 +31,7 @@ const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
         </div>
       </div>
       <p className="text-xl font-bold text-foreground">{getLabel()}</p>
-      <p className="text-sm text-muted-foreground">Health Score</p>
+      <p className="text-sm text-muted-foreground">{t('home.health_score')}</p>
     </Card>
   );
 };

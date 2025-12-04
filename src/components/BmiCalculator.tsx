@@ -1,10 +1,11 @@
 import { useAuth } from "@/context/AuthContext";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const calculateBmi = (weight: number | null, height: number | null) => {
+const calculateBmi = (weight: number | null, height: number | null, t: (key: string) => string) => {
   if (!weight || !height || height === 0) {
     return { bmi: 0, category: "Incomplete data", badgeClasses: "bg-gray-100 text-gray-800", position: 0 };
   }
@@ -16,16 +17,16 @@ const calculateBmi = (weight: number | null, height: number | null) => {
   let badgeClasses = "";
 
   if (bmi < 18.5) {
-    category = "Underweight";
+    category = t('bmi_calculator.underweight');
     badgeClasses = "bg-blue-100 text-blue-800";
   } else if (bmi >= 18.5 && bmi < 25) {
-    category = "Healthy";
+    category = t('bmi_calculator.healthy');
     badgeClasses = "bg-green-100 text-green-800";
   } else if (bmi >= 25 && bmi < 30) {
-    category = "Overweight";
+    category = t('bmi_calculator.overweight');
     badgeClasses = "bg-yellow-100 text-yellow-800";
   } else {
-    category = "Obesity";
+    category = t('bmi_calculator.obesity');
     badgeClasses = "bg-red-100 text-red-800";
   }
 
@@ -42,7 +43,8 @@ interface BmiCalculatorProps {
 
 const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
   const { profile } = useAuth();
-  const { bmi, category, badgeClasses, position } = calculateBmi(profile?.weight, profile?.height);
+  const { t } = useTranslation();
+  const { bmi, category, badgeClasses, position } = calculateBmi(profile?.weight, profile?.height, t);
   const isSmall = size === 'small';
 
   if (!profile?.weight || !profile?.height) {
@@ -51,12 +53,12 @@ const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
         <CardHeader>
           <CardTitle className={cn("flex items-center gap-2", isSmall && "text-lg")}>
             <TrendingUp className="w-6 h-6 text-primary" />
-            Your BMI
+            {t('bmi_calculator.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            Complete your weight and height in your profile to calculate your BMI.
+            {t('bmi_calculator.incomplete_data')}
           </p>
         </CardContent>
       </Card>
@@ -64,22 +66,22 @@ const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
   }
 
   const legendItems = [
-    { label: "Underweight", color: "bg-blue-500" },
-    { label: "Healthy", color: "bg-green-500" },
-    { label: "Overweight", color: "bg-yellow-500" },
-    { label: "Obesity", color: "bg-red-500" },
+    { label: t('bmi_calculator.underweight'), color: "bg-blue-500" },
+    { label: t('bmi_calculator.healthy'), color: "bg-green-500" },
+    { label: t('bmi_calculator.overweight'), color: "bg-yellow-500" },
+    { label: t('bmi_calculator.obesity'), color: "bg-red-500" },
   ];
 
   return (
     <Card>
       <CardHeader className="flex-row items-start justify-between pb-2">
-        <CardTitle className={cn(isSmall && "text-lg")}>Your BMI</CardTitle>
+        <CardTitle className={cn(isSmall && "text-lg")}>{t('bmi_calculator.title')}</CardTitle>
         <Tooltip>
           <TooltipTrigger asChild>
             <HelpCircle className="w-5 h-5 text-muted-foreground cursor-help" />
           </TooltipTrigger>
           <TooltipContent>
-            <p>The Body Mass Index (BMI) is a measure that relates weight and height.</p>
+            <p>{t('bmi_calculator.tooltip')}</p>
           </TooltipContent>
         </Tooltip>
       </CardHeader>
@@ -87,7 +89,7 @@ const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
         <div className="flex items-baseline gap-2 flex-wrap">
           <p className={cn("font-bold text-foreground", isSmall ? "text-4xl" : "text-6xl")}>{bmi}</p>
           <div className="flex items-center gap-2">
-            <p className={cn("text-muted-foreground", isSmall ? "text-sm" : "")}>Your weight is</p>
+            <p className={cn("text-muted-foreground", isSmall ? "text-sm" : "")}>{t('bmi_calculator.your_weight_is')}</p>
             <span className={cn("inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold", badgeClasses, isSmall && "text-xs px-2")}>
               {category}
             </span>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
+import { useTranslation } from 'react-i18next';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,13 +14,14 @@ import { cn } from '@/lib/utils';
 const Preferences = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
   const [badgeCelebrations, setBadgeCelebrations] = useState(true);
   const [dailyReminders, setDailyReminders] = useState(false);
 
   const themeOptions = [
-    { value: 'light', label: 'Light', icon: Sun, image: '/light-theme-preview.png' },
-    { value: 'dark', label: 'Dark', icon: Moon, image: '/dark-theme-preview.png' },
-    { value: 'system', label: 'System', icon: Monitor, image: '/system-theme-preview.png' },
+    { value: 'light', label: t('preferences.theme_light'), icon: Sun, image: '/light-theme-preview.png' },
+    { value: 'dark', label: t('preferences.theme_dark'), icon: Moon, image: '/dark-theme-preview.png' },
+    { value: 'system', label: t('preferences.theme_system'), icon: Monitor, image: '/system-theme-preview.png' },
   ];
 
   return (
@@ -29,12 +31,12 @@ const Preferences = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
             <ArrowLeft className="w-6 h-6" />
           </Button>
-          <h1 className="text-2xl font-bold text-primary">Preferences</h1>
+          <h1 className="text-2xl font-bold text-primary">{t('preferences.title')}</h1>
         </header>
 
         <Card>
           <CardHeader>
-            <CardTitle>App Theme</CardTitle>
+            <CardTitle>{t('preferences.theme_title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-4">
@@ -69,16 +71,16 @@ const Preferences = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Notifications & Alerts</CardTitle>
+            <CardTitle>{t('preferences.notifications_title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <Label htmlFor="badge-celebrations" className="font-semibold text-base">
-                  Badge Celebrations
+                  {t('preferences.badge_celebrations')}
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Show an animation when unlocking a new badge.
+                  {t('preferences.badge_celebrations_desc')}
                 </p>
               </div>
               <Switch
@@ -90,10 +92,10 @@ const Preferences = () => {
             <div className="flex items-center justify-between">
               <div>
                 <Label htmlFor="daily-reminders" className="font-semibold text-base">
-                  Daily Reminders
+                  {t('preferences.daily_reminders')}
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Receive a reminder to log your meals.
+                  {t('preferences.daily_reminders_desc')}
                 </p>
               </div>
               <Switch

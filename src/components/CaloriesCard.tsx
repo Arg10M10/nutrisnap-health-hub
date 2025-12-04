@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Flame } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import MacroProgressCircle from "./MacroProgressCircle";
 import AnimatedNumber from "./AnimatedNumber";
 
@@ -9,6 +10,7 @@ interface CaloriesCardProps {
 }
 
 const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
+  const { t } = useTranslation();
   const currentVal = current || 0;
   const goalVal = goal || 0;
   
@@ -29,11 +31,11 @@ const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
           <p className="text-muted-foreground">
             {remaining >= 0 ? (
               <>
-                <AnimatedNumber value={remaining} /> kcal remaining
+                <AnimatedNumber value={remaining} /> {t('home.kcal_remaining', { count: '' }).trim()}
               </>
             ) : (
               <>
-                <AnimatedNumber value={Math.abs(remaining)} /> kcal over
+                <AnimatedNumber value={Math.abs(remaining)} /> {t('home.kcal_over', { count: '' }).trim()}
               </>
             )}
           </p>

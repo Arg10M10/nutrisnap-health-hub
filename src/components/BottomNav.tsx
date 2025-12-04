@@ -1,32 +1,33 @@
 import { useState } from "react";
 import { Home, Settings, LineChart, Book, Plus, Scan, Dumbbell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
 import { Drawer, DrawerContent, DrawerTrigger, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const navItems = [
-    { icon: Home, label: "Home", path: "/" },
-    { icon: Settings, label: "Settings", path: "/settings" },
-    { icon: LineChart, label: "Progress", path: "/progress" },
-    { icon: Book, label: "Diets", path: "/diets" },
+    { icon: Home, label: t('bottom_nav.home'), path: "/" },
+    { icon: Settings, label: t('bottom_nav.settings'), path: "/settings" },
+    { icon: LineChart, label: t('bottom_nav.progress'), path: "/progress" },
+    { icon: Book, label: t('bottom_nav.diets'), path: "/diets" },
   ];
 
   const menuItems = [
     {
       icon: Scan,
-      label: "Scan Food",
+      label: t('bottom_nav.scan_food'),
       action: () => navigate("/scanner"),
     },
     {
       icon: Dumbbell,
-      label: "Log Exercise",
+      label: t('bottom_nav.log_exercise'),
       action: () => navigate("/exercise"),
     },
   ];
@@ -88,7 +89,7 @@ const BottomNav = () => {
       </nav>
       <DrawerContent>
         <DrawerHeader className="text-center">
-          <DrawerTitle>What do you want to log?</DrawerTitle>
+          <DrawerTitle>{t('bottom_nav.log_title')}</DrawerTitle>
         </DrawerHeader>
         <div className="grid grid-cols-2 gap-4 p-4 pb-8">
           <div

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
 import PageLayout from "@/components/PageLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import AnimatedNumber from "@/components/AnimatedNumber";
 const Progress = () => {
   const { getDataForDate, streak, streakDays } = useNutrition();
   const { profile } = useAuth();
+  const { t } = useTranslation();
   const today = new Date();
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
 
@@ -40,9 +42,9 @@ const Progress = () => {
     <PageLayout>
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-primary">Your Progress</h1>
+          <h1 className="text-primary">{t('progress.title')}</h1>
           <p className="text-muted-foreground text-lg">
-            Visualize your habits and progress over time.
+            {t('progress.subtitle')}
           </p>
         </div>
 
@@ -53,13 +55,13 @@ const Progress = () => {
             <p className="text-5xl font-bold text-foreground mt-2">
               <AnimatedNumber value={profile?.weight || 0} toFixed={1} />
             </p>
-            <p className="text-sm text-muted-foreground">kg</p>
+            <p className="text-sm text-muted-foreground">{t('progress.weight_unit')}</p>
           </Card>
           <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
             <p className="text-5xl font-bold text-foreground">
               <AnimatedNumber value={streak} />
             </p>
-            <p className="text-sm text-muted-foreground mb-3">{streak === 1 ? 'day streak' : 'day streak'}</p>
+            <p className="text-sm text-muted-foreground mb-3">{streak === 1 ? t('progress.day_streak') : t('progress.day_streaks')}</p>
             <StreakCalendar streakDays={streakDays} />
           </Card>
         </div>
@@ -72,7 +74,7 @@ const Progress = () => {
           className="w-full h-14 text-lg"
         >
           <Edit className="mr-2 h-5 w-5" />
-          Update my weight
+          {t('progress.update_weight')}
         </Button>
 
         {/* Weight Chart */}
@@ -86,9 +88,9 @@ const Progress = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Flame className="w-6 h-6 text-primary" />
-              Calorie Intake
+              {t('progress.calorie_intake')}
             </CardTitle>
-            <CardDescription>Last 7 days</CardDescription>
+            <CardDescription>{t('progress.last_7_days')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={{}} className="h-64 w-full">
@@ -107,7 +109,7 @@ const Progress = () => {
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold flex items-center gap-2">
             <ScanLine className="w-7 h-7" />
-            Today's History
+            {t('progress.todays_history')}
           </h2>
           {analyses.length > 0 ? (
             <div className="space-y-3">
@@ -128,7 +130,7 @@ const Progress = () => {
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
               <ScanLine className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground">No scans for today.</p>
+              <p className="text-muted-foreground">{t('progress.no_scans')}</p>
             </Card>
           )}
         </div>

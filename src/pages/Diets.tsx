@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import PageLayout from "@/components/PageLayout";
@@ -17,6 +18,7 @@ const Diets = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [selectedDiet, setSelectedDiet] = useState<Diet | null>(null);
+  const { t } = useTranslation();
 
   const { data: userDiets, isLoading } = useQuery({
     queryKey: ['userDiets', user?.id],
@@ -103,28 +105,28 @@ const Diets = () => {
     <PageLayout>
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-primary">Diet Plans</h1>
+          <h1 className="text-primary">{t('diets.title')}</h1>
           <p className="text-muted-foreground text-lg">
-            Explore, save, and start the perfect diet for you
+            {t('diets.subtitle')}
           </p>
         </div>
 
         <Card className="p-6 bg-gradient-to-br from-secondary/10 to-primary/10 border-secondary/20">
           <div className="flex items-center gap-3 mb-2">
             <Bookmark className="w-6 h-6 text-secondary" />
-            <h3 className="text-foreground">Your Summary</h3>
+            <h3 className="text-foreground">{t('diets.summary')}</h3>
           </div>
           <div className="flex justify-between items-end">
             <div>
-              <p className="text-sm text-muted-foreground">Saved Diets</p>
+              <p className="text-sm text-muted-foreground">{t('diets.saved_diets')}</p>
               <p className="text-2xl font-bold text-secondary">
-                {savedDiets.length} {savedDiets.length === 1 ? "diet" : "diets"}
+                {savedDiets.length} {savedDiets.length === 1 ? t('diets.diet') : t('diets.diets')}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground text-right">Active Diet</p>
+              <p className="text-sm text-muted-foreground text-right">{t('diets.active_diet')}</p>
               <p className="text-lg font-bold text-primary text-right">
-                {activeDiet ? activeDiet.name : "None"}
+                {activeDiet ? activeDiet.name : t('diets.none')}
               </p>
             </div>
           </div>
@@ -132,8 +134,8 @@ const Diets = () => {
 
         <Tabs defaultValue="explore" className="w-full">
           <TabsList className="grid w-full grid-cols-2 h-12">
-            <TabsTrigger value="explore" className="text-base">Explore</TabsTrigger>
-            <TabsTrigger value="saved" className="text-base">My Diets</TabsTrigger>
+            <TabsTrigger value="explore" className="text-base">{t('diets.explore')}</TabsTrigger>
+            <TabsTrigger value="saved" className="text-base">{t('diets.my_diets')}</TabsTrigger>
           </TabsList>
           <TabsContent value="explore" className="mt-6 space-y-4">
             {diets.map((diet) => {
@@ -152,7 +154,7 @@ const Diets = () => {
                   <div className="mb-4 space-y-2">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <BookOpen className="w-5 h-5" />
-                      <span className="font-medium">Benefits:</span>
+                      <span className="font-medium">{t('diets.benefits')}</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {diet.benefits.map((benefit, i) => (
@@ -161,7 +163,7 @@ const Diets = () => {
                     </div>
                   </div>
                   <Button onClick={(e) => handleToggleSave(e, diet.id, diet.name)} variant={isSaved ? "default" : "outline"} className="w-full h-12 text-base" disabled={mutation.isPending}>
-                    {isSaved ? (<><Heart className="mr-2 w-5 h-5 fill-current" /> Saved</>) : (<><Heart className="mr-2 w-5 h-5" /> Save Diet</>)}
+                    {isSaved ? (<><Heart className="mr-2 w-5 h-5 fill-current" /> {t('diets.saved')}</>) : (<><Heart className="mr-2 w-5 h-5" /> {t('diets.save_diet')}</>)}
                   </Button>
                 </Card>
               );
@@ -182,15 +184,15 @@ const Diets = () => {
                             <p className="text-base text-muted-foreground">{diet.description}</p>
                           </div>
                         </div>
-                        {isActive && <Badge>Active</Badge>}
+                        {isActive && <Badge>{t('diets.active_diet')}</Badge>}
                       </div>
                     </div>
                     <div className="flex gap-2 mt-4">
                       <Button onClick={(e) => handleToggleSave(e, diet.id, diet.name)} variant="outline" className="w-full h-12 text-base" disabled={mutation.isPending}>
-                        <Heart className="mr-2 w-5 h-5" /> Unsave
+                        <Heart className="mr-2 w-5 h-5" /> {t('diets.unsave')}
                       </Button>
                       <Button onClick={(e) => handleSetActive(e, diet.id)} disabled={isActive || mutation.isPending} className="w-full h-12 text-base">
-                        {isActive ? (<><CheckCircle className="mr-2 w-5 h-5" /> In Progress</>) : (<><PlusCircle className="mr-2 w-5 h-5" /> Start</>)}
+                        {isActive ? (<><CheckCircle className="mr-2 w-5 h-5" /> {t('diets.in_progress')}</>) : (<><PlusCircle className="mr-2 w-5 h-5" /> {t('diets.start')}</>)}
                       </Button>
                     </div>
                     <AnimatePresence>
@@ -203,11 +205,11 @@ const Diets = () => {
                           className="overflow-hidden"
                         >
                           <div className="pt-4 border-t border-border space-y-4">
-                            <h4 className="font-semibold text-foreground text-lg">Sample Daily Menu</h4>
-                            <MealPlanItem icon={Sunrise} meal="Breakfast" food={diet.sampleMealPlan.breakfast} />
-                            <MealPlanItem icon={Sun} meal="Lunch" food={diet.sampleMealPlan.lunch} />
-                            <MealPlanItem icon={Coffee} meal="Snack" food={diet.sampleMealPlan.snack} />
-                            <MealPlanItem icon={Moon} meal="Dinner" food={diet.sampleMealPlan.dinner} />
+                            <h4 className="font-semibold text-foreground text-lg">{t('diets.sample_menu')}</h4>
+                            <MealPlanItem icon={Sunrise} meal={t('diets.breakfast')} food={diet.sampleMealPlan.breakfast} />
+                            <MealPlanItem icon={Sun} meal={t('diets.lunch')} food={diet.sampleMealPlan.lunch} />
+                            <MealPlanItem icon={Coffee} meal={t('diets.snack')} food={diet.sampleMealPlan.snack} />
+                            <MealPlanItem icon={Moon} meal={t('diets.dinner')} food={diet.sampleMealPlan.dinner} />
                           </div>
                         </motion.div>
                       )}
@@ -217,8 +219,8 @@ const Diets = () => {
               })
             ) : (
               <div className="text-center py-10">
-                <p className="text-muted-foreground">You haven't saved any diets yet.</p>
-                <p className="text-sm text-muted-foreground">Go to "Explore" to find one.</p>
+                <p className="text-muted-foreground">{t('diets.no_saved_diets')}</p>
+                <p className="text-sm text-muted-foreground">{t('diets.go_explore')}</p>
               </div>
             )}
           </TabsContent>

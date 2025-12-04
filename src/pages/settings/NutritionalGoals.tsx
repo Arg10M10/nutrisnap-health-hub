@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
@@ -13,6 +14,7 @@ import { GoalInput } from '@/components/settings/GoalInput';
 const NutritionalGoals = () => {
   const navigate = useNavigate();
   const { profile, user, refetchProfile } = useAuth();
+  const { t } = useTranslation();
   const [goals, setGoals] = useState({
     calories: 2000,
     protein: 90,
@@ -69,18 +71,18 @@ const NutritionalGoals = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
             <ArrowLeft className="w-6 h-6" />
           </Button>
-          <h1 className="text-2xl font-bold text-primary">Nutritional Goals</h1>
+          <h1 className="text-2xl font-bold text-primary">{t('nutritional_goals.title')}</h1>
         </header>
 
         <Card>
           <CardHeader>
-            <CardTitle>Daily Goals</CardTitle>
-            <CardDescription>Set your daily nutritional targets manually.</CardDescription>
+            <CardTitle>{t('nutritional_goals.daily_goals')}</CardTitle>
+            <CardDescription>{t('nutritional_goals.subtitle')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-8">
             <div className="flex justify-center">
               <GoalInput
-                label="Calories"
+                label={t('nutritional_goals.calories')}
                 value={goals.calories}
                 unit="kcal"
                 onChange={(v) => handleGoalChange('calories', v)}
@@ -90,28 +92,28 @@ const NutritionalGoals = () => {
             </div>
             <div className="grid grid-cols-2 gap-x-4 gap-y-8">
               <GoalInput
-                label="Protein"
+                label={t('nutritional_goals.protein')}
                 value={goals.protein}
                 unit="g"
                 onChange={(v) => handleGoalChange('protein', v)}
                 color="text-red-500"
               />
               <GoalInput
-                label="Carbs"
+                label={t('nutritional_goals.carbs')}
                 value={goals.carbs}
                 unit="g"
                 onChange={(v) => handleGoalChange('carbs', v)}
                 color="text-orange-500"
               />
               <GoalInput
-                label="Fats"
+                label={t('nutritional_goals.fats')}
                 value={goals.fats}
                 unit="g"
                 onChange={(v) => handleGoalChange('fats', v)}
                 color="text-blue-500"
               />
               <GoalInput
-                label="Sugars"
+                label={t('nutritional_goals.sugars')}
                 value={goals.sugars}
                 unit="g"
                 onChange={(v) => handleGoalChange('sugars', v)}
@@ -130,7 +132,7 @@ const NutritionalGoals = () => {
             onClick={() => mutation.mutate()}
           >
             {mutation.isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-            Save Goals
+            {t('nutritional_goals.save')}
           </Button>
         </div>
       </footer>
