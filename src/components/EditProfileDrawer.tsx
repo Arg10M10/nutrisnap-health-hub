@@ -23,6 +23,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
+import DatePicker from '@/components/DatePicker';
 
 const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
   const { profile, user, refetchProfile } = useAuth();
@@ -32,14 +33,16 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     firstName: z.string().min(1, t('zod.first_name_required')),
     lastName: z.string().min(1, t('zod.last_name_required')),
     gender: z.string().min(1, t('zod.gender_required')),
-    date_of_birth: z.string().min(1, t('zod.dob_required')),
+    date_of_birth: z.date({ required_error: t('zod.dob_required') }),
     goal: z.string().min(1, t('zod.goal_required')),
     height: z.coerce.number().min(1, t('zod.height_required')),
     weight: z.coerce.number().min(1, t('zod.weight_required')),
     previous_apps_experience: z.string().min(1, t('zod.experience_required')),
   });
 
-  const form = useForm<z.infer<typeof profileSchema>>({
+  type ProfileFormValues = z.infer<typeof profileSchema>;
+
+  const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
   });
 
@@ -47,10 +50,10 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     if (profile && isOpen) {
       const [firstName, ...lastNameParts] = profile.full_name?.split(' ') || ['', ''];
       form.reset({
-        firstName: firstName,
+        firstName,
         lastName: lastNameParts.join(' '),
         gender: profile.gender || '',
-        date_of_birth: profile.date_of_birth || '',
+        date_of_birth: profile.date_of_birth ? new Date(profile.date_of_birth) : new Date('2000-01-01'),
         goal: profile.goal || '',
         height: profile.height || 0,
         weight: profile.weight || 0,
@@ -60,18 +63,19 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   }, [profile, isOpen, form]);
 
   const mutation = useMutation({
-    mutationFn: async (values: z.infer<typeof profileSchema>) => {
+    mutationFn: async (values: ProfileFormValues) => {
       if (!user) throw new Error('User not found');
       
-      const age = differenceInYears(new Date(), new Date(values.date_of_birth));
+      const isoDate = values.date_of_birth.toISOString().split('T')[0];
+      const age = differenceInYears(new Date(), values.date_of_birth);
 
       const { error } = await supabase
         .from('profiles')
         .update({
           full_name: `${values.firstName} ${values.lastName}`,
           gender: values.gender,
-          date_of_birth: values.date_of_birth,
-          age: age,
+          date_of_birth: isoDate,
+          age,
           goal: values.goal,
           units: 'metric',
           height: values.height,
@@ -87,11 +91,11 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       onClose();
     },
     onError: (error) => {
-      toast.error(t('edit_profile.toast_error'), { description: error.message });
+      toast.error(t('edit_profile.toast_error'), { description: (error as Error).message });
     },
   });
 
-  const onSubmit = (values: z.infer<typeof profileSchema>) => {
+  const onSubmit = (values: ProfileFormValues) => {
     mutation.mutate(values);
   };
 
@@ -104,61 +108,111 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         </DrawerHeader>
         <div className="overflow-y-auto px-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField control={form.control} name="firstName" render={({ field }) => (
-                  <FormItem><FormLabel>{t('edit_profile.first_name')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel>{t('edit_profile.first_name')}</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
                 <FormField control={form.control} name="lastName" render={({ field }) => (
-                  <FormItem><FormLabel>{t('edit_profile.last_name')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel>{t('edit_profile.last_name')}</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField control={form.control} name="date_of_birth" render={({ field }) => (
-                  <FormItem><FormLabel>{t('edit_profile.dob')}</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel>{t('edit_profile.dob')}</FormLabel>
+                    <FormControl>
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder={t('edit_profile.dob')}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
                 <FormField control={form.control} name="gender" render={({ field }) => (
-                  <FormItem><FormLabel>{t('edit_profile.gender')}</FormLabel><Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl><SelectTrigger><SelectValue placeholder={t('edit_profile.gender_placeholder')} /></SelectTrigger></FormControl>
-                    <SelectContent>
-                      <SelectItem value="Female">{t('edit_profile.gender_female')}</SelectItem>
-                      <SelectItem value="Male">{t('edit_profile.gender_male')}</SelectItem>
-                      <SelectItem value="Prefer not to say">{t('edit_profile.gender_not_say')}</SelectItem>
-                    </SelectContent>
-                  </Select><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel>{t('edit_profile.gender')}</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t('edit_profile.gender_placeholder')} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Female">{t('edit_profile.gender_female')}</SelectItem>
+                        <SelectItem value="Male">{t('edit_profile.gender_male')}</SelectItem>
+                        <SelectItem value="Prefer not to say">{t('edit_profile.gender_not_say')}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
                 )} />
               </div>
 
               <FormField control={form.control} name="goal" render={({ field }) => (
-                <FormItem><FormLabel>{t('edit_profile.goal')}</FormLabel><Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl><SelectTrigger><SelectValue placeholder={t('edit_profile.goal_placeholder')} /></SelectTrigger></FormControl>
-                  <SelectContent>
-                    <SelectItem value="lose_weight">{t('edit_profile.goal_lose')}</SelectItem>
-                    <SelectItem value="maintain_weight">{t('edit_profile.goal_maintain')}</SelectItem>
-                    <SelectItem value="gain_weight">{t('edit_profile.goal_gain')}</SelectItem>
-                  </SelectContent>
-                </Select><FormMessage /></FormItem>
+                <FormItem>
+                  <FormLabel>{t('edit_profile.goal')}</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('edit_profile.goal_placeholder')} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="lose_weight">{t('edit_profile.goal_lose')}</SelectItem>
+                      <SelectItem value="maintain_weight">{t('edit_profile.goal_maintain')}</SelectItem>
+                      <SelectItem value="gain_weight">{t('edit_profile.goal_gain')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
               )} />
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField control={form.control} name="height" render={({ field }) => (
-                  <FormItem><FormLabel>{t('edit_profile.height')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel>{t('edit_profile.height')}</FormLabel>
+                    <FormControl><Input type="number" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
                 <FormField control={form.control} name="weight" render={({ field }) => (
-                  <FormItem><FormLabel>{t('edit_profile.weight')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel>{t('edit_profile.weight')}</FormLabel>
+                    <FormControl><Input type="number" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
               </div>
 
               <FormField control={form.control} name="previous_apps_experience" render={({ field }) => (
-                <FormItem><FormLabel>{t('edit_profile.experience')}</FormLabel><Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl><SelectTrigger><SelectValue placeholder={t('edit_profile.experience_placeholder')} /></SelectTrigger></FormControl>
-                  <SelectContent>
-                    <SelectItem value="Yes, I've used several">{t('edit_profile.experience_several')}</SelectItem>
-                    <SelectItem value="Yes, one or two">{t('edit_profile.experience_one_or_two')}</SelectItem>
-                    <SelectItem value="No, this is my first time">{t('edit_profile.experience_first_time')}</SelectItem>
-                  </SelectContent>
-                </Select><FormMessage /></FormItem>
+                <FormItem>
+                  <FormLabel>{t('edit_profile.experience')}</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('edit_profile.experience_placeholder')} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Yes, I've used several">{t('edit_profile.experience_several')}</SelectItem>
+                      <SelectItem value="Yes, one or two">{t('edit_profile.experience_one_or_two')}</SelectItem>
+                      <SelectItem value="No, this is my first time">{t('edit_profile.experience_first_time')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
               )} />
               
               <DrawerFooter className="flex-row gap-2 px-0 pt-4">
@@ -166,7 +220,11 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                   {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {t('edit_profile.save')}
                 </Button>
-                <DrawerClose asChild><Button variant="outline" size="lg" className="flex-1">{t('edit_profile.cancel')}</Button></DrawerClose>
+                <DrawerClose asChild>
+                  <Button variant="outline" size="lg" className="flex-1">
+                    {t('edit_profile.cancel')}
+                  </Button>
+                </DrawerClose>
               </DrawerFooter>
             </form>
           </Form>
