@@ -27,10 +27,10 @@ export default function Login() {
             <Leaf className="w-16 h-16 text-primary" />
             <div className="space-y-1.5 flex flex-col items-center text-center">
               <h2 className="text-3xl font-bold text-foreground">
-                Bienvenido a NutriSnap
+                Welcome to NutriSnap
               </h2>
               <p className="text-muted-foreground px-4">
-                Tu compañero de salud inteligente. Comienza tu viaje con un solo clic.
+                Your smart health companion. Start your journey with a single click.
               </p>
             </div>
           </CardHeader>
@@ -46,20 +46,20 @@ export default function Login() {
               ) : (
                 <>
                   <img src="/google-logo.png" alt="Google logo" className="mr-3 h-6 w-6" />
-                  Continuar con Google
+                  Continue with Google
                 </>
               )}
             </Button>
           </CardContent>
           <CardFooter className="flex justify-center !py-6 mt-4">
             <p className="text-center text-xs text-muted-foreground px-4">
-              Al continuar, aceptas nuestros{" "}
+              By continuing, you agree to our{" "}
               <a href="#" className="text-primary hover:underline">
-                Términos de Servicio
+                Terms of Service
               </a>{" "}
-              y{" "}
+              and{" "}
               <a href="#" className="text-primary hover:underline">
-                Política de Privacidad
+                Privacy Policy
               </a>.
             </p>
           </CardFooter>

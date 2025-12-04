@@ -12,21 +12,21 @@ const BottomNav = () => {
   const navigate = useNavigate();
 
   const navItems = [
-    { icon: Home, label: "Inicio", path: "/" },
-    { icon: Settings, label: "Configuración", path: "/settings" },
-    { icon: LineChart, label: "Progreso", path: "/progress" },
-    { icon: Book, label: "Dietas", path: "/diets" },
+    { icon: Home, label: "Home", path: "/" },
+    { icon: Settings, label: "Settings", path: "/settings" },
+    { icon: LineChart, label: "Progress", path: "/progress" },
+    { icon: Book, label: "Diets", path: "/diets" },
   ];
 
   const menuItems = [
     {
       icon: Scan,
-      label: "Escanear Alimento",
+      label: "Scan Food",
       action: () => navigate("/scanner"),
     },
     {
       icon: Dumbbell,
-      label: "Registrar Ejercicio",
+      label: "Log Exercise",
       action: () => navigate("/exercise"),
     },
   ];
@@ -64,7 +64,7 @@ const BottomNav = () => {
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 className="flex items-center justify-center w-14 h-14 bg-primary rounded-full shadow-lg hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                aria-label="Abrir menú de acciones"
+                aria-label="Open actions menu"
               >
                 <motion.div animate={{ rotate: isMenuOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
                   <Plus className="w-7 h-7 text-primary-foreground" />
@@ -88,7 +88,7 @@ const BottomNav = () => {
       </nav>
       <DrawerContent>
         <DrawerHeader className="text-center">
-          <DrawerTitle>¿Qué quieres registrar?</DrawerTitle>
+          <DrawerTitle>What do you want to log?</DrawerTitle>
         </DrawerHeader>
         <div className="grid grid-cols-2 gap-4 p-4 pb-8">
           <div

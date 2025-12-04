@@ -1,7 +1,46 @@
 {
   "settings": {
     "title": "Settings",
-    "language": "Language"
+    "subtitle": "Manage your profile and app preferences.",
+    "language": "Language",
+    "profileCard": {
+      "namePlaceholder": "User",
+      "viewAndEdit": "View and edit profile"
+    },
+    "account": {
+      "title": "Account",
+      "personalDetails": "Personal Details",
+      "preferences": "Preferences"
+    },
+    "goals": {
+      "title": "Goals & Tracking",
+      "editNutrition": "Edit nutritional goals",
+      "editWeight": "Current goals and weight",
+      "ringColors": "Ring Colors"
+    },
+    "support": {
+      "title": "Support & Legal",
+      "requestFeature": "Request a feature",
+      "supportEmail": "Support email",
+      "terms": "Terms and conditions",
+      "privacy": "Privacy policy"
+    },
+    "social": {
+      "title": "Social Media",
+      "instagram": "Instagram",
+      "tiktok": "TikTok"
+    },
+    "actions": {
+      "title": "Account Actions",
+      "signOut": "Sign out",
+      "deleteAccount": "Delete account"
+    },
+    "deleteDialog": {
+      "title": "Are you absolutely sure?",
+      "description": "This action cannot be undone. This will permanently delete your account and your data from our servers.",
+      "confirm": "Yes, delete account",
+      "cancel": "Cancel"
+    }
   },
   "languages": {
     "es": "Spanish",

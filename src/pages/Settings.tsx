@@ -29,17 +29,17 @@ const Settings = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    toast.success("Has cerrado sesión.");
+    toast.success(t('settings.signOutSuccess'));
   };
 
   const handleNotImplemented = () => {
-    toast.info("Próximamente", { description: "Esta función estará disponible pronto." });
+    toast.info("Coming Soon", { description: "This feature will be available soon." });
   };
 
   const handleDeleteAccount = () => {
     // Placeholder for account deletion logic
-    toast.error("Función no implementada.", {
-      description: "La eliminación de la cuenta se activará en el futuro.",
+    toast.error("Function not implemented.", {
+      description: "Account deletion will be enabled in the future.",
     });
   };
 
@@ -49,7 +49,7 @@ const Settings = () => {
         <div className="text-center space-y-2">
           <h1 className="text-primary">{t('settings.title')}</h1>
           <p className="text-muted-foreground text-lg">
-            Gestiona tu perfil y preferencias de la aplicación.
+            {t('settings.subtitle')}
           </p>
         </div>
 
@@ -60,8 +60,8 @@ const Settings = () => {
               <User className="w-6 h-6 text-muted-foreground" />
             </div>
             <div>
-              <p className="font-bold text-lg text-foreground">{profile?.full_name || "Usuario"}</p>
-              <p className="text-sm text-muted-foreground">Ver y editar perfil</p>
+              <p className="font-bold text-lg text-foreground">{profile?.full_name || t('settings.profileCard.namePlaceholder')}</p>
+              <p className="text-sm text-muted-foreground">{t('settings.profileCard.viewAndEdit')}</p>
             </div>
           </div>
           <Button variant="ghost" size="icon" onClick={() => setIsEditDrawerOpen(true)}>
@@ -70,53 +70,53 @@ const Settings = () => {
         </div>
 
         {/* Account Category */}
-        <SettingsCategory title="Cuenta">
-          <SettingsItem icon={<HeartPulse size={20} />} label="Detalles Personales" onClick={() => setIsEditDrawerOpen(true)} />
-          <SettingsItem icon={<SlidersHorizontal size={20} />} label="Preferencias" onClick={() => navigate('/settings/preferences')} />
+        <SettingsCategory title={t('settings.account.title')}>
+          <SettingsItem icon={<HeartPulse size={20} />} label={t('settings.account.personalDetails')} onClick={() => setIsEditDrawerOpen(true)} />
+          <SettingsItem icon={<SlidersHorizontal size={20} />} label={t('settings.account.preferences')} onClick={() => navigate('/settings/preferences')} />
           <SettingsItem icon={<Languages size={20} />} label={t('settings.language')} onClick={() => setIsLanguageDrawerOpen(true)} />
         </SettingsCategory>
 
         {/* Goals and Tracking Category */}
-        <SettingsCategory title="Metas y seguimiento">
-          <SettingsItem icon={<Target size={20} />} label="Editar objetos nutricionales" onClick={handleNotImplemented} />
-          <SettingsItem icon={<Goal size={20} />} label="Objetivos y peso actual" onClick={handleNotImplemented} />
-          <SettingsItem icon={<Palette size={20} />} label="Colores de Anillos" onClick={handleNotImplemented} />
+        <SettingsCategory title={t('settings.goals.title')}>
+          <SettingsItem icon={<Target size={20} />} label={t('settings.goals.editNutrition')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<Goal size={20} />} label={t('settings.goals.editWeight')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<Palette size={20} />} label={t('settings.goals.ringColors')} onClick={handleNotImplemented} />
         </SettingsCategory>
 
         {/* Support and Legal Category */}
-        <SettingsCategory title="Soporte y Legal">
-          <SettingsItem icon={<Lightbulb size={20} />} label="Solicitar función" onClick={handleNotImplemented} />
-          <SettingsItem icon={<Mail size={20} />} label="Correo de soporte" onClick={handleNotImplemented} />
-          <SettingsItem icon={<FileText size={20} />} label="Términos y condiciones" onClick={handleNotImplemented} />
-          <SettingsItem icon={<Shield size={20} />} label="Política de privacidad" onClick={handleNotImplemented} />
+        <SettingsCategory title={t('settings.support.title')}>
+          <SettingsItem icon={<Lightbulb size={20} />} label={t('settings.support.requestFeature')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<Mail size={20} />} label={t('settings.support.supportEmail')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<FileText size={20} />} label={t('settings.support.terms')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<Shield size={20} />} label={t('settings.support.privacy')} onClick={handleNotImplemented} />
         </SettingsCategory>
 
         {/* Social Media Category */}
-        <SettingsCategory title="Redes Sociales">
-          <SettingsItem icon={<Instagram size={20} />} label="Instagram" onClick={handleNotImplemented} />
-          <SettingsItem icon={<TikTokIcon />} label="TikTok" onClick={handleNotImplemented} />
+        <SettingsCategory title={t('settings.social.title')}>
+          <SettingsItem icon={<Instagram size={20} />} label={t('settings.social.instagram')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<TikTokIcon />} label={t('settings.social.tiktok')} onClick={handleNotImplemented} />
         </SettingsCategory>
 
         {/* Account Actions Category */}
-        <SettingsCategory title="Acciones de Cuenta">
-          <SettingsItem icon={<LogOut size={20} />} label="Cerrar sesión" onClick={handleSignOut} />
+        <SettingsCategory title={t('settings.actions.title')}>
+          <SettingsItem icon={<LogOut size={20} />} label={t('settings.actions.signOut')} onClick={handleSignOut} />
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <button className="w-full">
-                <SettingsItem icon={<Trash2 size={20} />} label="Eliminar la cuenta" onClick={() => {}} destructive />
+                <SettingsItem icon={<Trash2 size={20} />} label={t('settings.actions.deleteAccount')} onClick={() => {}} destructive />
               </button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
+                <AlertDialogTitle>{t('settings.deleteDialog.title')}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y tus datos de nuestros servidores.
+                  {t('settings.deleteDialog.description')}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogCancel>{t('settings.deleteDialog.cancel')}</AlertDialogCancel>
                 <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                  Sí, eliminar cuenta
+                  {t('settings.deleteDialog.confirm')}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

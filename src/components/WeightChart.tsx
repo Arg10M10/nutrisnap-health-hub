@@ -9,7 +9,7 @@ import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { TrendingDown, Loader2 } from "lucide-react";
 
-const GOAL_RATE_KG_PER_WEEK = 0.5; // Tasa de cambio de peso saludable
+const GOAL_RATE_KG_PER_WEEK = 0.5; // Healthy weight change rate
 
 const WeightChart = () => {
   const { user, profile } = useAuth();
@@ -49,8 +49,8 @@ const WeightChart = () => {
       
       return {
         date: format(currentDate, 'd MMM', { locale: es }),
-        'Peso Real': entry.weight,
-        'Peso Objetivo': parseFloat(goalWeight.toFixed(1)),
+        'Actual Weight': entry.weight,
+        'Goal Weight': parseFloat(goalWeight.toFixed(1)),
       };
     });
   }, [data, profile]);
@@ -60,9 +60,9 @@ const WeightChart = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingDown className="w-6 h-6 text-primary" />
-          Progreso de Peso
+          Weight Progress
         </CardTitle>
-        <CardDescription>Tu peso real comparado con tu trayectoria objetivo.</CardDescription>
+        <CardDescription>Your actual weight compared to your goal trajectory.</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -77,14 +77,14 @@ const WeightChart = () => {
               <YAxis tickLine={false} axisLine={false} tickMargin={8} domain={['dataMin - 2', 'dataMax + 2']} />
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               <Legend />
-              <Line type="monotone" dataKey="Peso Real" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} />
-              <Line type="monotone" dataKey="Peso Objetivo" stroke="hsl(var(--muted-foreground))" strokeWidth={2} strokeDasharray="3 3" dot={false} />
+              <Line type="monotone" dataKey="Actual Weight" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} />
+              <Line type="monotone" dataKey="Goal Weight" stroke="hsl(var(--muted-foreground))" strokeWidth={2} strokeDasharray="3 3" dot={false} />
             </LineChart>
           </ChartContainer>
         ) : (
           <div className="text-center text-muted-foreground h-64 flex flex-col justify-center items-center">
-            <p>No hay datos de peso registrados.</p>
-            <p className="text-sm">Registra tu peso para empezar a ver tu progreso.</p>
+            <p>No weight data logged.</p>
+            <p className="text-sm">Log your weight to start seeing your progress.</p>
           </div>
         )}
       </CardContent>

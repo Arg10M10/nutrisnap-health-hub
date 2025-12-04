@@ -1,7 +1,46 @@
 {
   "settings": {
     "title": "Configuración",
-    "language": "Idioma"
+    "subtitle": "Gestiona tu perfil y preferencias de la aplicación.",
+    "language": "Idioma",
+    "profileCard": {
+      "namePlaceholder": "Usuario",
+      "viewAndEdit": "Ver y editar perfil"
+    },
+    "account": {
+      "title": "Cuenta",
+      "personalDetails": "Detalles Personales",
+      "preferences": "Preferencias"
+    },
+    "goals": {
+      "title": "Metas y seguimiento",
+      "editNutrition": "Editar objetos nutricionales",
+      "editWeight": "Objetivos y peso actual",
+      "ringColors": "Colores de Anillos"
+    },
+    "support": {
+      "title": "Soporte y Legal",
+      "requestFeature": "Solicitar función",
+      "supportEmail": "Correo de soporte",
+      "terms": "Términos y condiciones",
+      "privacy": "Política de privacidad"
+    },
+    "social": {
+      "title": "Redes Sociales",
+      "instagram": "Instagram",
+      "tiktok": "TikTok"
+    },
+    "actions": {
+      "title": "Acciones de Cuenta",
+      "signOut": "Cerrar sesión",
+      "deleteAccount": "Eliminar la cuenta"
+    },
+    "deleteDialog": {
+      "title": "¿Estás absolutamente seguro?",
+      "description": "Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y tus datos de nuestros servidores.",
+      "confirm": "Sí, eliminar cuenta",
+      "cancel": "Cancelar"
+    }
   },
   "languages": {
     "es": "Español",

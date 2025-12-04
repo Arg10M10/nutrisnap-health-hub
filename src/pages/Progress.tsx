@@ -40,9 +40,9 @@ const Progress = () => {
     <PageLayout>
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-primary">Tu Progreso</h1>
+          <h1 className="text-primary">Your Progress</h1>
           <p className="text-muted-foreground text-lg">
-            Visualiza tus hábitos y avances a lo largo del tiempo.
+            Visualize your habits and progress over time.
           </p>
         </div>
 
@@ -59,7 +59,7 @@ const Progress = () => {
             <p className="text-5xl font-bold text-foreground">
               <AnimatedNumber value={streak} />
             </p>
-            <p className="text-sm text-muted-foreground mb-3">{streak === 1 ? 'día de racha' : 'días de racha'}</p>
+            <p className="text-sm text-muted-foreground mb-3">{streak === 1 ? 'day streak' : 'day streak'}</p>
             <StreakCalendar streakDays={streakDays} />
           </Card>
         </div>
@@ -72,7 +72,7 @@ const Progress = () => {
           className="w-full h-14 text-lg"
         >
           <Edit className="mr-2 h-5 w-5" />
-          Actualizar mi peso
+          Update my weight
         </Button>
 
         {/* Weight Chart */}
@@ -86,9 +86,9 @@ const Progress = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Flame className="w-6 h-6 text-primary" />
-              Consumo de Calorías
+              Calorie Intake
             </CardTitle>
-            <CardDescription>Últimos 7 días</CardDescription>
+            <CardDescription>Last 7 days</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={{}} className="h-64 w-full">
@@ -107,7 +107,7 @@ const Progress = () => {
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold flex items-center gap-2">
             <ScanLine className="w-7 h-7" />
-            Historial de Hoy
+            Today's History
           </h2>
           {analyses.length > 0 ? (
             <div className="space-y-3">
@@ -128,7 +128,7 @@ const Progress = () => {
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
               <ScanLine className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground">No hay escaneos para hoy.</p>
+              <p className="text-muted-foreground">No scans for today.</p>
             </Card>
           )}
         </div>

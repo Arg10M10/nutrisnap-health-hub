@@ -29,11 +29,11 @@ const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
           <p className="text-muted-foreground">
             {remaining >= 0 ? (
               <>
-                <AnimatedNumber value={remaining} /> kcal restantes
+                <AnimatedNumber value={remaining} /> kcal remaining
               </>
             ) : (
               <>
-                <AnimatedNumber value={Math.abs(remaining)} /> kcal sobre la meta
+                <AnimatedNumber value={Math.abs(remaining)} /> kcal over
               </>
             )}
           </p>

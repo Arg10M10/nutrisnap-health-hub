@@ -14,10 +14,10 @@ const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
   if (safeScore < 50) color = "#ef4444"; // Red
 
   const getLabel = () => {
-    if (safeScore >= 85) return "Excelente";
-    if (safeScore >= 70) return "Bueno";
-    if (safeScore >= 50) return "Moderado";
-    return "Mejorable";
+    if (safeScore >= 85) return "Excellent";
+    if (safeScore >= 70) return "Good";
+    if (safeScore >= 50) return "Fair";
+    return "Improvable";
   };
 
   return (
@@ -29,7 +29,7 @@ const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
         </div>
       </div>
       <p className="text-xl font-bold text-foreground">{getLabel()}</p>
-      <p className="text-sm text-muted-foreground">Puntuación Salud</p>
+      <p className="text-sm text-muted-foreground">Health Score</p>
     </Card>
   );
 };

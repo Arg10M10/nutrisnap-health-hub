@@ -19,7 +19,7 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
         <p className="text-3xl font-bold text-foreground">
           <AnimatedNumber value={count} />
         </p>
-        <p className="text-muted-foreground">/ {goal} vasos</p>
+        <p className="text-muted-foreground">/ {goal} glasses</p>
       </div>
       <div className="flex justify-center items-center gap-2">
         <Button variant="outline" size="icon" onClick={onRemove} disabled={count === 0 || isUpdating}>

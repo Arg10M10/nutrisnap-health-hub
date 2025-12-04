@@ -22,9 +22,9 @@ const Badges = () => {
     <PageLayout>
       <div className="space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-primary">Mis Insignias</h1>
+          <h1 className="text-primary">My Badges</h1>
           <p className="text-muted-foreground text-lg">
-            Tus logros y rachas desbloqueadas.
+            Your unlocked achievements and streaks.
           </p>
         </div>
 
@@ -33,12 +33,12 @@ const Badges = () => {
             <div className="flex flex-col items-center justify-center text-center gap-1 pr-4">
               <Flame className="w-10 h-10 text-orange-500" />
               <p className="text-3xl font-bold text-foreground">{streak}</p>
-              <p className="text-sm text-muted-foreground">Racha de Comidas</p>
+              <p className="text-sm text-muted-foreground">Meal Streak</p>
             </div>
             <div className="flex flex-col items-center justify-center text-center gap-1 pl-4">
               <Award className="w-10 h-10 text-yellow-500" />
               <p className="text-3xl font-bold text-foreground">{totalUnlocked}</p>
-              <p className="text-sm text-muted-foreground">Insignias Totales</p>
+              <p className="text-sm text-muted-foreground">Total Badges</p>
             </div>
           </CardContent>
         </Card>
@@ -46,7 +46,7 @@ const Badges = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2 text-foreground">
             <Flame className="w-6 h-6 text-orange-500" />
-            Racha de Comidas
+            Meal Streak
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {streakBadges.map((badge) => {
@@ -76,7 +76,7 @@ const Badges = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2 text-foreground">
             <Droplet className="w-6 h-6 text-blue-500" />
-            Racha de Hidratación
+            Hydration Streak
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {waterBadges.map((badge) => {
@@ -107,7 +107,7 @@ const Badges = () => {
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold flex items-center gap-2 text-foreground">
               <TrendingDown className="w-6 h-6 text-green-500" />
-              Pérdida de Peso
+              Weight Loss
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {weightLossBadges.map((badge) => {

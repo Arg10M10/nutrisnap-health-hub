@@ -107,7 +107,7 @@ const Index = () => {
                         icon={<Beef className="w-6 h-6 text-red-500" />}
                         current={intake.protein}
                         unit="g"
-                        label="Proteína"
+                        label="Protein"
                       />
                       <MacroCard
                         value={getSafePercentage(intake.carbs, dailyGoals.carbs)}
@@ -123,7 +123,7 @@ const Index = () => {
                         icon={<Droplets className="w-6 h-6 text-blue-500" />}
                         current={intake.fats}
                         unit="g"
-                        label="Grasas"
+                        label="Fats"
                       />
                     </div>
                   </div>
@@ -151,7 +151,7 @@ const Index = () => {
                           icon={<Sparkles className="w-6 h-6 text-purple-500" />}
                           current={intake.sugars}
                           unit="g"
-                          label="Azúcares"
+                          label="Sugars"
                       />
                     </div>
                   </div>
@@ -167,14 +167,14 @@ const Index = () => {
                 className={`h-2 rounded-full transition-all duration-300 ${
                   index === current ? 'w-4 bg-primary' : 'w-2 bg-muted'
                 }`}
-                aria-label={`Ir a la página ${index + 1}`}
+                aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-foreground text-2xl font-semibold">Análisis del Día</h2>
+          <h2 className="text-foreground text-2xl font-semibold">Today's Analysis</h2>
           {analyses.length > 0 ? (
             <div className="space-y-3">
               {analyses.map((item) => (
@@ -194,8 +194,8 @@ const Index = () => {
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
               <ScanLine className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground">No hay datos para este día.</p>
-              <p className="text-sm text-muted-foreground">¡Usa el escáner para empezar a registrar!</p>
+              <p className="text-muted-foreground">No data for this day.</p>
+              <p className="text-sm text-muted-foreground">Use the scanner to start logging!</p>
             </Card>
           )}
         </div>
