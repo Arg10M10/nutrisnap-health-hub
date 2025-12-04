@@ -4,7 +4,7 @@ import { ChartContainer } from '@/components/ui/chart';
 
 const chartData = [
   { app: 'Otras Apps', exito: 45 },
-  { app: 'NutriSnap', exito: 85 },
+  { app: 'Calorel', exito: 85 },
 ];
 
 export const FinalStep = () => {
