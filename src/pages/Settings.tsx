@@ -20,7 +20,7 @@ import PageLayout from "@/components/PageLayout";
 import { SettingsCategory } from "@/components/settings/SettingsCategory";
 import { SettingsItem } from "@/components/settings/SettingsItem";
 import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
-import { TikTokIcon } from "@/components/icons/FlagIcon";
+import { TikTokIcon } from "@/components/icons/TikTokIcon";
 
 const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
