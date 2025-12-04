@@ -250,5 +250,24 @@
     "red_desc": "Más de 200 calorías por encima de tu objetivo.",
     "dotted_title": "Punteado",
     "dotted_desc": "No se registraron comidas ese día."
+  },
+  "request_feature": {
+    "title": "Solicitar una Función",
+    "subtitle": "Sugerencias de la Comunidad",
+    "description": "Vota por las ideas que te gusten o envía la tuya. Priorizamos las funciones más votadas.",
+    "search_placeholder": "Buscar ideas...",
+    "create_button": "Crear"
+  },
+  "new_request_drawer": {
+    "title": "Enviar una Nueva Idea",
+    "description": "Comparte tu sugerencia con la comunidad. Tu solicitud será anónima.",
+    "title_label": "Título",
+    "title_placeholder": "Ej: Integración con Apple Health",
+    "desc_label": "Descripción",
+    "desc_placeholder": "Explica tu idea en detalle. ¿Qué problema resuelve? ¿Cómo debería funcionar?",
+    "submit_button": "Enviar Idea",
+    "cancel_button": "Cancelar",
+    "toast_success": "¡Tu idea ha sido enviada!",
+    "toast_error": "No se pudo enviar tu idea."
   }
 }

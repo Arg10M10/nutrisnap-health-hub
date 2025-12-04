@@ -84,7 +84,7 @@ const Settings = () => {
 
         {/* Support and Legal Category */}
         <SettingsCategory title={t('settings.support.title')}>
-          <SettingsItem icon={<Lightbulb size={20} />} label={t('settings.support.requestFeature')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<Lightbulb size={20} />} label={t('settings.support.requestFeature')} onClick={() => navigate('/settings/request-feature')} />
           <SettingsItem icon={<Mail size={20} />} label={t('settings.support.supportEmail')} onClick={handleNotImplemented} />
           <SettingsItem icon={<FileText size={20} />} label={t('settings.support.terms')} onClick={handleNotImplemented} />
           <SettingsItem icon={<Shield size={20} />} label={t('settings.support.privacy')} onClick={handleNotImplemented} />

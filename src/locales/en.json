@@ -250,5 +250,24 @@
     "red_desc": "More than 200 calories over your goal.",
     "dotted_title": "Dotted",
     "dotted_desc": "No meals were logged on that day."
+  },
+  "request_feature": {
+    "title": "Request a Feature",
+    "subtitle": "Community Suggestions",
+    "description": "Vote for the ideas you like or submit your own. We prioritize the most voted features.",
+    "search_placeholder": "Search for ideas...",
+    "create_button": "Create"
+  },
+  "new_request_drawer": {
+    "title": "Submit a New Idea",
+    "description": "Share your suggestion with the community. Your request will be anonymous.",
+    "title_label": "Title",
+    "title_placeholder": "e.g., Integration with Apple Health",
+    "desc_label": "Description",
+    "desc_placeholder": "Explain your idea in detail. What problem does it solve? How should it work?",
+    "submit_button": "Submit Idea",
+    "cancel_button": "Cancel",
+    "toast_success": "Your idea has been submitted!",
+    "toast_error": "Could not submit your idea."
   }
 }
