@@ -37,8 +37,10 @@ const Onboarding = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!user) throw new Error('User not found');
-      const { error } = await supabase
+      if (!user || !formData.weight) throw new Error('User or weight not found');
+      
+      // 1. Update the user's profile
+      const { error: profileError } = await supabase
         .from('profiles')
         .update({
           gender: formData.gender,
@@ -53,7 +55,13 @@ const Onboarding = () => {
           onboarding_completed: true,
         })
         .eq('id', user.id);
-      if (error) throw error;
+      if (profileError) throw profileError;
+
+      // 2. Insert the first entry into the weight history table
+      const { error: historyError } = await supabase
+        .from('weight_history')
+        .insert({ user_id: user.id, weight: formData.weight });
+      if (historyError) throw historyError;
     },
     onSuccess: async () => {
       await refetchProfile();
