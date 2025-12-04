@@ -22,6 +22,9 @@ import { SettingsItem } from "@/components/settings/SettingsItem";
 import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
 import { TikTokIcon } from "@/components/icons/TikTokIcon";
 
+const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
+const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
+
 const Settings = () => {
   const { profile, signOut } = useAuth();
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -36,6 +39,10 @@ const Settings = () => {
 
   const handleNotImplemented = () => {
     toast.info(t('toasts.coming_soon_title'), { description: t('toasts.coming_soon_desc') });
+  };
+
+  const openExternal = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const deleteAccountMutation = useMutation({
@@ -104,8 +111,8 @@ const Settings = () => {
         <SettingsCategory title={t('settings.support.title')}>
           <SettingsItem icon={<Lightbulb size={20} />} label={t('settings.support.requestFeature')} onClick={() => navigate('/settings/request-feature')} />
           <SettingsItem icon={<Mail size={20} />} label={t('settings.support.supportEmail')} onClick={handleNotImplemented} />
-          <SettingsItem icon={<FileText size={20} />} label={t('settings.support.terms')} onClick={handleNotImplemented} />
-          <SettingsItem icon={<Shield size={20} />} label={t('settings.support.privacy')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<FileText size={20} />} label={t('settings.support.terms')} onClick={() => openExternal(TERMS_URL)} />
+          <SettingsItem icon={<Shield size={20} />} label={t('settings.support.privacy')} onClick={() => openExternal(PRIVACY_URL)} />
         </SettingsCategory>
 
         {/* Social Media Category */}
