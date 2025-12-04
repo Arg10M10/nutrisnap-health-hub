@@ -188,7 +188,9 @@
     "goal_weight_label": "¿Cuál es tu peso objetivo (kg)?",
     "rate_label": "Ritmo semanal deseado",
     "week": "semana",
-    "generate": "Generar Plan"
+    "generate": "Generar Plan",
+    "back": "Atrás",
+    "continue": "Continuar"
   },
   "bmi_calculator": {
     "title": "Tu IMC",

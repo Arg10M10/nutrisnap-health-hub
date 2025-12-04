@@ -188,7 +188,9 @@
     "goal_weight_label": "What is your goal weight (kg)?",
     "rate_label": "Desired weekly rate",
     "week": "week",
-    "generate": "Generate Plan"
+    "generate": "Generate Plan",
+    "back": "Back",
+    "continue": "Continue"
   },
   "bmi_calculator": {
     "title": "Your BMI",
