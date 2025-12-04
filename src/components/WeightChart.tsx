@@ -1,13 +1,12 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { format, differenceInDays } from "date-fns";
+import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend, ResponsiveContainer } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend, ResponsiveContainer, Tooltip } from "recharts";
 import { TrendingDown, Loader2 } from "lucide-react";
 
 const WeightChart = () => {
@@ -30,59 +29,15 @@ const WeightChart = () => {
 
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
+    const labelActual = t('progress.weight_progress_actual');
+    const labelGoal = t('progress.weight_progress_goal');
 
-    // Serie siempre presente: Peso Actual
-    let result = data.map(entry => ({
+    return data.map((entry) => ({
       date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
-      [t('progress.weight_progress_actual')]: entry.weight,
+      [labelActual]: entry.weight,
+      ...(profile?.goal_weight ? { [labelGoal]: profile.goal_weight } : {}),
     }));
-
-    // Serie opcional: Peso Objetivo (solo si hay datos de objetivo)
-    const hasGoalPlan = !!(profile?.starting_weight && profile.goal && profile.goal_weight);
-    if (!hasGoalPlan) {
-      return result;
-    }
-
-    const firstEntryDate = new Date(data[0].created_at);
-    const weeklyRate = profile?.weekly_rate || 0.5;
-    const totalWeightToChange = (profile.starting_weight as number) - (profile.goal_weight as number);
-
-    if (weeklyRate === 0 || totalWeightToChange === 0) {
-      result = data.map(entry => ({
-        date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
-        [t('progress.weight_progress_actual')]: entry.weight,
-        [t('progress.weight_progress_goal')]: profile.starting_weight,
-      }));
-      return result;
-    }
-
-    const totalWeeks = Math.abs(totalWeightToChange / weeklyRate);
-    const totalDays = totalWeeks * 7;
-
-    if (totalDays === 0) {
-      result = data.map(entry => ({
-        date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
-        [t('progress.weight_progress_actual')]: entry.weight,
-        [t('progress.weight_progress_goal')]: profile.goal_weight,
-      }));
-      return result;
-    }
-
-    result = data.map(entry => {
-      const currentDate = new Date(entry.created_at);
-      const daysSinceStart = differenceInDays(currentDate, firstEntryDate);
-      const expectedWeightChange = (totalWeightToChange / totalDays) * daysSinceStart;
-      const goalWeightOnDate = (profile.starting_weight as number) - expectedWeightChange;
-
-      return {
-        date: format(currentDate, 'd MMM', { locale: es }),
-        [t('progress.weight_progress_actual')]: entry.weight,
-        [t('progress.weight_progress_goal')]: parseFloat(goalWeightOnDate.toFixed(1)),
-      };
-    });
-
-    return result;
-  }, [data, profile, t]);
+  }, [data, profile?.goal_weight, t]);
 
   return (
     <Card>
@@ -99,19 +54,34 @@ const WeightChart = () => {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : chartData.length > 0 ? (
-          <ChartContainer config={{}} className="h-64 w-full">
+          <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 20, right: 20, bottom: 5, left: -16 }}>
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
-                <YAxis tickLine={false} axisLine={false} tickMargin={8} domain={['dataMin - 2', 'dataMax + 2']} />
-                <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+                <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey={t('progress.weight_progress_actual')} stroke="hsl(var(--primary))" strokeWidth={3} dot={false} />
-                <Line type="monotone" dataKey={t('progress.weight_progress_goal')} stroke="hsl(var(--muted-foreground))" strokeWidth={2} strokeDasharray="3 3" dot={false} />
+                <Line
+                  type="monotone"
+                  dataKey={t('progress.weight_progress_actual')}
+                  stroke="hsl(var(--primary))"
+                  strokeWidth={3}
+                  dot={false}
+                />
+                {profile?.goal_weight && (
+                  <Line
+                    type="monotone"
+                    dataKey={t('progress.weight_progress_goal')}
+                    stroke="hsl(var(--muted-foreground))"
+                    strokeWidth={2}
+                    strokeDasharray="4 4"
+                    dot={{ stroke: 'hsl(var(--muted-foreground))', r: 2 }}
+                  />
+                )}
               </LineChart>
             </ResponsiveContainer>
-          </ChartContainer>
+          </div>
         ) : (
           <div className="text-center text-muted-foreground h-64 flex flex-col justify-center items-center">
             <p>{t('progress.weight_progress_no_data')}</p>
