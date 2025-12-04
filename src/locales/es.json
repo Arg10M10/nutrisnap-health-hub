@@ -181,6 +181,15 @@
     "save_success": "¡Metas nutricionales actualizadas!",
     "save_error": "No se pudieron actualizar las metas."
   },
+  "ai_suggestions": {
+    "title": "Sugerencias de Metas por IA",
+    "subtitle": "Responde unas preguntas para obtener un plan personalizado.",
+    "workouts_label": "¿Cuántas veces entrenas por semana?",
+    "goal_weight_label": "¿Cuál es tu peso objetivo (kg)?",
+    "rate_label": "Ritmo semanal deseado",
+    "week": "semana",
+    "generate": "Generar Plan"
+  },
   "bmi_calculator": {
     "title": "Tu IMC",
     "incomplete_data": "Completa tu peso y altura en tu perfil para calcular tu IMC.",

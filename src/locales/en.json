@@ -181,6 +181,15 @@
     "save_success": "Nutritional goals updated!",
     "save_error": "Could not update goals."
   },
+  "ai_suggestions": {
+    "title": "AI Goal Suggestions",
+    "subtitle": "Answer a few questions to get a personalized plan.",
+    "workouts_label": "How many times do you work out per week?",
+    "goal_weight_label": "What is your goal weight (kg)?",
+    "rate_label": "Desired weekly rate",
+    "week": "week",
+    "generate": "Generate Plan"
+  },
   "bmi_calculator": {
     "title": "Your BMI",
     "incomplete_data": "Complete your weight and height in your profile to calculate your BMI.",

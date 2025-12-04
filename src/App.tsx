@@ -37,8 +37,6 @@ const AnimatedRoutes = () => {
         <Route path="/progress" element={<Progress />} />
         <Route path="/diets" element={<Diets />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/settings/preferences" element={<Preferences />} />
-        <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
         <Route path="/exercise" element={<Exercise />} />
         <Route path="/badges" element={<Badges />} />
         <Route path="*" element={<NotFound />} />
@@ -55,19 +53,23 @@ const AppRoutes = () => {
     return <SplashScreen />;
   }
 
-  const fullScreenRoutes = {
-    "/scanner": <Scanner />,
-    "/barcode-result": <BarcodeResultPage />,
-    "/exercise/running": <Running />,
-  };
+  const fullScreenRoutes = [
+    "/scanner",
+    "/barcode-result",
+    "/exercise/running",
+    "/settings/preferences",
+    "/settings/nutritional-goals",
+  ];
 
-  if (fullScreenRoutes[location.pathname]) {
+  if (fullScreenRoutes.includes(location.pathname)) {
     return (
        <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/scanner" element={<Scanner />} />
           <Route path="/barcode-result" element={<BarcodeResultPage />} />
           <Route path="/exercise/running" element={<Running />} />
+          <Route path="/settings/preferences" element={<Preferences />} />
+          <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
         </Routes>
       </AnimatePresence>
     );

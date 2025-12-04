@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -10,11 +10,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { ArrowLeft, Loader2, Flame, Beef, Wheat, Droplets, Sparkles, Wand2 } from 'lucide-react';
 import { GoalRow } from '@/components/settings/GoalRow';
+import AISuggestionsDrawer from '@/components/settings/AISuggestionsDrawer';
+import { useDebouncedCallback } from 'use-debounce';
 
 const NutritionalGoals = () => {
   const navigate = useNavigate();
   const { profile, user, refetchProfile } = useAuth();
   const { t } = useTranslation();
+  const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
   const [goals, setGoals] = useState({
     calories: 2000,
     protein: 90,
@@ -35,21 +38,17 @@ const NutritionalGoals = () => {
     }
   }, [profile]);
 
-  const handleGoalChange = (goal: keyof typeof goals, value: number) => {
-    setGoals(prev => ({ ...prev, [goal]: value }));
-  };
-
   const mutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (updatedGoals: typeof goals) => {
       if (!user) throw new Error('User not found');
       const { error } = await supabase
         .from('profiles')
         .update({
-          goal_calories: goals.calories,
-          goal_protein: goals.protein,
-          goal_carbs: goals.carbs,
-          goal_fats: goals.fats,
-          goal_sugars: goals.sugars,
+          goal_calories: updatedGoals.calories,
+          goal_protein: updatedGoals.protein,
+          goal_carbs: updatedGoals.carbs,
+          goal_fats: updatedGoals.fats,
+          goal_sugars: updatedGoals.sugars,
         })
         .eq('id', user.id);
       if (error) throw error;
@@ -57,15 +56,25 @@ const NutritionalGoals = () => {
     onSuccess: async () => {
       await refetchProfile();
       toast.success(t('nutritional_goals.save_success'));
-      navigate(-1);
     },
     onError: (error) => {
       toast.error(t('nutritional_goals.save_error'), { description: error.message });
     },
   });
 
-  const handleAISuggestions = () => {
-    toast.info(t('toasts.coming_soon_title'), { description: t('toasts.coming_soon_desc') });
+  const debouncedSave = useDebouncedCallback((newGoals) => {
+    mutation.mutate(newGoals);
+  }, 1000);
+
+  const handleGoalChange = (goal: keyof typeof goals, value: number) => {
+    const newGoals = { ...goals, [goal]: value };
+    setGoals(newGoals);
+    debouncedSave(newGoals);
+  };
+  
+  const handleApplySuggestions = (suggestions: any) => {
+    setGoals(suggestions);
+    mutation.mutate(suggestions); 
   };
 
   const goalsConfig = [
@@ -107,17 +116,18 @@ const NutritionalGoals = () => {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col sm:flex-row gap-2 pt-6">
-             <Button variant="outline" size="lg" className="w-full h-14 text-lg" onClick={handleAISuggestions}>
+             <Button variant="outline" size="lg" className="w-full h-14 text-lg" onClick={() => setIsAIDrawerOpen(true)}>
                 <Wand2 className="mr-2 h-5 w-5" />
                 {t('nutritional_goals.ai_suggestions')}
-             </Button>
-             <Button size="lg" className="w-full h-14 text-lg" disabled={mutation.isPending} onClick={() => mutation.mutate()}>
-                {mutation.isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                {t('nutritional_goals.save')}
              </Button>
           </CardFooter>
         </Card>
       </div>
+      <AISuggestionsDrawer 
+        isOpen={isAIDrawerOpen} 
+        onClose={() => setIsAIDrawerOpen(false)}
+        onApplySuggestions={handleApplySuggestions}
+      />
     </PageLayout>
   );
 };
