@@ -317,5 +317,43 @@
     "cancel_button": "Cancel",
     "toast_success": "Your idea has been submitted!",
     "toast_error": "Could not submit your idea."
+  },
+  "edit_profile": {
+    "title": "Edit Profile",
+    "description": "Make the changes you need and save them.",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "dob": "Date of Birth",
+    "gender": "Gender",
+    "gender_placeholder": "Select your gender",
+    "gender_female": "Female",
+    "gender_male": "Male",
+    "gender_not_say": "Prefer not to say",
+    "goal": "Main Goal",
+    "goal_placeholder": "Select your goal",
+    "goal_lose": "Lose weight",
+    "goal_maintain": "Maintain weight",
+    "goal_gain": "Gain weight",
+    "height": "Height (cm)",
+    "weight": "Weight (kg)",
+    "experience": "Previous Experience",
+    "experience_placeholder": "Select your experience",
+    "experience_several": "Yes, I've used several",
+    "experience_one_or_two": "Yes, one or two",
+    "experience_first_time": "No, this is my first time",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "toast_success": "Profile updated successfully!",
+    "toast_error": "There was an error updating your profile."
+  },
+  "zod": {
+    "first_name_required": "First name is required.",
+    "last_name_required": "Last name is required.",
+    "gender_required": "Gender is required.",
+    "dob_required": "Date of birth is required.",
+    "goal_required": "Goal is required.",
+    "height_required": "Height is required.",
+    "weight_required": "Weight is required.",
+    "experience_required": "Experience is required."
   }
 }

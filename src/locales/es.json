@@ -317,5 +317,43 @@
     "cancel_button": "Cancelar",
     "toast_success": "¡Tu idea ha sido enviada!",
     "toast_error": "No se pudo enviar tu idea."
+  },
+  "edit_profile": {
+    "title": "Editar Perfil",
+    "description": "Haz los cambios que necesites y guárdalos.",
+    "first_name": "Nombre",
+    "last_name": "Apellido",
+    "dob": "Fecha de Nacimiento",
+    "gender": "Género",
+    "gender_placeholder": "Selecciona tu género",
+    "gender_female": "Femenino",
+    "gender_male": "Masculino",
+    "gender_not_say": "Prefiero no decirlo",
+    "goal": "Objetivo Principal",
+    "goal_placeholder": "Selecciona tu objetivo",
+    "goal_lose": "Perder peso",
+    "goal_maintain": "Mantener peso",
+    "goal_gain": "Ganar peso",
+    "height": "Altura (cm)",
+    "weight": "Peso (kg)",
+    "experience": "Experiencia Previa",
+    "experience_placeholder": "Selecciona tu experiencia",
+    "experience_several": "Sí, he usado varias",
+    "experience_one_or_two": "Sí, una o dos",
+    "experience_first_time": "No, esta es mi primera vez",
+    "save": "Guardar Cambios",
+    "cancel": "Cancelar",
+    "toast_success": "¡Perfil actualizado con éxito!",
+    "toast_error": "Hubo un error al actualizar tu perfil."
+  },
+  "zod": {
+    "first_name_required": "El nombre es requerido.",
+    "last_name_required": "El apellido es requerido.",
+    "gender_required": "El género es requerido.",
+    "dob_required": "La fecha de nacimiento es requerida.",
+    "goal_required": "El objetivo es requerido.",
+    "height_required": "La altura es requerida.",
+    "weight_required": "El peso es requerido.",
+    "experience_required": "La experiencia es requerida."
   }
 }
