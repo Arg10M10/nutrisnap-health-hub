@@ -23,19 +23,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { cn } from "@/lib/utils";
 import Viewfinder from "@/components/Viewfinder";
-import { useNutrition } from "@/context/NutritionContext";
-import AnalysisResultDrawer from "@/components/AnalysisResultDrawer";
+import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
 
-const MAX_DIMENSION = 1024; // Max width/height for the image
+const MAX_DIMENSION = 1024;
 
 const pageVariants = {
   initial: { opacity: 0, x: 20 },
@@ -62,13 +60,11 @@ const Scanner = () => {
   const [BarcodeScanner, setBarcodeScanner] = useState<ComponentType<any> | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [hasFlash, setHasFlash] = useState(false);
-  const { addAnalysis } = useNutrition();
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    // Lock body scroll when scanner is active
     document.body.style.overflow = 'hidden';
-    // Restore body scroll on component unmount
     return () => {
       document.body.style.overflow = 'auto';
     };
@@ -233,32 +229,47 @@ const Scanner = () => {
     }
   };
 
-  const analyzeMutation = useMutation({
+  const startAnalysisMutation = useMutation({
     mutationFn: async (imageData: string) => {
-      const { data, error } = await supabase.functions.invoke("analyze-food", {
-        body: { imageData },
-      });
-      if (error) throw new Error(error.message);
-      return data as AnalysisResult;
+      if (!user) throw new Error('User not found');
+      const { data, error } = await supabase
+        .from('food_entries')
+        .insert({
+          user_id: user.id,
+          food_name: 'Analizando...',
+          image_url: imageData,
+          status: 'processing',
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return { newEntry: data, imageData };
     },
-    onSuccess: (data) => {
+    onSuccess: ({ newEntry, imageData }) => {
+      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+      navigate('/');
+      toast.info('Análisis iniciado...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
+      supabase.functions.invoke("analyze-food", {
+        body: { entry_id: newEntry.id, imageData: imageData },
+      }).then(({ error }) => {
+        if (error) {
+          console.error("Function invocation failed:", error);
+          supabase.from('food_entries').update({ status: 'failed', reason: 'Could not start analysis.' }).eq('id', newEntry.id).then(() => {
+            queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+          });
+        }
+      });
+    },
+    onError: (err: Error) => {
+      console.error("Analysis start error:", err);
+      toast.error("No se pudo iniciar el análisis.", { description: err.message });
       setState("captured");
-      setAnalysisResult(data);
-    },
-    onError: (err) => {
-      console.error("Analysis error:", err);
-      setError("No se pudo analizar la imagen. Inténtalo de nuevo.");
-      setState("error");
-      toast.error("Error en el análisis", {
-        description: "La IA no pudo procesar la imagen. Por favor, intenta con otra foto.",
-      });
     },
   });
 
   const handleAnalyze = () => {
     if (capturedImage) {
-      setState("loading");
-      analyzeMutation.mutate(capturedImage);
+      startAnalysisMutation.mutate(capturedImage);
     }
   };
 
@@ -273,19 +284,6 @@ const Scanner = () => {
     }
   };
 
-  const handleSaveAnalysis = () => {
-    if (analysisResult && capturedImage) {
-      addAnalysis(analysisResult, capturedImage);
-      setAnalysisResult(null);
-      handleReset();
-    }
-  };
-
-  const handleDrawerClose = () => {
-    setAnalysisResult(null);
-    handleReset();
-  };
-
   const handleClose = () => navigate(-1);
 
   return (
@@ -297,7 +295,6 @@ const Scanner = () => {
       transition={pageTransition}
       className="fixed inset-0 bg-black text-white z-50 flex flex-col"
     >
-      {/* BACKGROUND: Camera/Image View */}
       <div className="absolute inset-0 z-10">
         {scanMode === 'food' && (
           <video
@@ -320,7 +317,7 @@ const Scanner = () => {
             }}
           />
         )}
-        {capturedImage && (state === 'captured' || state === 'loading') && (
+        {capturedImage && (state === 'captured' || state === 'loading' || startAnalysisMutation.isPending) && (
           <img
             src={capturedImage}
             alt="Comida capturada"
@@ -329,7 +326,6 @@ const Scanner = () => {
         )}
       </div>
 
-      {/* FOREGROUND: UI Controls and Viewfinder */}
       <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
         <header className="flex justify-between items-center w-full p-4 pointer-events-auto">
           <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
@@ -371,8 +367,9 @@ const Scanner = () => {
               <Button onClick={handleReset} variant="secondary" size="lg" className="h-16 text-lg rounded-2xl">
                 <RefreshCw className="mr-2 w-6 h-6" /> Repetir
               </Button>
-              <Button onClick={handleAnalyze} size="lg" className="h-16 text-lg rounded-2xl">
-                <Scan className="mr-2 w-6 h-6" /> Analizar
+              <Button onClick={handleAnalyze} size="lg" className="h-16 text-lg rounded-2xl" disabled={startAnalysisMutation.isPending}>
+                {startAnalysisMutation.isPending ? <Loader2 className="mr-2 w-6 h-6 animate-spin" /> : <Scan className="mr-2 w-6 h-6" />}
+                Analizar
               </Button>
             </div>
           ) : state === 'camera' ? (
@@ -436,19 +433,12 @@ const Scanner = () => {
         </footer>
       </div>
 
-      {/* STATE OVERLAYS */}
       {state === "initializing" && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
           <Loader2 className="w-16 h-16 text-primary animate-spin" />
           <p className="text-white text-lg">
             {scanMode === 'food' ? 'Iniciando cámara...' : 'Cargando escáner...'}
           </p>
-        </div>
-      )}
-      {state === "loading" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
-          <Loader2 className="w-16 h-16 text-primary animate-spin" />
-          <p className="text-white text-lg">Analizando...</p>
         </div>
       )}
       {state === "error" && (
@@ -460,13 +450,6 @@ const Scanner = () => {
           </Button>
         </div>
       )}
-
-      <AnalysisResultDrawer
-        isOpen={!!analysisResult}
-        result={analysisResult}
-        onClose={handleDrawerClose}
-        onSave={handleSaveAnalysis}
-      />
 
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
       <canvas ref={canvasRef} className="hidden" />

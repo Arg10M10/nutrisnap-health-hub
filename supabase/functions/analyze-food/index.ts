@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -6,16 +7,12 @@ const corsHeaders = {
 };
 
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-// Cambiando a 'gemini-2.5-pro' para la prueba
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-// Helper function to safely parse JSON, cleaning it if necessary
 const safeParseJson = (text: string) => {
   try {
-    // First, try to parse it directly
     return JSON.parse(text);
   } catch {
-    // If it fails, try to clean it up by removing markdown fences
     const cleanedText = text.replace(/```json\n/g, "").replace(/\n```/g, "").trim();
     try {
       return JSON.parse(cleanedText);
@@ -27,21 +24,34 @@ const safeParseJson = (text: string) => {
   }
 };
 
+const parseNutrientValue = (value: string | null): number => {
+  if (!value) return 0;
+  const numbers = value.match(/\d+/g)?.map(Number) || [];
+  if (numbers.length === 0) return 0;
+  if (numbers.length === 1) return numbers[0];
+  return (numbers[0] + numbers[1]) / 2;
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  try {
-    const { imageData } = await req.json();
-    if (!imageData) {
-      return new Response(JSON.stringify({ error: "No se proporcionó ninguna imagen." }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400,
-      });
-    }
-    const base64Image = imageData.split(",")[1];
+  const { entry_id, imageData } = await req.json();
+  if (!entry_id || !imageData) {
+    return new Response(JSON.stringify({ error: "entry_id and imageData are required." }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 400,
+    });
+  }
 
+  const supabaseAdmin = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  );
+
+  try {
+    const base64Image = imageData.split(",")[1];
     const prompt = `
       Analiza la imagen de esta comida y proporciona una estimación de sus valores nutricionales.
       Responde únicamente con un objeto JSON válido, sin ningún texto adicional antes o después.
@@ -59,22 +69,8 @@ serve(async (req) => {
     `;
 
     const requestBody = {
-      contents: [
-        {
-          parts: [
-            { text: prompt },
-            {
-              inline_data: {
-                mime_type: "image/jpeg",
-                data: base64Image,
-              },
-            },
-          ],
-        },
-      ],
-       "generationConfig": {
-        "responseMimeType": "application/json",
-      }
+      contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: "image/jpeg", data: base64Image } }] }],
+      generationConfig: { responseMimeType: "application/json" },
     };
 
     const geminiResponse = await fetch(GEMINI_API_URL, {
@@ -90,27 +86,48 @@ serve(async (req) => {
     }
 
     const responseData = await geminiResponse.json();
-
-    // Robust check for valid response
     if (!responseData.candidates || responseData.candidates.length === 0) {
-      console.error("Respuesta de la IA inválida o bloqueada:", responseData);
       const blockReason = responseData.promptFeedback?.blockReason || "desconocida";
       throw new Error(`La IA no pudo procesar la imagen (motivo: ${blockReason}). Intenta con otra foto.`);
     }
 
     const jsonText = responseData.candidates[0].content.parts[0].text;
     const analysisResult = safeParseJson(jsonText);
+    if (!analysisResult) throw new Error("La IA devolvió una respuesta en un formato inesperado.");
 
-    if (!analysisResult) {
-      throw new Error("La IA devolvió una respuesta en un formato inesperado. No se pudo procesar.");
-    }
+    const { error: updateError } = await supabaseAdmin
+      .from('food_entries')
+      .update({
+        food_name: analysisResult.foodName,
+        calories: analysisResult.calories,
+        protein: analysisResult.protein,
+        carbs: analysisResult.carbs,
+        fats: analysisResult.fats,
+        sugars: analysisResult.sugars,
+        health_rating: analysisResult.healthRating,
+        reason: analysisResult.reason,
+        calories_value: parseNutrientValue(analysisResult.calories),
+        protein_value: parseNutrientValue(analysisResult.protein),
+        carbs_value: parseNutrientValue(analysisResult.carbs),
+        fats_value: parseNutrientValue(analysisResult.fats),
+        sugars_value: parseNutrientValue(analysisResult.sugars),
+        status: 'completed',
+      })
+      .eq('id', entry_id);
 
-    return new Response(JSON.stringify(analysisResult), {
+    if (updateError) throw updateError;
+
+    return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
     console.error("Error en la función Edge:", error);
+    await supabaseAdmin
+      .from('food_entries')
+      .update({ status: 'failed', reason: error.message })
+      .eq('id', entry_id);
+
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,

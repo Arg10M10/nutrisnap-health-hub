@@ -8,7 +8,7 @@ import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Flame, Leaf, ScanLine, Beef, Wheat, Droplets, Sparkles } from "lucide-react";
-import { useNutrition } from "@/context/NutritionContext";
+import { useNutrition, FoodEntry } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
 import HealthScoreCard from "@/components/HealthScoreCard";
@@ -17,6 +17,7 @@ import MacroCard from "@/components/MacroCard";
 import CaloriesCard from "@/components/CaloriesCard";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import AnimatedNumber from "@/components/AnimatedNumber";
+import AnalysisDetailDrawer from "@/components/AnalysisDetailDrawer";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -27,6 +28,7 @@ const Index = () => {
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
   const { t } = useTranslation();
+  const [selectedAnalysis, setSelectedAnalysis] = useState<FoodEntry | null>(null);
 
   useEffect(() => {
     if (!api) {
@@ -193,6 +195,8 @@ const Index = () => {
                   carbs={item.carbs_value}
                   fats={item.fats_value}
                   sugars={item.sugars_value}
+                  status={item.status}
+                  onClick={() => setSelectedAnalysis(item)}
                 />
               ))}
             </div>
@@ -205,6 +209,11 @@ const Index = () => {
           )}
         </div>
       </div>
+      <AnalysisDetailDrawer
+        entry={selectedAnalysis}
+        isOpen={!!selectedAnalysis}
+        onClose={() => setSelectedAnalysis(null)}
+      />
     </PageLayout>
   );
 };

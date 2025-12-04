@@ -26,6 +26,7 @@ export interface FoodEntry {
   carbs_value: number | null;
   fats_value: number | null;
   sugars_value: number | null;
+  status: 'processing' | 'completed' | 'failed';
 }
 
 export interface WaterEntry {
@@ -152,6 +153,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       carbs_value: parseNutrientValue(result.carbs),
       fats_value: parseNutrientValue(result.fats),
       sugars_value: parseNutrientValue(result.sugars),
+      status: 'completed' as const,
     };
     addEntryMutation.mutate(newEntry);
     toast.success(`${result.foodName} añadido a tu diario.`);
