@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@tanstack/react-query';
 import {
   User, Edit, HeartPulse, SlidersHorizontal, Languages, Target, Goal, Palette,
-  Lightbulb, Mail, FileText, Shield, Instagram, LogOut, Trash2
+  Lightbulb, Mail, FileText, Shield, Instagram, LogOut, Trash2, Loader2
 } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -13,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import EditProfileDrawer from "@/components/EditProfileDrawer";
 import PageLayout from "@/components/PageLayout";
 import { SettingsCategory } from "@/components/settings/SettingsCategory";
@@ -36,10 +38,26 @@ const Settings = () => {
     toast.info(t('toasts.coming_soon_title'), { description: t('toasts.coming_soon_desc') });
   };
 
+  const deleteAccountMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.functions.invoke('delete-user');
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
+      toast.success(t('toasts.delete_success_title'), {
+        description: t('toasts.delete_success_desc'),
+      });
+      signOut();
+    },
+    onError: (error: Error) => {
+      toast.error(t('toasts.delete_error_title'), {
+        description: error.message,
+      });
+    },
+  });
+
   const handleDeleteAccount = () => {
-    toast.error(t('toasts.delete_not_implemented_title'), {
-      description: t('toasts.delete_not_implemented_desc'),
-    });
+    deleteAccountMutation.mutate();
   };
 
   return (
@@ -114,7 +132,8 @@ const Settings = () => {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>{t('settings.deleteDialog.cancel')}</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                <AlertDialogAction onClick={handleDeleteAccount} disabled={deleteAccountMutation.isPending} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                  {deleteAccountMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {t('settings.deleteDialog.confirm')}
                 </AlertDialogAction>
               </AlertDialogFooter>

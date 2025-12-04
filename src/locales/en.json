@@ -228,8 +228,9 @@
     "coming_soon_title": "Coming Soon",
     "coming_soon_desc": "This feature will be available soon.",
     "sign_out_success": "Signed out successfully.",
-    "delete_not_implemented_title": "Function not implemented.",
-    "delete_not_implemented_desc": "Account deletion will be enabled in the future."
+    "delete_success_title": "Account Deleted",
+    "delete_success_desc": "Your account and all data have been permanently deleted.",
+    "delete_error_title": "Deletion Failed"
   },
   "weight_goal": {
     "title": "Goal Weight",

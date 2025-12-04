@@ -228,8 +228,9 @@
     "coming_soon_title": "Próximamente",
     "coming_soon_desc": "Esta función estará disponible pronto.",
     "sign_out_success": "Sesión cerrada con éxito.",
-    "delete_not_implemented_title": "Función no implementada.",
-    "delete_not_implemented_desc": "La eliminación de la cuenta se habilitará en el futuro."
+    "delete_success_title": "Cuenta Eliminada",
+    "delete_success_desc": "Tu cuenta y todos tus datos han sido eliminados permanentemente.",
+    "delete_error_title": "Error al Eliminar"
   },
   "weight_goal": {
     "title": "Peso objetivo",
