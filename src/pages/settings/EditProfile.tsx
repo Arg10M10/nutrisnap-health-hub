@@ -83,7 +83,7 @@ const EditProfile = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="flex flex-col items-center gap-6">
-              <UserAvatar name={currentFullName} color={selectedColor} className="w-32 h-32 text-5xl" />
+              <UserAvatar name={currentFullName} color={selectedColor} className="w-32 h-32 text-7xl" />
               <div className="flex flex-wrap justify-center gap-3">
                 {colorOptions.map(color => (
                   <button

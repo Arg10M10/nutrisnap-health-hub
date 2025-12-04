@@ -116,7 +116,7 @@ const Settings = () => {
           className="w-full p-6 bg-card border rounded-2xl flex items-center justify-between text-left transition-colors hover:bg-muted/50"
         >
           <div className="flex items-center gap-4">
-            <UserAvatar name={profile?.full_name} color={profile?.avatar_color} className="w-12 h-12" />
+            <UserAvatar name={profile?.full_name} color={profile?.avatar_color} className="w-12 h-12 text-2xl" />
             <div>
               <p className="font-bold text-lg text-foreground">{profile?.full_name || t('settings.profileCard.namePlaceholder')}</p>
               <p className="text-sm text-muted-foreground">{t('settings.profileCard.viewAndEdit')}</p>
