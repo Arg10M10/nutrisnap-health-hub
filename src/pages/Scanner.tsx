@@ -117,15 +117,21 @@ const Scanner = () => {
       stopCamera();
       setState('initializing');
       if (!BarcodeScanner) {
-        import('react-zxing').then(({ BarcodeScanner }) => {
-          setBarcodeScanner(() => BarcodeScanner);
-          setState('camera');
-        }).catch(err => {
-          console.error("Failed to load BarcodeScanner component", err);
-          toast.error("No se pudo cargar el escáner de códigos de barras.");
-          setError("Error al cargar el componente del escáner.");
-          setState("error");
-        });
+        import('react-zxing')
+          .then((mod) => {
+            const Comp = (mod as any).BarcodeScanner ?? (mod as any).default;
+            if (!Comp) {
+              throw new Error("BarcodeScanner component not available from react-zxing");
+            }
+            setBarcodeScanner(() => Comp as ComponentType<any>);
+            setState('camera');
+          })
+          .catch(err => {
+            console.error("Failed to load BarcodeScanner component", err);
+            toast.error("No se pudo cargar el escáner de códigos de barras.");
+            setError("Error al cargar el componente del escáner.");
+            setState("error");
+          });
       } else {
         setState('camera');
       }
@@ -311,7 +317,7 @@ const Scanner = () => {
         {scanMode === 'barcode' && state === 'camera' && BarcodeScanner && (
           <BarcodeScanner
             onResult={handleBarcodeScan}
-            onError={(error) => {
+            onError={(error: unknown) => {
               console.error(error);
               toast.error("Error del escáner de códigos.");
             }}
