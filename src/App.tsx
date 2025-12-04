@@ -25,6 +25,7 @@ import Running from "./pages/exercise/Running";
 import BottomNav from "./components/BottomNav";
 import Badges from "./pages/Badges";
 import ScrollToTop from "./components/ScrollToTop";
+import AISuggestions from "./pages/settings/AISuggestions";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ const AppRoutes = () => {
     "/exercise/running",
     "/settings/preferences",
     "/settings/nutritional-goals",
+    "/settings/ai-suggestions",
   ];
 
   if (fullScreenRoutes.includes(location.pathname)) {
@@ -70,6 +72,7 @@ const AppRoutes = () => {
           <Route path="/exercise/running" element={<Running />} />
           <Route path="/settings/preferences" element={<Preferences />} />
           <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
+          <Route path="/settings/ai-suggestions" element={<AISuggestions />} />
         </Routes>
       </AnimatePresence>
     );

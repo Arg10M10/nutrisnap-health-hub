@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -8,16 +8,14 @@ import { useAuth } from '@/context/AuthContext';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { ArrowLeft, Loader2, Flame, Beef, Wheat, Droplets, Sparkles, Wand2 } from 'lucide-react';
+import { ArrowLeft, Flame, Beef, Wheat, Droplets, Sparkles, Wand2 } from 'lucide-react';
 import { GoalRow } from '@/components/settings/GoalRow';
-import AISuggestionsDrawer from '@/components/settings/AISuggestionsDrawer';
 import { useDebouncedCallback } from 'use-debounce';
 
 const NutritionalGoals = () => {
   const navigate = useNavigate();
   const { profile, user, refetchProfile } = useAuth();
   const { t } = useTranslation();
-  const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
   const [goals, setGoals] = useState({
     calories: 2000,
     protein: 90,
@@ -71,11 +69,6 @@ const NutritionalGoals = () => {
     setGoals(newGoals);
     debouncedSave(newGoals);
   };
-  
-  const handleApplySuggestions = (suggestions: any) => {
-    setGoals(suggestions);
-    mutation.mutate(suggestions); 
-  };
 
   const goalsConfig = [
     { id: 'calories', label: t('nutritional_goals.calories'), unit: 'kcal', icon: <Flame className="w-5 h-5 text-white" />, color: 'bg-primary' },
@@ -116,18 +109,13 @@ const NutritionalGoals = () => {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col sm:flex-row gap-2 pt-6">
-             <Button variant="outline" size="lg" className="w-full h-14 text-lg" onClick={() => setIsAIDrawerOpen(true)}>
+             <Button variant="outline" size="lg" className="w-full h-14 text-lg" onClick={() => navigate('/settings/ai-suggestions')}>
                 <Wand2 className="mr-2 h-5 w-5" />
                 {t('nutritional_goals.ai_suggestions')}
              </Button>
           </CardFooter>
         </Card>
       </div>
-      <AISuggestionsDrawer 
-        isOpen={isAIDrawerOpen} 
-        onClose={() => setIsAIDrawerOpen(false)}
-        onApplySuggestions={handleApplySuggestions}
-      />
     </PageLayout>
   );
 };
