@@ -56,7 +56,11 @@
     "diets": "Dietas",
     "log_title": "¿Qué quieres registrar?",
     "scan_food": "Escanear Comida",
-    "log_exercise": "Registrar Ejercicio"
+    "log_exercise": "Registrar Ejercicio",
+    "log_run": "Correr",
+    "log_weights": "Pesas",
+    "write_exercise": "Escribir",
+    "manual_exercise": "Manual"
   },
   "home": {
     "title": "Calorel",
@@ -90,7 +94,7 @@
     "weight_progress_title": "Progreso de Peso",
     "weight_progress_desc": "Tu peso actual comparado con tu trayectoria objetivo.",
     "weight_progress_actual": "Peso Actual",
-    "weight_progress_goal": "Peso Objetivo",
+    "weight_progress_goal": "Peso Deseado",
     "weight_progress_no_data": "No hay datos de peso registrados.",
     "weight_progress_start_logging": "Registra tu peso para empezar a ver tu progreso."
   },
@@ -153,7 +157,41 @@
     "intensity_medium_example": "Correr a un ritmo cómodo.",
     "intensity_high": "Alta",
     "intensity_high_desc": "Esfuerzo máximo, intervalos.",
-    "intensity_high_example": "Sprints, correr en cuestas."
+    "intensity_high_example": "Sprints, correr en cuestas.",
+    "saved_toast_title": "¡Carrera guardada!",
+    "saved_toast_desc": "Has quemado aproximadamente {{calories}} kcal.",
+    "error_toast_title": "No se pudo registrar la carrera."
+  },
+  "weights": {
+    "title": "Registrar Pesas",
+    "save_action": "Guardar Pesas ({{calories}} kcal)",
+    "saved_toast_title": "¡Entrenamiento guardado!",
+    "saved_toast_desc": "Has quemado aproximadamente {{calories}} kcal.",
+    "error_toast_title": "No se pudo registrar el entrenamiento."
+  },
+  "write_exercise": {
+    "title": "Escribir Ejercicio",
+    "name_label": "Nombre del ejercicio",
+    "name_placeholder": "Ej: Natación, HIIT, fútbol...",
+    "duration_label": "Duración (minutos)",
+    "estimate_button": "Estimar calorías",
+    "save_button": "Guardar",
+    "estimated_label": "Calorías estimadas",
+    "estimated_toast": "Estimación lista",
+    "saved_toast": "Ejercicio guardado",
+    "error_toast_title": "No se pudo procesar",
+    "validation_error": "Completa nombre, duración y estimación válida."
+  },
+  "manual_exercise": {
+    "title": "Ejercicio Manual",
+    "name_label": "Nombre del ejercicio",
+    "name_placeholder": "Ej: Elíptica, paseo...",
+    "duration_label": "Duración (minutos)",
+    "calories_label": "Calorías (kcal)",
+    "save_button": "Guardar",
+    "saved_toast": "Ejercicio guardado",
+    "error_toast_title": "No se pudo guardar",
+    "validation_error": "Completa todos los campos con valores válidos."
   },
   "preferences": {
     "title": "Preferencias",

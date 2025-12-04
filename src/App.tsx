@@ -22,6 +22,9 @@ import Onboarding from "./pages/onboarding/Onboarding";
 import SplashScreen from "./pages/SplashScreen";
 import Exercise from "./pages/Exercise";
 import Running from "./pages/exercise/Running";
+import Weights from "./pages/exercise/Weights";
+import WriteExercise from "./pages/exercise/Write";
+import ManualExercise from "./pages/exercise/Manual";
 import BottomNav from "./components/BottomNav";
 import Badges from "./pages/Badges";
 import ScrollToTop from "./components/ScrollToTop";
@@ -61,6 +64,9 @@ const AppRoutes = () => {
     "/scanner",
     "/barcode-result",
     "/exercise/running",
+    "/exercise/weights",
+    "/exercise/write",
+    "/exercise/manual",
     "/settings/preferences",
     "/settings/nutritional-goals",
     "/settings/ai-suggestions",
@@ -76,6 +82,9 @@ const AppRoutes = () => {
           <Route path="/scanner" element={<Scanner />} />
           <Route path="/barcode-result" element={<BarcodeResultPage />} />
           <Route path="/exercise/running" element={<Running />} />
+          <Route path="/exercise/weights" element={<Weights />} />
+          <Route path="/exercise/write" element={<WriteExercise />} />
+          <Route path="/exercise/manual" element={<ManualExercise />} />
           <Route path="/settings/preferences" element={<Preferences />} />
           <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
           <Route path="/settings/ai-suggestions" element={<AISuggestions />} />

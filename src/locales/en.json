@@ -56,7 +56,11 @@
     "diets": "Diets",
     "log_title": "What do you want to log?",
     "scan_food": "Scan Food",
-    "log_exercise": "Log Exercise"
+    "log_exercise": "Log Exercise",
+    "log_run": "Run",
+    "log_weights": "Weights",
+    "write_exercise": "Write",
+    "manual_exercise": "Manual"
   },
   "home": {
     "title": "Calorel",
@@ -81,7 +85,7 @@
     "subtitle": "Visualize your habits and progress over time.",
     "weight_unit": "kg",
     "day_streak": "day streak",
-    "day_streaks": "day streak",
+    "day_streaks": "days streak",
     "update_weight": "Update my weight",
     "calorie_intake": "Calorie Intake",
     "last_7_days": "Last 7 days",
@@ -153,7 +157,41 @@
     "intensity_medium_example": "Running at a comfortable pace.",
     "intensity_high": "High",
     "intensity_high_desc": "Maximum effort, intervals.",
-    "intensity_high_example": "Sprints, hill running."
+    "intensity_high_example": "Sprints, hill running.",
+    "saved_toast_title": "Run logged!",
+    "saved_toast_desc": "You've burned approximately {{calories}} kcal.",
+    "error_toast_title": "Could not log run."
+  },
+  "weights": {
+    "title": "Log Weights",
+    "save_action": "Save Weights ({{calories}} kcal)",
+    "saved_toast_title": "Workout logged!",
+    "saved_toast_desc": "You've burned approximately {{calories}} kcal.",
+    "error_toast_title": "Could not log workout."
+  },
+  "write_exercise": {
+    "title": "Write Exercise",
+    "name_label": "Exercise name",
+    "name_placeholder": "e.g., Swimming, HIIT, soccer...",
+    "duration_label": "Duration (minutes)",
+    "estimate_button": "Estimate calories",
+    "save_button": "Save",
+    "estimated_label": "Estimated calories",
+    "estimated_toast": "Estimation ready",
+    "saved_toast": "Exercise saved",
+    "error_toast_title": "Could not process",
+    "validation_error": "Fill in name, duration and a valid estimate."
+  },
+  "manual_exercise": {
+    "title": "Manual Exercise",
+    "name_label": "Exercise name",
+    "name_placeholder": "e.g., Elliptical, walk...",
+    "duration_label": "Duration (minutes)",
+    "calories_label": "Calories (kcal)",
+    "save_button": "Save",
+    "saved_toast": "Exercise saved",
+    "error_toast_title": "Could not save",
+    "validation_error": "Complete all fields with valid values."
   },
   "preferences": {
     "title": "Preferences",

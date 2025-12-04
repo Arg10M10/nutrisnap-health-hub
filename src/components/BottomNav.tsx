@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, Settings, LineChart, Book, Plus, Scan, Dumbbell } from "lucide-react";
+import { Home, Settings, LineChart, Book, Plus, Scan, Dumbbell, FileText, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
@@ -20,16 +20,11 @@ const BottomNav = () => {
   ];
 
   const menuItems = [
-    {
-      icon: Scan,
-      label: t('bottom_nav.scan_food'),
-      action: () => navigate("/scanner"),
-    },
-    {
-      icon: Dumbbell,
-      label: t('bottom_nav.log_exercise'),
-      action: () => navigate("/exercise"),
-    },
+    { icon: Scan, label: t('bottom_nav.scan_food'), action: () => navigate("/scanner") },
+    { icon: Dumbbell, label: t('bottom_nav.log_run'), action: () => navigate("/exercise/running") },
+    { icon: Dumbbell, label: t('bottom_nav.log_weights'), action: () => navigate("/exercise/weights") },
+    { icon: FileText, label: t('bottom_nav.write_exercise'), action: () => navigate("/exercise/write") },
+    { icon: Pencil, label: t('bottom_nav.manual_exercise'), action: () => navigate("/exercise/manual") },
   ];
 
   const handleMenuAction = (action: () => void) => {
@@ -92,20 +87,16 @@ const BottomNav = () => {
           <DrawerTitle>{t('bottom_nav.log_title')}</DrawerTitle>
         </DrawerHeader>
         <div className="grid grid-cols-2 gap-4 p-4 pb-8">
-          <div
-            onClick={() => handleMenuAction(menuItems[0].action)}
-            className="flex flex-col items-center justify-center gap-3 p-6 bg-muted rounded-2xl aspect-square cursor-pointer hover:bg-muted/80 transition-colors"
-          >
-            <Scan className="w-12 h-12 text-primary" />
-            <span className="font-semibold text-center text-foreground text-lg">{menuItems[0].label}</span>
-          </div>
-          <div
-            onClick={() => handleMenuAction(menuItems[1].action)}
-            className="flex flex-col items-center justify-center gap-3 p-6 bg-muted rounded-2xl aspect-square cursor-pointer hover:bg-muted/80 transition-colors"
-          >
-            <Dumbbell className="w-12 h-12 text-primary" />
-            <span className="font-semibold text-center text-foreground text-lg">{menuItems[1].label}</span>
-          </div>
+          {menuItems.map((mi) => (
+            <div
+              key={mi.label as string}
+              onClick={() => handleMenuAction(mi.action)}
+              className="flex flex-col items-center justify-center gap-3 p-6 bg-muted rounded-2xl aspect-square cursor-pointer hover:bg-muted/80 transition-colors"
+            >
+              <mi.icon className="w-12 h-12 text-primary" />
+              <span className="font-semibold text-center text-foreground text-lg">{mi.label}</span>
+            </div>
+          ))}
         </div>
       </DrawerContent>
     </Drawer>

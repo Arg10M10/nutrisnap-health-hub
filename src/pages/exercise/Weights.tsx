@@ -6,15 +6,16 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Loader2, Footprints } from 'lucide-react';
+import { ArrowLeft, Loader2, Dumbbell } from 'lucide-react';
 import { IntensitySelector, Intensity } from '@/components/exercise/IntensitySelector';
 import { DurationSlider } from '@/components/exercise/DurationSlider';
 import { motion, Transition } from 'framer-motion';
 
+// MET aproximados para entrenamiento de fuerza
 const MET_VALUES: Record<Intensity, number> = {
-  'Low': 7.0,
-  'Medium': 9.8,
-  'High': 12.5,
+  Low: 3.5,     // Pesas ligeras
+  Medium: 5.0,  // Pesas moderadas
+  High: 6.0,    // Pesas intensas
 };
 
 const pageVariants = {
@@ -29,7 +30,7 @@ const pageTransition: Transition = {
   duration: 0.2,
 };
 
-const Running = () => {
+const Weights = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const { t } = useTranslation();
@@ -49,7 +50,7 @@ const Running = () => {
       const calories_burned = calculateCalories();
       const { error } = await supabase.from('exercise_entries').insert({
         user_id: user.id,
-        exercise_type: 'running',
+        exercise_type: 'weights',
         intensity: intensity.toLowerCase(),
         duration_minutes: duration,
         calories_burned,
@@ -59,13 +60,13 @@ const Running = () => {
     },
     onSuccess: ({ calories_burned }) => {
       queryClient.invalidateQueries({ queryKey: ['exercise_entries', user?.id] });
-      toast.success(t('running.saved_toast_title'), {
-        description: t('running.saved_toast_desc', { calories: calories_burned }),
+      toast.success(t('weights.saved_toast_title'), {
+        description: t('weights.saved_toast_desc', { calories: calories_burned }),
       });
       navigate('/');
     },
     onError: (error) => {
-      toast.error(t('running.error_toast_title'), {
+      toast.error(t('weights.error_toast_title'), {
         description: (error as Error).message,
       });
     },
@@ -87,8 +88,8 @@ const Running = () => {
           <ArrowLeft className="w-6 h-6" />
         </Button>
         <div className="flex items-center gap-2">
-          <Footprints className="w-7 h-7 text-primary" />
-          <h1 className="text-2xl font-bold text-primary">{t('running.title')}</h1>
+          <Dumbbell className="w-7 h-7 text-primary" />
+          <h1 className="text-2xl font-bold text-primary">{t('weights.title')}</h1>
         </div>
       </header>
       <main className="flex-1 p-4 pb-28 space-y-8">
@@ -111,7 +112,7 @@ const Running = () => {
           {mutation.isPending ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
           ) : (
-            t('running.save_run', { calories: calculateCalories() })
+            t('weights.save_action', { calories: calculateCalories() })
           )}
         </Button>
       </footer>
@@ -119,4 +120,4 @@ const Running = () => {
   );
 };
 
-export default Running;
+export default Weights;

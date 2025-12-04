@@ -3,15 +3,17 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/card';
 import PageLayout from '@/components/PageLayout';
-import { Footprints, Bike, Dumbbell, Weight } from 'lucide-react';
+import { Footprints, Bike, Dumbbell, Weight, FileText, Pencil } from 'lucide-react';
 
 const Exercise = () => {
   const { t } = useTranslation();
 
   const exercises = [
     { name: t('exercise.running'), icon: Footprints, path: '/exercise/running', enabled: true },
+    { name: t('exercise.weights'), icon: Dumbbell, path: '/exercise/weights', enabled: true },
+    { name: t('write_exercise.title'), icon: FileText, path: '/exercise/write', enabled: true },
+    { name: t('manual_exercise.title'), icon: Pencil, path: '/exercise/manual', enabled: true },
     { name: t('exercise.cycling'), icon: Bike, path: '#', enabled: false },
-    { name: t('exercise.weights'), icon: Dumbbell, path: '#', enabled: false },
     { name: t('exercise.other'), icon: Weight, path: '#', enabled: false },
   ];
 
@@ -34,7 +36,7 @@ const Exercise = () => {
               <Link to={exercise.path} key={exercise.name}>
                 <Card className="p-6 flex flex-col items-center justify-center gap-4 aspect-square hover:border-primary transition-colors">
                   <exercise.icon className="w-12 h-12 text-primary" />
-                  <span className="font-semibold text-lg text-foreground">{exercise.name}</span>
+                  <span className="font-semibold text-lg text-foreground text-center">{exercise.name}</span>
                 </Card>
               </Link>
             ) : (
@@ -44,7 +46,7 @@ const Exercise = () => {
                 className="p-6 flex flex-col items-center justify-center gap-4 aspect-square cursor-pointer bg-muted/50 opacity-60"
               >
                 <exercise.icon className="w-12 h-12 text-muted-foreground" />
-                <span className="font-semibold text-lg text-muted-foreground">{exercise.name}</span>
+                <span className="font-semibold text-lg text-muted-foreground text-center">{exercise.name}</span>
               </Card>
             )
           )}
