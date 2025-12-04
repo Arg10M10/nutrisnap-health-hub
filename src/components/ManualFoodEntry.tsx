@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
-import { useNutrition } from '@/context/NutritionContext';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Utensils, Loader2 } from 'lucide-react';
-import { AnalysisResult } from './FoodAnalysisCard';
+import { useNavigate } from 'react-router-dom';
 
 const formSchema = z.object({
   foodName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -24,8 +24,10 @@ const formSchema = z.object({
 });
 
 const ManualFoodEntry = () => {
-  const { addAnalysis } = useNutrition();
+  const { user } = useAuth();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,19 +38,38 @@ const ManualFoodEntry = () => {
 
   const mutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const { data, error } = await supabase.functions.invoke('analyze-text-food', {
-        body: values,
-      });
-      if (error) throw new Error(error.message);
-      return data as AnalysisResult;
+      if (!user) throw new Error('User not found');
+      const { data, error } = await supabase
+        .from('food_entries')
+        .insert({
+          user_id: user.id,
+          food_name: values.foodName,
+          status: 'processing',
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return { newEntry: data, formValues: values };
     },
-    onSuccess: (data) => {
-      addAnalysis(data);
-      toast.success('Analysis complete and added to diary.');
+    onSuccess: ({ newEntry, formValues }) => {
+      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+      navigate('/');
+      toast.info('Análisis manual iniciado...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
       form.reset();
+      
+      supabase.functions.invoke('analyze-text-food', {
+        body: { ...formValues, entry_id: newEntry.id },
+      }).then(({ error }) => {
+        if (error) {
+          console.error("Function invocation failed:", error);
+          supabase.from('food_entries').update({ status: 'failed', reason: 'Could not start analysis.' }).eq('id', newEntry.id).then(() => {
+            queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+          });
+        }
+      });
     },
     onError: (error) => {
-      toast.error('Error in analysis', {
+      toast.error('Error al iniciar el análisis', {
         description: error.message,
       });
     },

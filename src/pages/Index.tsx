@@ -8,7 +8,7 @@ import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Flame, Leaf, ScanLine, Beef, Wheat, Droplets, Sparkles } from "lucide-react";
-import { useNutrition, FoodEntry } from "@/context/NutritionContext";
+import { useNutrition, FoodEntry, ExerciseEntry } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
 import HealthScoreCard from "@/components/HealthScoreCard";
@@ -16,6 +16,7 @@ import WaterTrackerCard from "@/components/WaterTrackerCard";
 import MacroCard from "@/components/MacroCard";
 import CaloriesCard from "@/components/CaloriesCard";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
+import RecentExerciseCard from "@/components/RecentExerciseCard";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import AnalysisDetailDrawer from "@/components/AnalysisDetailDrawer";
 
@@ -184,21 +185,28 @@ const Index = () => {
           <h2 className="text-foreground text-2xl font-semibold">{t('home.todays_analysis')}</h2>
           {analyses.length > 0 ? (
             <div className="space-y-3">
-              {analyses.map((item) => (
-                <RecentAnalysisCard 
-                  key={item.id} 
-                  imageUrl={item.image_url}
-                  foodName={item.food_name}
-                  time={format(new Date(item.created_at), 'p', { locale: es })}
-                  calories={item.calories_value}
-                  protein={item.protein_value}
-                  carbs={item.carbs_value}
-                  fats={item.fats_value}
-                  sugars={item.sugars_value}
-                  status={item.status}
-                  onClick={() => setSelectedAnalysis(item)}
-                />
-              ))}
+              {analyses.map((item) => {
+                if ('food_name' in item) {
+                  return (
+                    <RecentAnalysisCard 
+                      key={item.id} 
+                      imageUrl={item.image_url}
+                      foodName={item.food_name}
+                      time={format(new Date(item.created_at), 'p', { locale: es })}
+                      calories={item.calories_value}
+                      protein={item.protein_value}
+                      carbs={item.carbs_value}
+                      fats={item.fats_value}
+                      sugars={item.sugars_value}
+                      status={item.status}
+                      onClick={() => setSelectedAnalysis(item)}
+                    />
+                  );
+                } else if ('exercise_type' in item) {
+                  return <RecentExerciseCard key={item.id} entry={item as ExerciseEntry} />;
+                }
+                return null;
+              })}
             </div>
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">

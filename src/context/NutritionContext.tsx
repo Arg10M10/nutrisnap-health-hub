@@ -29,6 +29,15 @@ export interface FoodEntry {
   status: 'processing' | 'completed' | 'failed';
 }
 
+export interface ExerciseEntry {
+  id: string;
+  created_at: string;
+  exercise_type: string;
+  intensity: string;
+  duration_minutes: number;
+  calories_burned: number;
+}
+
 export interface WaterEntry {
   id: string;
   created_at: string;
@@ -45,7 +54,7 @@ interface DailyIntake {
 
 interface DailyData {
   intake: DailyIntake;
-  analyses: FoodEntry[];
+  analyses: (FoodEntry | ExerciseEntry)[];
   healthScore: number;
   waterIntake: number;
 }
@@ -91,6 +100,17 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     queryFn: async () => {
       if (!user) return [];
       const { data, error } = await supabase.from('food_entries').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+      if (error) throw new Error(error.message);
+      return data || [];
+    },
+    enabled: !!user,
+  });
+
+  const { data: exerciseEntries = [], isLoading: isExerciseLoading } = useQuery<ExerciseEntry[]>({
+    queryKey: ['exercise_entries', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase.from('exercise_entries').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
       if (error) throw new Error(error.message);
       return data || [];
     },
@@ -164,9 +184,10 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
   const getDataForDate = (date: Date): DailyData => {
     const dailyFood = foodEntries.filter(entry => isSameDay(parseISO(entry.created_at), date));
+    const dailyExercise = exerciseEntries.filter(entry => isSameDay(parseISO(entry.created_at), date));
     const dailyWater = waterEntries.filter(entry => isSameDay(parseISO(entry.created_at), date));
 
-    const intake = dailyFood.reduce(
+    const foodIntake = dailyFood.reduce(
       (acc, entry) => ({
         calories: acc.calories + (entry.calories_value || 0),
         protein: acc.protein + (entry.protein_value || 0),
@@ -177,13 +198,24 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       { calories: 0, protein: 0, carbs: 0, fats: 0, sugars: 0 }
     );
 
+    const caloriesBurned = dailyExercise.reduce((acc, entry) => acc + (entry.calories_burned || 0), 0);
+
+    const intake = {
+      ...foodIntake,
+      calories: foodIntake.calories - caloriesBurned,
+    };
+
     const healthScore = dailyFood.length > 0
       ? dailyFood.reduce((acc, entry) => acc + healthRatingToScore(entry.health_rating), 0) / dailyFood.length
       : 0;
 
     const waterIntake = dailyWater.reduce((acc, entry) => acc + entry.glasses, 0);
 
-    return { intake, analyses: dailyFood, healthScore, waterIntake };
+    const combinedAnalyses = [...dailyFood, ...dailyExercise].sort(
+      (a, b) => parseISO(b.created_at).getTime() - parseISO(a.created_at).getTime()
+    );
+
+    return { intake, analyses: combinedAnalyses, healthScore, waterIntake };
   };
 
   const streakData = useMemo(() => {
@@ -252,7 +284,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       isWaterUpdating: waterMutation.isPending,
       ...streakData,
       waterStreak: waterStreakData.waterStreak,
-      isLoading: isFoodLoading || isWaterLoading
+      isLoading: isFoodLoading || isWaterLoading || isExerciseLoading
     }}>
       {children}
     </NutritionContext.Provider>
