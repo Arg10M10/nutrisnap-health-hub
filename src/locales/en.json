@@ -86,7 +86,13 @@
     "calorie_intake": "Calorie Intake",
     "last_7_days": "Last 7 days",
     "todays_history": "Today's History",
-    "no_scans": "No scans for today."
+    "no_scans": "No scans for today.",
+    "weight_progress_title": "Weight Progress",
+    "weight_progress_desc": "Your actual weight compared to your goal trajectory.",
+    "weight_progress_actual": "Actual Weight",
+    "weight_progress_goal": "Goal Weight",
+    "weight_progress_no_data": "No weight data logged.",
+    "weight_progress_start_logging": "Log your weight to start seeing your progress."
   },
   "diets": {
     "title": "Diet Plans",

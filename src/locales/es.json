@@ -86,7 +86,13 @@
     "calorie_intake": "Consumo de Calorías",
     "last_7_days": "Últimos 7 días",
     "todays_history": "Historial de Hoy",
-    "no_scans": "No hay escaneos para hoy."
+    "no_scans": "No hay escaneos para hoy.",
+    "weight_progress_title": "Progreso de Peso",
+    "weight_progress_desc": "Tu peso actual comparado con tu trayectoria objetivo.",
+    "weight_progress_actual": "Peso Actual",
+    "weight_progress_goal": "Peso Objetivo",
+    "weight_progress_no_data": "No hay datos de peso registrados.",
+    "weight_progress_start_logging": "Registra tu peso para empezar a ver tu progreso."
   },
   "diets": {
     "title": "Planes de Dieta",
