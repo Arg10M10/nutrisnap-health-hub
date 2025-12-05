@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import PageLayout from "@/components/PageLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { Flame, ScanLine, Weight, Edit } from "lucide-react";
 import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import RecentExerciseCard from "@/components/RecentExerciseCard";
@@ -97,12 +97,36 @@ const Progress = () => {
           <CardContent>
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 20, right: 10, bottom: 5, left: -16 }}>
-                  <CartesianGrid vertical={false} />
-                  <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} className="capitalize" />
-                  <YAxis tickLine={false} axisLine={false} tickMargin={8} />
-                  <Tooltip />
-                  <Bar dataKey="calories" fill="hsl(var(--primary))" radius={8} />
+                <BarChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -16 }}>
+                  <XAxis
+                    dataKey="day"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    className="capitalize"
+                    tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: 12,
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+                    }}
+                    labelStyle={{ color: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                  />
+                  <Bar
+                    dataKey="calories"
+                    fill="hsl(var(--primary))"
+                    radius={[8, 8, 8, 8]}
+                    barSize={32}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>

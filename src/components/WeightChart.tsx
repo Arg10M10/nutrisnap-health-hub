@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend, ResponsiveContainer, Tooltip } from "recharts";
+import { Line, LineChart, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from "recharts";
 import { TrendingDown, Loader2 } from "lucide-react";
 
 const WeightChart = () => {
@@ -39,6 +39,9 @@ const WeightChart = () => {
     }));
   }, [data, profile?.goal_weight, t]);
 
+  const labelActual = t('progress.weight_progress_actual');
+  const labelGoal = t('progress.weight_progress_goal');
+
   return (
     <Card>
       <CardHeader>
@@ -56,27 +59,53 @@ const WeightChart = () => {
         ) : chartData.length > 0 ? (
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 20, right: 20, bottom: 5, left: -16 }}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
-                <YAxis tickLine={false} axisLine={false} tickMargin={8} />
-                <Tooltip />
-                <Legend />
+              <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -16 }}>
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: 12,
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+                  }}
+                  labelStyle={{ color: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                />
+                {profile?.goal_weight && (
+                  <ReferenceLine
+                    y={profile.goal_weight}
+                    stroke="hsl(var(--muted-foreground))"
+                    strokeDasharray="4 4"
+                    strokeWidth={1.5}
+                  />
+                )}
                 <Line
                   type="monotone"
-                  dataKey={t('progress.weight_progress_actual')}
+                  dataKey={labelActual}
                   stroke="hsl(var(--primary))"
                   strokeWidth={3}
-                  dot={false}
+                  dot={{ r: 4, strokeWidth: 2, stroke: 'hsl(var(--card))', fill: 'hsl(var(--primary))' }}
+                  activeDot={{ r: 5 }}
                 />
                 {profile?.goal_weight && (
                   <Line
                     type="monotone"
-                    dataKey={t('progress.weight_progress_goal')}
+                    dataKey={labelGoal}
                     stroke="hsl(var(--muted-foreground))"
                     strokeWidth={2}
-                    strokeDasharray="4 4"
-                    dot={{ stroke: 'hsl(var(--muted-foreground))', r: 2 }}
+                    dot={false}
+                    isAnimationActive={false}
                   />
                 )}
               </LineChart>
