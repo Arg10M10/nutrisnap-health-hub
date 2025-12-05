@@ -9,10 +9,8 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* MODO CLARO: degradado azul muy visible */
-    /* Parte superior: azul cielo bastante saturado y más oscuro */
-    --background-gradient-start: 210 90% 80%;
-    /* Parte inferior: azul muy claro casi blanco */
-    --background: 210 100% 96%;
+    --background-gradient-start: 210 90% 80%; /* azul cielo arriba */
+    --background: 210 100% 96%;              /* azul muy claro abajo */
     --foreground: 150 30% 15%;
 
     --card: 0 0% 100%;
@@ -53,9 +51,10 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 150 25% 8%;
+    /* MODO OSCURO: degradado oscuro verdoso-azul */
+    --background-gradient-start: 210 40% 15%; /* arriba */
+    --background: 150 25% 8%;                 /* abajo */
     --foreground: 150 10% 95%;
-    --background-gradient-start: 150 25% 10%;
 
     --card: 150 20% 12%;
     --card-foreground: 150 10% 95%;
@@ -81,6 +80,7 @@ All colors MUST be HSL.
     --border: 150 15% 20%;
     --input: 150 15% 20%;
     --ring: 150 70% 45%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -97,15 +97,29 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-size: 16px;
-    /* Degradado azul muy marcado en modo claro */
+    /* Degradado vertical que usa las variables según tema (claro/oscuro) */
     background-image: linear-gradient(
       to bottom,
       hsl(var(--background-gradient-start)),
       hsl(var(--background))
     );
+  }
+
+  /* Quitamos el contenedor centrado blanco por defecto de Vite */
+  #root {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
   }
 
   h1 {
