@@ -8,9 +8,9 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* MODO CLARO: degradado azul muy visible */
-    --background-gradient-start: 210 90% 80%; /* azul cielo arriba */
-    --background: 210 100% 96%;              /* azul muy claro abajo */
+    /* MODO CLARO: fondo AZUL bien notorio */
+    --background-gradient-start: 210 90% 78%; /* azul cielo arriba */
+    --background: 210 100% 95%;              /* azul clarito abajo */
     --foreground: 150 30% 15%;
 
     --card: 0 0% 100%;
@@ -51,15 +51,15 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* MODO OSCURO: degradado oscuro verdoso-azul */
-    --background-gradient-start: 210 40% 15%; /* arriba */
-    --background: 150 25% 8%;                 /* abajo */
+    /* MODO OSCURO: fondo oscuro (sin azul) pero nieve encima */
+    --background-gradient-start: 220 15% 8%;  /* casi negro arriba */
+    --background: 220 15% 6%;                 /* casi negro abajo */
     --foreground: 150 10% 95%;
 
-    --card: 150 20% 12%;
+    --card: 220 15% 10%;
     --card-foreground: 150 10% 95%;
 
-    --popover: 150 20% 12%;
+    --popover: 220 15% 10%;
     --popover-foreground: 150 10% 95%;
 
     --primary: 150 70% 45%;
@@ -68,7 +68,7 @@ All colors MUST be HSL.
     --secondary: 142 76% 36%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 150 15% 20%;
+    --muted: 220 10% 18%;
     --muted-foreground: 150 10% 65%;
 
     --accent: 160 84% 39%;
@@ -77,8 +77,8 @@ All colors MUST be HSL.
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 150 15% 20%;
-    --input: 150 15% 20%;
+    --border: 220 10% 18%;
+    --input: 220 10% 18%;
     --ring: 150 70% 45%;
 
     --sidebar-background: 240 5.9% 10%;
@@ -106,7 +106,7 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-size: 16px;
-    /* Degradado vertical que usa las variables según tema (claro/oscuro) */
+    /* En claro: se ve el degradado azul. En oscuro: degradado casi negro. */
     background-image: linear-gradient(
       to bottom,
       hsl(var(--background-gradient-start)),
@@ -114,7 +114,8 @@ All colors MUST be HSL.
     );
   }
 
-  /* Quitamos el contenedor centrado blanco por defecto de Vite */
+  /* Quitamos el contenedor centrado blanco por defecto de Vite
+     para que el fondo azul se vea en TODAS las pantallas de inicio */
   #root {
     max-width: 100%;
     margin: 0;
