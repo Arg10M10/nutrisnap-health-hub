@@ -35,6 +35,7 @@ import RequestFeature from "./pages/settings/RequestFeature";
 import EditProfile from "./pages/settings/EditProfile";
 import Snowfall from "./components/Snowfall";
 import { useState, useEffect } from "react";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 const queryClient = new QueryClient();
 
@@ -58,18 +59,14 @@ const AnimatedRoutes = () => {
 const AppRoutes = () => {
   const { session, profile, loading } = useAuth();
   const location = useLocation();
-  const [snowEnabled, setSnowEnabled] = useState<boolean>(true);
+  const [snowEnabled, setSnowEnabled] = useLocalStorage<boolean>("calorel_snow_enabled", true);
 
+  // Aseguramos un valor por defecto razonable si algo va mal leyendo localStorage
   useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem("calorel_snow_enabled");
-      if (stored !== null) {
-        setSnowEnabled(JSON.parse(stored));
-      }
-    } catch {
+    if (snowEnabled === undefined || snowEnabled === null) {
       setSnowEnabled(true);
     }
-  }, []);
+  }, [snowEnabled, setSnowEnabled]);
 
   if (loading) {
     return <SplashScreen />;
@@ -97,7 +94,7 @@ const AppRoutes = () => {
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
-        <Snowfall enabled={snowEnabled} />
+        <Snowfall enabled={!!snowEnabled} />
         <div className="relative z-10">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -124,7 +121,7 @@ const AppRoutes = () => {
   if (!session) {
     return (
       <div className={shellClass}>
-        <Snowfall enabled={snowEnabled} />
+        <Snowfall enabled={!!snowEnabled} />
         <div className="relative z-10">
           <Login />
         </div>
@@ -135,7 +132,7 @@ const AppRoutes = () => {
   if (!profile?.onboarding_completed) {
     return (
       <div className={shellClass}>
-        <Snowfall enabled={snowEnabled} />
+        <Snowfall enabled={!!snowEnabled} />
         <div className="relative z-10">
           <Onboarding />
         </div>
@@ -145,7 +142,7 @@ const AppRoutes = () => {
 
   return (
     <div className={shellClass}>
-      <Snowfall enabled={snowEnabled} />
+      <Snowfall enabled={!!snowEnabled} />
       <div className="pb-28 relative z-10">
         <AnimatedRoutes />
       </div>
