@@ -133,22 +133,27 @@ const Settings = () => {
           <SettingsItem icon={<HeartPulse size={20} />} label={t('settings.account.personalDetails')} onClick={() => setIsEditDrawerOpen(true)} />
           <SettingsItem icon={<SlidersHorizontal size={20} />} label={t('settings.account.preferences')} onClick={() => navigate('/settings/preferences')} />
           <SettingsItem icon={<Languages size={20} />} label={t('settings.language')} onClick={() => setIsLanguageDrawerOpen(true)} />
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-6 text-primary">
-                <Snowflake size={20} />
+          <div className="flex flex-col gap-1 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-6 text-primary">
+                  <Snowflake size={20} />
+                </div>
+                <div>
+                  <p className="font-medium text-foreground">Efecto de nieve navideña</p>
+                  <p className="text-xs text-muted-foreground">
+                    Activa copos y bolas de nieve cayendo suavemente en el fondo.
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium text-foreground">Efecto de nieve navideña</p>
-                <p className="text-xs text-muted-foreground">
-                  Activa copos y bolas de nieve cayendo suavemente en el fondo.
-                </p>
-              </div>
+              <Switch
+                checked={snowEnabled}
+                onCheckedChange={setSnowEnabled}
+              />
             </div>
-            <Switch
-              checked={snowEnabled}
-              onCheckedChange={setSnowEnabled}
-            />
+            <p className="text-[11px] text-muted-foreground mt-1 pl-9">
+              Consejo: este efecto se ve mejor en modo oscuro.
+            </p>
           </div>
         </SettingsCategory>
 
