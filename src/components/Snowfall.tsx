@@ -15,7 +15,7 @@ interface SnowfallProps {
   enabled: boolean;
 }
 
-const SNOWFLAKE_COUNT = 80;
+const SNOWFLAKE_COUNT = 40; // menos copos que antes
 
 const Snowfall = ({ enabled }: SnowfallProps) => {
   const [flakes, setFlakes] = useState<Snowflake[]>([]);
@@ -27,15 +27,15 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
     }
 
     const newFlakes: Snowflake[] = Array.from({ length: SNOWFLAKE_COUNT }).map((_, i) => {
-      const size = Math.random() * 6 + 3; // 3px - 9px
+      const size = Math.random() * 4 + 2; // más pequeños: 2px - 6px
       return {
         id: i,
         left: Math.random() * 100,
         size,
-        duration: 8 + Math.random() * 10,
+        duration: 10 + Math.random() * 10,
         delay: Math.random() * -20,
-        opacity: 0.4 + Math.random() * 0.4,
-        blur: Math.random() > 0.6 ? 2 : 0,
+        opacity: 0.2 + Math.random() * 0.3, // más transparente
+        blur: Math.random() > 0.7 ? 1.5 : 0,
       };
     });
 
@@ -47,7 +47,7 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
   return (
     <div
       className={cn(
-        "pointer-events-none absolute inset-0 z-0 overflow-hidden",
+        "pointer-events-none fixed inset-0 z-0 overflow-hidden",
         "bg-transparent"
       )}
       aria-hidden="true"
@@ -55,7 +55,7 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
       {flakes.map((flake) => (
         <span
           key={flake.id}
-          className="absolute rounded-full bg-white shadow-sm"
+          className="absolute rounded-full bg-white"
           style={{
             left: `${flake.left}%`,
             width: flake.size,
