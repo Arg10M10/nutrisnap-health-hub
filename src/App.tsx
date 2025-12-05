@@ -93,7 +93,7 @@ const AppRoutes = () => {
 
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
-      <>
+      <div className="relative min-h-screen bg-background">
         <Snowfall enabled={snowEnabled} />
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
@@ -112,32 +112,32 @@ const AppRoutes = () => {
             <Route path="/settings/edit-profile" element={<EditProfile />} />
           </Routes>
         </AnimatePresence>
-      </>
+      </div>
     );
   }
 
   if (!session) {
     return (
-      <>
+      <div className="relative min-h-screen bg-background">
         <Snowfall enabled={snowEnabled} />
         <Login />
-      </>
+      </div>
     );
   }
 
   if (!profile?.onboarding_completed) {
     return (
-      <>
+      <div className="relative min-h-screen bg-background">
         <Snowfall enabled={snowEnabled} />
         <Onboarding />
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
       <Snowfall enabled={snowEnabled} />
-      <div className="pb-28">
+      <div className="pb-28 relative z-0">
         <AnimatedRoutes />
       </div>
       <BottomNav />

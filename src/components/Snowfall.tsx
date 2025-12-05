@@ -30,10 +30,10 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
       const size = Math.random() * 6 + 3; // 3px - 9px
       return {
         id: i,
-        left: Math.random() * 100, // porcentaje
+        left: Math.random() * 100,
         size,
-        duration: 8 + Math.random() * 10, // 8s - 18s
-        delay: Math.random() * -20, // para que no empiecen todos a la vez
+        duration: 8 + Math.random() * 10,
+        delay: Math.random() * -20,
         opacity: 0.3 + Math.random() * 0.5,
         blur: Math.random() > 0.6 ? 2 : 0,
       };
@@ -47,7 +47,7 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
   return (
     <div
       className={cn(
-        "pointer-events-none fixed inset-0 z-[5] overflow-hidden",
+        "pointer-events-none fixed inset-0 -z-10 overflow-hidden",
         "bg-transparent"
       )}
       aria-hidden="true"

@@ -8,7 +8,9 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* Fondo azul muy claro con tono verdoso para que destaque la nieve */
+    --background: 200 100% 98%;
+    --background-gradient-start: 200 100% 98%;
     --foreground: 150 30% 15%;
 
     --card: 0 0% 100%;
@@ -103,6 +105,11 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-size: 16px;
+    background-image: linear-gradient(
+      to bottom,
+      hsl(var(--background-gradient-start)),
+      hsl(var(--background))
+    );
   }
 
   h1 {
