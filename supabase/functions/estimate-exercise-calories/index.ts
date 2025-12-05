@@ -5,8 +5,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GPT_API_KEY = Deno.env.get("GEMINI_API_KEY");
+const GPT_API_URL = Deno.env.get("GPT_API_URL") ?? "";
+const GPT_MODEL = "gpt-5-nano";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -39,24 +40,25 @@ serve(async (req) => {
     `;
 
     const body = {
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: "application/json" },
+      model: GPT_MODEL,
+      input: prompt,
+      response_format: { type: "json_object" },
     };
 
-    const aiRes = await fetch(GEMINI_API_URL, {
+    const aiRes = await fetch(GPT_API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${GPT_API_KEY}` },
       body: JSON.stringify(body),
     });
 
     if (!aiRes.ok) {
       const text = await aiRes.text();
-      console.error("Gemini error:", text);
+      console.error("GPT error:", text);
       throw new Error(aiRes.statusText);
     }
 
     const aiData = await aiRes.json();
-    const jsonText = aiData.candidates?.[0]?.content?.parts?.[0]?.text ?? '{"calories": 0}';
+    const jsonText = aiData.output ?? JSON.stringify(aiData);
 
     return new Response(jsonText, {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

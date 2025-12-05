@@ -5,8 +5,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GPT_API_KEY = Deno.env.get("GEMINI_API_KEY");
+const GPT_API_URL = Deno.env.get("GPT_API_URL") ?? "";
+const GPT_MODEL = "gpt-5-nano";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -37,33 +38,34 @@ serve(async (req) => {
       }
     `;
 
-    const requestBody = {
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: "application/json" },
+    const body = {
+      model: GPT_MODEL,
+      input: prompt,
+      response_format: { type: "json_object" },
     };
 
-    const geminiResponse = await fetch(GEMINI_API_URL, {
+    const aiRes = await fetch(GPT_API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${GPT_API_KEY}` },
+      body: JSON.stringify(body),
     });
 
-    if (!geminiResponse.ok) {
-      const errorBody = await geminiResponse.text();
-      console.error("Error from Gemini API:", errorBody);
-      throw new Error(`Error en la API de IA: ${geminiResponse.statusText}`);
+    if (!aiRes.ok) {
+      const errorBody = await aiRes.text();
+      console.error("Error from GPT API:", errorBody);
+      throw new Error(`Error en la API de IA: ${aiRes.statusText}`);
     }
 
-    const responseData = await geminiResponse.json();
-    const jsonText = responseData.candidates[0].content.parts[0].text;
-    
+    const aiData = await aiRes.json();
+    const jsonText = aiData.output ?? aiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+
     return new Response(jsonText, {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
     console.error("Error in rate-food-product function:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });
