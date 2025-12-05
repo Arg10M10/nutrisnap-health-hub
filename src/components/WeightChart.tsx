@@ -95,8 +95,9 @@ const WeightChart = () => {
                   dataKey={labelActual}
                   stroke="hsl(var(--primary))"
                   strokeWidth={3}
-                  dot={{ r: 4, strokeWidth: 2, stroke: 'hsl(var(--card))', fill: 'hsl(var(--primary))' }}
-                  activeDot={{ r: 5 }}
+                  dot={false}
+                  activeDot={{ r: 5, strokeWidth: 0, fill: 'hsl(var(--primary))' }}
+                  isAnimationActive={false}
                 />
                 {profile?.goal_weight && (
                   <Line
