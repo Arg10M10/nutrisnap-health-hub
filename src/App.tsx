@@ -95,23 +95,25 @@ const AppRoutes = () => {
     return (
       <div className="relative min-h-screen bg-background">
         <Snowfall enabled={snowEnabled} />
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/scanner" element={<Scanner />} />
-            <Route path="/barcode-result" element={<BarcodeResultPage />} />
-            <Route path="/exercise/running" element={<Running />} />
-            <Route path="/exercise/weights" element={<Weights />} />
-            <Route path="/exercise/write" element={<WriteExercise />} />
-            <Route path="/exercise/manual" element={<ManualExercise />} />
-            <Route path="/settings/preferences" element={<Preferences />} />
-            <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
-            <Route path="/settings/ai-suggestions" element={<AISuggestions />} />
-            <Route path="/settings/weight-goal" element={<WeightGoal />} />
-            <Route path="/settings/ring-colors" element={<RingColors />} />
-            <Route path="/settings/request-feature" element={<RequestFeature />} />
-            <Route path="/settings/edit-profile" element={<EditProfile />} />
-          </Routes>
-        </AnimatePresence>
+        <div className="relative z-0">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/scanner" element={<Scanner />} />
+              <Route path="/barcode-result" element={<BarcodeResultPage />} />
+              <Route path="/exercise/running" element={<Running />} />
+              <Route path="/exercise/weights" element={<Weights />} />
+              <Route path="/exercise/write" element={<WriteExercise />} />
+              <Route path="/exercise/manual" element={<ManualExercise />} />
+              <Route path="/settings/preferences" element={<Preferences />} />
+              <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
+              <Route path="/settings/ai-suggestions" element={<AISuggestions />} />
+              <Route path="/settings/weight-goal" element={<WeightGoal />} />
+              <Route path="/settings/ring-colors" element={<RingColors />} />
+              <Route path="/settings/request-feature" element={<RequestFeature />} />
+              <Route path="/settings/edit-profile" element={<EditProfile />} />
+            </Routes>
+          </AnimatePresence>
+        </div>
       </div>
     );
   }
@@ -120,7 +122,9 @@ const AppRoutes = () => {
     return (
       <div className="relative min-h-screen bg-background">
         <Snowfall enabled={snowEnabled} />
-        <Login />
+        <div className="relative z-0">
+          <Login />
+        </div>
       </div>
     );
   }
@@ -129,7 +133,9 @@ const AppRoutes = () => {
     return (
       <div className="relative min-h-screen bg-background">
         <Snowfall enabled={snowEnabled} />
-        <Onboarding />
+        <div className="relative z-0">
+          <Onboarding />
+        </div>
       </div>
     );
   }

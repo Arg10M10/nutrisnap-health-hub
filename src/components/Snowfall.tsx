@@ -47,7 +47,7 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
   return (
     <div
       className={cn(
-        "pointer-events-none fixed inset-0 z-0 overflow-hidden",
+        "pointer-events-none fixed inset-0 z-[-1] overflow-hidden",
         "bg-transparent"
       )}
       aria-hidden="true"
