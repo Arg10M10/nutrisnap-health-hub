@@ -221,7 +221,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
     const caloriesBurned = dailyExercise.reduce((acc, entry) => acc + (entry.calories_burned || 0), 0);
 
-    // Cambiado: sumamos las calorías de ejercicio en lugar de restarlas
+    // Sumamos las calorías de ejercicio
     const intake = {
       ...foodIntake,
       calories: foodIntake.calories + caloriesBurned,
@@ -240,14 +240,22 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     return { intake, analyses: combinedAnalyses, healthScore, waterIntake };
   };
 
+  // NUEVA lógica de racha: último tramo de días consecutivos terminando en el último día con comida
   const streakData = useMemo(() => {
     if (!foodEntries.length) return { streak: 0, streakDays: [] };
+
     const entryDays = new Set(foodEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
+
+    // Encontrar el día más reciente con comida
+    const sortedDates = Array.from(entryDays).sort();
+    const lastDayKey = sortedDates[sortedDates.length - 1];
+    const lastDayDate = parseISO(lastDayKey);
+
     let currentStreak = 0;
     const daysInStreak: string[] = [];
-    const today = new Date();
+
     for (let i = 0; i < 365; i++) {
-      const dateToCheck = subDays(today, i);
+      const dateToCheck = subDays(lastDayDate, i);
       const dateKey = format(dateToCheck, 'yyyy-MM-dd');
       if (entryDays.has(dateKey)) {
         currentStreak++;
@@ -256,6 +264,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         break;
       }
     }
+
     return { streak: currentStreak, streakDays: daysInStreak };
   }, [foodEntries]);
 
@@ -263,9 +272,13 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     if (!waterEntries.length) return { waterStreak: 0 };
     const entryDays = new Set(waterEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
     let currentStreak = 0;
-    const today = new Date();
+
+    const sortedDates = Array.from(entryDays).sort();
+    const lastDayKey = sortedDates[sortedDates.length - 1];
+    const lastDayDate = parseISO(lastDayKey);
+
     for (let i = 0; i < 365; i++) {
-      const dateToCheck = subDays(today, i);
+      const dateToCheck = subDays(lastDayDate, i);
       const dateKey = format(dateToCheck, 'yyyy-MM-dd');
       if (entryDays.has(dateKey)) {
         currentStreak++;
