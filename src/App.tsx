@@ -91,11 +91,14 @@ const AppRoutes = () => {
     "/settings/edit-profile",
   ];
 
+  // Contenedor base que existe tanto en claro como en oscuro
+  const shellClass = "relative min-h-screen bg-background";
+
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
-      <div className="relative min-h-screen bg-background">
+      <div className={shellClass}>
         <Snowfall enabled={snowEnabled} />
-        <div className="relative z-0">
+        <div className="relative z-10">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/scanner" element={<Scanner />} />
@@ -120,9 +123,9 @@ const AppRoutes = () => {
 
   if (!session) {
     return (
-      <div className="relative min-h-screen bg-background">
+      <div className={shellClass}>
         <Snowfall enabled={snowEnabled} />
-        <div className="relative z-0">
+        <div className="relative z-10">
           <Login />
         </div>
       </div>
@@ -131,9 +134,9 @@ const AppRoutes = () => {
 
   if (!profile?.onboarding_completed) {
     return (
-      <div className="relative min-h-screen bg-background">
+      <div className={shellClass}>
         <Snowfall enabled={snowEnabled} />
-        <div className="relative z-0">
+        <div className="relative z-10">
           <Onboarding />
         </div>
       </div>
@@ -141,9 +144,9 @@ const AppRoutes = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className={shellClass}>
       <Snowfall enabled={snowEnabled} />
-      <div className="pb-28 relative z-0">
+      <div className="pb-28 relative z-10">
         <AnimatedRoutes />
       </div>
       <BottomNav />

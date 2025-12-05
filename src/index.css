@@ -8,9 +8,9 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Fondo azul cielo más marcado arriba, más claro abajo */
-    --background: 200 100% 96%;
-    --background-gradient-start: 210 100% 92%;
+    /* Claro: azul cielo bien visible arriba, muy claro abajo */
+    --background-gradient-start: 210 90% 88%; /* azul más intenso en la parte superior */
+    --background: 200 100% 97%;              /* azul muy claro en la parte inferior */
     --foreground: 150 30% 15%;
 
     --card: 0 0% 100%;
@@ -98,7 +98,7 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-size: 16px;
-    /* Degradado azul vertical solo en fondo */
+    /* Degradado vertical azul bien visible en modo claro */
     background-image: linear-gradient(
       to bottom,
       hsl(var(--background-gradient-start)),
