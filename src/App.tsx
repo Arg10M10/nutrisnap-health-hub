@@ -82,10 +82,13 @@ const AppRoutes = () => {
 
   const shellClass = "relative min-h-screen bg-background";
 
+  // No mostrar nieve en el escáner (ni mientras se toma ni mientras se revisa la foto)
+  const showSnow = snowEnabled && location.pathname !== "/scanner";
+
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
-        <Snowfall enabled={snowEnabled} />
+        <Snowfall enabled={showSnow} />
         <div className="relative z-10">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -112,7 +115,7 @@ const AppRoutes = () => {
   if (!session) {
     return (
       <div className={shellClass}>
-        <Snowfall enabled={snowEnabled} />
+        <Snowfall enabled={showSnow} />
         <div className="relative z-10">
           <Login />
         </div>
@@ -123,7 +126,7 @@ const AppRoutes = () => {
   if (!profile?.onboarding_completed) {
     return (
       <div className={shellClass}>
-        <Snowfall enabled={snowEnabled} />
+        <Snowfall enabled={showSnow} />
         <div className="relative z-10">
           <Onboarding />
         </div>
@@ -133,7 +136,7 @@ const AppRoutes = () => {
 
   return (
     <div className={shellClass}>
-      <Snowfall enabled={snowEnabled} />
+      <Snowfall enabled={showSnow} />
       <div className="pb-28 relative z-10">
         <AnimatedRoutes />
       </div>
