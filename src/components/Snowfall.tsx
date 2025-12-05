@@ -1,0 +1,78 @@
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+
+interface Snowflake {
+  id: number;
+  left: number;
+  size: number;
+  duration: number;
+  delay: number;
+  opacity: number;
+  blur: number;
+}
+
+interface SnowfallProps {
+  enabled: boolean;
+}
+
+const SNOWFLAKE_COUNT = 80;
+
+const Snowfall = ({ enabled }: SnowfallProps) => {
+  const [flakes, setFlakes] = useState<Snowflake[]>([]);
+
+  useEffect(() => {
+    if (!enabled) {
+      setFlakes([]);
+      return;
+    }
+
+    const newFlakes: Snowflake[] = Array.from({ length: SNOWFLAKE_COUNT }).map((_, i) => {
+      const size = Math.random() * 6 + 3; // 3px - 9px
+      return {
+        id: i,
+        left: Math.random() * 100, // porcentaje
+        size,
+        duration: 8 + Math.random() * 10, // 8s - 18s
+        delay: Math.random() * -20, // para que no empiecen todos a la vez
+        opacity: 0.3 + Math.random() * 0.5,
+        blur: Math.random() > 0.6 ? 2 : 0,
+      };
+    });
+
+    setFlakes(newFlakes);
+  }, [enabled]);
+
+  if (!enabled || flakes.length === 0) return null;
+
+  return (
+    <div
+      className={cn(
+        "pointer-events-none fixed inset-0 z-[5] overflow-hidden",
+        "bg-transparent"
+      )}
+      aria-hidden="true"
+    >
+      {flakes.map((flake) => (
+        <span
+          key={flake.id}
+          className="absolute rounded-full bg-white shadow-sm"
+          style={{
+            left: `${flake.left}%`,
+            width: flake.size,
+            height: flake.size,
+            opacity: flake.opacity,
+            filter: flake.blur ? `blur(${flake.blur}px)` : undefined,
+            top: "-10%",
+            animationName: "calorel-snowfall",
+            animationDuration: `${flake.duration}s`,
+            animationTimingFunction: "linear",
+            animationIterationCount: "infinite",
+            animationDelay: `${flake.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default Snowfall;

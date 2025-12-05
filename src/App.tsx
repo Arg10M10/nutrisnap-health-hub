@@ -33,6 +33,8 @@ import WeightGoal from "./pages/settings/WeightGoal";
 import RingColors from "./pages/settings/RingColors";
 import RequestFeature from "./pages/settings/RequestFeature";
 import EditProfile from "./pages/settings/EditProfile";
+import Snowfall from "./components/Snowfall";
+import { useState, useEffect } from "react";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +58,18 @@ const AnimatedRoutes = () => {
 const AppRoutes = () => {
   const { session, profile, loading } = useAuth();
   const location = useLocation();
+  const [snowEnabled, setSnowEnabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem("calorel_snow_enabled");
+      if (stored !== null) {
+        setSnowEnabled(JSON.parse(stored));
+      }
+    } catch {
+      setSnowEnabled(true);
+    }
+  }, []);
 
   if (loading) {
     return <SplashScreen />;
@@ -79,36 +93,50 @@ const AppRoutes = () => {
 
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
-       <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/scanner" element={<Scanner />} />
-          <Route path="/barcode-result" element={<BarcodeResultPage />} />
-          <Route path="/exercise/running" element={<Running />} />
-          <Route path="/exercise/weights" element={<Weights />} />
-          <Route path="/exercise/write" element={<WriteExercise />} />
-          <Route path="/exercise/manual" element={<ManualExercise />} />
-          <Route path="/settings/preferences" element={<Preferences />} />
-          <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
-          <Route path="/settings/ai-suggestions" element={<AISuggestions />} />
-          <Route path="/settings/weight-goal" element={<WeightGoal />} />
-          <Route path="/settings/ring-colors" element={<RingColors />} />
-          <Route path="/settings/request-feature" element={<RequestFeature />} />
-          <Route path="/settings/edit-profile" element={<EditProfile />} />
-        </Routes>
-      </AnimatePresence>
+      <>
+        <Snowfall enabled={snowEnabled} />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/scanner" element={<Scanner />} />
+            <Route path="/barcode-result" element={<BarcodeResultPage />} />
+            <Route path="/exercise/running" element={<Running />} />
+            <Route path="/exercise/weights" element={<Weights />} />
+            <Route path="/exercise/write" element={<WriteExercise />} />
+            <Route path="/exercise/manual" element={<ManualExercise />} />
+            <Route path="/settings/preferences" element={<Preferences />} />
+            <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
+            <Route path="/settings/ai-suggestions" element={<AISuggestions />} />
+            <Route path="/settings/weight-goal" element={<WeightGoal />} />
+            <Route path="/settings/ring-colors" element={<RingColors />} />
+            <Route path="/settings/request-feature" element={<RequestFeature />} />
+            <Route path="/settings/edit-profile" element={<EditProfile />} />
+          </Routes>
+        </AnimatePresence>
+      </>
     );
   }
 
   if (!session) {
-    return <Login />;
+    return (
+      <>
+        <Snowfall enabled={snowEnabled} />
+        <Login />
+      </>
+    );
   }
 
   if (!profile?.onboarding_completed) {
-    return <Onboarding />;
+    return (
+      <>
+        <Snowfall enabled={snowEnabled} />
+        <Onboarding />
+      </>
+    );
   }
 
   return (
     <div className="min-h-screen bg-background">
+      <Snowfall enabled={snowEnabled} />
       <div className="pb-28">
         <AnimatedRoutes />
       </div>

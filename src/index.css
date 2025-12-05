@@ -117,3 +117,16 @@ All colors MUST be HSL.
     @apply text-xl md:text-2xl font-semibold;
   }
 }
+
+/* Animación de nieve suave */
+@keyframes calorel-snowfall {
+  0% {
+    transform: translate3d(0, -10%, 0);
+  }
+  50% {
+    transform: translate3d(10px, 50vh, 0);
+  }
+  100% {
+    transform: translate3d(-10px, 110vh, 0);
+  }
+}
