@@ -39,7 +39,6 @@ const Onboarding = () => {
     mutationFn: async () => {
       if (!user || !formData.weight) throw new Error('User or weight not found');
       
-      // 1. Update the user's profile
       const { error: profileError } = await supabase
         .from('profiles')
         .update({
@@ -57,7 +56,6 @@ const Onboarding = () => {
         .eq('id', user.id);
       if (profileError) throw profileError;
 
-      // 2. Insert the first entry into the weight history table
       const { error: historyError } = await supabase
         .from('weight_history')
         .insert({ user_id: user.id, weight: formData.weight });
@@ -65,8 +63,9 @@ const Onboarding = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success('¡Todo listo! Bienvenido a Calorel.');
-      navigate('/');
+      toast.success('¡Todo listo! Ahora elige tu suscripción para usar Calorel.');
+      // En lugar de ir al dashboard directamente, vamos a la pantalla de suscripción
+      navigate('/subscription');
     },
     onError: (error) => {
       toast.error('Hubo un error al guardar tu perfil.');
@@ -133,7 +132,7 @@ const Onboarding = () => {
       description: 'Con Calorel, estás en el camino correcto hacia tus metas.',
       content: <FinalStep />,
       canContinue: true,
-      continueText: 'Finalizar y empezar',
+      continueText: 'Finalizar y elegir suscripción',
     },
   ];
 
