@@ -24,7 +24,6 @@ export interface Profile {
   goal_sugars: number | null;
   weekly_rate: number | null;
   avatar_color: string | null;
-  // En el futuro podríamos añadir aquí is_subscribed: boolean | null;
 }
 
 interface AuthContextType {
@@ -34,8 +33,6 @@ interface AuthContextType {
   loading: boolean;
   signOut: () => void;
   refetchProfile: () => Promise<void>;
-  isSubscribed: boolean;
-  setSubscribedLocally: (value: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,7 +43,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(false);
-  const [localSubscribed, setLocalSubscribed] = useState(false);
 
   const fetchProfile = async (userId: string) => {
     setProfileLoading(true);
@@ -65,22 +61,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    // First, check for an existing session on initial load.
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
+      setLoading(false); // Initial auth check is done.
     });
 
+    // Then, set up a listener for future auth state changes.
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      // Reiniciamos el flag local cuando cambia de usuario
-      setLocalSubscribed(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
+  // Fetch profile whenever the user object changes (e.g., on login)
   useEffect(() => {
     if (user) {
       fetchProfile(user.id);
@@ -91,7 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    setLocalSubscribed(false);
+    // The onAuthStateChange listener will handle navigation implicitly
   };
 
   const refetchProfile = async () => {
@@ -100,9 +97,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Por ahora: si en el futuro hay un campo profile.is_subscribed lo usamos, si no, usamos el flag local
-  const isSubscribed = localSubscribed;
-
   const value = {
     session,
     user,
@@ -110,8 +104,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loading: loading || profileLoading,
     signOut,
     refetchProfile,
-    isSubscribed,
-    setSubscribedLocally: setLocalSubscribed,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -35,7 +35,6 @@ import RequestFeature from "./pages/settings/RequestFeature";
 import EditProfile from "./pages/settings/EditProfile";
 import Snowfall from "./components/Snowfall";
 import { SnowProvider, useSnow } from "./context/SnowContext";
-import Subscription from "./pages/Subscription";
 
 const queryClient = new QueryClient();
 
@@ -57,7 +56,7 @@ const AnimatedRoutes = () => {
 };
 
 const AppRoutes = () => {
-  const { session, profile, loading, isSubscribed } = useAuth();
+  const { session, profile, loading } = useAuth();
   const location = useLocation();
   const { snowEnabled } = useSnow();
 
@@ -79,7 +78,6 @@ const AppRoutes = () => {
     "/settings/ring-colors",
     "/settings/request-feature",
     "/settings/edit-profile",
-    "/subscription",
   ];
 
   const shellClass = "relative min-h-screen bg-background";
@@ -104,7 +102,6 @@ const AppRoutes = () => {
               <Route path="/settings/ring-colors" element={<RingColors />} />
               <Route path="/settings/request-feature" element={<RequestFeature />} />
               <Route path="/settings/edit-profile" element={<EditProfile />} />
-              <Route path="/subscription" element={<Subscription />} />
             </Routes>
           </AnimatePresence>
         </div>
@@ -129,18 +126,6 @@ const AppRoutes = () => {
         <Snowfall enabled={snowEnabled} />
         <div className="relative z-10">
           <Onboarding />
-        </div>
-      </div>
-    );
-  }
-
-  // Onboarding completado pero sin suscripción -> forzar pantalla de suscripción
-  if (!isSubscribed) {
-    return (
-      <div className={shellClass}>
-        <Snowfall enabled={snowEnabled} />
-        <div className="relative z-10">
-          <Subscription />
         </div>
       </div>
     );
