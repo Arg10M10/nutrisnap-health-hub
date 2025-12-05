@@ -23,7 +23,7 @@ import { SettingsItem } from "@/components/settings/SettingsItem";
 import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
 import { TikTokIcon } from "@/components/icons/TikTokIcon";
 import UserAvatar from "@/components/UserAvatar";
-import useLocalStorage from "@/hooks/useLocalStorage";
+import { useSnow } from "@/context/SnowContext";
 
 const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
@@ -35,7 +35,7 @@ const Settings = () => {
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [snowEnabled, setSnowEnabled] = useLocalStorage<boolean>("calorel_snow_enabled", true);
+  const { snowEnabled, setSnowEnabled } = useSnow();
 
   const handleSignOut = async () => {
     await signOut();

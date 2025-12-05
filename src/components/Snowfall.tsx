@@ -50,7 +50,6 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
   return (
     <div
       className={cn(
-        // Ahora la nieve va POR ENCIMA de todo el contenido
         "pointer-events-none fixed inset-0 z-[9999] overflow-hidden",
         "bg-transparent"
       )}

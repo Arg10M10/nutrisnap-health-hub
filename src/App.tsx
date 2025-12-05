@@ -34,8 +34,7 @@ import RingColors from "./pages/settings/RingColors";
 import RequestFeature from "./pages/settings/RequestFeature";
 import EditProfile from "./pages/settings/EditProfile";
 import Snowfall from "./components/Snowfall";
-import { useState, useEffect } from "react";
-import useLocalStorage from "./hooks/useLocalStorage";
+import { SnowProvider, useSnow } from "./context/SnowContext";
 
 const queryClient = new QueryClient();
 
@@ -59,14 +58,7 @@ const AnimatedRoutes = () => {
 const AppRoutes = () => {
   const { session, profile, loading } = useAuth();
   const location = useLocation();
-  const [snowEnabled, setSnowEnabled] = useLocalStorage<boolean>("calorel_snow_enabled", true);
-
-  // Aseguramos un valor por defecto razonable si algo va mal leyendo localStorage
-  useEffect(() => {
-    if (snowEnabled === undefined || snowEnabled === null) {
-      setSnowEnabled(true);
-    }
-  }, [snowEnabled, setSnowEnabled]);
+  const { snowEnabled } = useSnow();
 
   if (loading) {
     return <SplashScreen />;
@@ -88,13 +80,12 @@ const AppRoutes = () => {
     "/settings/edit-profile",
   ];
 
-  // Contenedor base que existe tanto en claro como en oscuro
   const shellClass = "relative min-h-screen bg-background";
 
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
-        <Snowfall enabled={!!snowEnabled} />
+        <Snowfall enabled={snowEnabled} />
         <div className="relative z-10">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -121,7 +112,7 @@ const AppRoutes = () => {
   if (!session) {
     return (
       <div className={shellClass}>
-        <Snowfall enabled={!!snowEnabled} />
+        <Snowfall enabled={snowEnabled} />
         <div className="relative z-10">
           <Login />
         </div>
@@ -132,7 +123,7 @@ const AppRoutes = () => {
   if (!profile?.onboarding_completed) {
     return (
       <div className={shellClass}>
-        <Snowfall enabled={!!snowEnabled} />
+        <Snowfall enabled={snowEnabled} />
         <div className="relative z-10">
           <Onboarding />
         </div>
@@ -142,7 +133,7 @@ const AppRoutes = () => {
 
   return (
     <div className={shellClass}>
-      <Snowfall enabled={!!snowEnabled} />
+      <Snowfall enabled={snowEnabled} />
       <div className="pb-28 relative z-10">
         <AnimatedRoutes />
       </div>
@@ -159,9 +150,11 @@ const App = () => (
           <ScrollToTop />
           <AuthProvider>
             <NutritionProvider>
-              <Toaster />
-              <Sonner />
-              <AppRoutes />
+              <SnowProvider>
+                <Toaster />
+                <Sonner />
+                <AppRoutes />
+              </SnowProvider>
             </NutritionProvider>
           </AuthProvider>
         </BrowserRouter>
