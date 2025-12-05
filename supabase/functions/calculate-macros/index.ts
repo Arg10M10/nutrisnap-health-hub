@@ -5,9 +5,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Ahora usamos la clave de OpenAI y el modelo gpt-5-nano
 const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
-const GPT_API_URL = Deno.env.get("GPT_API_URL") ?? "";
+const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
 const GPT_MODEL = "gpt-5-nano";
 
 serve(async (req) => {
@@ -60,7 +59,12 @@ serve(async (req) => {
 
     const body = {
       model: GPT_MODEL,
-      input: prompt,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
       response_format: { type: "json_object" },
     };
 
@@ -77,7 +81,7 @@ serve(async (req) => {
     }
 
     const aiData = await aiRes.json();
-    const jsonText = aiData.output ?? JSON.stringify(aiData);
+    const jsonText = aiData.choices?.[0]?.message?.content ?? "";
 
     return new Response(jsonText, {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

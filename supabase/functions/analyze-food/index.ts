@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
-const GPT_API_URL = Deno.env.get("GPT_API_URL") ?? "";
+const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
 const GPT_MODEL = "gpt-5-nano";
 
 const safeParseJson = (text: string) => {
@@ -71,12 +71,12 @@ serve(async (req) => {
 
     const body = {
       model: GPT_MODEL,
-      input: [
+      messages: [
         {
           role: "user",
           content: [
             { type: "text", text: prompt },
-            { type: "input_image", image_url: { url: `data:image/jpeg;base64,${base64Image}` } },
+            { type: "image_url", image_url: { url: `data:image/jpeg;base64,${base64Image}` } },
           ],
         },
       ],
@@ -96,7 +96,7 @@ serve(async (req) => {
     }
 
     const aiData = await aiRes.json();
-    const jsonText = aiData.output ?? aiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    const jsonText = aiData.choices?.[0]?.message?.content ?? "";
     const analysisResult = safeParseJson(jsonText);
     if (!analysisResult) throw new Error("La IA devolvió una respuesta en un formato inesperado.");
 

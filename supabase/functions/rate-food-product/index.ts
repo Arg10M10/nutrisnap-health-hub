@@ -6,7 +6,7 @@ const corsHeaders = {
 };
 
 const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
-const GPT_API_URL = Deno.env.get("GPT_API_URL") ?? "";
+const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
 const GPT_MODEL = "gpt-5-nano";
 
 serve(async (req) => {
@@ -40,7 +40,12 @@ serve(async (req) => {
 
     const body = {
       model: GPT_MODEL,
-      input: prompt,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
       response_format: { type: "json_object" },
     };
 
@@ -57,7 +62,7 @@ serve(async (req) => {
     }
 
     const aiData = await aiRes.json();
-    const jsonText = aiData.output ?? aiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    const jsonText = aiData.choices?.[0]?.message?.content ?? "";
 
     return new Response(jsonText, {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
