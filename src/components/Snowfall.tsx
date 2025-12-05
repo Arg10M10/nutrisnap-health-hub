@@ -15,7 +15,10 @@ interface SnowfallProps {
   enabled: boolean;
 }
 
-const SNOWFLAKE_COUNT = 60;
+/**
+ * Menos copos para que no moleste tanto visualmente.
+ */
+const SNOWFLAKE_COUNT = 35;
 
 const Snowfall = ({ enabled }: SnowfallProps) => {
   const [flakes, setFlakes] = useState<Snowflake[]>([]);
@@ -47,7 +50,8 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
   return (
     <div
       className={cn(
-        "pointer-events-none fixed inset-0 z-0 overflow-hidden",
+        // Ahora la nieve va POR ENCIMA de todo el contenido
+        "pointer-events-none fixed inset-0 z-[9999] overflow-hidden",
         "bg-transparent"
       )}
       aria-hidden="true"

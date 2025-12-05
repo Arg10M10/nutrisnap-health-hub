@@ -8,9 +8,9 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* MODO CLARO: fondo AZUL bien notorio */
-    --background-gradient-start: 210 90% 78%; /* azul cielo arriba */
-    --background: 210 100% 95%;              /* azul clarito abajo */
+    /* MODO CLARO: fondo VERDE bien notorio */
+    --background-gradient-start: 140 70% 78%; /* verde claro arriba */
+    --background: 140 80% 95%;              /* verde muy clarito abajo */
     --foreground: 150 30% 15%;
 
     --card: 0 0% 100%;
@@ -51,7 +51,7 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* MODO OSCURO: fondo oscuro (sin azul) pero nieve encima */
+    /* MODO OSCURO: fondo negro (muy oscuro) para que los copos blancos destaquen */
     --background-gradient-start: 220 15% 8%;  /* casi negro arriba */
     --background: 220 15% 6%;                 /* casi negro abajo */
     --foreground: 150 10% 95%;
@@ -106,7 +106,7 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-size: 16px;
-    /* En claro: se ve el degradado azul. En oscuro: degradado casi negro. */
+    /* En claro: degradado verde; en oscuro: casi negro. */
     background-image: linear-gradient(
       to bottom,
       hsl(var(--background-gradient-start)),
@@ -114,8 +114,7 @@ All colors MUST be HSL.
     );
   }
 
-  /* Quitamos el contenedor centrado blanco por defecto de Vite
-     para que el fondo azul se vea en TODAS las pantallas de inicio */
+  /* Sin marco blanco de Vite: el fondo se ve en todas las pantallas */
   #root {
     max-width: 100%;
     margin: 0;
