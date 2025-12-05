@@ -15,7 +15,7 @@ interface SnowfallProps {
   enabled: boolean;
 }
 
-const SNOWFLAKE_COUNT = 40; // menos copos que antes
+const SNOWFLAKE_COUNT = 60;
 
 const Snowfall = ({ enabled }: SnowfallProps) => {
   const [flakes, setFlakes] = useState<Snowflake[]>([]);
@@ -27,15 +27,15 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
     }
 
     const newFlakes: Snowflake[] = Array.from({ length: SNOWFLAKE_COUNT }).map((_, i) => {
-      const size = Math.random() * 4 + 2; // más pequeños: 2px - 6px
+      const size = Math.random() * 5 + 3; // 3px - 8px
       return {
         id: i,
         left: Math.random() * 100,
         size,
         duration: 10 + Math.random() * 10,
         delay: Math.random() * -20,
-        opacity: 0.2 + Math.random() * 0.3, // más transparente
-        blur: Math.random() > 0.7 ? 1.5 : 0,
+        opacity: 0.3 + Math.random() * 0.4,
+        blur: Math.random() > 0.6 ? 2 : 0,
       };
     });
 
