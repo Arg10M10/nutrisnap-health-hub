@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const GPT_API_KEY = Deno.env.get("GEMINI_API_KEY");
+const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
 const GPT_API_URL = Deno.env.get("GPT_API_URL") ?? "";
 const GPT_MODEL = "gpt-5-nano";
 

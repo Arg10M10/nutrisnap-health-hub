@@ -5,8 +5,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Se asume que ya cambiaste la API y solo ajustamos el nombre del modelo.
-const GPT_API_KEY = Deno.env.get("GEMINI_API_KEY");
+// Ahora usamos la clave de OpenAI y el modelo gpt-5-nano
+const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
 const GPT_API_URL = Deno.env.get("GPT_API_URL") ?? "";
 const GPT_MODEL = "gpt-5-nano";
 
