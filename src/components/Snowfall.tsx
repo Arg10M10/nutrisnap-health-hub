@@ -9,6 +9,9 @@ interface Snowflake {
   delay: number;
   opacity: number;
   blur: number;
+  char: string;
+  drift: number;
+  rotate: number;
 }
 
 interface SnowfallProps {
@@ -16,9 +19,10 @@ interface SnowfallProps {
 }
 
 /**
- * Menos copos para que no moleste tanto visualmente.
+ * Pocos copos para que no moleste visualmente pero se note que es nieve.
  */
 const SNOWFLAKE_COUNT = 35;
+const FLAKE_CHARS = ["❄", "✻", "✼"];
 
 const Snowfall = ({ enabled }: SnowfallProps) => {
   const [flakes, setFlakes] = useState<Snowflake[]>([]);
@@ -30,15 +34,19 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
     }
 
     const newFlakes: Snowflake[] = Array.from({ length: SNOWFLAKE_COUNT }).map((_, i) => {
-      const size = Math.random() * 5 + 3; // 3px - 8px
+      const size = Math.random() * 10 + 10; // 10px - 20px aprox (tamaño de fuente)
+      const char = FLAKE_CHARS[Math.floor(Math.random() * FLAKE_CHARS.length)];
       return {
         id: i,
         left: Math.random() * 100,
         size,
         duration: 10 + Math.random() * 10,
         delay: Math.random() * -20,
-        opacity: 0.3 + Math.random() * 0.4,
-        blur: Math.random() > 0.6 ? 2 : 0,
+        opacity: 0.3 + Math.random() * 0.5,
+        blur: Math.random() > 0.7 ? 1.5 : 0,
+        char,
+        drift: Math.random() * 20 - 10, // ligera deriva horizontal
+        rotate: Math.random() * 40 - 20, // inclinación inicial
       };
     });
 
@@ -58,21 +66,24 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
       {flakes.map((flake) => (
         <span
           key={flake.id}
-          className="absolute rounded-full bg-white"
+          className="absolute text-white select-none"
           style={{
             left: `${flake.left}%`,
-            width: flake.size,
-            height: flake.size,
+            top: "-10%",
+            fontSize: `${flake.size}px`,
             opacity: flake.opacity,
             filter: flake.blur ? `blur(${flake.blur}px)` : undefined,
-            top: "-10%",
+            textShadow: "0 0 4px rgba(0,0,0,0.35)",
             animationName: "calorel-snowfall",
             animationDuration: `${flake.duration}s`,
             animationTimingFunction: "linear",
             animationIterationCount: "infinite",
             animationDelay: `${flake.delay}s`,
+            transform: `translate3d(0, 0, 0) rotate(${flake.rotate}deg)`,
           }}
-        />
+        >
+          {flake.char}
+        </span>
       ))}
     </div>
   );
