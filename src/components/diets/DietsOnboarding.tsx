@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -6,18 +7,31 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Slider } from '@/components/ui/slider';
-import { Wand2, Loader2 } from 'lucide-react';
+import { Wand2, Loader2, ArrowLeft, ArrowRight, Activity, ChefHat, Wallet, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { Progress } from '@/components/ui/progress';
 
-const preferences = [
-  { id: 'vegetarian', label: 'Vegetariano' },
-  { id: 'lactose_free', label: 'Sin lactosa' },
-  { id: 'sugar_free', label: 'Sin azúcar añadido' },
-  { id: 'gluten_free', label: 'Sin gluten' },
+const preferencesOptions = [
+  { id: 'vegetarian', label: 'Vegetariano', icon: '🥗' },
+  { id: 'lactose_free', label: 'Sin lactosa', icon: '🥛' },
+  { id: 'sugar_free', label: 'Sin azúcar', icon: '🍬' },
+  { id: 'gluten_free', label: 'Sin gluten', icon: '🍞' },
+];
+
+const activityOptions = [
+  { id: 'sedentary', label: 'Sedentario', desc: 'Poco o nada de ejercicio' },
+  { id: 'light', label: 'Ligero', desc: 'Ejercicio suave 1-3 días/sem' },
+  { id: 'moderate', label: 'Moderado', desc: 'Ejercicio moderado 3-5 días/sem' },
+  { id: 'high', label: 'Alto', desc: 'Ejercicio fuerte 6-7 días/sem' },
+];
+
+const levelOptions = [
+  { id: 'low', label: 'Bajo' },
+  { id: 'medium', label: 'Medio' },
+  { id: 'high', label: 'Alto' },
 ];
 
 const formSchema = z.object({
@@ -30,6 +44,8 @@ const formSchema = z.object({
 export const DietsOnboarding = () => {
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
+  const [step, setStep] = useState(1);
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -74,74 +90,220 @@ export const DietsOnboarding = () => {
     mutation.mutate(values);
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-primary">Tu Plan de Dieta Personalizado</h1>
-        <p className="text-muted-foreground text-lg">
-          Responde unas preguntas para que nuestra IA cree el plan perfecto para ti.
-        </p>
+  const nextStep = () => setStep(s => Math.min(s + 1, 3));
+  const prevStep = () => setStep(s => Math.max(s - 1, 1));
+
+  const BigOptionButton = ({ 
+    selected, 
+    onClick, 
+    label, 
+    desc,
+    icon 
+  }: { 
+    selected: boolean; 
+    onClick: () => void; 
+    label: string; 
+    desc?: string;
+    icon?: React.ReactNode;
+  }) => (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between text-left relative overflow-hidden",
+        selected 
+          ? "border-primary bg-primary/5 shadow-md" 
+          : "border-muted hover:border-primary/30 bg-card"
+      )}
+    >
+      <div className="flex items-center gap-4 z-10">
+        {icon && <div className={cn("p-2 rounded-full", selected ? "bg-white text-primary" : "bg-muted text-muted-foreground")}>{icon}</div>}
+        <div>
+          <p className={cn("font-bold text-lg", selected ? "text-primary" : "text-foreground")}>{label}</p>
+          {desc && <p className="text-sm text-muted-foreground">{desc}</p>}
+        </div>
       </div>
-      <Card>
-        <CardContent className="p-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField control={form.control} name="activityLevel" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base">Nivel de Actividad Física</FormLabel>
-                  <FormControl>
-                    <ToggleGroup type="single" variant="outline" className="w-full grid grid-cols-2 sm:grid-cols-4" value={field.value} onValueChange={field.onChange}>
-                      <ToggleGroupItem value="sedentary">Sedentario</ToggleGroupItem>
-                      <ToggleGroupItem value="light">Ligero</ToggleGroupItem>
-                      <ToggleGroupItem value="moderate">Moderado</ToggleGroupItem>
-                      <ToggleGroupItem value="high">Alto</ToggleGroupItem>
-                    </ToggleGroup>
-                  </FormControl>
-                </FormItem>
-              )} />
+      {selected && (
+        <div className="bg-primary text-white rounded-full p-1 z-10">
+          <Check className="w-5 h-5" />
+        </div>
+      )}
+    </button>
+  );
 
-              <FormField control={form.control} name="preferences" render={() => (
-                <FormItem>
-                  <FormLabel className="text-base">Preferencias Dietéticas</FormLabel>
-                  <div className="grid grid-cols-2 gap-4">
-                    {preferences.map((item) => (
-                      <FormField key={item.id} control={form.control} name="preferences" render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                          <FormControl>
-                            <Checkbox checked={field.value?.includes(item.id)} onCheckedChange={(checked) => {
-                              return checked ? field.onChange([...(field.value || []), item.id]) : field.onChange(field.value?.filter((value) => value !== item.id));
-                            }} />
-                          </FormControl>
-                          <FormLabel className="font-normal">{item.label}</FormLabel>
-                        </FormItem>
-                      )} />
-                    ))}
+  return (
+    <div className="max-w-md mx-auto h-full flex flex-col min-h-[80vh]">
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center justify-between">
+          {step > 1 ? (
+            <Button variant="ghost" size="icon" onClick={prevStep} className="rounded-full">
+              <ArrowLeft className="w-6 h-6" />
+            </Button>
+          ) : <div className="w-10" />}
+          
+          <h1 className="text-xl font-bold text-center">
+            {step === 1 && "Nivel de Actividad"}
+            {step === 2 && "Preferencias"}
+            {step === 3 && "Detalles Finales"}
+          </h1>
+          
+          <div className="w-10" />
+        </div>
+        <Progress value={(step / 3) * 100} className="h-2" />
+      </div>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col">
+          <div className="flex-1 overflow-y-auto px-1 pb-4">
+            <AnimatePresence mode="wait">
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-4"
+                >
+                  <div className="text-center mb-6">
+                    <Activity className="w-12 h-12 text-primary mx-auto mb-2 opacity-80" />
+                    <p className="text-muted-foreground">¿Cuánto te mueves en tu día a día?</p>
                   </div>
-                </FormItem>
-              )} />
+                  
+                  <FormField control={form.control} name="activityLevel" render={({ field }) => (
+                    <div className="space-y-3">
+                      {activityOptions.map((option) => (
+                        <BigOptionButton
+                          key={option.id}
+                          label={option.label}
+                          desc={option.desc}
+                          selected={field.value === option.id}
+                          onClick={() => field.onChange(option.id)}
+                        />
+                      ))}
+                    </div>
+                  )} />
+                </motion.div>
+              )}
 
-              <FormField control={form.control} name="cookingTime" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base">Tiempo para cocinar: <span className="font-bold text-primary capitalize">{field.value}</span></FormLabel>
-                  <FormControl><Slider value={[field.value === 'low' ? 0 : field.value === 'medium' ? 1 : 2]} onValueChange={(v) => field.onChange(v[0] === 0 ? 'low' : v[0] === 1 ? 'medium' : 'high')} max={2} step={1} /></FormControl>
-                </FormItem>
-              )} />
+              {step === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-4"
+                >
+                  <div className="text-center mb-6">
+                    <ChefHat className="w-12 h-12 text-primary mx-auto mb-2 opacity-80" />
+                    <p className="text-muted-foreground">Selecciona si tienes alguna preferencia o restricción.</p>
+                  </div>
 
-              <FormField control={form.control} name="budget" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base">Presupuesto: <span className="font-bold text-primary capitalize">{field.value}</span></FormLabel>
-                  <FormControl><Slider value={[field.value === 'low' ? 0 : field.value === 'medium' ? 1 : 2]} onValueChange={(v) => field.onChange(v[0] === 0 ? 'low' : v[0] === 1 ? 'medium' : 'high')} max={2} step={1} /></FormControl>
-                </FormItem>
-              )} />
+                  <FormField control={form.control} name="preferences" render={({ field }) => (
+                    <div className="grid grid-cols-1 gap-3">
+                      {preferencesOptions.map((option) => {
+                        const isSelected = field.value?.includes(option.id);
+                        return (
+                          <BigOptionButton
+                            key={option.id}
+                            label={option.label}
+                            icon={<span className="text-xl">{option.icon}</span>}
+                            selected={!!isSelected}
+                            onClick={() => {
+                              const newValue = isSelected
+                                ? field.value?.filter(v => v !== option.id)
+                                : [...(field.value || []), option.id];
+                              field.onChange(newValue);
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  )} />
+                  <p className="text-xs text-center text-muted-foreground mt-4">Si no tienes ninguna, puedes continuar.</p>
+                </motion.div>
+              )}
 
-              <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={mutation.isPending}>
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-8"
+                >
+                  <div className="text-center">
+                    <Wallet className="w-12 h-12 text-primary mx-auto mb-2 opacity-80" />
+                    <p className="text-muted-foreground">Ajusta el plan a tu estilo de vida.</p>
+                  </div>
+
+                  <FormField control={form.control} name="cookingTime" render={({ field }) => (
+                    <div className="space-y-3">
+                      <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                        ⏱️ Tiempo para cocinar
+                      </FormLabel>
+                      <div className="grid grid-cols-3 gap-2">
+                        {levelOptions.map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => field.onChange(opt.id)}
+                            className={cn(
+                              "p-3 rounded-xl border-2 font-medium transition-all text-center",
+                              field.value === opt.id
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "border-muted text-muted-foreground hover:bg-muted/50"
+                            )}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )} />
+
+                  <FormField control={form.control} name="budget" render={({ field }) => (
+                    <div className="space-y-3">
+                      <FormLabel className="text-lg font-semibold flex items-center gap-2">
+                        💰 Presupuesto
+                      </FormLabel>
+                      <div className="grid grid-cols-3 gap-2">
+                        {levelOptions.map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => field.onChange(opt.id)}
+                            className={cn(
+                              "p-3 rounded-xl border-2 font-medium transition-all text-center",
+                              field.value === opt.id
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "border-muted text-muted-foreground hover:bg-muted/50"
+                            )}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="pt-4 mt-auto">
+            {step < 3 ? (
+              <Button type="button" size="lg" className="w-full h-14 text-lg rounded-xl" onClick={nextStep}>
+                Siguiente <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            ) : (
+              <Button type="submit" size="lg" className="w-full h-14 text-lg rounded-xl" disabled={mutation.isPending}>
                 {mutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
                 Generar mi Plan
               </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+            )}
+          </div>
+        </form>
+      </Form>
     </div>
   );
 };
