@@ -349,7 +349,7 @@ const Scanner = () => {
         </header>
 
         <div className="flex-1 relative flex items-center justify-center">
-          {state === 'camera' && <Viewfinder />}
+          {state === 'camera' && <Viewfinder mode={scanMode} />}
           {(state === 'loading' || startAnalysisMutation.isPending) && (
              <div className="flex flex-col items-center gap-4">
                 <Loader2 className="w-16 h-16 text-primary animate-spin" />
