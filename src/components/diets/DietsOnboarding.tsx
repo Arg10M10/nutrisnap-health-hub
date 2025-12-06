@@ -7,8 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Wand2, Loader2, ArrowLeft, ArrowRight, Activity, ChefHat, Wallet, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -90,8 +89,15 @@ export const DietsOnboarding = () => {
     mutation.mutate(values);
   };
 
-  const nextStep = () => setStep(s => Math.min(s + 1, 3));
-  const prevStep = () => setStep(s => Math.max(s - 1, 1));
+  const nextStep = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevenir cualquier intento de submit
+    setStep(s => Math.min(s + 1, 3));
+  };
+
+  const prevStep = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevenir cualquier intento de submit
+    setStep(s => Math.max(s - 1, 1));
+  };
 
   const BigOptionButton = ({ 
     selected, 
@@ -108,7 +114,10 @@ export const DietsOnboarding = () => {
   }) => (
     <button
       type="button"
-      onClick={onClick}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick();
+      }}
       className={cn(
         "w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between text-left relative overflow-hidden",
         selected 
@@ -153,7 +162,8 @@ export const DietsOnboarding = () => {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col">
+        {/* Eliminamos el onSubmit del form para evitar envíos automáticos/accidentales */}
+        <form className="flex-1 flex flex-col">
           <div className="flex-1 overflow-y-auto px-1 pb-4">
             <AnimatePresence mode="wait">
               {step === 1 && (
@@ -246,7 +256,10 @@ export const DietsOnboarding = () => {
                           <button
                             key={opt.id}
                             type="button"
-                            onClick={() => field.onChange(opt.id)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              field.onChange(opt.id);
+                            }}
                             className={cn(
                               "p-3 rounded-xl border-2 font-medium transition-all text-center",
                               field.value === opt.id
@@ -271,7 +284,10 @@ export const DietsOnboarding = () => {
                           <button
                             key={opt.id}
                             type="button"
-                            onClick={() => field.onChange(opt.id)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              field.onChange(opt.id);
+                            }}
                             className={cn(
                               "p-3 rounded-xl border-2 font-medium transition-all text-center",
                               field.value === opt.id
@@ -296,7 +312,13 @@ export const DietsOnboarding = () => {
                 Siguiente <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             ) : (
-              <Button type="submit" size="lg" className="w-full h-14 text-lg rounded-xl" disabled={mutation.isPending}>
+              <Button 
+                type="button" 
+                size="lg" 
+                className="w-full h-14 text-lg rounded-xl" 
+                disabled={mutation.isPending}
+                onClick={form.handleSubmit(onSubmit)} // Trigger manual solo al hacer click
+              >
                 {mutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
                 Generar mi Plan
               </Button>
