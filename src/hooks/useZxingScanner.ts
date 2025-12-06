@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { BrowserMultiFormatReader, NotFoundException } from '@zxing/browser';
+import { BrowserMultiFormatReader } from '@zxing/browser';
 
 export const useZxingScanner = (
   onScan: (result: string) => void,
@@ -27,7 +27,10 @@ export const useZxingScanner = (
           if (result) {
             onScan(result.getText());
           }
-          if (err && !(err instanceof NotFoundException)) {
+          // The NotFoundException is thrown when no barcode is found in a frame.
+          // We don't want to treat this as an error, as it's expected behavior during scanning.
+          // We check the error's name property instead of using instanceof.
+          if (err && err.name !== 'NotFoundException') {
             console.error('Error de escaneo:', err);
             setError('Ocurrió un error durante el escaneo.');
           }
