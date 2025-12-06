@@ -158,11 +158,48 @@ const Scanner = () => {
     }
   };
 
+  const barcodeScanMutation = useMutation({
+    mutationFn: async (barcode: string) => {
+      if (!user) throw new Error('User not found');
+      const { data, error } = await supabase
+        .from('food_entries')
+        .insert({
+          user_id: user.id,
+          food_name: `Buscando: ${barcode}`,
+          status: 'processing',
+          barcode: barcode,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return { newEntry: data, barcode };
+    },
+    onSuccess: ({ newEntry, barcode }) => {
+      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+      navigate('/');
+      toast.info('Buscando producto...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
+
+      supabase.functions.invoke('process-barcode', {
+        body: { entry_id: newEntry.id, barcode },
+      }).then(({ error }) => {
+        if (error) {
+          console.error("Function invocation failed:", error);
+          supabase.from('food_entries').update({ status: 'failed', reason: 'No se pudo iniciar la búsqueda.' }).eq('id', newEntry.id).then(() => {
+            queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+          });
+        }
+      });
+    },
+    onError: (err: Error) => {
+      console.error("Barcode scan start error:", err);
+      toast.error("No se pudo iniciar la búsqueda.", { description: err.message });
+    },
+  });
+
   const handleBarcodeScan = (result: any) => {
-    if (result) {
+    if (result && !barcodeScanMutation.isPending) {
       const barcode = result.getText();
-      toast.success(`Código de barras detectado: ${barcode}`);
-      navigate('/barcode-result', { state: { barcode } });
+      barcodeScanMutation.mutate(barcode);
     }
   };
 
@@ -207,7 +244,6 @@ const Scanner = () => {
 
   const handleCapture = async () => {
     if (videoRef.current && canvasRef.current) {
-      // 1. Capture Image
       const video = videoRef.current;
       const canvas = canvasRef.current;
       const { videoWidth, videoHeight } = video;
@@ -235,15 +271,12 @@ const Scanner = () => {
       setCapturedImage(imageData);
       stopCamera();
       
-      // 2. Auto-Send Logic
       const canProceed = await checkLimit('food_scan', 4, 'daily');
       
       if (canProceed) {
         setState("loading");
         startAnalysisMutation.mutate(imageData);
       } else {
-        // If limit reached, show captured state but don't proceed automatically
-        // so user sees why it stopped (the toast from useAILimit handles the message)
         setState("captured");
       }
     }
@@ -293,7 +326,6 @@ const Scanner = () => {
     }
   };
 
-  // Only used for manual retry if limit was hit or error occurred
   const handleManualAnalyze = async () => {
     if (capturedImage) {
       const canProceed = await checkLimit('food_scan', 4, 'daily');
@@ -403,7 +435,6 @@ const Scanner = () => {
         <footer className="flex flex-col items-center gap-6 w-full p-4 pointer-events-auto">
           {state === 'captured' && !startAnalysisMutation.isPending ? (
             <div className="grid grid-cols-2 gap-4 w-full max-w-md">
-              {/* This state is only reached if there was an error or limit reached */}
               <Button onClick={handleReset} variant="secondary" size="lg" className="h-16 text-lg rounded-2xl">
                 <RefreshCw className="mr-2 w-6 h-6" /> Repetir
               </Button>

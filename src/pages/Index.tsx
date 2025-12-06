@@ -199,6 +199,7 @@ const Index = () => {
                       fats={item.fats_value}
                       sugars={item.sugars_value}
                       status={item.status}
+                      reason={item.reason}
                       onClick={() => setSelectedAnalysis(item)}
                     />
                   );

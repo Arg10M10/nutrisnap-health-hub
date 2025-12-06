@@ -13,10 +13,11 @@ interface RecentAnalysisCardProps {
   fats: number | null;
   sugars: number | null;
   status: 'processing' | 'completed' | 'failed';
+  reason: string | null;
   onClick: () => void;
 }
 
-const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs, fats, sugars, status, onClick }: RecentAnalysisCardProps) => {
+const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs, fats, sugars, status, reason, onClick }: RecentAnalysisCardProps) => {
   const isProcessing = status === 'processing';
   const hasFailed = status === 'failed';
   const isClickable = status === 'completed';
@@ -27,13 +28,10 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
   useEffect(() => {
     if (isProcessing) {
       setProgress(0);
-      // Simulación más lenta y realista: ~20-25 segundos para llegar al 90%
       timerRef.current = window.setInterval(() => {
         setProgress((p) => {
-          // Incrementos pequeños y variables
           const increment = Math.random() * 2 + 0.5; 
           const next = p + increment;
-          // Ralentizar drásticamente al acercarse al 90%
           if (next > 90) return 90 + Math.random(); 
           return next;
         });
@@ -88,10 +86,9 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
         {isProcessing ? (
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-primary font-medium animate-pulse">Analizando nutrientes...</span>
+              <span className="text-primary font-medium animate-pulse">Analizando...</span>
               <span className="font-bold text-foreground">{Math.floor(progress)}%</span>
             </div>
-            {/* Barra de progreso moderna */}
             <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
               <div 
                 className="h-full bg-primary rounded-full transition-all duration-300 ease-out shadow-[0_0_10px_rgba(34,197,94,0.5)]"
@@ -100,7 +97,7 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
             </div>
           </div>
         ) : hasFailed ? (
-          <p className="text-sm text-destructive font-medium">Análisis fallido. Toca para reintentar.</p>
+          <p className="text-sm text-destructive font-medium">{reason || 'Análisis fallido.'}</p>
         ) : (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">

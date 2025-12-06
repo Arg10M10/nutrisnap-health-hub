@@ -13,7 +13,6 @@ import Scanner from "./pages/Scanner";
 import Progress from "./pages/Progress";
 import Diets from "./pages/Diets";
 import NotFound from "./pages/NotFound";
-import BarcodeResultPage from "@/pages/BarcodeResult";
 import Settings from "./pages/Settings";
 import Preferences from "./pages/settings/Preferences";
 import NutritionalGoals from "./pages/settings/NutritionalGoals";
@@ -80,7 +79,6 @@ const AppRoutes = () => {
 
   const fullScreenRoutes = [
     "/scanner",
-    "/barcode-result",
     "/exercise/running",
     "/exercise/weights",
     "/exercise/write",
@@ -108,7 +106,6 @@ const AppRoutes = () => {
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/scanner" element={<Scanner />} />
-              <Route path="/barcode-result" element={<BarcodeResultPage />} />
               <Route path="/exercise/running" element={<Running />} />
               <Route path="/exercise/weights" element={<Weights />} />
               <Route path="/exercise/write" element={<WriteExercise />} />
