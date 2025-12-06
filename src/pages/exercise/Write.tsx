@@ -85,13 +85,18 @@ const WriteExercise = () => {
             <div className="flex gap-2">
               <Button className="flex-1 h-12" onClick={() => estimateMutation.mutate()} disabled={estimateMutation.isPending}>
                 {estimateMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                {t('write_exercise.estimate_button')}
+                {estimateMutation.isPending ? "Calculando..." : t('write_exercise.estimate_button')}
               </Button>
               <Button className="flex-1 h-12" onClick={() => saveMutation.mutate()} disabled={estimated === null || saveMutation.isPending}>
                 {saveMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 {t('write_exercise.save_button')}
               </Button>
             </div>
+            {estimateMutation.isPending && (
+              <p className="text-xs text-center text-muted-foreground animate-pulse">
+                La IA está estimando las calorías...
+              </p>
+            )}
             {estimated !== null && (
               <p className="text-center text-sm text-muted-foreground">
                 {t('write_exercise.estimated_label')}: <span className="font-semibold text-foreground">{estimated} kcal</span>

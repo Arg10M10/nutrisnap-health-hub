@@ -312,16 +312,23 @@ export const DietsOnboarding = () => {
                 Siguiente <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             ) : (
-              <Button 
-                type="button" 
-                size="lg" 
-                className="w-full h-14 text-lg rounded-xl" 
-                disabled={mutation.isPending}
-                onClick={form.handleSubmit(onSubmit)} // Trigger manual solo al hacer click
-              >
-                {mutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
-                Generar mi Plan
-              </Button>
+              <div className="space-y-2">
+                <Button 
+                  type="button" 
+                  size="lg" 
+                  className="w-full h-14 text-lg rounded-xl" 
+                  disabled={mutation.isPending}
+                  onClick={form.handleSubmit(onSubmit)} // Trigger manual solo al hacer click
+                >
+                  {mutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
+                  {mutation.isPending ? "Generando con IA... (puede tardar 1 min)" : "Generar mi Plan"}
+                </Button>
+                {mutation.isPending && (
+                  <p className="text-center text-xs text-muted-foreground animate-pulse">
+                    La IA está creando un plan único para ti. Por favor espera...
+                  </p>
+                )}
+              </div>
             )}
           </div>
         </form>

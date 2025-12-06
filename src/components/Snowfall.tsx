@@ -55,7 +55,7 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
   return (
     <div
       className={cn(
-        "pointer-events-none fixed inset-0 z-0 overflow-hidden", 
+        "pointer-events-none fixed inset-0 z-[100] overflow-hidden", 
         "bg-transparent"
       )}
       aria-hidden="true"
@@ -76,8 +76,6 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
             animationTimingFunction: "linear",
             animationIterationCount: "infinite",
             animationDelay: `${flake.delay}s`,
-            // Combinamos la rotación inicial con la deriva en la animación CSS si fuera posible, 
-            // pero aquí usamos transform estático para rotación inicial.
             transform: `rotate(${flake.rotate}deg)`,
           }}
         >

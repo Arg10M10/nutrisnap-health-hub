@@ -91,7 +91,7 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
         </div>
         {isProcessing ? (
           <div className="text-sm text-muted-foreground">
-            La IA está analizando tu comida... {progress}%
+            La IA está calculando los nutrientes. Esto puede tardar unos segundos...
           </div>
         ) : hasFailed ? (
           <p className="text-sm text-destructive">El análisis ha fallado. Por favor, inténtalo de nuevo.</p>

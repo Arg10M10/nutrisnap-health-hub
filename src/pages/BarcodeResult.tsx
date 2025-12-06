@@ -112,6 +112,11 @@ const BarcodeResultPage = () => {
           rating={ratingData}
           isRatingLoading={isRatingPending}
         />
+        {isRatingPending && (
+          <p className="text-center text-sm text-muted-foreground animate-pulse">
+            La IA está analizando los ingredientes para darte una recomendación...
+          </p>
+        )}
         <div className="grid grid-cols-2 gap-4">
           <Button onClick={() => navigate('/scanner')} variant="outline" size="lg" className="h-14 text-base">
             <Scan className="mr-2 w-5 h-5" /> Escanear Otro

@@ -214,10 +214,15 @@ const AISuggestions = () => {
               ) : (
                 <Button type="submit" size="lg" className="flex-1 h-14 text-lg" disabled={mutation.isPending}>
                   {mutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
-                  {t('ai_suggestions.generate')}
+                  {mutation.isPending ? "Generando con IA..." : t('ai_suggestions.generate')}
                 </Button>
               )}
             </div>
+            {mutation.isPending && (
+              <p className="text-center text-sm text-muted-foreground mt-2 animate-pulse">
+                La IA está calculando el mejor plan para ti...
+              </p>
+            )}
           </form>
         </Form>
       </main>
