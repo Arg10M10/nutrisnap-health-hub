@@ -18,11 +18,8 @@ interface SnowfallProps {
   enabled: boolean;
 }
 
-/**
- * Pocos copos para que no moleste visualmente pero se note que es nieve.
- */
-const SNOWFLAKE_COUNT = 20;
-const FLAKE_CHARS = ["❄", "✻", "✼"];
+const SNOWFLAKE_COUNT = 50; 
+const FLAKE_CHARS = ["❄", "❅", "❆", "•"];
 
 const Snowfall = ({ enabled }: SnowfallProps) => {
   const [flakes, setFlakes] = useState<Snowflake[]>([]);
@@ -34,19 +31,19 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
     }
 
     const newFlakes: Snowflake[] = Array.from({ length: SNOWFLAKE_COUNT }).map((_, i) => {
-      const size = Math.random() * 10 + 10; // 10px - 20px aprox (tamaño de fuente)
+      const size = Math.random() * 15 + 8; // Tamaño variado
       const char = FLAKE_CHARS[Math.floor(Math.random() * FLAKE_CHARS.length)];
       return {
         id: i,
         left: Math.random() * 100,
         size,
-        duration: 10 + Math.random() * 10,
-        delay: Math.random() * -20,
-        opacity: 0.3 + Math.random() * 0.5,
-        blur: Math.random() > 0.7 ? 1.5 : 0,
+        duration: 10 + Math.random() * 20, // Caída lenta
+        delay: Math.random() * -30, // Inicio aleatorio para que ya haya nieve al cargar
+        opacity: 0.2 + Math.random() * 0.5,
+        blur: Math.random() > 0.5 ? 1 : 0,
         char,
-        drift: Math.random() * 20 - 10, // ligera deriva horizontal
-        rotate: Math.random() * 40 - 20, // inclinación inicial
+        drift: Math.random() * 50 - 25,
+        rotate: Math.random() * 360,
       };
     });
 
@@ -58,7 +55,7 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
   return (
     <div
       className={cn(
-        "pointer-events-none fixed inset-0 z-0 overflow-hidden",
+        "pointer-events-none fixed inset-0 z-0 overflow-hidden", 
         "bg-transparent"
       )}
       aria-hidden="true"
@@ -66,20 +63,22 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
       {flakes.map((flake) => (
         <span
           key={flake.id}
-          className="absolute text-white select-none"
+          className="absolute text-white select-none will-change-transform"
           style={{
             left: `${flake.left}%`,
-            top: "-10%",
+            top: "-20px",
             fontSize: `${flake.size}px`,
             opacity: flake.opacity,
             filter: flake.blur ? `blur(${flake.blur}px)` : undefined,
-            textShadow: "0 0 4px rgba(0,0,0,0.35)",
+            textShadow: "0 0 5px rgba(255,255,255,0.4)",
             animationName: "calorel-snowfall",
             animationDuration: `${flake.duration}s`,
             animationTimingFunction: "linear",
             animationIterationCount: "infinite",
             animationDelay: `${flake.delay}s`,
-            transform: `translate3d(0, 0, 0) rotate(${flake.rotate}deg)`,
+            // Combinamos la rotación inicial con la deriva en la animación CSS si fuera posible, 
+            // pero aquí usamos transform estático para rotación inicial.
+            transform: `rotate(${flake.rotate}deg)`,
           }}
         >
           {flake.char}
