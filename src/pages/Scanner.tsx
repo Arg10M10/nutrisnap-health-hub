@@ -30,7 +30,7 @@ import Viewfinder from "@/components/Viewfinder";
 import { useAuth } from "@/context/AuthContext";
 import { motion, Transition } from "framer-motion";
 import { useAILimit } from "@/hooks/useAILimit";
-import { BrowserMultiFormatReader, NotFoundException } from '@zxing/browser';
+import { BrowserMultiFormatReader } from '@zxing/browser';
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -230,7 +230,7 @@ const Scanner = () => {
         const result = await reader.decodeFromImageUrl(imageData);
         handleBarcodeDetected(result.getText());
       } catch (err) {
-        if (err instanceof NotFoundException) {
+        if (err && (err as Error).name === 'NotFoundException') {
           toast.error("No se encontró un código de barras.", { description: "Asegúrate de que esté bien enfocado y visible." });
         } else {
           toast.error("Error al leer el código de barras.", { description: (err as Error).message });
