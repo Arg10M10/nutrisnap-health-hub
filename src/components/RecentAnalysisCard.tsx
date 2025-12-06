@@ -109,15 +109,15 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
             </div>
             <div className="w-px h-3 bg-border" />
             <div className="flex items-center gap-1">
-              <span className="text-xs">P:</span>
+              <Beef className="w-3.5 h-3.5 text-red-500" />
               <span className="font-medium text-foreground">{protein ?? 0}g</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="text-xs">C:</span>
+              <Wheat className="w-3.5 h-3.5 text-orange-500" />
               <span className="font-medium text-foreground">{carbs ?? 0}g</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="text-xs">G:</span>
+              <Droplets className="w-3.5 h-3.5 text-blue-500" />
               <span className="font-medium text-foreground">{fats ?? 0}g</span>
             </div>
           </div>
