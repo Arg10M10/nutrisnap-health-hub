@@ -73,7 +73,8 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
       toast.success(t('edit_weight.save') + '!');
       await Promise.all([
         refetchProfile(),
-        queryClient.invalidateQueries({ queryKey: ['weight_history', user?.id] })
+        queryClient.invalidateQueries({ queryKey: ['weight_history_all', user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ['todays_weight_updates_count', user?.id] })
       ]);
       // We need to get the fresh profile data to check for badges
       const { data: updatedProfileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();

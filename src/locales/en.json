@@ -100,7 +100,7 @@
     "weight_progress_goal": "Goal Weight",
     "weight_progress_no_data": "No weight data logged.",
     "weight_progress_start_logging": "Log your weight to start seeing your progress.",
-    "weight_updated_today": "Weight updated today"
+    "weight_updated_today": "Today's update limit reached"
   },
   "diets": {
     "title": "Diet Plans",
@@ -316,7 +316,7 @@
     "height": "Height",
     "dob": "Date of birth",
     "gender": "Gender",
-    "updated_today": "Updated today"
+    "updated_today": "Today's limit reached"
   },
   "ring_colors": {
     "title": "Ring Colors",

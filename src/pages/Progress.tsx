@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { isToday } from "date-fns";
+import { isToday, startOfDay } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
@@ -23,27 +23,25 @@ const Progress = () => {
   const { t } = useTranslation();
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
 
-  const { data: lastWeightEntry } = useQuery({
-    queryKey: ['last_weight_entry', user?.id],
+  const { data: todaysWeightUpdatesCount } = useQuery({
+    queryKey: ['todays_weight_updates_count', user?.id],
     queryFn: async () => {
-      if (!user) return null;
-      const { data, error } = await supabase
+      if (!user) return 0;
+      const todayStart = startOfDay(new Date()).toISOString();
+      const { count, error } = await supabase
         .from('weight_history')
-        .select('created_at')
+        .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-      if (error && error.code !== 'PGRST116') throw error;
-      return data;
+        .gte('created_at', todayStart);
+      if (error) throw error;
+      return count ?? 0;
     },
     enabled: !!user,
   });
 
-  const hasUpdatedWeightToday = useMemo(() => {
-    if (!lastWeightEntry) return false;
-    return isToday(new Date(lastWeightEntry.created_at));
-  }, [lastWeightEntry]);
+  const hasReachedDailyWeightUpdateLimit = useMemo(() => {
+    return (todaysWeightUpdatesCount ?? 0) >= 2;
+  }, [todaysWeightUpdatesCount]);
 
   const handleOpenWeightDrawer = () => {
     setIsWeightDrawerOpen(true);
@@ -83,9 +81,9 @@ const Progress = () => {
           variant="outline"
           size="lg"
           className="w-full h-14 text-lg"
-          disabled={hasUpdatedWeightToday}
+          disabled={hasReachedDailyWeightUpdateLimit}
         >
-          {hasUpdatedWeightToday ? (
+          {hasReachedDailyWeightUpdateLimit ? (
             t('progress.weight_updated_today')
           ) : (
             <>

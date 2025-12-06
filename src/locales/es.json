@@ -100,7 +100,7 @@
     "weight_progress_goal": "Peso Deseado",
     "weight_progress_no_data": "No hay datos de peso registrados.",
     "weight_progress_start_logging": "Registra tu peso para empezar a ver tu progreso.",
-    "weight_updated_today": "Peso actualizado hoy"
+    "weight_updated_today": "Límite de actualizaciones de hoy"
   },
   "diets": {
     "title": "Planes de Dieta",
@@ -316,7 +316,7 @@
     "height": "Altura",
     "dob": "Fecha de nacimiento",
     "gender": "Género",
-    "updated_today": "Actualizado hoy"
+    "updated_today": "Límite de hoy alcanzado"
   },
   "ring_colors": {
     "title": "Colores de los Anillos",

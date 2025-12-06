@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { format, isToday } from 'date-fns';
+import { format, isToday, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useAuth } from '@/context/AuthContext';
 import PageLayout from '@/components/PageLayout';
@@ -38,27 +38,25 @@ const WeightGoal = () => {
   const [isGoalDrawerOpen, setIsGoalDrawerOpen] = useState(false);
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
 
-  const { data: lastWeightEntry } = useQuery({
-    queryKey: ['last_weight_entry', user?.id],
+  const { data: todaysWeightUpdatesCount } = useQuery({
+    queryKey: ['todays_weight_updates_count', user?.id],
     queryFn: async () => {
-      if (!user) return null;
-      const { data, error } = await supabase
+      if (!user) return 0;
+      const todayStart = startOfDay(new Date()).toISOString();
+      const { count, error } = await supabase
         .from('weight_history')
-        .select('created_at')
+        .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-      if (error && error.code !== 'PGRST116') throw error;
-      return data;
+        .gte('created_at', todayStart);
+      if (error) throw error;
+      return count ?? 0;
     },
     enabled: !!user,
   });
 
-  const hasUpdatedWeightToday = useMemo(() => {
-    if (!lastWeightEntry) return false;
-    return isToday(new Date(lastWeightEntry.created_at));
-  }, [lastWeightEntry]);
+  const hasReachedDailyWeightUpdateLimit = useMemo(() => {
+    return (todaysWeightUpdatesCount ?? 0) >= 2;
+  }, [todaysWeightUpdatesCount]);
 
   const handleOpenWeightDrawer = () => {
     setIsWeightDrawerOpen(true);
@@ -94,7 +92,7 @@ const WeightGoal = () => {
               label={t('weight_goal.current_weight')} 
               value={`${profile?.weight || '-'} kg`} 
               onEdit={handleOpenWeightDrawer} 
-              editDisabled={hasUpdatedWeightToday}
+              editDisabled={hasReachedDailyWeightUpdateLimit}
               disabledText={t('weight_goal.updated_today')}
             />
             <InfoRow label={t('weight_goal.height')} value={`${profile?.height || '-'} cm`} onEdit={() => setIsEditDrawerOpen(true)} />
