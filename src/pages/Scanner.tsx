@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,7 +8,6 @@ import {
   AlertTriangle,
   X,
   Image as ImageIcon,
-  ScanLine,
   HelpCircle,
   Zap,
   ZapOff,
@@ -30,10 +29,8 @@ import Viewfinder from "@/components/Viewfinder";
 import { useAuth } from "@/context/AuthContext";
 import { motion, Transition } from "framer-motion";
 import { useAILimit } from "@/hooks/useAILimit";
-import { BrowserMultiFormatReader } from '@zxing/browser';
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
-type ScanMode = "food" | "barcode";
 
 const MAX_DIMENSION = 1024;
 
@@ -51,7 +48,6 @@ const pageTransition: Transition = {
 
 const Scanner = () => {
   const [state, setState] = useState<ScannerState>("initializing");
-  const [scanMode, setScanMode] = useState<ScanMode>("food");
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -64,7 +60,6 @@ const Scanner = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
-  const codeReader = useMemo(() => new BrowserMultiFormatReader(), []);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -86,7 +81,6 @@ const Scanner = () => {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
-    codeReader.reset();
     setIsFlashOn(false);
   };
 
@@ -113,34 +107,6 @@ const Scanner = () => {
       });
       setError("No se pudo acceder a la cámara. Revisa los permisos de tu navegador.");
       setState("error");
-    }
-  };
-
-  const handleBarcodeDetected = async (barcode: string) => {
-    const toastId = toast.loading("Código detectado. Buscando producto...");
-    try {
-      const response = await fetch(`https://world.openfoodfacts.org/api/v3/product/${barcode}.json`);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-
-      if (data.status === 0 || !data.product) {
-        toast.error("Producto no encontrado", { id: toastId, description: "Este código de barras no está en la base de datos." });
-        handleReset();
-        return;
-      }
-
-      const { error: functionError } = await supabase.functions.invoke('process-openfoodfacts-data', {
-        body: { product: data.product },
-      });
-      if (functionError) throw new Error(functionError.message);
-
-      toast.success("¡Producto añadido!", { id: toastId, description: data.product.product_name });
-      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
-      navigate('/');
-    } catch (err) {
-      console.error("Error processing barcode:", err);
-      toast.error("Error al procesar el producto", { id: toastId, description: (err as Error).message });
-      handleReset();
     }
   };
 
@@ -219,25 +185,11 @@ const Scanner = () => {
     stopCamera();
     setState("loading");
 
-    if (scanMode === 'food') {
-      const canProceed = await checkLimit('food_scan', 4, 'daily');
-      if (canProceed) {
-        startAnalysisMutation.mutate(imageData);
-      } else {
-        setState("captured");
-      }
-    } else { // Barcode mode
-      try {
-        const result = await codeReader.decodeFromCanvas(canvas);
-        handleBarcodeDetected(result.getText());
-      } catch (err) {
-        if (err && (err as Error).name === 'NotFoundException') {
-          toast.error("No se encontró un código de barras.", { description: "Asegúrate de que esté bien enfocado y visible." });
-        } else {
-          toast.error("Error al leer el código de barras.", { description: (err as Error).message });
-        }
-        handleReset();
-      }
+    const canProceed = await checkLimit('food_scan', 4, 'daily');
+    if (canProceed) {
+      startAnalysisMutation.mutate(imageData);
+    } else {
+      setState("captured");
     }
   };
 
@@ -340,8 +292,7 @@ const Scanner = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>¿Cómo funciona el escáner?</AlertDialogTitle>
                 <AlertDialogDescription className="space-y-3 pt-2">
-                  <p><strong>Modo Comida:</strong> Centra tu plato y toma una foto. La IA la analizará.</p>
-                  <p><strong>Modo Código:</strong> Captura una foto clara del código de barras para buscar el producto.</p>
+                  <p>Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional.</p>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogAction>Entendido</AlertDialogAction>
@@ -350,7 +301,7 @@ const Scanner = () => {
         </header>
 
         <div className="flex-1 relative flex items-center justify-center">
-          {state === 'camera' && <Viewfinder mode={scanMode} />}
+          {state === 'camera' && <Viewfinder mode="food" />}
           {(state === 'loading' || startAnalysisMutation.isPending) && (
              <div className="flex flex-col items-center gap-4">
                 <Loader2 className="w-16 h-16 text-primary animate-spin" />
@@ -370,38 +321,24 @@ const Scanner = () => {
               </Button>
             </div>
           ) : state === 'camera' ? (
-            <>
-              <div className="flex items-center justify-center gap-4 w-full">
-                <Button
-                  onClick={() => setScanMode("food")}
-                  variant="ghost"
-                  className={cn("flex flex-col items-center justify-center gap-2 w-28 h-20 rounded-2xl text-white transition-colors", scanMode === "food" ? "bg-white/90 text-black" : "bg-black/50 hover:bg-black/70")}
-                ><Scan className="w-8 h-8" /><span className="font-semibold">Comida</span></Button>
-                <Button
-                  onClick={() => setScanMode("barcode")}
-                  variant="ghost"
-                  className={cn("flex flex-col items-center justify-center gap-2 w-28 h-20 rounded-2xl text-white transition-colors", scanMode === "barcode" ? "bg-white/90 text-black" : "bg-black/50 hover:bg-black/70")}
-                ><ScanLine className="w-8 h-8" /><span className="font-semibold">Código</span></Button>
-              </div>
-              <div className="flex items-center justify-around w-full max-w-md">
-                <button
-                  onClick={toggleFlash}
-                  disabled={!hasFlash}
-                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
-                  aria-label="Activar flash"
-                >{isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}</button>
-                <button
-                  onClick={handleCapture}
-                  className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
-                  aria-label="Tomar foto"
-                />
-                <button
-                  onClick={handleUploadClick}
-                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
-                  aria-label="Subir imagen"
-                ><ImageIcon className="w-8 h-8 text-white" /></button>
-              </div>
-            </>
+            <div className="flex items-center justify-around w-full max-w-md">
+              <button
+                onClick={toggleFlash}
+                disabled={!hasFlash}
+                className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
+                aria-label="Activar flash"
+              >{isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}</button>
+              <button
+                onClick={handleCapture}
+                className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
+                aria-label="Tomar foto"
+              />
+              <button
+                onClick={handleUploadClick}
+                className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                aria-label="Subir imagen"
+              ><ImageIcon className="w-8 h-8 text-white" /></button>
+            </div>
           ) : null}
         </footer>
       </div>

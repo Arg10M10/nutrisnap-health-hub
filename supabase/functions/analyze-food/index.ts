@@ -54,25 +54,18 @@ serve(async (req) => {
   try {
     const base64Image = imageData.split(",")[1];
     const prompt = `
-      Analiza la imagen con las siguientes prioridades:
-
-      1.  **Detectar Código de Barras:** Si la imagen contiene un código de barras claro y legible, extrae el número. Responde ÚNICAMENTE con un objeto JSON con la siguiente estructura:
-          {"barcode": "EL_NUMERO_DEL_CODIGO_DE_BARRAS"}
-
-      2.  **Detectar Intento Fallido de Código de Barras:** Si la imagen parece ser un intento de mostrar un código de barras pero está borroso, en un mal ángulo o es ilegible, responde ÚNICAMENTE con un objeto JSON que indique el error:
-          {"error": "No se pudo leer el código de barras. Intenta con mejor luz y enfoque."}
-
-      3.  **Analizar Comida:** Solo si la imagen muestra claramente un plato de comida y NO un código de barras, proporciona una estimación nutricional. Responde ÚNICA y EXCLUSIVAMENTE con un objeto JSON con la siguiente estructura:
-          {
-            "foodName": "Nombre del plato",
-            "calories": "Estimación de calorías (ej. '350-450 kcal')",
-            "protein": "Estimación de proteínas (ej. '20-25g')",
-            "carbs": "Estimación de carbohidratos (ej. '30-40g')",
-            "fats": "Estimación de grasas (ej. '15-20g')",
-            "sugars": "Estimación de azúcares (ej. '5-10g')",
-            "healthRating": "Clasificación ('Saludable', 'Moderado', o 'Evitar')",
-            "reason": "Breve explicación (máx 20 palabras)."
-          }
+      Analiza la imagen de este plato de comida y proporciona una estimación nutricional.
+      Responde ÚNICA y EXCLUSIVAMENTE con un objeto JSON con la siguiente estructura:
+      {
+        "foodName": "Nombre del plato",
+        "calories": "Estimación de calorías (ej. '350-450 kcal')",
+        "protein": "Estimación de proteínas (ej. '20-25g')",
+        "carbs": "Estimación de carbohidratos (ej. '30-40g')",
+        "fats": "Estimación de grasas (ej. '15-20g')",
+        "sugars": "Estimación de azúcares (ej. '5-10g')",
+        "healthRating": "Clasificación ('Saludable', 'Moderado', 'Evitar')",
+        "reason": "Breve explicación (máx 20 palabras)."
+      }
     `;
 
     const body = {
@@ -108,47 +101,27 @@ serve(async (req) => {
       throw new Error("La IA devolvió una respuesta en un formato inesperado.");
     }
 
-    // CASO 1: Código de barras detectado
-    if (analysisResult.barcode) {
-      const { error: invokeError } = await supabaseAdmin.functions.invoke('process-barcode', {
-        body: { entry_id, barcode: analysisResult.barcode },
-      });
-      if (invokeError) {
-        throw new Error(`Error al procesar el código de barras: ${invokeError.message}`);
-      }
-    } 
-    // CASO 2: Error de lectura de código de barras
-    else if (analysisResult.error) {
-      const { error: updateError } = await supabaseAdmin
-        .from('food_entries')
-        .update({ status: 'failed', reason: analysisResult.error })
-        .eq('id', entry_id);
-      if (updateError) throw updateError;
-    }
-    // CASO 3: Análisis de comida
-    else {
-      const { error: updateError } = await supabaseAdmin
-        .from('food_entries')
-        .update({
-          food_name: analysisResult.foodName,
-          calories: analysisResult.calories,
-          protein: analysisResult.protein,
-          carbs: analysisResult.carbs,
-          fats: analysisResult.fats,
-          sugars: analysisResult.sugars,
-          health_rating: analysisResult.healthRating,
-          reason: analysisResult.reason,
-          calories_value: parseNutrientValue(analysisResult.calories),
-          protein_value: parseNutrientValue(analysisResult.protein),
-          carbs_value: parseNutrientValue(analysisResult.carbs),
-          fats_value: parseNutrientValue(analysisResult.fats),
-          sugars_value: parseNutrientValue(analysisResult.sugars),
-          status: 'completed',
-        })
-        .eq('id', entry_id);
+    const { error: updateError } = await supabaseAdmin
+      .from('food_entries')
+      .update({
+        food_name: analysisResult.foodName,
+        calories: analysisResult.calories,
+        protein: analysisResult.protein,
+        carbs: analysisResult.carbs,
+        fats: analysisResult.fats,
+        sugars: analysisResult.sugars,
+        health_rating: analysisResult.healthRating,
+        reason: analysisResult.reason,
+        calories_value: parseNutrientValue(analysisResult.calories),
+        protein_value: parseNutrientValue(analysisResult.protein),
+        carbs_value: parseNutrientValue(analysisResult.carbs),
+        fats_value: parseNutrientValue(analysisResult.fats),
+        sugars_value: parseNutrientValue(analysisResult.sugars),
+        status: 'completed',
+      })
+      .eq('id', entry_id);
 
-      if (updateError) throw updateError;
-    }
+    if (updateError) throw updateError;
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
