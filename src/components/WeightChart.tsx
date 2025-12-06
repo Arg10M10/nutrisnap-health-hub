@@ -170,10 +170,10 @@ const WeightChart = () => {
           onValueChange={(value: TimeRange) => value && setTimeRange(value)}
           className="w-full bg-muted p-1 rounded-full"
         >
-          <ToggleGroupItem value="30D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">30D</ToggleGroupItem>
-          <ToggleGroupItem value="90D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">90D</ToggleGroupItem>
-          <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">1A</ToggleGroupItem>
-          <ToggleGroupItem value="ALL" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">Todo</ToggleGroupItem>
+          <ToggleGroupItem value="30D" className="w-full rounded-full data-[state=on]:bg-card data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">30D</ToggleGroupItem>
+          <ToggleGroupItem value="90D" className="w-full rounded-full data-[state=on]:bg-card data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">90D</ToggleGroupItem>
+          <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-card data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">1A</ToggleGroupItem>
+          <ToggleGroupItem value="ALL" className="w-full rounded-full data-[state=on]:bg-card data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">Todo</ToggleGroupItem>
         </ToggleGroup>
       </CardFooter>
     </Card>

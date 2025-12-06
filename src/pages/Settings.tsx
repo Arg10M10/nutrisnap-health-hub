@@ -28,6 +28,7 @@ const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
 const INSTAGRAM_URL = "https://www.instagram.com/calorel.app/";
 const SUPPORT_EMAIL = "calorel.help@gmail.com";
+const TIKTOK_URL = "https://www.tiktok.com/@calorel.app?_r=1&_t=ZS-920XYSQSag5";
 
 const Settings = () => {
   const { profile, signOut } = useAuth();
@@ -182,7 +183,7 @@ const Settings = () => {
           <SettingsItem 
             icon={<img src="/tiktok-logo.png" alt="TikTok" className="w-5 h-5 object-contain" />} 
             label={t('settings.social.tiktok')} 
-            onClick={handleNotImplemented} 
+            onClick={() => openExternal(TIKTOK_URL)} 
           />
         </SettingsCategory>
 

@@ -274,7 +274,7 @@
     "healthy": "Healthy",
     "overweight": "Overweight",
     "obesity": "Obesity",
-    "tooltip": "The Body Mass Index (BMI) is a measure that relates weight and height."
+    "tooltip": "The Body Mass Index (BMI) uses your height and weight to estimate if your weight is healthy. Categories: Underweight (<18.5), Healthy (18.5-24.9), Overweight (25-29.9), Obesity (≥30)."
   },
   "manual_food": {
     "title": "Add Food Manually",
