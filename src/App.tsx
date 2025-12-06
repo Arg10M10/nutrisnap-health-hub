@@ -36,6 +36,7 @@ import Snowfall from "./components/Snowfall";
 import LightBackground from "./components/LightBackground";
 import { SnowProvider, useSnow } from "./context/SnowContext";
 import BadgeUnlockModal from "./components/BadgeUnlockModal";
+import Subscribe from "./pages/Subscribe";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +91,7 @@ const AppRoutes = () => {
     "/settings/ring-colors",
     "/settings/request-feature",
     "/settings/edit-profile",
+    "/subscribe",
   ];
 
   const shellClass = "relative min-h-screen"; 
@@ -117,6 +119,7 @@ const AppRoutes = () => {
               <Route path="/settings/ring-colors" element={<RingColors />} />
               <Route path="/settings/request-feature" element={<RequestFeature />} />
               <Route path="/settings/edit-profile" element={<EditProfile />} />
+              <Route path="/subscribe" element={<Subscribe />} />
             </Routes>
           </AnimatePresence>
         </div>

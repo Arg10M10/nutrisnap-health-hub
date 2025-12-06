@@ -69,7 +69,7 @@ const Onboarding = () => {
     onSuccess: async () => {
       await refetchProfile();
       toast.success('¡Todo listo! Bienvenido a Calorel.');
-      navigate('/');
+      navigate('/subscribe');
     },
     onError: (error) => {
       toast.error('Hubo un error al guardar tu perfil.');
