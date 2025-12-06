@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, ComponentType } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,7 +30,6 @@ import Viewfinder from "@/components/Viewfinder";
 import { useAuth } from "@/context/AuthContext";
 import { motion, Transition } from "framer-motion";
 import { useAILimit } from "@/hooks/useAILimit";
-import { BarcodeScanner as ZxingBarcodeScanner } from 'react-zxing';
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -59,6 +58,7 @@ const Scanner = () => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const navigate = useNavigate();
+  const [BarcodeScanner, setBarcodeScanner] = useState<ComponentType<any> | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [hasFlash, setHasFlash] = useState(false);
   const { user } = useAuth();
@@ -117,7 +117,27 @@ const Scanner = () => {
       startCamera();
     } else {
       stopCamera();
-      setState('camera');
+      setState('initializing');
+      if (!BarcodeScanner) {
+        import('react-zxing')
+          .then((mod) => {
+            const ScannerComponent = mod.BarcodeScanner;
+            if (ScannerComponent) {
+              setBarcodeScanner(() => ScannerComponent);
+              setState('camera');
+            } else {
+              throw new Error("BarcodeScanner component not found in react-zxing module.");
+            }
+          })
+          .catch(err => {
+            console.error("Failed to load BarcodeScanner component", err);
+            toast.error("No se pudo cargar el escáner de códigos de barras.");
+            setError("Error al cargar el componente del escáner.");
+            setState("error");
+          });
+      } else {
+        setState('camera');
+      }
     }
     return () => stopCamera();
   }, [scanMode]);
@@ -352,8 +372,8 @@ const Scanner = () => {
             )}
           />
         )}
-        {scanMode === 'barcode' && state === 'camera' && (
-          <ZxingBarcodeScanner
+        {scanMode === 'barcode' && state === 'camera' && BarcodeScanner && (
+          <BarcodeScanner
             onResult={handleBarcodeScan}
             onError={(error: unknown) => {
               console.error(error);
