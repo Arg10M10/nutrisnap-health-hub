@@ -30,7 +30,7 @@ import Viewfinder from "@/components/Viewfinder";
 import { useAuth } from "@/context/AuthContext";
 import { motion, Transition } from "framer-motion";
 import { useAILimit } from "@/hooks/useAILimit";
-import BarcodeScannerComponent from "@/components/BarcodeScannerComponent";
+import { BrowserMultiFormatReader, NotFoundException } from '@zxing/browser';
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -64,12 +64,13 @@ const Scanner = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
-  const [isProcessingBarcode, setIsProcessingBarcode] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
+    startCamera();
     return () => {
       document.body.style.overflow = 'auto';
+      stopCamera();
     };
   }, []);
 
@@ -113,53 +114,31 @@ const Scanner = () => {
     }
   };
 
-  useEffect(() => {
-    if (scanMode === 'food') {
-      startCamera();
-    } else {
-      stopCamera();
-      setState('camera');
-    }
-    return () => stopCamera();
-  }, [scanMode]);
-
   const handleBarcodeDetected = async (barcode: string) => {
-    if (isProcessingBarcode) return;
-    setIsProcessingBarcode(true);
-    
     const toastId = toast.loading("Código detectado. Buscando producto...");
-
     try {
       const response = await fetch(`https://world.openfoodfacts.org/api/v3/product/${barcode}.json`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
 
       if (data.status === 0 || !data.product) {
         toast.error("Producto no encontrado", { id: toastId, description: "Este código de barras no está en la base de datos." });
-        setIsProcessingBarcode(false);
+        handleReset();
         return;
       }
 
       const { error: functionError } = await supabase.functions.invoke('process-openfoodfacts-data', {
         body: { product: data.product },
       });
-
-      if (functionError) {
-        throw new Error(functionError.message);
-      }
+      if (functionError) throw new Error(functionError.message);
 
       toast.success("¡Producto añadido!", { id: toastId, description: data.product.product_name });
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       navigate('/');
-
     } catch (err) {
       console.error("Error processing barcode:", err);
       toast.error("Error al procesar el producto", { id: toastId, description: (err as Error).message });
-      setIsProcessingBarcode(false);
+      handleReset();
     }
   };
 
@@ -185,14 +164,8 @@ const Scanner = () => {
       if (!user) throw new Error('User not found');
       const { data, error } = await supabase
         .from('food_entries')
-        .insert({
-          user_id: user.id,
-          food_name: 'Analizando...',
-          image_url: imageData,
-          status: 'processing',
-        })
-        .select()
-        .single();
+        .insert({ user_id: user.id, food_name: 'Analizando...', image_url: imageData, status: 'processing' })
+        .select().single();
       if (error) throw error;
       return { newEntry: data, imageData };
     },
@@ -220,48 +193,54 @@ const Scanner = () => {
   });
 
   const handleCapture = async () => {
-    if (videoRef.current && canvasRef.current) {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      const { videoWidth, videoHeight } = video;
-      let width = videoWidth;
-      let height = videoHeight;
+    if (!videoRef.current || !canvasRef.current) return;
 
-      if (width > height) {
-        if (width > MAX_DIMENSION) {
-          height *= MAX_DIMENSION / width;
-          width = MAX_DIMENSION;
-        }
-      } else {
-        if (height > MAX_DIMENSION) {
-          width *= MAX_DIMENSION / height;
-          height = MAX_DIMENSION;
-        }
-      }
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const { videoWidth, videoHeight } = video;
+    let width = videoWidth;
+    let height = videoHeight;
 
-      canvas.width = width;
-      canvas.height = height;
-      const context = canvas.getContext("2d");
-      context?.drawImage(video, 0, 0, width, height);
-      const imageData = canvas.toDataURL("image/jpeg", 0.8);
-      
-      setCapturedImage(imageData);
-      stopCamera();
-      
+    if (width > height) {
+      if (width > MAX_DIMENSION) { height *= MAX_DIMENSION / width; width = MAX_DIMENSION; }
+    } else {
+      if (height > MAX_DIMENSION) { width *= MAX_DIMENSION / height; height = MAX_DIMENSION; }
+    }
+
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d");
+    context?.drawImage(video, 0, 0, width, height);
+    const imageData = canvas.toDataURL("image/jpeg", 0.8);
+    
+    setCapturedImage(imageData);
+    stopCamera();
+    setState("loading");
+
+    if (scanMode === 'food') {
       const canProceed = await checkLimit('food_scan', 4, 'daily');
-      
       if (canProceed) {
-        setState("loading");
         startAnalysisMutation.mutate(imageData);
       } else {
         setState("captured");
       }
+    } else { // Barcode mode
+      try {
+        const reader = new BrowserMultiFormatReader();
+        const result = await reader.decodeFromImageUrl(imageData);
+        handleBarcodeDetected(result.getText());
+      } catch (err) {
+        if (err instanceof NotFoundException) {
+          toast.error("No se encontró un código de barras.", { description: "Asegúrate de que esté bien enfocado y visible." });
+        } else {
+          toast.error("Error al leer el código de barras.", { description: (err as Error).message });
+        }
+        handleReset();
+      }
     }
   };
 
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
+  const handleUploadClick = () => fileInputRef.current?.click();
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -278,15 +257,9 @@ const Scanner = () => {
           if (!canvas) return;
           let { width, height } = img;
           if (width > height) {
-            if (width > MAX_DIMENSION) {
-              height *= MAX_DIMENSION / width;
-              width = MAX_DIMENSION;
-            }
+            if (width > MAX_DIMENSION) { height *= MAX_DIMENSION / width; width = MAX_DIMENSION; }
           } else {
-            if (height > MAX_DIMENSION) {
-              width *= MAX_DIMENSION / height;
-              height = MAX_DIMENSION;
-            }
+            if (height > MAX_DIMENSION) { width *= MAX_DIMENSION / height; height = MAX_DIMENSION; }
           }
           canvas.width = width;
           canvas.height = height;
@@ -317,11 +290,7 @@ const Scanner = () => {
     setCapturedImage(null);
     setError(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
-    if (scanMode === 'food') {
-      startCamera();
-    } else {
-      setState('camera');
-    }
+    startCamera();
   };
 
   const handleClose = () => navigate(-1);
@@ -336,25 +305,20 @@ const Scanner = () => {
       className="fixed inset-0 bg-black text-white z-50 flex flex-col"
     >
       <div className="absolute inset-0 z-10">
-        {scanMode === 'food' && (
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            onCanPlay={() => setState("camera")}
-            className={cn(
-              "w-full h-full object-cover",
-              state === "captured" || state === "loading" || state === 'error' ? "hidden" : "block"
-            )}
-          />
-        )}
-        {scanMode === 'barcode' && state === 'camera' && (
-          <BarcodeScannerComponent onScan={handleBarcodeDetected} />
-        )}
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          onCanPlay={() => setState("camera")}
+          className={cn(
+            "w-full h-full object-cover",
+            state === "captured" || state === "loading" || state === 'error' ? "hidden" : "block"
+          )}
+        />
         {capturedImage && (state === 'captured' || state === 'loading' || startAnalysisMutation.isPending) && (
           <img
             src={capturedImage}
-            alt="Comida capturada"
+            alt="Captura de cámara"
             className="w-full h-full object-cover opacity-50"
           />
         )}
@@ -375,12 +339,8 @@ const Scanner = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>¿Cómo funciona el escáner?</AlertDialogTitle>
                 <AlertDialogDescription className="space-y-3 pt-2">
-                  <p>
-                    <strong>Modo Comida:</strong> Centra tu plato y toma una foto. La IA comenzará a analizarla automáticamente.
-                  </p>
-                  <p>
-                    <strong>Modo Código:</strong> Apunta al código de barras para buscar el producto.
-                  </p>
+                  <p><strong>Modo Comida:</strong> Centra tu plato y toma una foto. La IA la analizará.</p>
+                  <p><strong>Modo Código:</strong> Captura una foto clara del código de barras para buscar el producto.</p>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogAction>Entendido</AlertDialogAction>
@@ -389,11 +349,11 @@ const Scanner = () => {
         </header>
 
         <div className="flex-1 relative flex items-center justify-center">
-          {scanMode === 'food' && state === 'camera' && <Viewfinder />}
+          {state === 'camera' && <Viewfinder />}
           {(state === 'loading' || startAnalysisMutation.isPending) && (
              <div className="flex flex-col items-center gap-4">
                 <Loader2 className="w-16 h-16 text-primary animate-spin" />
-                <p className="text-xl font-bold animate-pulse">Analizando imagen...</p>
+                <p className="text-xl font-bold animate-pulse">Procesando...</p>
              </div>
           )}
         </div>
@@ -414,29 +374,13 @@ const Scanner = () => {
                 <Button
                   onClick={() => setScanMode("food")}
                   variant="ghost"
-                  className={cn(
-                    "flex flex-col items-center justify-center gap-2 w-28 h-20 rounded-2xl text-white transition-colors",
-                    scanMode === "food"
-                      ? "bg-white/90 text-black"
-                      : "bg-black/50 hover:bg-black/70"
-                  )}
-                >
-                  <Scan className="w-8 h-8" />
-                  <span className="font-semibold">Comida</span>
-                </Button>
+                  className={cn("flex flex-col items-center justify-center gap-2 w-28 h-20 rounded-2xl text-white transition-colors", scanMode === "food" ? "bg-white/90 text-black" : "bg-black/50 hover:bg-black/70")}
+                ><Scan className="w-8 h-8" /><span className="font-semibold">Comida</span></Button>
                 <Button
                   onClick={() => setScanMode("barcode")}
                   variant="ghost"
-                  className={cn(
-                    "flex flex-col items-center justify-center gap-2 w-28 h-20 rounded-2xl text-white transition-colors",
-                    scanMode === "barcode"
-                      ? "bg-white/90 text-black"
-                      : "bg-black/50 hover:bg-black/70"
-                  )}
-                >
-                  <ScanLine className="w-8 h-8" />
-                  <span className="font-semibold">Código</span>
-                </Button>
+                  className={cn("flex flex-col items-center justify-center gap-2 w-28 h-20 rounded-2xl text-white transition-colors", scanMode === "barcode" ? "bg-white/90 text-black" : "bg-black/50 hover:bg-black/70")}
+                ><ScanLine className="w-8 h-8" /><span className="font-semibold">Código</span></Button>
               </div>
               <div className="flex items-center justify-around w-full max-w-md">
                 <button
@@ -444,32 +388,24 @@ const Scanner = () => {
                   disabled={!hasFlash}
                   className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
                   aria-label="Activar flash"
-                >
-                  {isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}
-                </button>
-                {scanMode === 'food' ? (
-                  <button
-                    onClick={handleCapture}
-                    className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
-                    aria-label="Tomar foto"
-                  />
-                ) : (
-                  <div className="w-20 h-20" />
-                )}
+                >{isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}</button>
+                <button
+                  onClick={handleCapture}
+                  className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
+                  aria-label="Tomar foto"
+                />
                 <button
                   onClick={handleUploadClick}
                   className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
                   aria-label="Subir imagen"
-                >
-                  <ImageIcon className="w-8 h-8 text-white" />
-                </button>
+                ><ImageIcon className="w-8 h-8 text-white" /></button>
               </div>
             </>
           ) : null}
         </footer>
       </div>
 
-      {state === "initializing" && scanMode === 'food' && (
+      {state === "initializing" && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
           <Loader2 className="w-16 h-16 text-primary animate-spin" />
           <p className="text-white text-lg">Iniciando cámara...</p>
