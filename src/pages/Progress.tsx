@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { isToday } from "date-fns";
-import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
@@ -41,16 +40,12 @@ const Progress = () => {
     enabled: !!user,
   });
 
+  const hasUpdatedWeightToday = useMemo(() => {
+    if (!lastWeightEntry) return false;
+    return isToday(new Date(lastWeightEntry.created_at));
+  }, [lastWeightEntry]);
+
   const handleOpenWeightDrawer = () => {
-    if (lastWeightEntry) {
-      const lastEntryDate = new Date(lastWeightEntry.created_at);
-      if (isToday(lastEntryDate)) {
-        toast.info("Ya has actualizado tu peso hoy.", {
-          description: "Puedes actualizar tu peso de nuevo mañana.",
-        });
-        return;
-      }
-    }
     setIsWeightDrawerOpen(true);
   };
 
@@ -88,9 +83,16 @@ const Progress = () => {
           variant="outline"
           size="lg"
           className="w-full h-14 text-lg"
+          disabled={hasUpdatedWeightToday}
         >
-          <Edit className="mr-2 h-5 w-5" />
-          {t('progress.update_weight')}
+          {hasUpdatedWeightToday ? (
+            t('progress.weight_updated_today')
+          ) : (
+            <>
+              <Edit className="mr-2 h-5 w-5" />
+              {t('progress.update_weight')}
+            </>
+          )}
         </Button>
 
         {/* Weight Chart */}

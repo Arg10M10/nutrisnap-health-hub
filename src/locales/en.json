@@ -99,7 +99,8 @@
     "weight_progress_actual": "Actual Weight",
     "weight_progress_goal": "Goal Weight",
     "weight_progress_no_data": "No weight data logged.",
-    "weight_progress_start_logging": "Log your weight to start seeing your progress."
+    "weight_progress_start_logging": "Log your weight to start seeing your progress.",
+    "weight_updated_today": "Weight updated today"
   },
   "diets": {
     "title": "Diet Plans",
@@ -251,9 +252,7 @@
     "fats": "Fats",
     "sugars": "Sugars",
     "save": "Save Goals",
-    "ai_suggestions": "AI Suggestions",
-    "save_success": "Nutritional goals updated!",
-    "save_error": "Could not update goals."
+    "ai_suggestions": "AI Suggestions"
   },
   "ai_suggestions": {
     "title": "AI Goal Suggestions",
@@ -312,7 +311,8 @@
     "current_weight": "Current weight",
     "height": "Height",
     "dob": "Date of birth",
-    "gender": "Gender"
+    "gender": "Gender",
+    "updated_today": "Updated today"
   },
   "ring_colors": {
     "title": "Ring Colors",

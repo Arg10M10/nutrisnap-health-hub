@@ -99,7 +99,8 @@
     "weight_progress_actual": "Peso Actual",
     "weight_progress_goal": "Peso Deseado",
     "weight_progress_no_data": "No hay datos de peso registrados.",
-    "weight_progress_start_logging": "Registra tu peso para empezar a ver tu progreso."
+    "weight_progress_start_logging": "Registra tu peso para empezar a ver tu progreso.",
+    "weight_updated_today": "Peso actualizado hoy"
   },
   "diets": {
     "title": "Planes de Dieta",
@@ -251,9 +252,7 @@
     "fats": "Grasas",
     "sugars": "Azúcares",
     "save": "Guardar Metas",
-    "ai_suggestions": "Sugerencias de la IA",
-    "save_success": "¡Metas nutricionales actualizadas!",
-    "save_error": "No se pudieron actualizar las metas."
+    "ai_suggestions": "Sugerencias de la IA"
   },
   "ai_suggestions": {
     "title": "Sugerencias de Metas por IA",
@@ -312,7 +311,8 @@
     "current_weight": "Peso actual",
     "height": "Altura",
     "dob": "Fecha de nacimiento",
-    "gender": "Género"
+    "gender": "Género",
+    "updated_today": "Actualizado hoy"
   },
   "ring_colors": {
     "title": "Colores de los Anillos",
