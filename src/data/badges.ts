@@ -5,11 +5,15 @@ export const streakBadges = [
   { id: "streak_10", days: 10, image: "/badges/streak-10.png" },
   { id: "streak_30", days: 30, image: "/badges/streak-30.png" },
   { id: "streak_60", days: 60, image: "/badges/streak-60.png" },
-  { id: "streak_80", days: 80, image: "/badges/streak-80.png" },
+  { id: "streak_90", days: 90, image: "/badges/streak-90.png" },
   { id: "streak_100", days: 100, image: "/badges/streak-100.png" },
+  { id: "streak_150", days: 150, image: "/badges/streak-150.png" },
   { id: "streak_200", days: 200, image: "/badges/streak-200.png" },
+  { id: "streak_250", days: 250, image: "/badges/streak-250.png" },
   { id: "streak_300", days: 300, image: "/badges/streak-300.png" },
+  { id: "streak_350", days: 350, image: "/badges/streak-350.png" },
   { id: "streak_400", days: 400, image: "/badges/streak-400.png" },
+  { id: "streak_450", days: 450, image: "/badges/streak-450.png" },
   { id: "streak_500", days: 500, image: "/badges/streak-500.png" },
 ];
 
