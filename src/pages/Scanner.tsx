@@ -227,7 +227,7 @@ const Scanner = () => {
     } else { // Barcode mode
       try {
         const reader = new BrowserMultiFormatReader();
-        const result = await reader.decodeFromImageUrl(imageData);
+        const result = await reader.decodeFromCanvas(canvas);
         handleBarcodeDetected(result.getText());
       } catch (err) {
         if (err && (err as Error).name === 'NotFoundException') {
