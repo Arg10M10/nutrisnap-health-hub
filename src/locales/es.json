@@ -383,5 +383,42 @@
     "height_required": "La altura es requerida.",
     "weight_required": "El peso es requerido.",
     "experience_required": "La experiencia es requerida."
+  },
+  "onboarding": {
+    "gender": {
+      "title": "¿Cuál es tu género?",
+      "description": "Esto nos ayuda a personalizar tus metas y recomendaciones."
+    },
+    "age": {
+      "title": "¿Cuál es tu edad?",
+      "description": "Tu edad nos ayuda a calcular tus necesidades calóricas."
+    },
+    "experience": {
+      "title": "¿Has probado otras apps?",
+      "description": "Cuéntanos un poco sobre tu experiencia previa."
+    },
+    "metrics": {
+      "title": "Tus medidas",
+      "description": "Introduce tu peso y altura para un seguimiento preciso."
+    },
+    "dob": {
+      "title": "¿Cuándo naciste?",
+      "description": "Saber tu fecha de nacimiento nos ayuda a verificar tu edad."
+    },
+    "goal": {
+      "title": "¿Cuál es tu objetivo principal?",
+      "description": "Elige qué quieres lograr con Calorel."
+    },
+    "goal_weight": {
+      "title": "Establece tu meta",
+      "description": "¿Cuál es el peso que te gustaría alcanzar?"
+    },
+    "final": {
+      "title": "¡Estás a un paso!",
+      "description": "Con Calorel, estás en el camino correcto hacia tus metas.",
+      "button": "Finalizar y empezar"
+    },
+    "toast_success": "¡Todo listo! Bienvenido a Calorel.",
+    "toast_error": "Hubo un error al guardar tu perfil."
   }
 }

@@ -383,5 +383,42 @@
     "height_required": "Height is required.",
     "weight_required": "Weight is required.",
     "experience_required": "Experience is required."
+  },
+  "onboarding": {
+    "gender": {
+      "title": "What is your gender?",
+      "description": "This helps us customize your goals and recommendations."
+    },
+    "age": {
+      "title": "What is your age?",
+      "description": "Your age helps us calculate your caloric needs."
+    },
+    "experience": {
+      "title": "Have you tried other apps?",
+      "description": "Tell us a bit about your previous experience."
+    },
+    "metrics": {
+      "title": "Your measurements",
+      "description": "Enter your weight and height for accurate tracking."
+    },
+    "dob": {
+      "title": "When were you born?",
+      "description": "Knowing your date of birth helps us verify your age."
+    },
+    "goal": {
+      "title": "What is your main goal?",
+      "description": "Choose what you want to achieve with Calorel."
+    },
+    "goal_weight": {
+      "title": "Set your goal",
+      "description": "What is the weight you would like to reach?"
+    },
+    "final": {
+      "title": "You're one step away!",
+      "description": "With Calorel, you're on the right path to your goals.",
+      "button": "Finish and start"
+    },
+    "toast_success": "All set! Welcome to Calorel.",
+    "toast_error": "There was an error saving your profile."
   }
 }

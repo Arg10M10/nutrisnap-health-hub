@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
-import { format, setYear } from 'date-fns';
+import { format, addYears } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
@@ -15,11 +15,9 @@ interface DatePickerProps {
   className?: string;
 }
 
-const CURRENT_YEAR = new Date().getFullYear();
-
 const DatePicker = ({ value, onChange, label, placeholder = 'Selecciona una fecha', className }: DatePickerProps) => {
   const [open, setOpen] = useState(false);
-  const [displayYear, setDisplayYear] = useState<number>(value?.getFullYear() ?? CURRENT_YEAR);
+  const [month, setMonth] = useState(value ?? new Date());
 
   const displayValue = value ? format(value, 'PPP', { locale: es }) : placeholder;
 
@@ -29,16 +27,13 @@ const DatePicker = ({ value, onChange, label, placeholder = 'Selecciona una fech
       return;
     }
     onChange(date);
-    setDisplayYear(date.getFullYear());
+    setMonth(date);
     setOpen(false);
   };
 
   const jumpYears = (delta: number) => {
-    setDisplayYear((prev) => prev + delta);
+    setMonth((prev) => addYears(prev, delta));
   };
-
-  // Genera una fecha base para el calendario usando el año que se está mostrando
-  const calendarMonth = value ? setYear(value, displayYear) : setYear(new Date(), displayYear);
 
   return (
     <div className={cn('space-y-1.5', className)}>
@@ -70,6 +65,7 @@ const DatePicker = ({ value, onChange, label, placeholder = 'Selecciona una fech
                 onClick={() => jumpYears(-10)}
               >
                 <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-4 w-4 -ml-2" />
               </Button>
               <Button
                 variant="ghost"
@@ -81,7 +77,7 @@ const DatePicker = ({ value, onChange, label, placeholder = 'Selecciona una fech
               </Button>
             </div>
             <span className="text-sm font-medium">
-              {displayYear}
+              {format(month, 'yyyy')}
             </span>
             <div className="flex items-center gap-1">
               <Button
@@ -99,15 +95,15 @@ const DatePicker = ({ value, onChange, label, placeholder = 'Selecciona una fech
                 onClick={() => jumpYears(10)}
               >
                 <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4 -ml-2" />
               </Button>
             </div>
           </div>
           <Calendar
             mode="single"
             selected={value ?? undefined}
-            // `month` controla qué mes/año muestra el calendario; aquí fijamos solo el año
-            month={calendarMonth}
-            onMonthChange={(date) => setDisplayYear(date.getFullYear())}
+            month={month}
+            onMonthChange={setMonth}
             onSelect={handleSelect}
             initialFocus
             locale={es}

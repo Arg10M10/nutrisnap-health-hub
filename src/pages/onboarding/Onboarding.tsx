@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 import { OnboardingLayout } from '@/components/onboarding/OnboardingLayout';
 import { GenderStep } from './steps/GenderStep';
@@ -12,25 +13,26 @@ import { ExperienceStep } from './steps/ExperienceStep';
 import { MetricsStep } from './steps/MetricsStep';
 import { DobStep } from './steps/DobStep';
 import { GoalStep } from './steps/GoalStep';
-import { GoalWeightStep } from './steps/GoalWeightStep'; // Nuevo import
+import { GoalWeightStep } from './steps/GoalWeightStep';
 import { FinalStep } from './steps/FinalStep';
 
-const TOTAL_STEPS = 8; // Aumentado de 7 a 8
+const TOTAL_STEPS = 8;
 
 const Onboarding = () => {
   const { user, refetchProfile } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     gender: null as string | null,
     age: null as number | null,
     experience: null as string | null,
-    units: 'metric' as 'metric',
+    units: 'metric' as 'metric' | 'imperial',
     weight: null as number | null,
     height: null as number | null,
     dob: null as Date | null,
     goal: null as string | null,
-    goalWeight: null as number | null, // Nuevo campo
+    goalWeight: null as number | null,
   });
 
   const updateFormData = (field: string, value: any) => {
@@ -41,7 +43,6 @@ const Onboarding = () => {
     mutationFn: async () => {
       if (!user || !formData.weight) throw new Error('User or weight not found');
       
-      // 1. Update the user's profile
       const { error: profileError } = await supabase
         .from('profiles')
         .update({
@@ -54,13 +55,12 @@ const Onboarding = () => {
           height: formData.height,
           date_of_birth: formData.dob ? formData.dob.toISOString().split('T')[0] : null,
           goal: formData.goal,
-          goal_weight: formData.goalWeight, // Guardamos el peso objetivo
+          goal_weight: formData.goalWeight,
           onboarding_completed: true,
         })
         .eq('id', user.id);
       if (profileError) throw profileError;
 
-      // 2. Insert the first entry into the weight history table
       const { error: historyError } = await supabase
         .from('weight_history')
         .insert({ user_id: user.id, weight: formData.weight });
@@ -68,11 +68,11 @@ const Onboarding = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success('¡Todo listo! Bienvenido a Calorel.');
+      toast.success(t('onboarding.toast_success'));
       navigate('/subscribe');
     },
     onError: (error) => {
-      toast.error('Hubo un error al guardar tu perfil.');
+      toast.error(t('onboarding.toast_error'));
       console.error(error);
     },
   });
@@ -93,48 +93,48 @@ const Onboarding = () => {
 
   const steps = [
     {
-      title: '¿Cuál es tu género?',
-      description: 'Esto nos ayuda a personalizar tus metas y recomendaciones.',
+      title: t('onboarding.gender.title'),
+      description: t('onboarding.gender.description'),
       content: <GenderStep gender={formData.gender} setGender={(v) => updateFormData('gender', v)} />,
       canContinue: !!formData.gender,
     },
     {
-      title: '¿Cuál es tu edad?',
-      description: 'Tu edad nos ayuda a calcular tus necesidades calóricas.',
+      title: t('onboarding.age.title'),
+      description: t('onboarding.age.description'),
       content: <AgeStep age={formData.age} setAge={(v) => updateFormData('age', v)} />,
       canContinue: formData.age !== null && formData.age > 0,
     },
     {
-      title: '¿Has probado otras apps?',
-      description: 'Cuéntanos un poco sobre tu experiencia previa.',
+      title: t('onboarding.experience.title'),
+      description: t('onboarding.experience.description'),
       content: <ExperienceStep experience={formData.experience} setExperience={(v) => updateFormData('experience', v)} />,
       canContinue: !!formData.experience,
     },
     {
-      title: 'Tus medidas',
-      description: 'Introduce tu peso y altura para un seguimiento preciso.',
+      title: t('onboarding.metrics.title'),
+      description: t('onboarding.metrics.description'),
       content: <MetricsStep 
+                  units={formData.units} setUnits={(v) => updateFormData('units', v)}
                   weight={formData.weight} setWeight={(v) => updateFormData('weight', v)}
                   height={formData.height} setHeight={(v) => updateFormData('height', v)}
                 />,
       canContinue: formData.weight !== null && formData.height !== null,
     },
     {
-      title: '¿Cuándo naciste?',
-      description: 'Saber tu fecha de nacimiento nos ayuda a verificar tu edad.',
+      title: t('onboarding.dob.title'),
+      description: t('onboarding.dob.description'),
       content: <DobStep dob={formData.dob} setDob={(v) => updateFormData('dob', v)} />,
       canContinue: !!formData.dob,
     },
     {
-      title: '¿Cuál es tu objetivo principal?',
-      description: 'Elige qué quieres lograr con Calorel.',
+      title: t('onboarding.goal.title'),
+      description: t('onboarding.goal.description'),
       content: <GoalStep goal={formData.goal} setGoal={(v) => updateFormData('goal', v)} />,
       canContinue: !!formData.goal,
     },
-    // Nuevo paso insertado aquí
     {
-      title: 'Establece tu meta',
-      description: '¿Cuál es el peso que te gustaría alcanzar?',
+      title: t('onboarding.goal_weight.title'),
+      description: t('onboarding.goal_weight.description'),
       content: <GoalWeightStep 
                   goalWeight={formData.goalWeight} 
                   setGoalWeight={(v) => updateFormData('goalWeight', v)}
@@ -143,11 +143,11 @@ const Onboarding = () => {
       canContinue: formData.goalWeight !== null,
     },
     {
-      title: '¡Estás a un paso!',
-      description: 'Con Calorel, estás en el camino correcto hacia tus metas.',
+      title: t('onboarding.final.title'),
+      description: t('onboarding.final.description'),
       content: <FinalStep />,
       canContinue: true,
-      continueText: 'Finalizar y empezar',
+      continueText: t('onboarding.final.button'),
     },
   ];
 
