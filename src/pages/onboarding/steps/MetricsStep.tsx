@@ -11,6 +11,12 @@ interface MetricsStepProps {
 }
 
 export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHeight }: MetricsStepProps) => {
+  const formatFeetAndInches = (totalInches: number) => {
+    const feet = Math.floor(totalInches / 12);
+    const inches = totalInches % 12;
+    return `${feet}.${inches.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="space-y-6">
       <ToggleGroup
@@ -22,7 +28,7 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
         className="grid grid-cols-2"
       >
         <ToggleGroupItem value="metric" className="h-12 text-base">Metric (kg, cm)</ToggleGroupItem>
-        <ToggleGroupItem value="imperial" className="h-12 text-base">Imperial (lbs, in)</ToggleGroupItem>
+        <ToggleGroupItem value="imperial" className="h-12 text-base">Imperial (lbs, ft)</ToggleGroupItem>
       </ToggleGroup>
 
       <div className="space-y-4">
@@ -49,11 +55,12 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
           <>
             <NumberPicker
               label="Height"
-              unit="in"
+              unit="ft"
               value={height}
               onValueChange={setHeight}
-              min={47}
-              max={86}
+              min={47} // 3'11" in inches
+              max={86} // 7'2" in inches
+              displayFormatter={formatFeetAndInches}
             />
             <NumberPicker
               label="Weight"
