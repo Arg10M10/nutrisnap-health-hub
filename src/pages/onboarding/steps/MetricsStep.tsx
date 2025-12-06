@@ -13,6 +13,29 @@ interface MetricsStepProps {
 
 export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHeight }: MetricsStepProps) => {
   const { t } = useTranslation();
+
+  const handleUnitChange = (newUnit: 'metric' | 'imperial') => {
+    if (!newUnit || newUnit === units) return;
+
+    // Convert weight
+    if (weight !== null) {
+      const newWeight = newUnit === 'imperial'
+        ? Math.round(weight * 2.20462) // kg to lbs
+        : Math.round(weight / 2.20462); // lbs to kg
+      setWeight(newWeight);
+    }
+
+    // Convert height
+    if (height !== null) {
+      const newHeight = newUnit === 'imperial'
+        ? Math.round(height / 2.54) // cm to inches
+        : Math.round(height * 2.54); // inches to cm
+      setHeight(newHeight);
+    }
+
+    setUnits(newUnit);
+  };
+
   const formatFeetAndInches = (totalInches: number) => {
     const feet = Math.floor(totalInches / 12);
     const inches = totalInches % 12;
@@ -24,9 +47,7 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
       <ToggleGroup
         type="single"
         value={units}
-        onValueChange={(value) => {
-          if (value) setUnits(value as 'metric' | 'imperial');
-        }}
+        onValueChange={(value) => handleUnitChange(value as 'metric' | 'imperial')}
         className="grid grid-cols-2"
       >
         <ToggleGroupItem value="metric" className="h-12 text-base">{t('onboarding.metrics.metric')}</ToggleGroupItem>

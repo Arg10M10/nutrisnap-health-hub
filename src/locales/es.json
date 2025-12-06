@@ -412,8 +412,8 @@
     "metrics": {
       "title": "Tus medidas",
       "description": "Introduce tu peso y altura para un seguimiento preciso.",
-      "metric": "Métrico (kg, cm)",
-      "imperial": "Imperial (lbs, ft)",
+      "metric": "Métrico",
+      "imperial": "Imperial",
       "height": "Altura",
       "weight": "Peso",
       "cm": "cm",
