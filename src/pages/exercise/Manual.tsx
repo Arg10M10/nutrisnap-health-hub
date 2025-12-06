@@ -7,8 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Pencil } from 'lucide-react';
+import { ArrowLeft, Flame, Loader2 } from 'lucide-react';
 
 const ManualExercise = () => {
   const navigate = useNavigate();
@@ -16,20 +15,20 @@ const ManualExercise = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const [name, setName] = useState('');
-  const [duration, setDuration] = useState<number>(30);
-  const [calories, setCalories] = useState<number>(200);
+  const [calories, setCalories] = useState<number | ''>('');
 
   const mutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error('User not found');
-      if (!name || duration <= 0 || calories <= 0) throw new Error(t('manual_exercise.validation_error'));
+      if (calories === '' || calories <= 0) throw new Error(t('manual_exercise.validation_error'));
+      
       const { error } = await supabase.from('exercise_entries').insert({
         user_id: user.id,
-        exercise_type: name.toLowerCase(),
+        exercise_type: 'manual',
         intensity: 'manual',
-        duration_minutes: duration,
+        duration_minutes: 0,
         calories_burned: calories,
+        status: 'completed',
       });
       if (error) throw error;
     },
@@ -50,30 +49,38 @@ const ManualExercise = () => {
           <ArrowLeft className="w-6 h-6" />
         </Button>
         <div className="flex items-center gap-2">
-          <Pencil className="w-7 h-7 text-primary" />
+          <Flame className="w-6 h-6 text-primary" />
           <h1 className="text-2xl font-bold text-primary">{t('manual_exercise.title')}</h1>
         </div>
       </header>
-      <main className="flex-1 p-4 space-y-6">
-        <Card>
-          <CardContent className="p-4 space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">{t('manual_exercise.name_label')}</label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t('manual_exercise.name_placeholder')} />
+      <main className="flex-1 p-4 flex flex-col">
+        <div className="flex-1 space-y-8">
+          <h2 className="text-4xl font-bold text-foreground">{t('manual_exercise.calories_burned')}</h2>
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full border-4 border-primary flex items-center justify-center flex-shrink-0">
+              <Flame className="w-8 h-8 text-primary" />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">{t('manual_exercise.duration_label')}</label>
-              <Input type="number" value={duration} onChange={(e) => setDuration(parseInt(e.target.value || '0', 10))} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">{t('manual_exercise.calories_label')}</label>
-              <Input type="number" value={calories} onChange={(e) => setCalories(parseInt(e.target.value || '0', 10))} />
-            </div>
-            <Button className="w-full h-12" onClick={() => mutation.mutate()} disabled={mutation.isPending}>
-              {t('manual_exercise.save_button')}
-            </Button>
-          </CardContent>
-        </Card>
+            <Input
+              type="number"
+              value={calories}
+              onChange={(e) => setCalories(e.target.value === '' ? '' : parseInt(e.target.value, 10))}
+              placeholder="0"
+              className="h-20 text-4xl font-bold"
+              autoFocus
+            />
+          </div>
+        </div>
+        <footer className="py-4">
+          <Button
+            size="lg"
+            className="w-full h-14 text-lg rounded-full"
+            onClick={() => mutation.mutate()}
+            disabled={mutation.isPending || calories === '' || calories <= 0}
+          >
+            {mutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+            {t('manual_exercise.add_button')}
+          </Button>
+        </footer>
       </main>
     </div>
   );

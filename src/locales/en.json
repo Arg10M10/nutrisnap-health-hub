@@ -172,7 +172,8 @@
     "running": "Running",
     "cycling": "Cycling",
     "weights": "Weights",
-    "other": "Other"
+    "other": "Other",
+    "manual": "Manual Exercise"
   },
   "running": {
     "title": "Log Run",
@@ -223,15 +224,12 @@
     "ai_success_toast": "Estimation ready! Review and add your exercise."
   },
   "manual_exercise": {
-    "title": "Manual Exercise",
-    "name_label": "Exercise name",
-    "name_placeholder": "e.g., Elliptical, walk...",
-    "duration_label": "Duration (minutes)",
-    "calories_label": "Calories (kcal)",
-    "save_button": "Save",
-    "saved_toast": "Exercise saved",
-    "error_toast_title": "Could not save",
-    "validation_error": "Complete all fields with valid values."
+    "title": "Manual",
+    "calories_burned": "Calories Burned",
+    "add_button": "Add",
+    "saved_toast": "Manual exercise added.",
+    "error_toast_title": "Could not add exercise.",
+    "validation_error": "Please enter a valid number of calories."
   },
   "preferences": {
     "title": "Preferences",

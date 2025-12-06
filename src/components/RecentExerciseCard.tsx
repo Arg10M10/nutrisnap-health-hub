@@ -11,6 +11,7 @@ const exerciseIcons: { [key: string]: React.ElementType } = {
   running: Footprints,
   cycling: Bike,
   weights: Dumbbell,
+  manual: Dumbbell,
   default: Dumbbell,
 };
 
@@ -42,7 +43,7 @@ const RecentExerciseCard = ({ entry }: RecentExerciseCardProps) => {
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start mb-2">
           <h4 className="font-semibold text-foreground truncate pr-2">
-            {isProcessing ? (entry.description || 'Analizando...') : t(`exercise.${entry.exercise_type}` as any)}
+            {isProcessing ? (entry.description || 'Analizando...') : t(`exercise.${entry.exercise_type}` as any, { defaultValue: entry.exercise_type })}
           </h4>
           <span className="text-xs text-muted-foreground flex-shrink-0">{new Date(entry.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         </div>
@@ -59,8 +60,8 @@ const RecentExerciseCard = ({ entry }: RecentExerciseCardProps) => {
               <Flame className="w-4 h-4 text-destructive" />
               <span className="font-semibold text-destructive">{entry.calories_burned} kcal</span>
             </div>
-            <p>{entry.duration_minutes} min</p>
-            <p className="capitalize">{t(`running.intensity_${entry.intensity}` as any)}</p>
+            {entry.duration_minutes > 0 && <p>{entry.duration_minutes} min</p>}
+            {entry.intensity !== 'manual' && <p className="capitalize">{t(`running.intensity_${entry.intensity}` as any)}</p>}
           </div>
         )}
       </div>

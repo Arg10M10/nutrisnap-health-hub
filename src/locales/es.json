@@ -172,7 +172,8 @@
     "running": "Correr",
     "cycling": "Ciclismo",
     "weights": "Pesas",
-    "other": "Otro"
+    "other": "Otro",
+    "manual": "Ejercicio Manual"
   },
   "running": {
     "title": "Registrar Carrera",
@@ -223,15 +224,12 @@
     "ai_success_toast": "¡Estimación lista! Revisa y agrega tu ejercicio."
   },
   "manual_exercise": {
-    "title": "Ejercicio Manual",
-    "name_label": "Nombre del ejercicio",
-    "name_placeholder": "Ej: Elíptica, paseo...",
-    "duration_label": "Duración (minutos)",
-    "calories_label": "Calorías (kcal)",
-    "save_button": "Guardar",
-    "saved_toast": "Ejercicio guardado",
-    "error_toast_title": "No se pudo guardar",
-    "validation_error": "Completa todos los campos con valores válidos."
+    "title": "Manual",
+    "calories_burned": "Calorías quemadas",
+    "add_button": "Añadir",
+    "saved_toast": "Ejercicio manual añadido.",
+    "error_toast_title": "No se pudo añadir el ejercicio.",
+    "validation_error": "Por favor, introduce un número válido de calorías."
   },
   "preferences": {
     "title": "Preferencias",
