@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, ComponentType } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +30,7 @@ import Viewfinder from "@/components/Viewfinder";
 import { useAuth } from "@/context/AuthContext";
 import { motion, Transition } from "framer-motion";
 import { useAILimit } from "@/hooks/useAILimit";
+import BarcodeScannerComponent from "@/components/BarcodeScannerComponent";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -58,12 +59,12 @@ const Scanner = () => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const navigate = useNavigate();
-  const [BarcodeScanner, setBarcodeScanner] = useState<ComponentType<any> | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [hasFlash, setHasFlash] = useState(false);
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
+  const [isProcessingBarcode, setIsProcessingBarcode] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -117,30 +118,50 @@ const Scanner = () => {
       startCamera();
     } else {
       stopCamera();
-      setState('initializing');
-      if (!BarcodeScanner) {
-        import('react-zxing')
-          .then((mod) => {
-            const ScannerComponent = mod.BarcodeScanner;
-            if (ScannerComponent) {
-              setBarcodeScanner(() => ScannerComponent);
-              setState('camera');
-            } else {
-              throw new Error("BarcodeScanner component not found in react-zxing module.");
-            }
-          })
-          .catch(err => {
-            console.error("Failed to load BarcodeScanner component", err);
-            toast.error("No se pudo cargar el escáner de códigos de barras.");
-            setError("Error al cargar el componente del escáner.");
-            setState("error");
-          });
-      } else {
-        setState('camera');
-      }
+      setState('camera');
     }
     return () => stopCamera();
   }, [scanMode]);
+
+  const handleBarcodeDetected = async (barcode: string) => {
+    if (isProcessingBarcode) return;
+    setIsProcessingBarcode(true);
+    
+    const toastId = toast.loading("Código detectado. Buscando producto...");
+
+    try {
+      const response = await fetch(`https://world.openfoodfacts.org/api/v3/product/${barcode}.json`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.status === 0 || !data.product) {
+        toast.error("Producto no encontrado", { id: toastId, description: "Este código de barras no está en la base de datos." });
+        setIsProcessingBarcode(false);
+        return;
+      }
+
+      const { error: functionError } = await supabase.functions.invoke('process-openfoodfacts-data', {
+        body: { product: data.product },
+      });
+
+      if (functionError) {
+        throw new Error(functionError.message);
+      }
+
+      toast.success("¡Producto añadido!", { id: toastId, description: data.product.product_name });
+      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+      navigate('/');
+
+    } catch (err) {
+      console.error("Error processing barcode:", err);
+      toast.error("Error al procesar el producto", { id: toastId, description: (err as Error).message });
+      setIsProcessingBarcode(false);
+    }
+  };
 
   const toggleFlash = async () => {
     if (!hasFlash || !streamRef.current) {
@@ -156,55 +177,6 @@ const Scanner = () => {
     } catch (err) {
       console.error("Error toggling flash:", err);
       toast.error("No se pudo activar el flash.");
-    }
-  };
-
-  const barcodeScanMutation = useMutation({
-    mutationFn: async (barcode: string) => {
-      if (!user) throw new Error('User not found');
-      const { data, error } = await supabase
-        .from('food_entries')
-        .insert({
-          user_id: user.id,
-          food_name: `Buscando: ${barcode}`,
-          status: 'processing',
-          barcode: barcode,
-        })
-        .select()
-        .single();
-      if (error) throw error;
-      return { newEntry: data, barcode };
-    },
-    onSuccess: ({ newEntry, barcode }) => {
-      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
-      navigate('/');
-      toast.info('Buscando producto...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
-
-      supabase.functions.invoke('process-barcode', {
-        body: { entry_id: newEntry.id, barcode },
-      }).then(({ error }) => {
-        if (error) {
-          console.error("Function invocation failed:", error);
-          supabase.from('food_entries').update({ status: 'failed', reason: 'No se pudo iniciar la búsqueda.' }).eq('id', newEntry.id).then(() => {
-            queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
-          });
-        }
-      });
-    },
-    onError: (err: Error) => {
-      console.error("Barcode scan start error:", err);
-      toast.error("No se pudo iniciar la búsqueda.", { description: err.message });
-    },
-  });
-
-  const handleBarcodeScan = (result: unknown) => {
-    if (barcodeScanMutation.isPending) return;
-
-    if (result && typeof (result as any).getText === 'function') {
-      const barcode = (result as any).getText();
-      if (barcode) {
-        barcodeScanMutation.mutate(barcode);
-      }
     }
   };
 
@@ -243,7 +215,7 @@ const Scanner = () => {
     onError: (err: Error) => {
       console.error("Analysis start error:", err);
       toast.error("No se pudo iniciar el análisis.", { description: err.message });
-      setState("captured"); // Allow retry if failed
+      setState("captured");
     },
   });
 
@@ -376,24 +348,8 @@ const Scanner = () => {
             )}
           />
         )}
-        {scanMode === 'barcode' && state === 'camera' && BarcodeScanner && (
-          <BarcodeScanner
-            onResult={handleBarcodeScan}
-            onError={(error) => {
-              console.error("Barcode scanner error:", error);
-              let message = "Ocurrió un error inesperado con el escáner.";
-              if (error instanceof Error) {
-                if (error.name === 'NotAllowedError') {
-                  message = "Permiso de cámara denegado. Por favor, habilita el acceso a la cámara en la configuración de tu navegador.";
-                } else if (error.name === 'NotFoundException' || error.name === 'NotFoundError') {
-                  message = "No se encontró una cámara compatible. Asegúrate de que no esté siendo usada por otra aplicación.";
-                } else {
-                  message = "El escáner no pudo iniciarse. Intenta refrescar la página.";
-                }
-              }
-              toast.error("Error del escáner", { description: message });
-            }}
-          />
+        {scanMode === 'barcode' && state === 'camera' && (
+          <BarcodeScannerComponent onScan={handleBarcodeDetected} />
         )}
         {capturedImage && (state === 'captured' || state === 'loading' || startAnalysisMutation.isPending) && (
           <img
@@ -434,11 +390,6 @@ const Scanner = () => {
 
         <div className="flex-1 relative flex items-center justify-center">
           {scanMode === 'food' && state === 'camera' && <Viewfinder />}
-          {scanMode === 'barcode' && state === 'camera' && (
-            <div className="w-[80vw] max-w-md h-24 bg-white/10 rounded-lg border-2 border-white/50 relative">
-              <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-red-500 animate-pulse" />
-            </div>
-          )}
           {(state === 'loading' || startAnalysisMutation.isPending) && (
              <div className="flex flex-col items-center gap-4">
                 <Loader2 className="w-16 h-16 text-primary animate-spin" />
@@ -518,12 +469,10 @@ const Scanner = () => {
         </footer>
       </div>
 
-      {state === "initializing" && (
+      {state === "initializing" && scanMode === 'food' && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
           <Loader2 className="w-16 h-16 text-primary animate-spin" />
-          <p className="text-white text-lg">
-            {scanMode === 'food' ? 'Iniciando cámara...' : 'Cargando escáner...'}
-          </p>
+          <p className="text-white text-lg">Iniciando cámara...</p>
         </div>
       )}
       {state === "error" && (
