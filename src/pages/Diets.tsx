@@ -7,11 +7,13 @@ import PageLayout from "@/components/PageLayout";
 import { Loader2 } from "lucide-react";
 import { DietsOnboarding } from "@/components/diets/DietsOnboarding";
 import { WeeklyPlanDisplay } from "@/components/diets/WeeklyPlanDisplay";
+import { useAILimit } from "@/hooks/useAILimit";
 
 const Diets = () => {
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+  const { logUsage } = useAILimit();
 
   const { data: weeklyPlan, isLoading: isLoadingPlan } = useQuery({
     queryKey: ['weekly_diet_plan', user?.id],
@@ -40,6 +42,13 @@ const Diets = () => {
       if (error) throw error;
     },
     onSuccess: async () => {
+      // Nota: Logueamos el uso aquí porque "regenerar" implica volver al onboarding para usar la IA.
+      // O si el diseño cambiara para regenerar directamente, aquí iría la llamada a logUsage('diet_plan').
+      // Dado que esto resetea el flag y manda al usuario a `DietsOnboarding`, 
+      // el `logUsage` real ocurrirá cuando completen el formulario en `DietsOnboarding`.
+      // Sin embargo, para contar el intento de regeneración en sí mismo como una acción limitada,
+      // ya lo verificamos en WeeklyPlanDisplay antes de llamar a esta mutación.
+      
       await refetchProfile();
       queryClient.invalidateQueries({ queryKey: ['weekly_diet_plan', user?.id] });
     },
@@ -65,7 +74,6 @@ const Diets = () => {
     );
   }
 
-  // Fallback si algo sale mal o no hay plan
   return <PageLayout><DietsOnboarding /></PageLayout>;
 };
 

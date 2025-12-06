@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useAILimit } from '@/hooks/useAILimit';
 
 const step1Schema = z.object({
   workoutsPerWeek: z.number().min(0).max(7),
@@ -37,6 +38,7 @@ const AISuggestions = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
+  const { checkLimit, logUsage } = useAILimit();
 
   const form = useForm<z.infer<typeof fullSchema>>({
     resolver: zodResolver(fullSchema),
@@ -92,6 +94,7 @@ const AISuggestions = () => {
       return suggestions;
     },
     onSuccess: async () => {
+      logUsage('ai_suggestions');
       await refetchProfile();
       toast.success("¡Plan nutricional actualizado con las sugerencias de la IA!");
       navigate(-1);
@@ -101,8 +104,11 @@ const AISuggestions = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof fullSchema>) => {
-    mutation.mutate(values);
+  const handleGenerate = async (values: z.infer<typeof fullSchema>) => {
+    const canProceed = await checkLimit('ai_suggestions', 2, 'daily');
+    if (canProceed) {
+      mutation.mutate(values);
+    }
   };
 
   const handleNext = async () => {
@@ -148,7 +154,7 @@ const AISuggestions = () => {
       </header>
       <main className="flex-1 p-4 overflow-hidden flex flex-col">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
+          <form onSubmit={form.handleSubmit(handleGenerate)} className="flex flex-col h-full">
             <div className="flex-1">
               <AnimatePresence initial={false} custom={direction}>
                 <motion.div

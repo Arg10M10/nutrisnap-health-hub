@@ -9,12 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Loader2, FileText } from 'lucide-react';
+import { useAILimit } from '@/hooks/useAILimit';
 
 const WriteExercise = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
+  const { checkLimit, logUsage } = useAILimit();
 
   const [name, setName] = useState('');
   const [duration, setDuration] = useState<number>(30);
@@ -30,6 +32,7 @@ const WriteExercise = () => {
       return data as { calories: number };
     },
     onSuccess: ({ calories }) => {
+      logUsage('exercise_ai');
       setEstimated(calories);
       toast.success(t('write_exercise.estimated_toast'), { description: `${calories} kcal` });
     },
@@ -37,6 +40,13 @@ const WriteExercise = () => {
       toast.error(t('write_exercise.error_toast_title'), { description: (error as Error).message });
     },
   });
+
+  const handleEstimate = async () => {
+    const canProceed = await checkLimit('exercise_ai', 2, 'daily');
+    if (canProceed) {
+      estimateMutation.mutate();
+    }
+  };
 
   const saveMutation = useMutation({
     mutationFn: async () => {
@@ -83,7 +93,7 @@ const WriteExercise = () => {
               <Input type="number" value={duration} onChange={(e) => setDuration(parseInt(e.target.value || '0', 10))} />
             </div>
             <div className="flex gap-2">
-              <Button className="flex-1 h-12" onClick={() => estimateMutation.mutate()} disabled={estimateMutation.isPending}>
+              <Button className="flex-1 h-12" onClick={handleEstimate} disabled={estimateMutation.isPending}>
                 {estimateMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 {estimateMutation.isPending ? "Calculando..." : t('write_exercise.estimate_button')}
               </Button>

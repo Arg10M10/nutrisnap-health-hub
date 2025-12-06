@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import Viewfinder from "@/components/Viewfinder";
 import { useAuth } from "@/context/AuthContext";
 import { motion, Transition } from "framer-motion";
+import { useAILimit } from "@/hooks/useAILimit";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -62,6 +63,7 @@ const Scanner = () => {
   const [hasFlash, setHasFlash] = useState(false);
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { checkLimit, logUsage } = useAILimit();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -252,6 +254,7 @@ const Scanner = () => {
       return { newEntry: data, imageData };
     },
     onSuccess: ({ newEntry, imageData }) => {
+      logUsage('food_scan'); // Log usage on success
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       navigate('/');
       toast.info('Análisis iniciado...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
@@ -273,9 +276,13 @@ const Scanner = () => {
     },
   });
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (capturedImage) {
-      startAnalysisMutation.mutate(capturedImage);
+      // Check limit (4 per day)
+      const canProceed = await checkLimit('food_scan', 4, 'daily');
+      if (canProceed) {
+        startAnalysisMutation.mutate(capturedImage);
+      }
     }
   };
 

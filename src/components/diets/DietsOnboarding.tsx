@@ -12,6 +12,7 @@ import { Wand2, Loader2, ArrowLeft, ArrowRight, Activity, ChefHat, Wallet, Check
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
+import { useAILimit } from '@/hooks/useAILimit';
 
 const preferencesOptions = [
   { id: 'vegetarian', label: 'Vegetariano', icon: '🥗' },
@@ -44,6 +45,7 @@ export const DietsOnboarding = () => {
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
+  const { checkLimit, logUsage } = useAILimit();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,6 +78,7 @@ export const DietsOnboarding = () => {
       if (profileError) throw profileError;
     },
     onSuccess: async () => {
+      logUsage('diet_plan');
       await refetchProfile();
       queryClient.invalidateQueries({ queryKey: ['weekly_diet_plan', user?.id] });
       toast.success("¡Tu plan de dieta personalizado está listo!");
@@ -85,17 +88,20 @@ export const DietsOnboarding = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    mutation.mutate(values);
+  const handleGenerate = async (values: z.infer<typeof formSchema>) => {
+    const canProceed = await checkLimit('diet_plan', 2, 'weekly');
+    if (canProceed) {
+      mutation.mutate(values);
+    }
   };
 
   const nextStep = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevenir cualquier intento de submit
+    e.preventDefault(); 
     setStep(s => Math.min(s + 1, 3));
   };
 
   const prevStep = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevenir cualquier intento de submit
+    e.preventDefault(); 
     setStep(s => Math.max(s - 1, 1));
   };
 
@@ -162,7 +168,6 @@ export const DietsOnboarding = () => {
       </div>
 
       <Form {...form}>
-        {/* Eliminamos el onSubmit del form para evitar envíos automáticos/accidentales */}
         <form className="flex-1 flex flex-col">
           <div className="flex-1 overflow-y-auto px-1 pb-4">
             <AnimatePresence mode="wait">
@@ -318,7 +323,7 @@ export const DietsOnboarding = () => {
                   size="lg" 
                   className="w-full h-14 text-lg rounded-xl" 
                   disabled={mutation.isPending}
-                  onClick={form.handleSubmit(onSubmit)} // Trigger manual solo al hacer click
+                  onClick={form.handleSubmit(handleGenerate)} 
                 >
                   {mutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
                   {mutation.isPending ? "Generando con IA... (puede tardar 1 min)" : "Generar mi Plan"}

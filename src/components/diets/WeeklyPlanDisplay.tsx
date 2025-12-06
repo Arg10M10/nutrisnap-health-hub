@@ -1,8 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Utensils, RefreshCw, Sun, Moon, Coffee, Apple } from 'lucide-react';
+import { RefreshCw, Sun, Moon, Coffee, Apple } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from '@/lib/utils';
+import { useAILimit } from '@/hooks/useAILimit';
 
 type MealPlan = {
   [day: string]: {
@@ -19,7 +20,6 @@ interface WeeklyPlanDisplayProps {
   isRegenerating: boolean;
 }
 
-// Mapeo de claves de la BD (inglés) a visualización (español) y orden
 const dayMapping: { [key: string]: string } = {
   monday: "Lun",
   tuesday: "Mar",
@@ -33,13 +33,17 @@ const dayMapping: { [key: string]: string } = {
 const dayKeys = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
 export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: WeeklyPlanDisplayProps) => {
-  // Determinar el día actual para seleccionarlo por defecto
-  const todayIndex = new Date().getDay(); // 0 = Domingo, 1 = Lunes...
-  // Ajustar para que coincida con nuestro array dayKeys (donde 0 es lunes)
-  // JS: Dom(0), Lun(1), Mar(2)...
-  // Nosotros: Lun(0), Mar(1)... Dom(6)
+  const { checkLimit } = useAILimit();
+  const todayIndex = new Date().getDay(); 
   const defaultIndex = todayIndex === 0 ? 6 : todayIndex - 1;
   const currentDayKey = dayKeys[defaultIndex];
+
+  const handleRegenerateClick = async () => {
+    const canProceed = await checkLimit('diet_plan', 2, 'weekly');
+    if (canProceed) {
+      onRegenerate();
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -48,7 +52,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           <h2 className="text-2xl font-bold text-primary">Tu Plan Semanal</h2>
           <p className="text-sm text-muted-foreground">Menú personalizado</p>
         </div>
-        <Button variant="ghost" size="icon" onClick={onRegenerate} disabled={isRegenerating} title="Regenerar plan">
+        <Button variant="ghost" size="icon" onClick={handleRegenerateClick} disabled={isRegenerating} title="Regenerar plan">
           <RefreshCw className={cn("w-5 h-5 text-muted-foreground", isRegenerating && "animate-spin")} />
         </Button>
       </div>
