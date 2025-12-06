@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
-import { format, subDays } from "date-fns";
-import { es } from "date-fns/locale";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { isToday } from "date-fns";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import PageLayout from "@/components/PageLayout";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
-import { Flame, Weight, Edit } from "lucide-react";
+import { Weight, Edit } from "lucide-react";
 import { useNutrition } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import ManualFoodEntry from "@/components/ManualFoodEntry";
@@ -15,23 +16,43 @@ import StreakCalendar from "@/components/StreakCalendar";
 import EditWeightDrawer from "@/components/EditWeightDrawer";
 import WeightChart from "@/components/WeightChart";
 import AnimatedNumber from "@/components/AnimatedNumber";
+import CalorieIntakeChart from "@/components/CalorieIntakeChart";
 
 const Progress = () => {
-  const { getDataForDate, streak, streakDays } = useNutrition();
-  const { profile } = useAuth();
+  const { streak, streakDays } = useNutrition();
+  const { profile, user } = useAuth();
   const { t } = useTranslation();
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
 
-  const chartData = useMemo(() => {
-    return Array.from({ length: 7 }).map((_, i) => {
-      const day = subDays(new Date(), i);
-      const { intake } = getDataForDate(day);
-      return {
-        day: format(day, "EEE", { locale: es }),
-        calories: intake.calories || 0,
-      };
-    }).reverse();
-  }, [getDataForDate]);
+  const { data: lastWeightEntry } = useQuery({
+    queryKey: ['last_weight_entry', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .from('weight_history')
+        .select('created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      if (error && error.code !== 'PGRST116') throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const handleOpenWeightDrawer = () => {
+    if (lastWeightEntry) {
+      const lastEntryDate = new Date(lastWeightEntry.created_at);
+      if (isToday(lastEntryDate)) {
+        toast.info("Ya has actualizado tu peso hoy.", {
+          description: "Puedes actualizar tu peso de nuevo mañana.",
+        });
+        return;
+      }
+    }
+    setIsWeightDrawerOpen(true);
+  };
 
   return (
     <PageLayout>
@@ -63,7 +84,7 @@ const Progress = () => {
 
         {/* Edit Weight Button */}
         <Button
-          onClick={() => setIsWeightDrawerOpen(true)}
+          onClick={handleOpenWeightDrawer}
           variant="outline"
           size="lg"
           className="w-full h-14 text-lg"
@@ -79,52 +100,7 @@ const Progress = () => {
         <BmiCalculator size="small" />
 
         {/* Calories Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Flame className="w-6 h-6 text-primary" />
-              {t('progress.calorie_intake')}
-            </CardTitle>
-            <CardDescription>{t('progress.last_7_days')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -16 }}>
-                  <XAxis
-                    dataKey="day"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    className="capitalize"
-                    tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                  />
-                  <YAxis
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: 12,
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-                    }}
-                    labelStyle={{ color: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                  />
-                  <Bar
-                    dataKey="calories"
-                    fill="hsl(var(--primary))"
-                    radius={[8, 8, 8, 8]}
-                    barSize={32}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+        <CalorieIntakeChart />
 
         {/* Manual Food Entry */}
         <div className="space-y-4">
