@@ -95,6 +95,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const queryClient = useQueryClient();
   const [unlockedBadges, setUnlockedBadges] = useLocalStorage<string[]>('unlockedBadges', []);
 
+  // Polling inteligente: Si hay algún item "processing", recarga cada 2 segundos.
   const { data: foodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
     queryKey: ['food_entries', user?.id],
     queryFn: async () => {
@@ -104,6 +105,14 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       return data || [];
     },
     enabled: !!user,
+    refetchInterval: (query) => {
+      const data = query.state.data as FoodEntry[] | undefined;
+      // Si hay entradas procesando, refrescar cada 2s
+      if (data?.some(entry => entry.status === 'processing')) {
+        return 2000;
+      }
+      return false;
+    }
   });
 
   const { data: exerciseEntries = [], isLoading: isExerciseLoading } = useQuery<ExerciseEntry[]>({
@@ -128,6 +137,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     enabled: !!user,
   });
 
+  // Mantener suscripción Realtime como respaldo inmediato
   useEffect(() => {
     if (!user) return;
 
@@ -221,7 +231,6 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
     const caloriesBurned = dailyExercise.reduce((acc, entry) => acc + (entry.calories_burned || 0), 0);
 
-    // Sumamos las calorías de ejercicio
     const intake = {
       ...foodIntake,
       calories: foodIntake.calories + caloriesBurned,
@@ -240,13 +249,11 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     return { intake, analyses: combinedAnalyses, healthScore, waterIntake };
   };
 
-  // NUEVA lógica de racha: último tramo de días consecutivos terminando en el último día con comida
   const streakData = useMemo(() => {
     if (!foodEntries.length) return { streak: 0, streakDays: [] };
 
     const entryDays = new Set(foodEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
 
-    // Encontrar el día más reciente con comida
     const sortedDates = Array.from(entryDays).sort();
     const lastDayKey = sortedDates[sortedDates.length - 1];
     const lastDayDate = parseISO(lastDayKey);
