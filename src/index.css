@@ -8,9 +8,8 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* MODO CLARO: fondo VERDE bien notorio */
-    --background-gradient-start: 140 70% 78%; /* verde claro arriba */
-    --background: 140 80% 95%;              /* verde muy clarito abajo */
+    /* MODO CLARO: fondo definido ahora por el componente LightBackground */
+    --background: 140 80% 98%;              /* muy claro para componentes que usen bg-background */
     --foreground: 150 30% 15%;
 
     --card: 0 0% 100%;
@@ -52,7 +51,6 @@ All colors MUST be HSL.
 
   .dark {
     /* MODO OSCURO: fondo negro (muy oscuro) para que los copos blancos destaquen */
-    --background-gradient-start: 220 15% 8%;  /* casi negro arriba */
     --background: 220 15% 6%;                 /* casi negro abajo */
     --foreground: 150 10% 95%;
 
@@ -104,14 +102,10 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    /* Quitamos el bg-background predeterminado para que el componente LightBackground se vea */
+    /* Pero mantenemos un color base para modo oscuro */
+    @apply text-foreground dark:bg-background;
     font-size: 16px;
-    /* En claro: degradado verde; en oscuro: casi negro. */
-    background-image: linear-gradient(
-      to bottom,
-      hsl(var(--background-gradient-start)),
-      hsl(var(--background))
-    );
   }
 
   /* Sin marco blanco de Vite: el fondo se ve en todas las pantallas */

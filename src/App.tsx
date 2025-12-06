@@ -34,6 +34,7 @@ import RingColors from "./pages/settings/RingColors";
 import RequestFeature from "./pages/settings/RequestFeature";
 import EditProfile from "./pages/settings/EditProfile";
 import Snowfall from "./components/Snowfall";
+import LightBackground from "./components/LightBackground";
 import { SnowProvider, useSnow } from "./context/SnowContext";
 
 const queryClient = new QueryClient();
@@ -80,14 +81,16 @@ const AppRoutes = () => {
     "/settings/edit-profile",
   ];
 
-  const shellClass = "relative min-h-screen bg-background";
+  // Eliminamos bg-background aquí para que se vea el LightBackground
+  const shellClass = "relative min-h-screen"; 
 
-  // No mostrar nieve en el escáner (ni mientras se toma ni mientras se revisa la foto)
+  // No mostrar nieve en el escáner
   const showSnow = snowEnabled && location.pathname !== "/scanner";
 
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
+        <LightBackground />
         <Snowfall enabled={showSnow} />
         <div className="relative z-10">
           <AnimatePresence mode="wait">
@@ -115,6 +118,7 @@ const AppRoutes = () => {
   if (!session) {
     return (
       <div className={shellClass}>
+        <LightBackground />
         <Snowfall enabled={showSnow} />
         <div className="relative z-10">
           <Login />
@@ -126,6 +130,7 @@ const AppRoutes = () => {
   if (!profile?.onboarding_completed) {
     return (
       <div className={shellClass}>
+        <LightBackground />
         <Snowfall enabled={showSnow} />
         <div className="relative z-10">
           <Onboarding />
@@ -136,6 +141,7 @@ const AppRoutes = () => {
 
   return (
     <div className={shellClass}>
+      <LightBackground />
       <Snowfall enabled={showSnow} />
       <div className="pb-28 relative z-10">
         <AnimatedRoutes />
