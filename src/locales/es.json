@@ -274,7 +274,8 @@
     "healthy": "Saludable",
     "overweight": "Sobrepeso",
     "obesity": "Obesidad",
-    "tooltip": "El Índice de Masa Corporal (IMC) relaciona peso y altura para estimar si tu peso es saludable. Categorías: Bajo peso (<18.5), Saludable (18.5-24.9), Sobrepeso (25-29.9), Obesidad (≥30)."
+    "tooltip": "El Índice de Masa Corporal (IMC) utiliza tu altura y peso para estimar si tu peso es saludable. Categorías: Bajo peso (<18.5), Saludable (18.5-24.9), Sobrepeso (25-29.9), Obesidad (≥30).",
+    "dialog_action": "Entendido"
   },
   "manual_food": {
     "title": "Añadir Comida Manualmente",

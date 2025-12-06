@@ -1,7 +1,14 @@
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -76,14 +83,20 @@ const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
     <Card>
       <CardHeader className="flex-row items-start justify-between pb-2">
         <CardTitle className={cn(isSmall && "text-lg")}>{t('bmi_calculator.title')}</CardTitle>
-        <Tooltip>
-          <TooltipTrigger asChild>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
             <HelpCircle className="w-5 h-5 text-muted-foreground cursor-help" />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{t('bmi_calculator.tooltip')}</p>
-          </TooltipContent>
-        </Tooltip>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('bmi_calculator.title')}</AlertDialogTitle>
+              <p className="text-sm text-muted-foreground pt-2">
+                {t('bmi_calculator.tooltip')}
+              </p>
+            </AlertDialogHeader>
+            <AlertDialogAction>{t('bmi_calculator.dialog_action')}</AlertDialogAction>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardHeader>
       <CardContent className={cn("pt-4", isSmall ? "space-y-4" : "space-y-6")}>
         <div className="flex items-baseline gap-2 flex-wrap">
