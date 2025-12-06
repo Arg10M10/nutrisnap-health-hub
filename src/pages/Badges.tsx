@@ -54,10 +54,10 @@ const Badges = () => {
             {streakBadges.map((badge) => {
               const isUnlocked = streak >= badge.days;
               return (
-                <Card key={badge.name} className={cn("text-center p-4 transition-all", !isUnlocked && "opacity-50 bg-muted")}>
+                <Card key={badge.id} className={cn("text-center p-4 transition-all", !isUnlocked && "opacity-50 bg-muted")}>
                   <CardHeader className="p-2">
                     <div className="relative w-24 h-24 mx-auto">
-                      <img src={badge.image} alt={badge.name} className="w-full h-full" />
+                      <img src={badge.image} alt={t(`badge_names.${badge.id}.name` as any)} className="w-full h-full" />
                       {!isUnlocked && (
                         <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
                           <Lock className="w-8 h-8 text-white" />
@@ -66,8 +66,8 @@ const Badges = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="p-2">
-                    <CardTitle className="text-base font-semibold">{badge.name}</CardTitle>
-                    <CardDescription className="text-xs">{badge.description}</CardDescription>
+                    <CardTitle className="text-base font-semibold">{t(`badge_names.${badge.id}.name` as any)}</CardTitle>
+                    <CardDescription className="text-xs">{t(`badge_names.${badge.id}.desc` as any)}</CardDescription>
                   </CardContent>
                 </Card>
               );
@@ -84,10 +84,10 @@ const Badges = () => {
             {waterBadges.map((badge) => {
               const isUnlocked = waterStreak >= badge.days;
               return (
-                <Card key={badge.name} className={cn("text-center p-4 transition-all", !isUnlocked && "opacity-50 bg-muted")}>
+                <Card key={badge.id} className={cn("text-center p-4 transition-all", !isUnlocked && "opacity-50 bg-muted")}>
                   <CardHeader className="p-2">
                     <div className="relative w-24 h-24 mx-auto">
-                      <img src={badge.image} alt={badge.name} className="w-full h-full" />
+                      <img src={badge.image} alt={t(`badge_names.${badge.id}.name` as any)} className="w-full h-full" />
                       {!isUnlocked && (
                         <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
                           <Lock className="w-8 h-8 text-white" />
@@ -96,8 +96,8 @@ const Badges = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="p-2">
-                    <CardTitle className="text-base font-semibold">{badge.name}</CardTitle>
-                    <CardDescription className="text-xs">{badge.description}</CardDescription>
+                    <CardTitle className="text-base font-semibold">{t(`badge_names.${badge.id}.name` as any)}</CardTitle>
+                    <CardDescription className="text-xs">{t(`badge_names.${badge.id}.desc` as any)}</CardDescription>
                   </CardContent>
                 </Card>
               );
@@ -115,10 +115,10 @@ const Badges = () => {
               {weightLossBadges.map((badge) => {
                 const isUnlocked = weightLost >= badge.kg;
                 return (
-                  <Card key={badge.name} className={cn("text-center p-4 transition-all", !isUnlocked && "opacity-50 bg-muted")}>
+                  <Card key={badge.id} className={cn("text-center p-4 transition-all", !isUnlocked && "opacity-50 bg-muted")}>
                     <CardHeader className="p-2">
                       <div className="relative w-24 h-24 mx-auto">
-                        <img src={badge.image} alt={badge.name} className="w-full h-full" />
+                        <img src={badge.image} alt={t(`badge_names.${badge.id}.name` as any)} className="w-full h-full" />
                         {!isUnlocked && (
                           <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
                             <Lock className="w-8 h-8 text-white" />
@@ -127,8 +127,8 @@ const Badges = () => {
                       </div>
                     </CardHeader>
                     <CardContent className="p-2">
-                      <CardTitle className="text-base font-semibold">{badge.name}</CardTitle>
-                      <CardDescription className="text-xs">{badge.description}</CardDescription>
+                      <CardTitle className="text-base font-semibold">{t(`badge_names.${badge.id}.name` as any)}</CardTitle>
+                      <CardDescription className="text-xs">{t(`badge_names.${badge.id}.desc` as any)}</CardDescription>
                     </CardContent>
                   </Card>
                 );

@@ -40,7 +40,10 @@
       "description": "Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y tus datos de nuestros servidores.",
       "confirm": "Sí, eliminar cuenta",
       "cancel": "Cancelar"
-    }
+    },
+    "snow_effect_title": "Efecto de Nieve",
+    "snow_effect_desc": "Activa copos de nieve cayendo suavemente en el fondo.",
+    "snow_effect_tip": "Consejo: Se ve mejor en modo oscuro."
   },
   "languages": {
     "es": "Español",
@@ -132,7 +135,31 @@
     "meal_streak": "Racha de Comidas",
     "total_badges": "Insignias Totales",
     "hydration_streak": "Racha de Hidratación",
-    "weight_loss": "Pérdida de Peso"
+    "weight_loss": "Pérdida de Peso",
+    "notification_title": "¡Insignia Desbloqueada!"
+  },
+  "badge_names": {
+    "streak_1": { "name": "Primer Día", "desc": "Registra tu primer día." },
+    "streak_3": { "name": "Tres en Raya", "desc": "Mantén una racha de 3 días." },
+    "streak_6": { "name": "Casi una Semana", "desc": "Mantén una racha de 6 días." },
+    "streak_10": { "name": "Doble Dígito", "desc": "Alcanza una racha de 10 días." },
+    "streak_30": { "name": "Racha Mensual", "desc": "¡Un mes completo! Sigue así." },
+    "streak_60": { "name": "Dos Meses", "desc": "¡Dos meses seguidos!" },
+    "streak_80": { "name": "En Llamas", "desc": "Una racha de 80 días." },
+    "streak_100": { "name": "Club 100", "desc": "¡100 días seguidos!" },
+    "streak_200": { "name": "Imparable", "desc": "Una racha épica de 200 días." },
+    "streak_300": { "name": "Pura Constancia", "desc": "Increíble racha de 300 días." },
+    "streak_400": { "name": "Leyenda", "desc": "Una racha imparable de 400 días." },
+    "streak_500": { "name": "Más Allá", "desc": "Has superado los 500 días. ¡Wow!" },
+    "water_1": { "name": "Primer Vaso", "desc": "Registra agua por 1 día." },
+    "water_3": { "name": "Hidratación Constante", "desc": "Racha de 3 días de agua." },
+    "water_5": { "name": "Hábito Saludable", "desc": "Racha de 5 días de agua." },
+    "water_10": { "name": "Maestro del Agua", "desc": "Racha de 10 días de agua." },
+    "weight_1": { "name": "Primer Kilo", "desc": "Pierde tu primer kilogramo." },
+    "weight_15": { "name": "Meta 15kg", "desc": "Alcanza 15kg perdidos." },
+    "weight_30": { "name": "Meta 30kg", "desc": "Has perdido 30kg." },
+    "weight_50": { "name": "Meta 50kg", "desc": "¡Increíble! 50kg menos." },
+    "weight_70": { "name": "Meta 70kg", "desc": "Un logro monumental: 70kg." }
   },
   "exercise": {
     "title": "Registrar Ejercicio",

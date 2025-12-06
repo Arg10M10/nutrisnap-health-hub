@@ -37,13 +37,19 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
 
     const weightLost = updatedProfile.starting_weight - updatedProfile.weight;
     weightLossBadges.forEach(badge => {
-      if (weightLost >= badge.kg && !unlockedBadges.includes(badge.name)) {
+      if (weightLost >= badge.kg && !unlockedBadges.includes(badge.id)) {
+        const translatedBadge = {
+          ...badge,
+          name: t(`badge_names.${badge.id}.name` as any),
+          description: t(`badge_names.${badge.id}.desc` as any),
+        };
+
         toast.custom(() => (
           <div className="bg-card border p-4 rounded-lg shadow-lg w-full max-w-md">
-            <BadgeNotification {...badge} />
+            <BadgeNotification {...translatedBadge} />
           </div>
         ), { duration: 5000 });
-        setUnlockedBadges(prev => [...prev, badge.name]);
+        setUnlockedBadges(prev => [...prev, badge.id]);
       }
     });
   };
@@ -64,7 +70,7 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
       if (historyError) throw historyError;
     },
     onSuccess: async () => {
-      toast.success('¡Peso actualizado con éxito!');
+      toast.success(t('edit_weight.save') + '!');
       await Promise.all([
         refetchProfile(),
         queryClient.invalidateQueries({ queryKey: ['weight_history', user?.id] })
@@ -77,7 +83,7 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
       onClose();
     },
     onError: (error) => {
-      toast.error('No se pudo actualizar el peso.', { description: error.message });
+      toast.error('Error', { description: error.message });
     },
   });
 

@@ -140,9 +140,9 @@ const Settings = () => {
                   <Snowflake size={20} />
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">Efecto de nieve navideña</p>
+                  <p className="font-medium text-foreground">{t('settings.snow_effect_title')}</p>
                   <p className="text-xs text-muted-foreground">
-                    Activa copos y bolas de nieve cayendo suavemente en el fondo.
+                    {t('settings.snow_effect_desc')}
                   </p>
                 </div>
               </div>
@@ -152,7 +152,7 @@ const Settings = () => {
               />
             </div>
             <p className="text-[11px] text-muted-foreground mt-1 pl-9">
-              Consejo: este efecto se ve mejor en modo oscuro.
+              {t('settings.snow_effect_tip')}
             </p>
           </div>
         </SettingsCategory>

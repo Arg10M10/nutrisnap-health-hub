@@ -8,6 +8,7 @@ import { format, isSameDay, subDays, parseISO } from 'date-fns';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { streakBadges, waterBadges } from '@/data/badges';
 import BadgeNotification from '@/components/BadgeNotification';
+import { useTranslation } from 'react-i18next';
 
 export interface FoodEntry {
   id: string;
@@ -94,6 +95,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [unlockedBadges, setUnlockedBadges] = useLocalStorage<string[]>('unlockedBadges', []);
+  const { t } = useTranslation();
 
   // Polling inteligente: Si hay algún item "processing", recarga cada 2 segundos.
   const { data: foodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
@@ -302,20 +304,28 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
     const checkAndNotify = (badges: any[], currentStreak: number, type: 'days') => {
       badges.forEach(badge => {
-        if (currentStreak >= badge[type] && !unlockedBadges.includes(badge.name)) {
+        if (currentStreak >= badge[type] && !unlockedBadges.includes(badge.id)) {
+          // Translate badge details before showing toast
+          const translatedBadge = {
+            ...badge,
+            name: t(`badge_names.${badge.id}.name` as any),
+            description: t(`badge_names.${badge.id}.desc` as any),
+          };
+          
           toast.custom((t) => (
             <div className="bg-card border p-4 rounded-lg shadow-lg w-full max-w-md">
-              <BadgeNotification {...badge} />
+              <BadgeNotification {...translatedBadge} />
             </div>
           ), { duration: 5000 });
-          setUnlockedBadges(prev => [...prev, badge.name]);
+          
+          setUnlockedBadges(prev => [...prev, badge.id]);
         }
       });
     };
 
     checkAndNotify(streakBadges, streak, 'days');
     checkAndNotify(waterBadges, waterStreak, 'days');
-  }, [streakData, waterStreakData, unlockedBadges, setUnlockedBadges]);
+  }, [streakData, waterStreakData, unlockedBadges, setUnlockedBadges, t]);
 
   return (
     <NutritionContext.Provider value={{

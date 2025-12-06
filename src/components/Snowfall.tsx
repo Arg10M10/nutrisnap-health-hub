@@ -18,7 +18,7 @@ interface SnowfallProps {
   enabled: boolean;
 }
 
-const SNOWFLAKE_COUNT = 50; 
+const SNOWFLAKE_COUNT = 20; 
 const FLAKE_CHARS = ["❄", "❅", "❆", "•"];
 
 const Snowfall = ({ enabled }: SnowfallProps) => {
