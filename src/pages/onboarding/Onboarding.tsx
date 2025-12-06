@@ -12,9 +12,10 @@ import { ExperienceStep } from './steps/ExperienceStep';
 import { MetricsStep } from './steps/MetricsStep';
 import { DobStep } from './steps/DobStep';
 import { GoalStep } from './steps/GoalStep';
+import { GoalWeightStep } from './steps/GoalWeightStep'; // Nuevo import
 import { FinalStep } from './steps/FinalStep';
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 8; // Aumentado de 7 a 8
 
 const Onboarding = () => {
   const { user, refetchProfile } = useAuth();
@@ -29,6 +30,7 @@ const Onboarding = () => {
     height: null as number | null,
     dob: null as Date | null,
     goal: null as string | null,
+    goalWeight: null as number | null, // Nuevo campo
   });
 
   const updateFormData = (field: string, value: any) => {
@@ -52,6 +54,7 @@ const Onboarding = () => {
           height: formData.height,
           date_of_birth: formData.dob ? formData.dob.toISOString().split('T')[0] : null,
           goal: formData.goal,
+          goal_weight: formData.goalWeight, // Guardamos el peso objetivo
           onboarding_completed: true,
         })
         .eq('id', user.id);
@@ -127,6 +130,17 @@ const Onboarding = () => {
       description: 'Elige qué quieres lograr con Calorel.',
       content: <GoalStep goal={formData.goal} setGoal={(v) => updateFormData('goal', v)} />,
       canContinue: !!formData.goal,
+    },
+    // Nuevo paso insertado aquí
+    {
+      title: 'Establece tu meta',
+      description: '¿Cuál es el peso que te gustaría alcanzar?',
+      content: <GoalWeightStep 
+                  goalWeight={formData.goalWeight} 
+                  setGoalWeight={(v) => updateFormData('goalWeight', v)}
+                  currentWeight={formData.weight}
+                />,
+      canContinue: formData.goalWeight !== null,
     },
     {
       title: '¡Estás a un paso!',

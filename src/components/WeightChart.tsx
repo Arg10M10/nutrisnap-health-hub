@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Line, LineChart, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from "recharts";
+import { Line, LineChart, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine, CartesianGrid } from "recharts";
 import { TrendingDown, Loader2 } from "lucide-react";
 
 const WeightChart = () => {
@@ -30,17 +30,24 @@ const WeightChart = () => {
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
     const labelActual = t('progress.weight_progress_actual');
-    const labelGoal = t('progress.weight_progress_goal');
-
+    
     return data.map((entry) => ({
       date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
       [labelActual]: entry.weight,
-      ...(profile?.goal_weight ? { [labelGoal]: profile.goal_weight } : {}),
+      rawWeight: entry.weight // Usado para calcular dominios si es necesario
     }));
-  }, [data, profile?.goal_weight, t]);
+  }, [data, t]);
 
   const labelActual = t('progress.weight_progress_actual');
-  const labelGoal = t('progress.weight_progress_goal');
+  // const labelGoal = t('progress.weight_progress_goal'); // Opcional si queremos graficar la línea de meta como serie
+
+  // Calculamos el dominio para que la gráfica se "acerque"
+  const minWeight = data && data.length > 0 ? Math.min(...data.map(d => d.weight)) : 0;
+  const maxWeight = data && data.length > 0 ? Math.max(...data.map(d => d.weight)) : 100;
+  
+  // Añadimos un pequeño margen (padding) al dominio para que los puntos no toquen los bordes
+  const domainMin = Math.floor(minWeight - 1);
+  const domainMax = Math.ceil(maxWeight + 1);
 
   return (
     <Card>
@@ -59,19 +66,22 @@ const WeightChart = () => {
         ) : chartData.length > 0 ? (
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -16 }}>
+              <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -20 }}>
+                <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
                 <XAxis
                   dataKey="date"
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={8}
+                  tickMargin={12}
                   tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
                 />
                 <YAxis
+                  domain={[domainMin, domainMax]} // Esto hace el "zoom"
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
                   tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  width={40}
                 />
                 <Tooltip
                   contentStyle={{
@@ -80,14 +90,20 @@ const WeightChart = () => {
                     borderRadius: 12,
                     boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
                   }}
-                  labelStyle={{ color: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                  labelStyle={{ color: 'hsl(var(--muted-foreground))', fontSize: 12, marginBottom: 4 }}
+                  cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }}
                 />
                 {profile?.goal_weight && (
                   <ReferenceLine
                     y={profile.goal_weight}
                     stroke="hsl(var(--muted-foreground))"
-                    strokeDasharray="4 4"
-                    strokeWidth={1.5}
+                    strokeDasharray="3 3"
+                    label={{ 
+                      value: `Meta: ${profile.goal_weight}kg`, 
+                      position: 'insideBottomRight', 
+                      fill: 'hsl(var(--muted-foreground))',
+                      fontSize: 10
+                    }}
                   />
                 )}
                 <Line
@@ -95,27 +111,17 @@ const WeightChart = () => {
                   dataKey={labelActual}
                   stroke="hsl(var(--primary))"
                   strokeWidth={3}
-                  dot={false}
-                  activeDot={{ r: 5, strokeWidth: 0, fill: 'hsl(var(--primary))' }}
-                  isAnimationActive={false}
+                  dot={{ r: 4, strokeWidth: 0, fill: 'hsl(var(--primary))' }}
+                  activeDot={{ r: 6, strokeWidth: 0, fill: 'hsl(var(--primary))' }}
+                  isAnimationActive={true}
                 />
-                {profile?.goal_weight && (
-                  <Line
-                    type="monotone"
-                    dataKey={labelGoal}
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={2}
-                    dot={false}
-                    isAnimationActive={false}
-                  />
-                )}
               </LineChart>
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="text-center text-muted-foreground h-64 flex flex-col justify-center items-center">
+          <div className="text-center text-muted-foreground h-64 flex flex-col justify-center items-center bg-muted/20 rounded-lg border border-dashed">
             <p>{t('progress.weight_progress_no_data')}</p>
-            <p className="text-sm">{t('progress.weight_progress_start_logging')}</p>
+            <p className="text-sm mt-1">{t('progress.weight_progress_start_logging')}</p>
           </div>
         )}
       </CardContent>
