@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -64,6 +64,7 @@ const Scanner = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
+  const codeReader = useMemo(() => new BrowserMultiFormatReader(), []);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -226,8 +227,7 @@ const Scanner = () => {
       }
     } else { // Barcode mode
       try {
-        const reader = new BrowserMultiFormatReader();
-        const result = await reader.decodeFromCanvas(canvas);
+        const result = await codeReader.decodeFromCanvas(canvas);
         handleBarcodeDetected(result.getText());
       } catch (err) {
         if (err && (err as Error).name === 'NotFoundException') {
