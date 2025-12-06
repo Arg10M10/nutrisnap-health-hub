@@ -16,14 +16,8 @@ export const useZxingScanner = (
 
     const startScan = async () => {
       try {
-        const videoInputDevices = await reader.listVideoInputDevices();
-        const selectedDeviceId = videoInputDevices.length > 0 ? videoInputDevices[0].deviceId : undefined;
-
-        if (!selectedDeviceId) {
-          throw new Error("No se encontró ninguna cámara.");
-        }
-
-        await reader.decodeFromVideoDevice(selectedDeviceId, videoRef.current, (result, err) => {
+        // Simplified logic: let the browser choose the default camera
+        await reader.decodeFromVideoDevice(undefined, videoRef.current, (result, err) => {
           if (result) {
             onScan(result.getText());
           }
