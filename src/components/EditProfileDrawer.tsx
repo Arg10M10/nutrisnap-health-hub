@@ -30,8 +30,6 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   const { t } = useTranslation();
 
   const profileSchema = z.object({
-    firstName: z.string().min(1, t('zod.first_name_required')),
-    lastName: z.string().min(1, t('zod.last_name_required')),
     gender: z.string().min(1, t('zod.gender_required')),
     date_of_birth: z.date({ required_error: t('zod.dob_required') }),
     goal: z.string().min(1, t('zod.goal_required')),
@@ -48,10 +46,7 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
   useEffect(() => {
     if (profile && isOpen) {
-      const [firstName, ...lastNameParts] = profile.full_name?.split(' ') || ['', ''];
       form.reset({
-        firstName,
-        lastName: lastNameParts.join(' '),
         gender: profile.gender || '',
         date_of_birth: profile.date_of_birth ? new Date(profile.date_of_birth) : new Date('2000-01-01'),
         goal: profile.goal || '',
@@ -72,7 +67,6 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       const { error } = await supabase
         .from('profiles')
         .update({
-          full_name: `${values.firstName} ${values.lastName}`,
           gender: values.gender,
           date_of_birth: isoDate,
           age,
@@ -109,23 +103,6 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         <div className="overflow-y-auto px-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pb-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField control={form.control} name="firstName" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('edit_profile.first_name')}</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="lastName" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('edit_profile.last_name')}</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </div>
-              
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField control={form.control} name="date_of_birth" render={({ field }) => (
                   <FormItem>
