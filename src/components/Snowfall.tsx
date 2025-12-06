@@ -21,7 +21,7 @@ interface SnowfallProps {
 /**
  * Pocos copos para que no moleste visualmente pero se note que es nieve.
  */
-const SNOWFLAKE_COUNT = 35;
+const SNOWFLAKE_COUNT = 20;
 const FLAKE_CHARS = ["❄", "✻", "✼"];
 
 const Snowfall = ({ enabled }: SnowfallProps) => {
@@ -58,7 +58,7 @@ const Snowfall = ({ enabled }: SnowfallProps) => {
   return (
     <div
       className={cn(
-        "pointer-events-none fixed inset-0 z-[9999] overflow-hidden",
+        "pointer-events-none fixed inset-0 z-0 overflow-hidden",
         "bg-transparent"
       )}
       aria-hidden="true"
