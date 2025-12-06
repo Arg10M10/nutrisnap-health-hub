@@ -252,48 +252,68 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const streakData = useMemo(() => {
-    if (!foodEntries.length) return { streak: 0, streakDays: [] };
-
     const entryDays = new Set(foodEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
+    if (entryDays.size === 0) return { streak: 0, streakDays: [] };
 
-    const sortedDates = Array.from(entryDays).sort();
-    const lastDayKey = sortedDates[sortedDates.length - 1];
-    const lastDayDate = parseISO(lastDayKey);
+    const today = new Date();
+    const todayKey = format(today, 'yyyy-MM-dd');
+    const yesterday = subDays(today, 1);
+    const yesterdayKey = format(yesterday, 'yyyy-MM-dd');
 
     let currentStreak = 0;
     const daysInStreak: string[] = [];
+    
+    let startDateForCount: Date;
+    if (entryDays.has(todayKey)) {
+        startDateForCount = today;
+    } else if (entryDays.has(yesterdayKey)) {
+        startDateForCount = yesterday;
+    } else {
+        return { streak: 0, streakDays: [] };
+    }
 
     for (let i = 0; i < 365; i++) {
-      const dateToCheck = subDays(lastDayDate, i);
-      const dateKey = format(dateToCheck, 'yyyy-MM-dd');
-      if (entryDays.has(dateKey)) {
-        currentStreak++;
-        daysInStreak.push(dateKey);
-      } else {
-        break;
-      }
+        const dateToCheck = subDays(startDateForCount, i);
+        const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+        if (entryDays.has(dateKey)) {
+            currentStreak++;
+            daysInStreak.push(dateKey);
+        } else {
+            break;
+        }
     }
 
     return { streak: currentStreak, streakDays: daysInStreak };
   }, [foodEntries]);
 
   const waterStreakData = useMemo(() => {
-    if (!waterEntries.length) return { waterStreak: 0 };
     const entryDays = new Set(waterEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
-    let currentStreak = 0;
+    if (entryDays.size === 0) return { waterStreak: 0 };
 
-    const sortedDates = Array.from(entryDays).sort();
-    const lastDayKey = sortedDates[sortedDates.length - 1];
-    const lastDayDate = parseISO(lastDayKey);
+    const today = new Date();
+    const todayKey = format(today, 'yyyy-MM-dd');
+    const yesterday = subDays(today, 1);
+    const yesterdayKey = format(yesterday, 'yyyy-MM-dd');
+
+    let currentStreak = 0;
+    
+    let startDateForCount: Date;
+    if (entryDays.has(todayKey)) {
+        startDateForCount = today;
+    } else if (entryDays.has(yesterdayKey)) {
+        startDateForCount = yesterday;
+    } else {
+        return { waterStreak: 0 };
+    }
 
     for (let i = 0; i < 365; i++) {
-      const dateToCheck = subDays(lastDayDate, i);
-      const dateKey = format(dateToCheck, 'yyyy-MM-dd');
-      if (entryDays.has(dateKey)) {
-        currentStreak++;
-      } else {
-        break;
-      }
+        const dateToCheck = subDays(startDateForCount, i);
+        const dateKey = format(dateToCheck, 'yyyy-MM-dd');
+        if (entryDays.has(dateKey)) {
+            currentStreak++;
+        } else {
+            break;
+        }
     }
     return { waterStreak: currentStreak };
   }, [waterEntries]);
