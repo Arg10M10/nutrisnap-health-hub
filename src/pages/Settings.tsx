@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
   User, Edit, HeartPulse, SlidersHorizontal, Languages, Target, Goal, Palette,
-  Lightbulb, Mail, FileText, Shield, Instagram, LogOut, Trash2, Loader2, ChevronRight, Snowflake
+  Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, ChevronRight, Snowflake
 } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -21,7 +21,6 @@ import PageLayout from "@/components/PageLayout";
 import { SettingsCategory } from "@/components/settings/SettingsCategory";
 import { SettingsItem } from "@/components/settings/SettingsItem";
 import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
-import { TikTokIcon } from "@/components/icons/TikTokIcon";
 import UserAvatar from "@/components/UserAvatar";
 import { useSnow } from "@/context/SnowContext";
 
@@ -175,8 +174,16 @@ const Settings = () => {
 
         {/* Social Media Category */}
         <SettingsCategory title={t('settings.social.title')}>
-          <SettingsItem icon={<Instagram size={20} />} label={t('settings.social.instagram')} onClick={() => openExternal(INSTAGRAM_URL)} />
-          <SettingsItem icon={<TikTokIcon width={20} height={20} />} label={t('settings.social.tiktok')} onClick={handleNotImplemented} />
+          <SettingsItem 
+            icon={<img src="/instagram-logo.png" alt="Instagram" className="w-5 h-5 object-contain" />} 
+            label={t('settings.social.instagram')} 
+            onClick={() => openExternal(INSTAGRAM_URL)} 
+          />
+          <SettingsItem 
+            icon={<img src="/tiktok-logo.png" alt="TikTok" className="w-5 h-5 object-contain" />} 
+            label={t('settings.social.tiktok')} 
+            onClick={handleNotImplemented} 
+          />
         </SettingsCategory>
 
         {/* Account Actions Category */}
