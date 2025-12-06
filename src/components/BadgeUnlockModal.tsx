@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import Confetti from 'react-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Share2, X, Download } from 'lucide-react';
+import { Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
-import { useWindowSize } from 'react-use'; // Nota: Si no tienes react-use, usaremos un hook personalizado inline o window direct.
-// Para no añadir más deps, usaré window.innerWidth/Height directamente o un hook simple.
 
 interface BadgeUnlockModalProps {
   isOpen: boolean;
@@ -37,13 +35,12 @@ const BadgeUnlockModal = ({ isOpen, onClose, badge }: BadgeUnlockModalProps) => 
         await navigator.share({
           title: t('badges.notification_title'),
           text: `¡Acabo de desbloquear la insignia "${badge.name}" en Calorel! ${badge.description}`,
-          url: window.location.href, // O un link a la app
+          url: window.location.href,
         });
       } catch (error) {
         console.error('Error sharing:', error);
       }
     } else {
-      // Fallback simple si no hay Web Share API
       alert('Tu navegador no soporta la función de compartir nativa.');
     }
   };
@@ -54,7 +51,6 @@ const BadgeUnlockModal = ({ isOpen, onClose, badge }: BadgeUnlockModalProps) => 
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center">
-          {/* Backdrop con blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -63,7 +59,6 @@ const BadgeUnlockModal = ({ isOpen, onClose, badge }: BadgeUnlockModalProps) => 
             onClick={onClose}
           />
 
-          {/* Confetti */}
           <div className="absolute inset-0 pointer-events-none">
             <Confetti
               width={windowSize.width}
@@ -74,7 +69,6 @@ const BadgeUnlockModal = ({ isOpen, onClose, badge }: BadgeUnlockModalProps) => 
             />
           </div>
 
-          {/* Contenido del Modal */}
           <motion.div
             initial={{ scale: 0.5, opacity: 0, y: 100 }}
             animate={{ 
@@ -88,19 +82,18 @@ const BadgeUnlockModal = ({ isOpen, onClose, badge }: BadgeUnlockModalProps) => 
           >
             <div className="bg-gradient-to-b from-background/90 to-background border border-white/20 rounded-3xl p-8 text-center shadow-2xl overflow-hidden relative">
               
-              {/* Efecto de brillo de fondo */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 blur-[80px] rounded-full pointer-events-none" />
 
               <motion.div 
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 15 }}
                 className="relative mb-6 mx-auto w-40 h-40"
               >
                 <img 
                   src={badge.image} 
                   alt={badge.name} 
-                  className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" 
+                  className="w-full h-full object-contain animate-badge-glow" 
                 />
               </motion.div>
 

@@ -20,7 +20,7 @@ export const streakBadges = [
 export const waterBadges = [
   { id: "water_1", days: 1, image: "/badges/water-1.png" },
   { id: "water_3", days: 3, image: "/badges/water-3.png" },
-  { id: "water_5", days: 5, image: "/badges/water-5.png" },
+  { id: "water_6", days: 6, image: "/badges/water-6.png" },
   { id: "water_10", days: 10, image: "/badges/water-10.png" },
 ];
 

@@ -158,7 +158,7 @@
     "streak_500": { "name": "Más Allá", "desc": "Has superado los 500 días. ¡Wow!" },
     "water_1": { "name": "Primer Vaso", "desc": "Registra agua por 1 día." },
     "water_3": { "name": "Hidratación Constante", "desc": "Racha de 3 días de agua." },
-    "water_5": { "name": "Hábito Saludable", "desc": "Racha de 5 días de agua." },
+    "water_6": { "name": "Hidratación Pro", "desc": "Racha de 6 días de agua." },
     "water_10": { "name": "Maestro del Agua", "desc": "Racha de 10 días de agua." },
     "weight_1": { "name": "Primer Kilo", "desc": "Pierde tu primer kilogramo." },
     "weight_15": { "name": "Meta 15kg", "desc": "Alcanza 15kg perdidos." },
