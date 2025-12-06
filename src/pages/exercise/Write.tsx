@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Loader2, Wand2 } from 'lucide-react';
 import { useAILimit } from '@/hooks/useAILimit';
+import { Badge } from '@/components/ui/badge';
 
 const WriteExercise = () => {
   const navigate = useNavigate();
@@ -87,9 +88,11 @@ const WriteExercise = () => {
             placeholder={t('write_exercise.placeholder')}
             className="h-40 text-lg resize-none"
           />
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <Wand2 className="w-4 h-4" />
-            <span>{t('write_exercise.ai_button')}</span>
+          <div className="flex justify-center">
+            <Badge variant="outline" className="py-2 px-4 border-primary/20 bg-primary/5 text-primary">
+              <Wand2 className="w-4 h-4 mr-2" />
+              <span className="font-semibold">{t('write_exercise.ai_button')}</span>
+            </Badge>
           </div>
         </div>
         <footer className="py-4">
