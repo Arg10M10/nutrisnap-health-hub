@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { useTranslation } from 'react-i18next';
 
 interface OnboardingLayoutProps {
   step: number;
@@ -26,8 +27,9 @@ export const OnboardingLayout = ({
   onBack,
   canContinue,
   isPending,
-  continueText = 'Continuar',
+  continueText,
 }: OnboardingLayoutProps) => {
+  const { t } = useTranslation();
   const progressValue = (step / totalSteps) * 100;
 
   return (
@@ -41,7 +43,7 @@ export const OnboardingLayout = ({
           )}
           <div className="flex-1">
             <p className="text-sm font-semibold text-primary">
-              Paso {step} de {totalSteps}
+              {t('onboarding.step', { step, totalSteps })}
             </p>
             <Progress value={progressValue} className="mt-1 h-2" />
           </div>
@@ -60,7 +62,7 @@ export const OnboardingLayout = ({
             onClick={onContinue}
             disabled={!canContinue || isPending}
           >
-            {continueText}
+            {continueText || t('onboarding.continue')}
           </Button>
         </div>
       </main>

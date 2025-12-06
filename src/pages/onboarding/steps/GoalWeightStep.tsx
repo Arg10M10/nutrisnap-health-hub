@@ -1,29 +1,32 @@
 import { NumberPicker } from '@/components/onboarding/NumberPicker';
+import { useTranslation } from 'react-i18next';
 
 interface GoalWeightStepProps {
   goalWeight: number | null;
   setGoalWeight: (weight: number) => void;
   currentWeight: number | null;
+  units: 'metric' | 'imperial';
 }
 
-export const GoalWeightStep = ({ goalWeight, setGoalWeight, currentWeight }: GoalWeightStepProps) => {
-  // Si no hay peso objetivo aún, sugerimos el peso actual como punto de partida
-  const initialValue = goalWeight || currentWeight || 70;
+export const GoalWeightStep = ({ goalWeight, setGoalWeight, currentWeight, units }: GoalWeightStepProps) => {
+  const { t } = useTranslation();
+  const isMetric = units === 'metric';
+  const initialValue = goalWeight || currentWeight || (isMetric ? 70 : 150);
 
   return (
     <div className="space-y-4">
       <NumberPicker
-        label="Peso Objetivo"
-        unit="kg"
+        label={t('onboarding.goal_weight.label')}
+        unit={isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}
         value={goalWeight}
         onValueChange={setGoalWeight}
-        min={30}
-        max={200}
+        min={isMetric ? 30 : 60}
+        max={isMetric ? 200 : 450}
         displayFormatter={(val) => val.toFixed(1)}
-        step={0.5}
+        step={isMetric ? 0.5 : 1}
       />
       <p className="text-sm text-muted-foreground">
-        Este será el objetivo que verás en tu gráfica de progreso.
+        {t('onboarding.goal_weight.disclaimer')}
       </p>
     </div>
   );

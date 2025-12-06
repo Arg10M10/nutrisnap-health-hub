@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { TrendingDown, TrendingUp, Minus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface GoalStepProps {
   goal: string | null;
@@ -8,10 +9,11 @@ interface GoalStepProps {
 }
 
 export const GoalStep = ({ goal, setGoal }: GoalStepProps) => {
+  const { t } = useTranslation();
   const goals = [
-    { id: 'lose_weight', label: 'Perder peso', icon: <TrendingDown className="w-8 h-8" /> },
-    { id: 'maintain_weight', label: 'Mantener peso', icon: <Minus className="w-8 h-8" /> },
-    { id: 'gain_weight', label: 'Ganar peso', icon: <TrendingUp className="w-8 h-8" /> },
+    { id: 'lose_weight', label: t('onboarding.goal.lose_weight'), icon: <TrendingDown className="w-8 h-8" /> },
+    { id: 'maintain_weight', label: t('onboarding.goal.maintain_weight'), icon: <Minus className="w-8 h-8" /> },
+    { id: 'gain_weight', label: t('onboarding.goal.gain_weight'), icon: <TrendingUp className="w-8 h-8" /> },
   ];
 
   return (

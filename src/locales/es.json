@@ -385,38 +385,68 @@
     "experience_required": "La experiencia es requerida."
   },
   "onboarding": {
+    "step": "Paso {{step}} de {{totalSteps}}",
+    "continue": "Continuar",
+    "confirm": "Confirmar",
+    "select": "Seleccionar",
     "gender": {
       "title": "¿Cuál es tu género?",
-      "description": "Esto nos ayuda a personalizar tus metas y recomendaciones."
+      "description": "Esto nos ayuda a personalizar tus metas y recomendaciones.",
+      "female": "Femenino",
+      "male": "Masculino",
+      "not_say": "Prefiero no decirlo"
     },
     "age": {
       "title": "¿Cuál es tu edad?",
-      "description": "Tu edad nos ayuda a calcular tus necesidades calóricas."
+      "description": "Tu edad nos ayuda a calcular tus necesidades calóricas.",
+      "label": "Tu edad",
+      "unit": "años"
     },
     "experience": {
       "title": "¿Has probado otras apps?",
-      "description": "Cuéntanos un poco sobre tu experiencia previa."
+      "description": "Cuéntanos un poco sobre tu experiencia previa.",
+      "several": "Sí, he usado varias",
+      "one_or_two": "Sí, una o dos",
+      "first_time": "No, esta es mi primera vez"
     },
     "metrics": {
       "title": "Tus medidas",
-      "description": "Introduce tu peso y altura para un seguimiento preciso."
+      "description": "Introduce tu peso y altura para un seguimiento preciso.",
+      "metric": "Métrico (kg, cm)",
+      "imperial": "Imperial (lbs, ft)",
+      "height": "Altura",
+      "weight": "Peso",
+      "cm": "cm",
+      "kg": "kg",
+      "ft": "ft",
+      "lbs": "lbs"
     },
     "dob": {
       "title": "¿Cuándo naciste?",
-      "description": "Saber tu fecha de nacimiento nos ayuda a verificar tu edad."
+      "description": "Saber tu fecha de nacimiento nos ayuda a verificar tu edad.",
+      "label": "Tu fecha de nacimiento",
+      "placeholder": "Selecciona tu fecha de nacimiento",
+      "disclaimer": "Usamos tu fecha de nacimiento para personalizar tus metas y verificar tu edad."
     },
     "goal": {
       "title": "¿Cuál es tu objetivo principal?",
-      "description": "Elige qué quieres lograr con Calorel."
+      "description": "Elige qué quieres lograr con Calorel.",
+      "lose_weight": "Perder peso",
+      "maintain_weight": "Mantener peso",
+      "gain_weight": "Ganar peso"
     },
     "goal_weight": {
       "title": "Establece tu meta",
-      "description": "¿Cuál es el peso que te gustaría alcanzar?"
+      "description": "¿Cuál es el peso que te gustaría alcanzar?",
+      "label": "Peso Objetivo",
+      "disclaimer": "Este será el objetivo que verás en tu gráfica de progreso."
     },
     "final": {
       "title": "¡Estás a un paso!",
       "description": "Con Calorel, estás en el camino correcto hacia tus metas.",
-      "button": "Finalizar y empezar"
+      "button": "Finalizar y empezar",
+      "chart_title": "Tu Éxito Potencial",
+      "other_apps": "Otras Apps"
     },
     "toast_success": "¡Todo listo! Bienvenido a Calorel.",
     "toast_error": "Hubo un error al guardar tu perfil."

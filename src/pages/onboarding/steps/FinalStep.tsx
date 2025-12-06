@@ -1,17 +1,19 @@
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer } from '@/components/ui/chart';
-
-const chartData = [
-  { app: 'Otras Apps', exito: 45 },
-  { app: 'Calorel', exito: 85 },
-];
+import { useTranslation } from 'react-i18next';
 
 export const FinalStep = () => {
+  const { t } = useTranslation();
+  const chartData = [
+    { app: t('onboarding.final.other_apps'), exito: 45 },
+    { app: 'Calorel', exito: 85 },
+  ];
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tu Éxito Potencial</CardTitle>
+        <CardTitle>{t('onboarding.final.chart_title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={{}} className="h-64 w-full">

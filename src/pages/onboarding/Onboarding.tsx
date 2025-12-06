@@ -139,6 +139,7 @@ const Onboarding = () => {
                   goalWeight={formData.goalWeight} 
                   setGoalWeight={(v) => updateFormData('goalWeight', v)}
                   currentWeight={formData.weight}
+                  units={formData.units}
                 />,
       canContinue: formData.goalWeight !== null,
     },

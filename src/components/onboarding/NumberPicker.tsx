@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface NumberPickerProps {
   value: number | null;
@@ -24,6 +25,7 @@ export const NumberPicker = ({
   step = 1,
   displayFormatter,
 }: NumberPickerProps) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(value ?? min);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -56,7 +58,7 @@ export const NumberPicker = ({
       >
         <span className="flex-1 text-muted-foreground">{label}</span>
         <span className="font-semibold text-foreground">
-          {value !== null ? `${formatValue(value)} ${unit}`.trim() : 'Seleccionar'}
+          {value !== null ? `${formatValue(value)} ${unit}`.trim() : t('onboarding.select')}
         </span>
       </Button>
 
@@ -88,7 +90,7 @@ export const NumberPicker = ({
             </div>
           </div>
           <DrawerFooter>
-            <Button size="lg" onClick={handleConfirm}>Confirmar</Button>
+            <Button size="lg" onClick={handleConfirm}>{t('onboarding.confirm')}</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

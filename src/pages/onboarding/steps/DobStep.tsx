@@ -1,4 +1,5 @@
 import DatePicker from '@/components/DatePicker';
+import { useTranslation } from 'react-i18next';
 
 interface DobStepProps {
   dob: Date | null;
@@ -6,16 +7,17 @@ interface DobStepProps {
 }
 
 export const DobStep = ({ dob, setDob }: DobStepProps) => {
+  const { t } = useTranslation();
   return (
     <div className="space-y-4">
       <DatePicker
         value={dob}
         onChange={setDob}
-        label="Tu fecha de nacimiento"
-        placeholder="Selecciona tu fecha de nacimiento"
+        label={t('onboarding.dob.label')}
+        placeholder={t('onboarding.dob.placeholder')}
       />
       <p className="text-sm text-muted-foreground">
-        Usamos tu fecha de nacimiento para personalizar tus metas y verificar tu edad.
+        {t('onboarding.dob.disclaimer')}
       </p>
     </div>
   );

@@ -1,5 +1,6 @@
 import { NumberPicker } from '@/components/onboarding/NumberPicker';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useTranslation } from 'react-i18next';
 
 interface MetricsStepProps {
   units: 'metric' | 'imperial';
@@ -11,6 +12,7 @@ interface MetricsStepProps {
 }
 
 export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHeight }: MetricsStepProps) => {
+  const { t } = useTranslation();
   const formatFeetAndInches = (totalInches: number) => {
     const feet = Math.floor(totalInches / 12);
     const inches = totalInches % 12;
@@ -27,24 +29,24 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
         }}
         className="grid grid-cols-2"
       >
-        <ToggleGroupItem value="metric" className="h-12 text-base">Metric (kg, cm)</ToggleGroupItem>
-        <ToggleGroupItem value="imperial" className="h-12 text-base">Imperial (lbs, ft)</ToggleGroupItem>
+        <ToggleGroupItem value="metric" className="h-12 text-base">{t('onboarding.metrics.metric')}</ToggleGroupItem>
+        <ToggleGroupItem value="imperial" className="h-12 text-base">{t('onboarding.metrics.imperial')}</ToggleGroupItem>
       </ToggleGroup>
 
       <div className="space-y-4">
         {units === 'metric' ? (
           <>
             <NumberPicker
-              label="Height"
-              unit="cm"
+              label={t('onboarding.metrics.height')}
+              unit={t('onboarding.metrics.cm')}
               value={height}
               onValueChange={setHeight}
               min={120}
               max={220}
             />
             <NumberPicker
-              label="Weight"
-              unit="kg"
+              label={t('onboarding.metrics.weight')}
+              unit={t('onboarding.metrics.kg')}
               value={weight}
               onValueChange={setWeight}
               min={30}
@@ -54,8 +56,8 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
         ) : (
           <>
             <NumberPicker
-              label="Height"
-              unit="ft"
+              label={t('onboarding.metrics.height')}
+              unit={t('onboarding.metrics.ft')}
               value={height}
               onValueChange={setHeight}
               min={47} // 3'11" in inches
@@ -63,8 +65,8 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
               displayFormatter={formatFeetAndInches}
             />
             <NumberPicker
-              label="Weight"
-              unit="lbs"
+              label={t('onboarding.metrics.weight')}
+              unit={t('onboarding.metrics.lbs')}
               value={weight}
               onValueChange={setWeight}
               min={60}
