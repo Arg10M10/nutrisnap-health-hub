@@ -211,17 +211,16 @@
     "intensity_high_example": "Sets to failure, heavy compounds."
   },
   "write_exercise": {
-    "title": "Write Exercise",
-    "name_label": "Exercise name",
-    "name_placeholder": "e.g., Swimming, HIIT, soccer...",
-    "duration_label": "Duration (minutes)",
-    "estimate_button": "Estimate calories",
-    "save_button": "Save",
-    "estimated_label": "Estimated calories",
-    "estimated_toast": "Estimation ready",
+    "title": "Describe the exercise",
+    "placeholder": "Describe the duration, intensity of the...",
+    "ai_button": "Created by AI",
+    "ai_button_loading": "Creating...",
+    "example": "Example: Yoga for 60 min, stretching and relaxed",
+    "add_button": "Add exercise",
     "saved_toast": "Exercise saved",
     "error_toast_title": "Could not process",
-    "validation_error": "Fill in name, duration and a valid estimate."
+    "validation_error": "Please describe your exercise.",
+    "ai_success_toast": "Estimation ready! Review and add your exercise."
   },
   "manual_exercise": {
     "title": "Manual Exercise",

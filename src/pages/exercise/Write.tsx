@@ -6,9 +6,8 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Loader2, FileText } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { ArrowLeft, Loader2, Wand2 } from 'lucide-react';
 import { useAILimit } from '@/hooks/useAILimit';
 
 const WriteExercise = () => {
@@ -18,23 +17,21 @@ const WriteExercise = () => {
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
 
-  const [name, setName] = useState('');
-  const [duration, setDuration] = useState<number>(30);
-  const [estimated, setEstimated] = useState<number | null>(null);
+  const [description, setDescription] = useState('');
+  const [estimatedData, setEstimatedData] = useState<{ name: string; duration: number; calories: number } | null>(null);
 
   const estimateMutation = useMutation({
-    mutationFn: async () => {
-      if (!name || duration <= 0) throw new Error(t('write_exercise.validation_error'));
+    mutationFn: async (text: string) => {
       const { data, error } = await supabase.functions.invoke('estimate-exercise-calories', {
-        body: { name, duration, weight: profile?.weight ?? null },
+        body: { description: text, weight: profile?.weight ?? null },
       });
       if (error) throw new Error(error.message);
-      return data as { calories: number };
+      return data as { name: string; duration: number; calories: number };
     },
-    onSuccess: ({ calories }) => {
+    onSuccess: (data) => {
       logUsage('exercise_ai');
-      setEstimated(calories);
-      toast.success(t('write_exercise.estimated_toast'), { description: `${calories} kcal` });
+      setEstimatedData(data);
+      toast.success(t('write_exercise.ai_success_toast'));
     },
     onError: (error) => {
       toast.error(t('write_exercise.error_toast_title'), { description: (error as Error).message });
@@ -42,21 +39,25 @@ const WriteExercise = () => {
   });
 
   const handleEstimate = async () => {
+    if (description.trim().length < 10) {
+      toast.info("Por favor, describe tu ejercicio con más detalle.");
+      return;
+    }
     const canProceed = await checkLimit('exercise_ai', 2, 'daily');
     if (canProceed) {
-      estimateMutation.mutate();
+      estimateMutation.mutate(description);
     }
   };
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      if (!user || !name || duration <= 0 || estimated === null) throw new Error(t('write_exercise.validation_error'));
+      if (!user || !estimatedData) throw new Error(t('write_exercise.validation_error'));
       const { error } = await supabase.from('exercise_entries').insert({
         user_id: user.id,
-        exercise_type: name.toLowerCase(),
+        exercise_type: estimatedData.name.toLowerCase(),
         intensity: 'custom',
-        duration_minutes: duration,
-        calories_burned: estimated,
+        duration_minutes: estimatedData.duration,
+        calories_burned: estimatedData.calories,
       });
       if (error) throw error;
     },
@@ -76,44 +77,54 @@ const WriteExercise = () => {
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
           <ArrowLeft className="w-6 h-6" />
         </Button>
-        <div className="flex items-center gap-2">
-          <FileText className="w-7 h-7 text-primary" />
-          <h1 className="text-2xl font-bold text-primary">{t('write_exercise.title')}</h1>
-        </div>
+        <h1 className="text-2xl font-bold text-primary">{t('write_exercise.title')}</h1>
       </header>
-      <main className="flex-1 p-4 space-y-6">
-        <Card>
-          <CardContent className="p-4 space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">{t('write_exercise.name_label')}</label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t('write_exercise.name_placeholder')} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">{t('write_exercise.duration_label')}</label>
-              <Input type="number" value={duration} onChange={(e) => setDuration(parseInt(e.target.value || '0', 10))} />
-            </div>
-            <div className="flex gap-2">
-              <Button className="flex-1 h-12" onClick={handleEstimate} disabled={estimateMutation.isPending}>
-                {estimateMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                {estimateMutation.isPending ? "Calculando..." : t('write_exercise.estimate_button')}
-              </Button>
-              <Button className="flex-1 h-12" onClick={() => saveMutation.mutate()} disabled={estimated === null || saveMutation.isPending}>
-                {saveMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                {t('write_exercise.save_button')}
-              </Button>
-            </div>
-            {estimateMutation.isPending && (
-              <p className="text-xs text-center text-muted-foreground animate-pulse">
-                La IA está estimando las calorías...
-              </p>
+      <main className="flex-1 p-4 flex flex-col">
+        <div className="flex-1 space-y-6">
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder={t('write_exercise.placeholder')}
+            className="h-32 text-lg resize-none"
+          />
+          <Button
+            variant="outline"
+            className="w-full h-14 text-lg rounded-full"
+            onClick={handleEstimate}
+            disabled={estimateMutation.isPending}
+          >
+            {estimateMutation.isPending ? (
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            ) : (
+              <Wand2 className="mr-2 h-5 w-5" />
             )}
-            {estimated !== null && (
-              <p className="text-center text-sm text-muted-foreground">
-                {t('write_exercise.estimated_label')}: <span className="font-semibold text-foreground">{estimated} kcal</span>
+            {estimateMutation.isPending ? t('write_exercise.ai_button_loading') : t('write_exercise.ai_button')}
+          </Button>
+          <div className="bg-muted p-4 rounded-xl">
+            <p className="text-muted-foreground text-center">{t('write_exercise.example')}</p>
+          </div>
+          {estimatedData && (
+            <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl text-center">
+              <p className="font-semibold text-primary">Estimación de la IA:</p>
+              <p className="text-foreground">
+                {estimatedData.name} - {estimatedData.duration} min - {estimatedData.calories} kcal
               </p>
-            )}
-          </CardContent>
-        </Card>
+            </div>
+          )}
+        </div>
+        <footer className="py-4">
+          <Button
+            size="lg"
+            className="w-full h-14 text-lg rounded-full"
+            onClick={() => saveMutation.mutate()}
+            disabled={!estimatedData || saveMutation.isPending}
+          >
+            {saveMutation.isPending ? (
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            ) : null}
+            {t('write_exercise.add_button')}
+          </Button>
+        </footer>
       </main>
     </div>
   );

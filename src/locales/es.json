@@ -211,17 +211,16 @@
     "intensity_high_example": "Series al fallo, compuestos pesados."
   },
   "write_exercise": {
-    "title": "Escribir Ejercicio",
-    "name_label": "Nombre del ejercicio",
-    "name_placeholder": "Ej: Natación, HIIT, fútbol...",
-    "duration_label": "Duración (minutos)",
-    "estimate_button": "Estimar calorías",
-    "save_button": "Guardar",
-    "estimated_label": "Calorías estimadas",
-    "estimated_toast": "Estimación lista",
+    "title": "Describe el ejercicio",
+    "placeholder": "Describe la duración, intensidad del...",
+    "ai_button": "Creado por IA",
+    "ai_button_loading": "Creando...",
+    "example": "Ejemplo: Yoga durante 60 min, estirado y relajado",
+    "add_button": "Agregar ejercicio",
     "saved_toast": "Ejercicio guardado",
     "error_toast_title": "No se pudo procesar",
-    "validation_error": "Completa nombre, duración y estimación válida."
+    "validation_error": "Por favor, describe tu ejercicio.",
+    "ai_success_toast": "¡Estimación lista! Revisa y agrega tu ejercicio."
   },
   "manual_exercise": {
     "title": "Ejercicio Manual",

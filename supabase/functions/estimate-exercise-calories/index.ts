@@ -15,28 +15,30 @@ serve(async (req) => {
   }
 
   try {
-    const { name, duration, weight } = await req.json();
-    if (!name || !duration) {
-      return new Response(JSON.stringify({ error: "name and duration are required" }), {
+    const { description, weight } = await req.json();
+    if (!description) {
+      return new Response(JSON.stringify({ error: "Description is required" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400,
       });
     }
 
     const prompt = `
-      Eres una IA experta en fitness. Estima las calorías quemadas para el ejercicio descrito.
-      Datos:
-      - Ejercicio: "${name}"
-      - Duración: ${duration} minutos
-      - Peso (kg): ${weight ?? 'desconocido'}
+      Eres una IA experta en fitness. Analiza la descripción de un ejercicio y extrae el nombre, la duración en minutos y estima las calorías quemadas.
+      Datos del usuario:
+      - Descripción: "${description}"
+      - Peso (kg): ${weight ?? '70'} (Usa 70kg como referencia si no se proporciona)
 
       Reglas:
-      - Si el peso no está disponible, asume 70 kg como referencia.
-      - Responde SOLO con JSON válido:
+      1. Extrae el nombre del ejercicio principal. Sé conciso (ej. "Yoga", "Correr", "Entrenamiento de fuerza").
+      2. Extrae la duración total en minutos. Si se da un rango, usa el promedio. Si no se especifica, haz una estimación razonable.
+      3. Estima las calorías quemadas basándote en el ejercicio, duración, intensidad implícita y peso.
+      4. Responde SOLO con un objeto JSON válido con la siguiente estructura, sin texto adicional:
       {
+        "name": "string",
+        "duration": number,
         "calories": number
       }
-      - Redondea al entero más cercano.
     `;
 
     const body = {
