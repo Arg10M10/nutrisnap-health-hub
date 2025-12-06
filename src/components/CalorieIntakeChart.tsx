@@ -5,7 +5,7 @@ import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
 import { Flame, Loader2 } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -82,6 +82,18 @@ const CalorieIntakeChart = () => {
 
   const isLoading = isFoodLoading || isExerciseLoading;
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-background/80 backdrop-blur-sm p-2 px-4 border rounded-lg shadow-lg">
+          <p className="label text-sm text-muted-foreground">{`${label}`}</p>
+          <p className="intro font-bold text-foreground">{`${payload[0].value} kcal`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -93,17 +105,6 @@ const CalorieIntakeChart = () => {
             </CardTitle>
             <CardDescription>{t('progress.last_7_days')}</CardDescription>
           </div>
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            size="sm"
-            value={timeRange}
-            onValueChange={(value: TimeRange) => value && setTimeRange(value)}
-          >
-            <ToggleGroupItem value="7D">7D</ToggleGroupItem>
-            <ToggleGroupItem value="30D">30D</ToggleGroupItem>
-            <ToggleGroupItem value="1Y">1A</ToggleGroupItem>
-          </ToggleGroup>
         </div>
       </CardHeader>
       <CardContent>
@@ -130,12 +131,7 @@ const CalorieIntakeChart = () => {
                   tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
                 />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: 12,
-                  }}
-                  labelStyle={{ color: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                  content={<CustomTooltip />}
                   cursor={{ fill: 'hsl(var(--muted))' }}
                 />
                 <Bar
@@ -148,6 +144,20 @@ const CalorieIntakeChart = () => {
           </div>
         )}
       </CardContent>
+      <CardFooter>
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          size="sm"
+          value={timeRange}
+          onValueChange={(value: TimeRange) => value && setTimeRange(value)}
+          className="w-full bg-muted p-1 rounded-full"
+        >
+          <ToggleGroupItem value="7D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">7D</ToggleGroupItem>
+          <ToggleGroupItem value="30D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">30D</ToggleGroupItem>
+          <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">1A</ToggleGroupItem>
+        </ToggleGroup>
+      </CardFooter>
     </Card>
   );
 };

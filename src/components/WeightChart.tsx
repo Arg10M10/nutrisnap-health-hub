@@ -5,12 +5,14 @@ import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine, CartesianGrid } from "recharts";
-import { TrendingDown, Loader2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Line, LineChart, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, ReferenceLine } from "recharts";
+import { TrendingDown, Loader2, Flag } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Badge } from "@/components/ui/badge";
+import AnimatedNumber from "./AnimatedNumber";
 
-type TimeRange = '7D' | '30D' | '1Y';
+type TimeRange = '30D' | '90D' | '1Y' | 'ALL';
 
 const WeightChart = () => {
   const { user, profile } = useAuth();
@@ -18,15 +20,13 @@ const WeightChart = () => {
   const [timeRange, setTimeRange] = useState<TimeRange>('30D');
 
   const { data, isLoading } = useQuery({
-    queryKey: ['weight_history_1y', user?.id],
+    queryKey: ['weight_history_all', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      const oneYearAgo = subDays(new Date(), 365).toISOString();
       const { data, error } = await supabase
         .from('weight_history')
         .select('weight, created_at')
         .eq('user_id', user.id)
-        .gte('created_at', oneYearAgo)
         .order('created_at', { ascending: true });
       if (error) throw error;
       return data;
@@ -37,11 +37,18 @@ const WeightChart = () => {
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
+    if (timeRange === 'ALL') {
+      return data.map((entry) => ({
+        date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
+        weight: entry.weight,
+      }));
+    }
+
     const now = new Date();
     let startDate: Date;
-    if (timeRange === '7D') startDate = subDays(now, 7);
-    else if (timeRange === '30D') startDate = subDays(now, 30);
-    else startDate = subDays(now, 365);
+    if (timeRange === '30D') startDate = subDays(now, 30);
+    else if (timeRange === '90D') startDate = subDays(now, 90);
+    else startDate = subDays(now, 365); // 1Y
 
     const filteredData = data.filter(entry => isAfter(new Date(entry.created_at), startDate));
 
@@ -51,34 +58,49 @@ const WeightChart = () => {
     }));
   }, [data, timeRange]);
 
+  const percentageToGoal = useMemo(() => {
+    if (profile?.starting_weight && profile.goal_weight && profile.weight) {
+      const totalToChange = Math.abs(profile.starting_weight - profile.goal_weight);
+      if (totalToChange === 0) return 100;
+      const changedSoFar = Math.abs(profile.starting_weight - profile.weight);
+      return Math.min(100, (changedSoFar / totalToChange) * 100);
+    }
+    return 0;
+  }, [profile]);
+
   const minWeight = chartData.length > 0 ? Math.min(...chartData.map(d => d.weight)) : 0;
   const maxWeight = chartData.length > 0 ? Math.max(...chartData.map(d => d.weight)) : 100;
   
-  const domainMin = Math.floor(minWeight - 2);
-  const domainMax = Math.ceil(maxWeight + 2);
+  const domainMin = Math.floor(minWeight - 5);
+  const domainMax = Math.ceil(maxWeight + 5);
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-background/80 backdrop-blur-sm p-2 px-4 border rounded-lg shadow-lg">
+          <p className="label text-sm text-muted-foreground">{`${label}`}</p>
+          <p className="intro font-bold text-foreground">{`${payload[0].value} kg`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingDown className="w-6 h-6 text-primary" />
-              {t('progress.weight_progress_title')}
-            </CardTitle>
-            <CardDescription>{t('progress.weight_progress_desc')}</CardDescription>
-          </div>
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            size="sm"
-            value={timeRange}
-            onValueChange={(value: TimeRange) => value && setTimeRange(value)}
-          >
-            <ToggleGroupItem value="7D">7D</ToggleGroupItem>
-            <ToggleGroupItem value="30D">30D</ToggleGroupItem>
-            <ToggleGroupItem value="1Y">1A</ToggleGroupItem>
-          </ToggleGroup>
+        <div className="flex justify-between items-center">
+          <CardTitle className="flex items-center gap-2">
+            <TrendingDown className="w-6 h-6 text-primary" />
+            {t('progress.weight_progress_title')}
+          </CardTitle>
+          <Badge variant="outline" className="flex items-center gap-1.5 py-1 px-2">
+            <Flag className="w-4 h-4" />
+            <span className="font-semibold">
+              <AnimatedNumber value={percentageToGoal} toFixed={0} />%
+            </span>
+            <span className="hidden sm:inline">del objetivo</span>
+          </Badge>
         </div>
       </CardHeader>
       <CardContent>
@@ -89,13 +111,7 @@ const WeightChart = () => {
         ) : chartData.length > 1 ? (
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -20 }}>
-                <defs>
-                  <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
+              <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -20 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
                 <XAxis
                   dataKey="date"
@@ -103,6 +119,7 @@ const WeightChart = () => {
                   axisLine={false}
                   tickMargin={12}
                   tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  interval="preserveStartEnd"
                 />
                 <YAxis
                   domain={[domainMin, domainMax]}
@@ -112,15 +129,7 @@ const WeightChart = () => {
                   tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
                   width={40}
                 />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: 12,
-                  }}
-                  labelStyle={{ color: 'hsl(var(--muted-foreground))', fontSize: 12, marginBottom: 4 }}
-                  cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }}
-                />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }} />
                 {profile?.goal_weight && (
                   <ReferenceLine
                     y={profile.goal_weight}
@@ -134,17 +143,15 @@ const WeightChart = () => {
                     }}
                   />
                 )}
-                <Area
+                <Line
                   type="monotone"
                   dataKey="weight"
                   stroke="hsl(var(--primary))"
                   strokeWidth={3}
-                  fillOpacity={1}
-                  fill="url(#colorWeight)"
                   dot={{ r: 4, strokeWidth: 2, fill: 'hsl(var(--background))', stroke: 'hsl(var(--primary))' }}
                   activeDot={{ r: 6, strokeWidth: 2, fill: 'hsl(var(--background))', stroke: 'hsl(var(--primary))' }}
                 />
-              </AreaChart>
+              </LineChart>
             </ResponsiveContainer>
           </div>
         ) : (
@@ -154,6 +161,21 @@ const WeightChart = () => {
           </div>
         )}
       </CardContent>
+      <CardFooter>
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          size="sm"
+          value={timeRange}
+          onValueChange={(value: TimeRange) => value && setTimeRange(value)}
+          className="w-full bg-muted p-1 rounded-full"
+        >
+          <ToggleGroupItem value="30D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">30D</ToggleGroupItem>
+          <ToggleGroupItem value="90D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">90D</ToggleGroupItem>
+          <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">1A</ToggleGroupItem>
+          <ToggleGroupItem value="ALL" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">Todo</ToggleGroupItem>
+        </ToggleGroup>
+      </CardFooter>
     </Card>
   );
 };
