@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import Confetti from 'react-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,15 +15,6 @@ interface BadgeUnlockModalProps {
 
 const BadgeUnlockModal = ({ isOpen, onClose, badge }: BadgeUnlockModalProps) => {
   const { t } = useTranslation();
-  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleShare = async () => {
     if (!badge) return;
@@ -58,16 +47,6 @@ const BadgeUnlockModal = ({ isOpen, onClose, badge }: BadgeUnlockModalProps) => 
             className="absolute inset-0 bg-black/80 backdrop-blur-md"
             onClick={onClose}
           />
-
-          <div className="absolute inset-0 pointer-events-none">
-            <Confetti
-              width={windowSize.width}
-              height={windowSize.height}
-              recycle={false}
-              numberOfPieces={500}
-              gravity={0.2}
-            />
-          </div>
 
           <motion.div
             initial={{ scale: 0.5, opacity: 0, y: 100 }}
