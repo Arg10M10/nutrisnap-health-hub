@@ -3,7 +3,6 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { FlagIcon } from '@/components/icons/FlagIcon';
 
 interface LanguageDrawerProps {
   isOpen: boolean;
@@ -11,8 +10,8 @@ interface LanguageDrawerProps {
 }
 
 const languages = [
-  { code: 'es', name: 'Español' },
-  { code: 'en', name: 'Inglés' },
+  { code: 'es', name: 'Español', flag: '/es-flag.png' },
+  { code: 'en', name: 'Inglés', flag: '/us-flag.png' },
 ];
 
 export const LanguageDrawer = ({ isOpen, onClose }: LanguageDrawerProps) => {
@@ -42,7 +41,7 @@ export const LanguageDrawer = ({ isOpen, onClose }: LanguageDrawerProps) => {
               onClick={() => changeLanguage(lang.code)}
             >
               <div className="flex items-center gap-4">
-                <FlagIcon code={lang.code as any} className="w-8 h-6 rounded-sm" />
+                <img src={lang.flag} alt={`${lang.name} flag`} className="w-8 h-6 rounded-sm object-cover" />
                 <span>{t(`languages.${lang.code}` as any)}</span>
               </div>
               {i18n.language.startsWith(lang.code) && <Check className="w-5 h-5 text-primary" />}
