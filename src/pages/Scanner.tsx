@@ -197,10 +197,14 @@ const Scanner = () => {
     },
   });
 
-  const handleBarcodeScan = (result: any) => {
-    if (result && !barcodeScanMutation.isPending) {
-      const barcode = result.getText();
-      barcodeScanMutation.mutate(barcode);
+  const handleBarcodeScan = (result: unknown) => {
+    if (barcodeScanMutation.isPending) return;
+
+    if (result && typeof (result as any).getText === 'function') {
+      const barcode = (result as any).getText();
+      if (barcode) {
+        barcodeScanMutation.mutate(barcode);
+      }
     }
   };
 
@@ -375,9 +379,19 @@ const Scanner = () => {
         {scanMode === 'barcode' && state === 'camera' && BarcodeScanner && (
           <BarcodeScanner
             onResult={handleBarcodeScan}
-            onError={(error: unknown) => {
-              console.error(error);
-              toast.error("Error del escáner de códigos.");
+            onError={(error) => {
+              console.error("Barcode scanner error:", error);
+              let message = "Ocurrió un error inesperado con el escáner.";
+              if (error instanceof Error) {
+                if (error.name === 'NotAllowedError') {
+                  message = "Permiso de cámara denegado. Por favor, habilita el acceso a la cámara en la configuración de tu navegador.";
+                } else if (error.name === 'NotFoundException' || error.name === 'NotFoundError') {
+                  message = "No se encontró una cámara compatible. Asegúrate de que no esté siendo usada por otra aplicación.";
+                } else {
+                  message = "El escáner no pudo iniciarse. Intenta refrescar la página.";
+                }
+              }
+              toast.error("Error del escáner", { description: message });
             }}
           />
         )}
