@@ -16,60 +16,60 @@ const WriteExercise = () => {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
-
   const [description, setDescription] = useState('');
-  const [estimatedData, setEstimatedData] = useState<{ name: string; duration: number; calories: number } | null>(null);
 
-  const estimateMutation = useMutation({
+  const saveAndAnalyzeMutation = useMutation({
     mutationFn: async (text: string) => {
-      const { data, error } = await supabase.functions.invoke('estimate-exercise-calories', {
-        body: { description: text, weight: profile?.weight ?? null },
-      });
-      if (error) throw new Error(error.message);
-      return data as { name: string; duration: number; calories: number };
+      if (!user) throw new Error('User not found');
+      
+      const { data, error } = await supabase
+        .from('exercise_entries')
+        .insert({
+          user_id: user.id,
+          description: text,
+          status: 'processing',
+          exercise_type: 'Analizando...',
+          intensity: 'custom',
+          duration_minutes: 0,
+          calories_burned: 0,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return { newEntry: data };
     },
-    onSuccess: (data) => {
+    onSuccess: ({ newEntry }) => {
       logUsage('exercise_ai');
-      setEstimatedData(data);
-      toast.success(t('write_exercise.ai_success_toast'));
+      queryClient.invalidateQueries({ queryKey: ['exercise_entries', user?.id] });
+      navigate('/');
+      toast.info('Análisis de ejercicio iniciado...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
+
+      supabase.functions.invoke('estimate-exercise-calories', {
+        body: { entry_id: newEntry.id, description, weight: profile?.weight ?? null },
+      }).then(({ error }) => {
+        if (error) {
+          console.error("Function invocation failed:", error);
+          supabase.from('exercise_entries').update({ status: 'failed', reason: 'Could not start analysis.' }).eq('id', newEntry.id).then(() => {
+            queryClient.invalidateQueries({ queryKey: ['exercise_entries', user?.id] });
+          });
+        }
+      });
     },
     onError: (error) => {
-      toast.error(t('write_exercise.error_toast_title'), { description: (error as Error).message });
+      toast.error('Error al iniciar el análisis', { description: (error as Error).message });
     },
   });
 
-  const handleEstimate = async () => {
+  const handleAddExercise = async () => {
     if (description.trim().length < 10) {
       toast.info("Por favor, describe tu ejercicio con más detalle.");
       return;
     }
     const canProceed = await checkLimit('exercise_ai', 2, 'daily');
     if (canProceed) {
-      estimateMutation.mutate(description);
+      saveAndAnalyzeMutation.mutate(description);
     }
   };
-
-  const saveMutation = useMutation({
-    mutationFn: async () => {
-      if (!user || !estimatedData) throw new Error(t('write_exercise.validation_error'));
-      const { error } = await supabase.from('exercise_entries').insert({
-        user_id: user.id,
-        exercise_type: estimatedData.name.toLowerCase(),
-        intensity: 'custom',
-        duration_minutes: estimatedData.duration,
-        calories_burned: estimatedData.calories,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['exercise_entries', user?.id] });
-      toast.success(t('write_exercise.saved_toast'));
-      navigate('/');
-    },
-    onError: (error) => {
-      toast.error(t('write_exercise.error_toast_title'), { description: (error as Error).message });
-    },
-  });
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -85,41 +85,21 @@ const WriteExercise = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder={t('write_exercise.placeholder')}
-            className="h-32 text-lg resize-none"
+            className="h-40 text-lg resize-none"
           />
-          <Button
-            variant="outline"
-            className="w-full h-14 text-lg rounded-full"
-            onClick={handleEstimate}
-            disabled={estimateMutation.isPending}
-          >
-            {estimateMutation.isPending ? (
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            ) : (
-              <Wand2 className="mr-2 h-5 w-5" />
-            )}
-            {estimateMutation.isPending ? t('write_exercise.ai_button_loading') : t('write_exercise.ai_button')}
-          </Button>
-          <div className="bg-muted p-4 rounded-xl">
-            <p className="text-muted-foreground text-center">{t('write_exercise.example')}</p>
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <Wand2 className="w-4 h-4" />
+            <span>{t('write_exercise.ai_button')}</span>
           </div>
-          {estimatedData && (
-            <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl text-center">
-              <p className="font-semibold text-primary">Estimación de la IA:</p>
-              <p className="text-foreground">
-                {estimatedData.name} - {estimatedData.duration} min - {estimatedData.calories} kcal
-              </p>
-            </div>
-          )}
         </div>
         <footer className="py-4">
           <Button
             size="lg"
             className="w-full h-14 text-lg rounded-full"
-            onClick={() => saveMutation.mutate()}
-            disabled={!estimatedData || saveMutation.isPending}
+            onClick={handleAddExercise}
+            disabled={saveAndAnalyzeMutation.isPending}
           >
-            {saveMutation.isPending ? (
+            {saveAndAnalyzeMutation.isPending ? (
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             ) : null}
             {t('write_exercise.add_button')}

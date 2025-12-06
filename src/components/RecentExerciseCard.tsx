@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Flame, Dumbbell, Footprints, Bike } from "lucide-react";
+import { Flame, Dumbbell, Footprints, Bike, Wand2, AlertTriangle } from "lucide-react";
 import { ExerciseEntry } from "@/context/NutritionContext";
 import { useTranslation } from "react-i18next";
 
@@ -16,26 +16,53 @@ const exerciseIcons: { [key: string]: React.ElementType } = {
 
 const RecentExerciseCard = ({ entry }: RecentExerciseCardProps) => {
   const { t } = useTranslation();
+  const isProcessing = entry.status === 'processing';
+  const hasFailed = entry.status === 'failed';
+
   const Icon = exerciseIcons[entry.exercise_type] || exerciseIcons.default;
 
   return (
-    <Card className="p-4 flex items-center gap-4 bg-primary/5 border-primary/20">
-      <div className="w-20 h-20 flex-shrink-0 bg-primary/10 rounded-lg flex items-center justify-center">
-        <Icon className="w-10 h-10 text-primary" />
-      </div>
-      <div className="flex-1">
-        <div className="flex justify-between items-start mb-2">
-          <h4 className="font-semibold text-foreground capitalize">{t(`exercise.${entry.exercise_type}` as any)}</h4>
-          <span className="text-xs text-muted-foreground">{new Date(entry.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+    <Card className="p-4 flex items-center gap-4 relative overflow-hidden">
+      <div className="relative w-20 h-20 flex-shrink-0">
+        <div className="w-full h-full bg-primary/10 rounded-lg flex items-center justify-center">
+          <Icon className="w-10 h-10 text-primary" />
         </div>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Flame className="w-4 h-4 text-destructive" />
-            <span className="font-semibold text-destructive">{entry.calories_burned} kcal</span>
+        {isProcessing && (
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] rounded-lg flex flex-col items-center justify-center p-2 z-10">
+             <Wand2 className="w-6 h-6 text-white animate-pulse mb-1" />
           </div>
-          <p>{entry.duration_minutes} min</p>
-          <p className="capitalize">{t(`running.intensity_${entry.intensity}` as any)}</p>
+        )}
+        {hasFailed && (
+          <div className="absolute inset-0 bg-red-900/60 rounded-lg flex items-center justify-center">
+            <AlertTriangle className="w-6 h-6 text-white" />
+          </div>
+        )}
+      </div>
+      
+      <div className="flex-1 min-w-0">
+        <div className="flex justify-between items-start mb-2">
+          <h4 className="font-semibold text-foreground truncate pr-2">
+            {isProcessing ? (entry.description || 'Analizando...') : t(`exercise.${entry.exercise_type}` as any)}
+          </h4>
+          <span className="text-xs text-muted-foreground flex-shrink-0">{new Date(entry.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         </div>
+        
+        {isProcessing ? (
+          <div className="space-y-2">
+            <p className="text-sm text-primary animate-pulse">La IA está calculando tu esfuerzo...</p>
+          </div>
+        ) : hasFailed ? (
+          <p className="text-sm text-destructive font-medium">Análisis fallido.</p>
+        ) : (
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Flame className="w-4 h-4 text-destructive" />
+              <span className="font-semibold text-destructive">{entry.calories_burned} kcal</span>
+            </div>
+            <p>{entry.duration_minutes} min</p>
+            <p className="capitalize">{t(`running.intensity_${entry.intensity}` as any)}</p>
+          </div>
+        )}
       </div>
     </Card>
   );

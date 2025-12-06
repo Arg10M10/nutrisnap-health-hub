@@ -36,6 +36,9 @@ export interface ExerciseEntry {
   intensity: string;
   duration_minutes: number;
   calories_burned: number;
+  status: 'processing' | 'completed' | 'failed';
+  description: string | null;
+  reason: string | null;
 }
 
 export interface WaterEntry {
@@ -135,6 +138,13 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       return data || [];
     },
     enabled: !!user,
+    refetchInterval: (query) => {
+      const data = query.state.data as ExerciseEntry[] | undefined;
+      if (data?.some(entry => entry.status === 'processing')) {
+        return 2000;
+      }
+      return false;
+    }
   });
 
   const { data: waterEntries = [], isLoading: isWaterLoading } = useQuery<WaterEntry[]>({
@@ -151,7 +161,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!user) return;
 
-    const channel = supabase
+    const foodChannel = supabase
       .channel('food_entries_changes')
       .on(
         'postgres_changes',
@@ -163,9 +173,23 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         }
       )
       .subscribe();
+      
+    const exerciseChannel = supabase
+      .channel('exercise_entries_changes')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'exercise_entries', filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          if (payload.new.status === 'completed' || payload.new.status === 'failed') {
+            queryClient.invalidateQueries({ queryKey: ['exercise_entries', user.id] });
+          }
+        }
+      )
+      .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(foodChannel);
+      supabase.removeChannel(exerciseChannel);
     };
   }, [user, queryClient]);
 
