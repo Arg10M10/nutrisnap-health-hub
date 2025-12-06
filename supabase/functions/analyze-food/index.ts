@@ -54,19 +54,22 @@ serve(async (req) => {
   try {
     const base64Image = imageData.split(",")[1];
     const prompt = `
-      Analiza la imagen de esta comida y proporciona una estimación de sus valores nutricionales.
-      Responde únicamente con un objeto JSON válido, sin ningún texto adicional antes o después.
-      El objeto JSON debe tener la siguiente estructura:
-      {
-        "foodName": "Nombre del plato o comida principal",
-        "calories": "Estimación de calorías (ej. '350-450 kcal')",
-        "protein": "Estimación de proteínas (ej. '20-25g')",
-        "carbs": "Estimación de carbohidratos (ej. '30-40g')",
-        "fats": "Estimación de grasas (ej. '15-20g')",
-        "sugars": "Estimación de azúcares (ej. '5-10g')",
-        "healthRating": "Clasificación de salud ('Saludable', 'Moderado', o 'Evitar')",
-        "reason": "Una breve explicación (máximo 20 palabras) de por qué le diste esa clasificación."
-      }
+      Analiza la imagen. Tu primera prioridad es detectar un código de barras.
+      
+      1. Si la imagen contiene un código de barras claro y legible, extrae el número y responde ÚNICAMENTE con un objeto JSON con la siguiente estructura:
+         {"barcode": "EL_NUMERO_DEL_CODIGO_DE_BARRAS"}
+
+      2. Si NO hay un código de barras legible, analiza la comida en la imagen y proporciona una estimación nutricional. Responde ÚNICAMENTE con un objeto JSON con la siguiente estructura:
+         {
+           "foodName": "Nombre del plato",
+           "calories": "Estimación de calorías (ej. '350-450 kcal')",
+           "protein": "Estimación de proteínas (ej. '20-25g')",
+           "carbs": "Estimación de carbohidratos (ej. '30-40g')",
+           "fats": "Estimación de grasas (ej. '15-20g')",
+           "sugars": "Estimación de azúcares (ej. '5-10g')",
+           "healthRating": "Clasificación ('Saludable', 'Moderado', o 'Evitar')",
+           "reason": "Breve explicación (máx 20 palabras)."
+         }
     `;
 
     const body = {
@@ -91,36 +94,50 @@ serve(async (req) => {
 
     if (!aiRes.ok) {
       const errorBody = await aiRes.text();
-      console.error("Error from GPT API:", errorBody);
-      throw new Error(`Error en la API de IA: ${aiRes.statusText}`);
+      throw new Error(`Error en la API de IA: ${errorBody}`);
     }
 
     const aiData = await aiRes.json();
     const jsonText = aiData.choices?.[0]?.message?.content ?? "";
     const analysisResult = safeParseJson(jsonText);
-    if (!analysisResult) throw new Error("La IA devolvió una respuesta en un formato inesperado.");
 
-    const { error: updateError } = await supabaseAdmin
-      .from('food_entries')
-      .update({
-        food_name: analysisResult.foodName,
-        calories: analysisResult.calories,
-        protein: analysisResult.protein,
-        carbs: analysisResult.carbs,
-        fats: analysisResult.fats,
-        sugars: analysisResult.sugars,
-        health_rating: analysisResult.healthRating,
-        reason: analysisResult.reason,
-        calories_value: parseNutrientValue(analysisResult.calories),
-        protein_value: parseNutrientValue(analysisResult.protein),
-        carbs_value: parseNutrientValue(analysisResult.carbs),
-        fats_value: parseNutrientValue(analysisResult.fats),
-        sugars_value: parseNutrientValue(analysisResult.sugars),
-        status: 'completed',
-      })
-      .eq('id', entry_id);
+    if (!analysisResult) {
+      throw new Error("La IA devolvió una respuesta en un formato inesperado.");
+    }
 
-    if (updateError) throw updateError;
+    // SI SE DETECTA UN CÓDIGO DE BARRAS
+    if (analysisResult.barcode) {
+      const { error: invokeError } = await supabaseAdmin.functions.invoke('process-barcode', {
+        body: { entry_id, barcode: analysisResult.barcode },
+      });
+      if (invokeError) {
+        throw new Error(`Error al procesar el código de barras: ${invokeError.message}`);
+      }
+    } 
+    // SI ES UN ANÁLISIS VISUAL DE COMIDA
+    else {
+      const { error: updateError } = await supabaseAdmin
+        .from('food_entries')
+        .update({
+          food_name: analysisResult.foodName,
+          calories: analysisResult.calories,
+          protein: analysisResult.protein,
+          carbs: analysisResult.carbs,
+          fats: analysisResult.fats,
+          sugars: analysisResult.sugars,
+          health_rating: analysisResult.healthRating,
+          reason: analysisResult.reason,
+          calories_value: parseNutrientValue(analysisResult.calories),
+          protein_value: parseNutrientValue(analysisResult.protein),
+          carbs_value: parseNutrientValue(analysisResult.carbs),
+          fats_value: parseNutrientValue(analysisResult.fats),
+          sugars_value: parseNutrientValue(analysisResult.sugars),
+          status: 'completed',
+        })
+        .eq('id', entry_id);
+
+      if (updateError) throw updateError;
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
