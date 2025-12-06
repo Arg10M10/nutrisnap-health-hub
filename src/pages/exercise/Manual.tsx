@@ -55,7 +55,7 @@ const ManualExercise = () => {
       </header>
       <main className="flex-1 p-4 flex flex-col">
         <div className="flex-1 space-y-8">
-          <h2 className="text-4xl font-bold text-foreground">{t('manual_exercise.calories_burned')}</h2>
+          <h2 className="text-3xl font-bold text-foreground">{t('manual_exercise.calories_burned')}</h2>
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full border-4 border-primary flex items-center justify-center flex-shrink-0">
               <Flame className="w-8 h-8 text-primary" />
@@ -65,7 +65,7 @@ const ManualExercise = () => {
               value={calories}
               onChange={(e) => setCalories(e.target.value === '' ? '' : parseInt(e.target.value, 10))}
               placeholder="0"
-              className="h-20 text-4xl font-bold"
+              className="h-16 text-3xl font-bold"
               autoFocus
             />
           </div>
@@ -73,7 +73,7 @@ const ManualExercise = () => {
         <footer className="py-4">
           <Button
             size="lg"
-            className="w-full h-14 text-lg rounded-full"
+            className="w-full h-12 text-lg rounded-full"
             onClick={() => mutation.mutate()}
             disabled={mutation.isPending || calories === '' || calories <= 0}
           >

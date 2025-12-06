@@ -81,14 +81,17 @@ const WriteExercise = () => {
         <h1 className="text-2xl font-bold text-primary">{t('write_exercise.title')}</h1>
       </header>
       <main className="flex-1 p-4 flex flex-col">
-        <div className="flex-1 space-y-6">
+        <div className="flex-1 space-y-4">
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder={t('write_exercise.placeholder')}
             className="h-40 text-lg resize-none"
           />
-          <div className="flex justify-center">
+          <p className="text-sm text-muted-foreground text-center px-4">
+            {t('write_exercise.example')}
+          </p>
+          <div className="flex justify-center pt-2">
             <Badge variant="outline" className="py-2 px-4 border-primary/20 bg-primary/5 text-primary">
               <Wand2 className="w-4 h-4 mr-2" />
               <span className="font-semibold">{t('write_exercise.ai_button')}</span>
