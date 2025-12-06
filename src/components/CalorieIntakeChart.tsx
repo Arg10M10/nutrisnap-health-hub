@@ -113,7 +113,7 @@ const CalorieIntakeChart = () => {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="h-64 w-full">
+          <div className="h-64 w-full outline-none focus:outline-none">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -16 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
@@ -132,7 +132,7 @@ const CalorieIntakeChart = () => {
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'hsl(var(--muted))' }}
+                  cursor={false}
                 />
                 <Bar
                   dataKey="calories"

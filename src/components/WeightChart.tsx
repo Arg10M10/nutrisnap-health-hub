@@ -109,7 +109,7 @@ const WeightChart = () => {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : chartData.length > 1 ? (
-          <div className="h-64 w-full">
+          <div className="h-64 w-full outline-none focus:outline-none">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -20 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
@@ -129,7 +129,7 @@ const WeightChart = () => {
                   tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
                   width={40}
                 />
-                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }} />
+                <Tooltip content={<CustomTooltip />} cursor={false} />
                 {profile?.goal_weight && (
                   <ReferenceLine
                     y={profile.goal_weight}
@@ -149,7 +149,7 @@ const WeightChart = () => {
                   stroke="hsl(var(--primary))"
                   strokeWidth={3}
                   dot={{ r: 4, strokeWidth: 2, fill: 'hsl(var(--background))', stroke: 'hsl(var(--primary))' }}
-                  activeDot={{ r: 6, strokeWidth: 2, fill: 'hsl(var(--background))', stroke: 'hsl(var(--primary))' }}
+                  activeDot={{ r: 8, strokeWidth: 2, fill: 'hsl(var(--background))', stroke: 'hsl(var(--primary))' }}
                 />
               </LineChart>
             </ResponsiveContainer>
