@@ -26,8 +26,8 @@ export const waterBadges = [
 
 export const weightLossBadges = [
   { id: "weight_1", kg: 1, image: "/badges/weight-loss-1kg.png" },
-  { id: "weight_15", kg: 15, image: "/badges/weight-loss-15kg.png" },
-  { id: "weight_30", kg: 30, image: "/badges/weight-loss-30kg.png" },
+  { id: "weight_10", kg: 10, image: "/badges/weight-loss-10kg.png" },
+  { id: "weight_20", kg: 20, image: "/badges/weight-loss-20kg.png" },
   { id: "weight_50", kg: 50, image: "/badges/weight-loss-50kg.png" },
   { id: "weight_70", kg: 70, image: "/badges/weight-loss-70kg.png" },
 ];

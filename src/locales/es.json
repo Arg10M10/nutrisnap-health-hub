@@ -161,8 +161,8 @@
     "water_6": { "name": "Hidratación Pro", "desc": "Racha de 6 días de agua." },
     "water_10": { "name": "Maestro del Agua", "desc": "Racha de 10 días de agua." },
     "weight_1": { "name": "Primer Kilo", "desc": "Pierde tu primer kilogramo." },
-    "weight_15": { "name": "Meta 15kg", "desc": "Alcanza 15kg perdidos." },
-    "weight_30": { "name": "Meta 30kg", "desc": "Has perdido 30kg." },
+    "weight_10": { "name": "Meta 10kg", "desc": "Alcanza 10kg perdidos." },
+    "weight_20": { "name": "Meta 20kg", "desc": "Has perdido 20kg." },
     "weight_50": { "name": "Meta 50kg", "desc": "¡Increíble! 50kg menos." },
     "weight_70": { "name": "Meta 70kg", "desc": "Un logro monumental: 70kg." }
   },

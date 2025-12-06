@@ -161,8 +161,8 @@
     "water_6": { "name": "Hydration Pro", "desc": "6-day water streak." },
     "water_10": { "name": "Water Master", "desc": "10-day water streak." },
     "weight_1": { "name": "First Kilo", "desc": "Lose your first kilogram." },
-    "weight_15": { "name": "15kg Goal", "desc": "Reach 15kg lost." },
-    "weight_30": { "name": "30kg Goal", "desc": "You've lost 30kg." },
+    "weight_10": { "name": "10kg Goal", "desc": "Reach 10kg lost." },
+    "weight_20": { "name": "20kg Goal", "desc": "You've lost 20kg." },
     "weight_50": { "name": "50kg Goal", "desc": "Incredible! 50kg down." },
     "weight_70": { "name": "70kg Goal", "desc": "A monumental achievement: 70kg." }
   },
