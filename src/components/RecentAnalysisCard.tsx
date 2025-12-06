@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Flame, Beef, Wheat, Droplets, Sparkles, Loader2, AlertTriangle } from "lucide-react";
+import { Flame, Beef, Wheat, Droplets, Sparkles, Loader2, AlertTriangle, Wand2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Progress } from "@/components/ui/progress";
 
 interface RecentAnalysisCardProps {
   imageUrl: string | null;
@@ -22,19 +21,21 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
   const hasFailed = status === 'failed';
   const isClickable = status === 'completed';
 
-  // Progreso simulado mientras la IA procesa
-  const [progress, setProgress] = useState<number>(isProcessing ? 0 : 100);
+  const [progress, setProgress] = useState<number>(0);
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Reiniciar segun status
     if (isProcessing) {
       setProgress(0);
-      // Incrementos suaves hasta ~95% mientras llega el resultado real
+      // Simulación más lenta y realista: ~20-25 segundos para llegar al 90%
       timerRef.current = window.setInterval(() => {
         setProgress((p) => {
-          const next = p + Math.floor(Math.random() * 7) + 4; // +4..+10
-          return Math.min(next, 95);
+          // Incrementos pequeños y variables
+          const increment = Math.random() * 2 + 0.5; 
+          const next = p + increment;
+          // Ralentizar drásticamente al acercarse al 90%
+          if (next > 90) return 90 + Math.random(); 
+          return next;
         });
       }, 500);
     } else if (status === 'completed') {
@@ -61,21 +62,14 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
 
   return (
     <Card 
-      className={cn("p-4 flex items-center gap-4 relative transition-colors", isClickable && "cursor-pointer hover:bg-muted/50")} 
+      className={cn("p-4 flex items-center gap-4 relative transition-colors overflow-hidden", isClickable && "cursor-pointer hover:bg-muted/50")} 
       onClick={isClickable ? onClick : undefined}
     >
       <div className="relative w-20 h-20 flex-shrink-0">
         <img src={imageUrl || '/placeholder.svg'} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
         {isProcessing && (
-          <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center p-2">
-            <div className="w-full">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Loader2 className="w-4 h-4 text-white animate-spin" />
-                <span className="text-white text-sm font-medium">Analizando...</span>
-              </div>
-              <Progress value={progress} className="h-2" />
-              <div className="text-center mt-1 text-white text-xs font-semibold">{progress}%</div>
-            </div>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] rounded-lg flex flex-col items-center justify-center p-2 z-10">
+             <Wand2 className="w-6 h-6 text-white animate-pulse mb-1" />
           </div>
         )}
         {hasFailed && (
@@ -84,38 +78,47 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
           </div>
         )}
       </div>
-      <div className="flex-1">
+      
+      <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start mb-2">
-          <h4 className="font-semibold text-foreground">{foodName}</h4>
-          <span className="text-xs text-muted-foreground">{time}</span>
+          <h4 className="font-semibold text-foreground truncate pr-2">{foodName}</h4>
+          <span className="text-xs text-muted-foreground flex-shrink-0">{time}</span>
         </div>
+        
         {isProcessing ? (
-          <div className="text-sm text-muted-foreground">
-            La IA está calculando los nutrientes. Esto puede tardar unos segundos...
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-primary font-medium animate-pulse">Analizando nutrientes...</span>
+              <span className="font-bold text-foreground">{Math.floor(progress)}%</span>
+            </div>
+            {/* Barra de progreso moderna */}
+            <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-primary rounded-full transition-all duration-300 ease-out shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
         ) : hasFailed ? (
-          <p className="text-sm text-destructive">El análisis ha fallado. Por favor, inténtalo de nuevo.</p>
+          <p className="text-sm text-destructive font-medium">Análisis fallido. Toca para reintentar.</p>
         ) : (
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
-              <Flame className="w-4 h-4 text-primary" />
-              <span>{calories ?? 0} kcal</span>
+              <Flame className="w-3.5 h-3.5 text-primary" />
+              <span className="font-medium text-foreground">{calories ?? 0}</span>
+            </div>
+            <div className="w-px h-3 bg-border" />
+            <div className="flex items-center gap-1">
+              <span className="text-xs">P:</span>
+              <span className="font-medium text-foreground">{protein ?? 0}g</span>
             </div>
             <div className="flex items-center gap-1">
-              <Beef className="w-4 h-4 text-red-500" />
-              <span>{protein ?? 0}g</span>
+              <span className="text-xs">C:</span>
+              <span className="font-medium text-foreground">{carbs ?? 0}g</span>
             </div>
             <div className="flex items-center gap-1">
-              <Wheat className="w-4 h-4 text-orange-500" />
-              <span>{carbs ?? 0}g</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Droplets className="w-4 h-4 text-blue-500" />
-              <span>{fats ?? 0}g</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Sparkles className="w-4 h-4 text-purple-500" />
-              <span>{sugars ?? 0}g</span>
+              <span className="text-xs">G:</span>
+              <span className="font-medium text-foreground">{fats ?? 0}g</span>
             </div>
           </div>
         )}

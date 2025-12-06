@@ -166,8 +166,48 @@ const Scanner = () => {
     }
   };
 
-  const handleCapture = () => {
+  const startAnalysisMutation = useMutation({
+    mutationFn: async (imageData: string) => {
+      if (!user) throw new Error('User not found');
+      const { data, error } = await supabase
+        .from('food_entries')
+        .insert({
+          user_id: user.id,
+          food_name: 'Analizando...',
+          image_url: imageData,
+          status: 'processing',
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return { newEntry: data, imageData };
+    },
+    onSuccess: ({ newEntry, imageData }) => {
+      logUsage('food_scan');
+      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+      navigate('/');
+      toast.info('Análisis iniciado...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
+      supabase.functions.invoke("analyze-food", {
+        body: { entry_id: newEntry.id, imageData: imageData },
+      }).then(({ error }) => {
+        if (error) {
+          console.error("Function invocation failed:", error);
+          supabase.from('food_entries').update({ status: 'failed', reason: 'Could not start analysis.' }).eq('id', newEntry.id).then(() => {
+            queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+          });
+        }
+      });
+    },
+    onError: (err: Error) => {
+      console.error("Analysis start error:", err);
+      toast.error("No se pudo iniciar el análisis.", { description: err.message });
+      setState("captured"); // Allow retry if failed
+    },
+  });
+
+  const handleCapture = async () => {
     if (videoRef.current && canvasRef.current) {
+      // 1. Capture Image
       const video = videoRef.current;
       const canvas = canvasRef.current;
       const { videoWidth, videoHeight } = video;
@@ -191,9 +231,21 @@ const Scanner = () => {
       const context = canvas.getContext("2d");
       context?.drawImage(video, 0, 0, width, height);
       const imageData = canvas.toDataURL("image/jpeg", 0.8);
+      
       setCapturedImage(imageData);
       stopCamera();
-      setState("captured");
+      
+      // 2. Auto-Send Logic
+      const canProceed = await checkLimit('food_scan', 4, 'daily');
+      
+      if (canProceed) {
+        setState("loading");
+        startAnalysisMutation.mutate(imageData);
+      } else {
+        // If limit reached, show captured state but don't proceed automatically
+        // so user sees why it stopped (the toast from useAILimit handles the message)
+        setState("captured");
+      }
     }
   };
 
@@ -201,9 +253,13 @@ const Scanner = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      const canProceed = await checkLimit('food_scan', 4, 'daily');
+      if (!canProceed) return;
+
+      setState("loading");
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
@@ -227,9 +283,9 @@ const Scanner = () => {
           const ctx = canvas.getContext("2d");
           ctx?.drawImage(img, 0, 0, width, height);
           const resizedImageData = canvas.toDataURL("image/jpeg", 0.8);
+          
           setCapturedImage(resizedImageData);
-          setState("captured");
-          toast.success("Imagen cargada y optimizada.");
+          startAnalysisMutation.mutate(resizedImageData);
         };
         img.src = e.target?.result as string;
       };
@@ -237,50 +293,12 @@ const Scanner = () => {
     }
   };
 
-  const startAnalysisMutation = useMutation({
-    mutationFn: async (imageData: string) => {
-      if (!user) throw new Error('User not found');
-      const { data, error } = await supabase
-        .from('food_entries')
-        .insert({
-          user_id: user.id,
-          food_name: 'Analizando...',
-          image_url: imageData,
-          status: 'processing',
-        })
-        .select()
-        .single();
-      if (error) throw error;
-      return { newEntry: data, imageData };
-    },
-    onSuccess: ({ newEntry, imageData }) => {
-      logUsage('food_scan'); // Log usage on success
-      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
-      navigate('/');
-      toast.info('Análisis iniciado...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
-      supabase.functions.invoke("analyze-food", {
-        body: { entry_id: newEntry.id, imageData: imageData },
-      }).then(({ error }) => {
-        if (error) {
-          console.error("Function invocation failed:", error);
-          supabase.from('food_entries').update({ status: 'failed', reason: 'Could not start analysis.' }).eq('id', newEntry.id).then(() => {
-            queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
-          });
-        }
-      });
-    },
-    onError: (err: Error) => {
-      console.error("Analysis start error:", err);
-      toast.error("No se pudo iniciar el análisis.", { description: err.message });
-      setState("captured");
-    },
-  });
-
-  const handleAnalyze = async () => {
+  // Only used for manual retry if limit was hit or error occurred
+  const handleManualAnalyze = async () => {
     if (capturedImage) {
-      // Check limit (4 per day)
       const canProceed = await checkLimit('food_scan', 4, 'daily');
       if (canProceed) {
+        setState("loading");
         startAnalysisMutation.mutate(capturedImage);
       }
     }
@@ -317,7 +335,7 @@ const Scanner = () => {
             onCanPlay={() => setState("camera")}
             className={cn(
               "w-full h-full object-cover",
-              state === "captured" || state === 'error' ? "hidden" : "block"
+              state === "captured" || state === "loading" || state === 'error' ? "hidden" : "block"
             )}
           />
         )}
@@ -334,7 +352,7 @@ const Scanner = () => {
           <img
             src={capturedImage}
             alt="Comida capturada"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover opacity-50"
           />
         )}
       </div>
@@ -355,13 +373,10 @@ const Scanner = () => {
                 <AlertDialogTitle>¿Cómo funciona el escáner?</AlertDialogTitle>
                 <AlertDialogDescription className="space-y-3 pt-2">
                   <p>
-                    <strong>Modo Comida:</strong> Centra tu plato en el recuadro y toma una foto. Nuestra IA analizará la imagen para darte una estimación de sus valores nutricionales.
+                    <strong>Modo Comida:</strong> Centra tu plato y toma una foto. La IA comenzará a analizarla automáticamente.
                   </p>
                   <p>
-                    <strong>Modo Código:</strong> Apunta la cámara al código de barras de un producto. Buscaremos en nuestra base de datos para darte su información nutricional exacta.
-                  </p>
-                  <p>
-                    ¡También puedes subir una foto desde tu galería usando el icono de imagen!
+                    <strong>Modo Código:</strong> Apunta al código de barras para buscar el producto.
                   </p>
                 </AlertDialogDescription>
               </AlertDialogHeader>
@@ -370,19 +385,25 @@ const Scanner = () => {
           </AlertDialog>
         </header>
 
-        <div className="flex-1 relative">
+        <div className="flex-1 relative flex items-center justify-center">
           {scanMode === 'food' && state === 'camera' && <Viewfinder />}
+          {(state === 'loading' || startAnalysisMutation.isPending) && (
+             <div className="flex flex-col items-center gap-4">
+                <Loader2 className="w-16 h-16 text-primary animate-spin" />
+                <p className="text-xl font-bold animate-pulse">Analizando imagen...</p>
+             </div>
+          )}
         </div>
 
         <footer className="flex flex-col items-center gap-6 w-full p-4 pointer-events-auto">
-          {state === 'captured' ? (
+          {state === 'captured' && !startAnalysisMutation.isPending ? (
             <div className="grid grid-cols-2 gap-4 w-full max-w-md">
+              {/* This state is only reached if there was an error or limit reached */}
               <Button onClick={handleReset} variant="secondary" size="lg" className="h-16 text-lg rounded-2xl">
                 <RefreshCw className="mr-2 w-6 h-6" /> Repetir
               </Button>
-              <Button onClick={handleAnalyze} size="lg" className="h-16 text-lg rounded-2xl" disabled={startAnalysisMutation.isPending}>
-                {startAnalysisMutation.isPending ? <Loader2 className="mr-2 w-6 h-6 animate-spin" /> : <Scan className="mr-2 w-6 h-6" />}
-                Analizar
+              <Button onClick={handleManualAnalyze} size="lg" className="h-16 text-lg rounded-2xl">
+                <Scan className="mr-2 w-6 h-6" /> Reintentar
               </Button>
             </div>
           ) : state === 'camera' ? (
@@ -427,7 +448,7 @@ const Scanner = () => {
                 {scanMode === 'food' ? (
                   <button
                     onClick={handleCapture}
-                    className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-colors"
+                    className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
                     aria-label="Tomar foto"
                   />
                 ) : (
