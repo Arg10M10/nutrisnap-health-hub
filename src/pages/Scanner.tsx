@@ -30,7 +30,7 @@ import Viewfinder from "@/components/Viewfinder";
 import { useAuth } from "@/context/AuthContext";
 import { motion, Transition } from "framer-motion";
 import { useAILimit } from "@/hooks/useAILimit";
-import { BrowserMultiFormatReader, IScannerControls } from '@zxing/browser';
+import { BrowserMultiFormatReader } from '@zxing/browser';
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 type ScanMode = "food" | "barcode";
@@ -65,7 +65,6 @@ const Scanner = () => {
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
   const codeReader = useMemo(() => new BrowserMultiFormatReader(), []);
-  const controlsRef = useRef<IScannerControls | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -73,41 +72,8 @@ const Scanner = () => {
     return () => {
       document.body.style.overflow = 'auto';
       stopCamera();
-      codeReader.reset();
     };
   }, []);
-
-  useEffect(() => {
-    if (state !== 'camera' || !videoRef.current) {
-      return;
-    }
-
-    if (scanMode === 'barcode') {
-      codeReader.decodeFromVideoDevice(undefined, videoRef.current, (result, err, controls) => {
-        controlsRef.current = controls;
-        if (result) {
-          controls.stop();
-          handleBarcodeDetected(result.getText());
-        }
-      }).catch(err => {
-        console.error("Failed to start barcode scanner:", err);
-      });
-    } else {
-      codeReader.reset();
-      if (controlsRef.current) {
-        controlsRef.current.stop();
-        controlsRef.current = null;
-      }
-    }
-
-    return () => {
-      codeReader.reset();
-      if (controlsRef.current) {
-        controlsRef.current.stop();
-        controlsRef.current = null;
-      }
-    };
-  }, [scanMode, state]);
 
   const stopCamera = () => {
     if (streamRef.current) {
@@ -120,6 +86,7 @@ const Scanner = () => {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
+    codeReader.reset();
     setIsFlashOn(false);
   };
 
@@ -150,7 +117,6 @@ const Scanner = () => {
   };
 
   const handleBarcodeDetected = async (barcode: string) => {
-    setState("loading");
     const toastId = toast.loading("Código detectado. Buscando producto...");
     try {
       const response = await fetch(`https://world.openfoodfacts.org/api/v3/product/${barcode}.json`);
@@ -229,7 +195,7 @@ const Scanner = () => {
   });
 
   const handleCapture = async () => {
-    if (scanMode !== 'food' || !videoRef.current || !canvasRef.current) return;
+    if (!videoRef.current || !canvasRef.current) return;
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -253,11 +219,25 @@ const Scanner = () => {
     stopCamera();
     setState("loading");
 
-    const canProceed = await checkLimit('food_scan', 4, 'daily');
-    if (canProceed) {
-      startAnalysisMutation.mutate(imageData);
-    } else {
-      setState("captured");
+    if (scanMode === 'food') {
+      const canProceed = await checkLimit('food_scan', 4, 'daily');
+      if (canProceed) {
+        startAnalysisMutation.mutate(imageData);
+      } else {
+        setState("captured");
+      }
+    } else { // Barcode mode
+      try {
+        const result = await codeReader.decodeFromCanvas(canvas);
+        handleBarcodeDetected(result.getText());
+      } catch (err) {
+        if (err && (err as Error).name === 'NotFoundException') {
+          toast.error("No se encontró un código de barras.", { description: "Asegúrate de que esté bien enfocado y visible." });
+        } else {
+          toast.error("Error al leer el código de barras.", { description: (err as Error).message });
+        }
+        handleReset();
+      }
     }
   };
 
@@ -361,7 +341,7 @@ const Scanner = () => {
                 <AlertDialogTitle>¿Cómo funciona el escáner?</AlertDialogTitle>
                 <AlertDialogDescription className="space-y-3 pt-2">
                   <p><strong>Modo Comida:</strong> Centra tu plato y toma una foto. La IA la analizará.</p>
-                  <p><strong>Modo Código:</strong> Apunta al código de barras. La app lo detectará automáticamente.</p>
+                  <p><strong>Modo Código:</strong> Captura una foto clara del código de barras para buscar el producto.</p>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogAction>Entendido</AlertDialogAction>
@@ -410,19 +390,11 @@ const Scanner = () => {
                   className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
                   aria-label="Activar flash"
                 >{isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}</button>
-                
-                {scanMode === 'food' ? (
-                  <button
-                    onClick={handleCapture}
-                    className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
-                    aria-label="Tomar foto"
-                  />
-                ) : (
-                  <div className="w-20 h-20 flex items-center justify-center">
-                    <p className="text-sm text-center text-white/80">Apuntando...</p>
-                  </div>
-                )}
-
+                <button
+                  onClick={handleCapture}
+                  className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
+                  aria-label="Tomar foto"
+                />
                 <button
                   onClick={handleUploadClick}
                   className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
