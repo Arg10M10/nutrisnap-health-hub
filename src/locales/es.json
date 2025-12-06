@@ -450,5 +450,36 @@
     },
     "toast_success": "¡Todo listo! Bienvenido a Calorel.",
     "toast_error": "Hubo un error al guardar tu perfil."
+  },
+  "subscribe": {
+    "title": "Vuélvete Premium",
+    "trial_tab": "Prueba Gratuita de 3 Días",
+    "pay_now_tab": "Pagar Ahora",
+    "timeline": {
+      "today_title": "Hoy",
+      "today_desc": "Desbloquea todas las funciones premium como el escáner de calorías por IA y mucho más.",
+      "reminder_title": "En 2 días",
+      "reminder_desc": "Te enviaremos un recordatorio de que tu prueba está a punto de terminar.",
+      "billing_title": "En 3 días - Comienza la facturación",
+      "billing_desc": "Se te cobrará a menos que canceles en cualquier momento antes."
+    },
+    "features_title": "Funciones Premium",
+    "features": {
+      "scanner": "Escáner de alimentos con IA",
+      "exercise": "Análisis de ejercicio por IA",
+      "diet_plans": "Planes de dieta personalizados",
+      "goals": "Sugerencias de metas inteligentes"
+    },
+    "plan": {
+      "title": "Acceso Mensual",
+      "price_suffix": "/Mes",
+      "trial_note": "Después de 3 días gratis"
+    },
+    "buttons": {
+      "start_trial": "Comenzar mi prueba gratuita de 3 días",
+      "unlock_now": "Desbloquear Premium Ahora",
+      "no_payment_note": "No tienes que pagar nada ahora",
+      "skip": "Quizás más tarde"
+    }
   }
 }

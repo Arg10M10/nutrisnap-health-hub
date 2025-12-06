@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Lock, Bell, ShoppingBag, Sparkles, Clock, Zap, ChefHat, Target } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useTranslation } from 'react-i18next';
 
 const Subscribe = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [planType, setPlanType] = useState<'trial' | 'paid'>('trial');
 
   const handleSubscribe = () => {
@@ -22,26 +24,26 @@ const Subscribe = () => {
   const timelineItems = [
     {
       icon: Lock,
-      title: "Hoy",
-      description: "Desbloquea todas las funciones premium como el escáner de calorías por IA y mucho más.",
+      title: t('subscribe.timeline.today_title'),
+      description: t('subscribe.timeline.today_desc'),
     },
     {
       icon: Bell,
-      title: "En 2 días",
-      description: "Te enviaremos un recordatorio de que tu prueba está a punto de terminar.",
+      title: t('subscribe.timeline.reminder_title'),
+      description: t('subscribe.timeline.reminder_desc'),
     },
     {
       icon: ShoppingBag,
-      title: "En 3 días - Comienza la facturación",
-      description: "Se te cobrará a menos que canceles en cualquier momento antes.",
+      title: t('subscribe.timeline.billing_title'),
+      description: t('subscribe.timeline.billing_desc'),
     },
   ];
 
   const premiumFeatures = [
-    { icon: Sparkles, text: "Escáner de alimentos con IA" },
-    { icon: Zap, text: "Análisis de ejercicio por IA" },
-    { icon: ChefHat, text: "Planes de dieta personalizados" },
-    { icon: Target, text: "Sugerencias de metas inteligentes" },
+    { icon: Sparkles, text: t('subscribe.features.scanner') },
+    { icon: Zap, text: t('subscribe.features.exercise') },
+    { icon: ChefHat, text: t('subscribe.features.diet_plans') },
+    { icon: Target, text: t('subscribe.features.goals') },
   ];
 
   const containerVariants = {
@@ -63,7 +65,7 @@ const Subscribe = () => {
         className="w-full max-w-md"
       >
         <div className="p-6 text-center">
-          <h1 className="text-3xl font-bold text-foreground mb-4">Vuélvete Premium</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-4">{t('subscribe.title')}</h1>
         </div>
 
         <ToggleGroup
@@ -72,28 +74,28 @@ const Subscribe = () => {
           onValueChange={(value: 'trial' | 'paid') => value && setPlanType(value)}
           className="grid grid-cols-2 w-full mb-8"
         >
-          <ToggleGroupItem value="trial" className="h-12 text-base">Prueba Gratuita de 3 Días</ToggleGroupItem>
-          <ToggleGroupItem value="paid" className="h-12 text-base">Pagar Ahora</ToggleGroupItem>
+          <ToggleGroupItem value="trial" className="h-12 text-base">{t('subscribe.trial_tab')}</ToggleGroupItem>
+          <ToggleGroupItem value="paid" className="h-12 text-base">{t('subscribe.pay_now_tab')}</ToggleGroupItem>
         </ToggleGroup>
 
         {planType === 'trial' ? (
           <motion.div 
             key="trial"
-            className="relative space-y-8 pl-12 mb-8"
+            className="relative space-y-8 mb-8"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             exit="hidden"
           >
-            <div className="absolute left-[23px] top-2 h-full w-0.5 bg-primary/20" />
+            <div className="absolute left-6 top-2 h-full w-0.5 bg-primary/20 -translate-x-1/2" />
             {timelineItems.map((item, index) => (
               <motion.div key={index} className="relative flex items-start gap-4" variants={itemVariants}>
-                <div className="absolute left-[-23px] mt-1 flex h-12 w-12 items-center justify-center rounded-full bg-card border-4 border-background">
+                <div className="z-10 flex h-12 w-12 items-center justify-center rounded-full bg-card border-4 border-background flex-shrink-0">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <item.icon className="h-5 w-5" />
                   </div>
                 </div>
-                <div>
+                <div className="pt-1">
                   <h3 className="font-bold text-foreground">{item.title}</h3>
                   <p className="text-sm text-muted-foreground">{item.description}</p>
                 </div>
@@ -109,7 +111,7 @@ const Subscribe = () => {
             animate="visible"
             exit="hidden"
           >
-            <h3 className="text-center font-semibold text-lg text-foreground">Funciones Premium</h3>
+            <h3 className="text-center font-semibold text-lg text-foreground">{t('subscribe.features_title')}</h3>
             {premiumFeatures.map((feature, index) => (
               <motion.div key={index} className="flex items-center gap-4" variants={itemVariants}>
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary flex-shrink-0">
@@ -124,25 +126,25 @@ const Subscribe = () => {
         <Card className="shadow-lg">
           <CardContent className="p-4 space-y-3">
             <div className="border-2 border-primary bg-primary/5 rounded-lg p-4 text-center">
-              <p className="font-bold text-lg text-primary">Acceso Mensual</p>
-              <p className="text-2xl font-extrabold text-foreground">$2.00<span className="text-base font-medium text-muted-foreground">/Mes</span></p>
-              {planType === 'trial' && <p className="text-sm text-muted-foreground mt-1">Después de 3 días gratis</p>}
+              <p className="font-bold text-lg text-primary">{t('subscribe.plan.title')}</p>
+              <p className="text-2xl font-extrabold text-foreground">$2.00<span className="text-base font-medium text-muted-foreground">{t('subscribe.plan.price_suffix')}</span></p>
+              {planType === 'trial' && <p className="text-sm text-muted-foreground mt-1">{t('subscribe.plan.trial_note')}</p>}
             </div>
           </CardContent>
         </Card>
 
         <div className="mt-6 flex flex-col gap-3">
           <Button onClick={handleSubscribe} size="lg" className="w-full h-14 text-lg rounded-xl shadow-lg shadow-primary/30">
-            {planType === 'trial' ? 'Comenzar mi prueba gratuita de 3 días' : 'Desbloquear Premium Ahora'}
+            {planType === 'trial' ? t('subscribe.buttons.start_trial') : t('subscribe.buttons.unlock_now')}
           </Button>
           {planType === 'trial' && (
             <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
               <Clock className="h-3 w-3" />
-              No tienes que pagar nada ahora
+              {t('subscribe.buttons.no_payment_note')}
             </p>
           )}
           <Button variant="link" onClick={handleSkip} className="text-muted-foreground">
-            Quizás más tarde
+            {t('subscribe.buttons.skip')}
           </Button>
         </div>
       </motion.div>

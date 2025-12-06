@@ -450,5 +450,36 @@
     },
     "toast_success": "All set! Welcome to Calorel.",
     "toast_error": "There was an error saving your profile."
+  },
+  "subscribe": {
+    "title": "Go Premium",
+    "trial_tab": "3-Day Free Trial",
+    "pay_now_tab": "Pay Now",
+    "timeline": {
+      "today_title": "Today",
+      "today_desc": "Unlock all premium features like the AI calorie scanner and much more.",
+      "reminder_title": "In 2 days",
+      "reminder_desc": "We'll send you a reminder that your trial is about to end.",
+      "billing_title": "In 3 days - Billing begins",
+      "billing_desc": "You will be charged unless you cancel anytime before."
+    },
+    "features_title": "Premium Features",
+    "features": {
+      "scanner": "AI Food Scanner",
+      "exercise": "AI Exercise Analysis",
+      "diet_plans": "Personalized Diet Plans",
+      "goals": "Smart Goal Suggestions"
+    },
+    "plan": {
+      "title": "Monthly Access",
+      "price_suffix": "/Month",
+      "trial_note": "After 3 free days"
+    },
+    "buttons": {
+      "start_trial": "Start my 3-day free trial",
+      "unlock_now": "Unlock Premium Now",
+      "no_payment_note": "You don't have to pay anything now",
+      "skip": "Maybe later"
+    }
   }
 }
