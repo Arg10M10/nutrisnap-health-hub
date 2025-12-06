@@ -387,6 +387,11 @@ const Scanner = () => {
 
         <div className="flex-1 relative flex items-center justify-center">
           {scanMode === 'food' && state === 'camera' && <Viewfinder />}
+          {scanMode === 'barcode' && state === 'camera' && (
+            <div className="w-[80vw] max-w-md h-24 bg-white/10 rounded-lg border-2 border-white/50 relative">
+              <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-red-500 animate-pulse" />
+            </div>
+          )}
           {(state === 'loading' || startAnalysisMutation.isPending) && (
              <div className="flex flex-col items-center gap-4">
                 <Loader2 className="w-16 h-16 text-primary animate-spin" />
