@@ -111,7 +111,7 @@ const WeightChart = () => {
         ) : chartData.length > 1 ? (
           <div className="h-64 w-full outline-none focus:outline-none">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -20 }}>
+              <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: 0 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
                 <XAxis
                   dataKey="date"

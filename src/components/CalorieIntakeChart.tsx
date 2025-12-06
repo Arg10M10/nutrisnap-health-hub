@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format, subDays, isAfter, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
@@ -41,6 +41,28 @@ const CalorieIntakeChart = () => {
     },
     enabled: !!user,
   });
+
+  const uniqueEntryDays = useMemo(() => {
+    const allEntries = [...foodEntries, ...exerciseEntries];
+    const daySet = new Set<string>();
+    allEntries.forEach(entry => {
+      const day = format(parseISO(entry.created_at), 'yyyy-MM-dd');
+      daySet.add(day);
+    });
+    return daySet.size;
+  }, [foodEntries, exerciseEntries]);
+
+  const show30D = uniqueEntryDays > 7;
+  const show1Y = uniqueEntryDays > 30;
+
+  useEffect(() => {
+    if (timeRange === '1Y' && !show1Y) {
+      setTimeRange(show30D ? '30D' : '7D');
+    }
+    if (timeRange === '30D' && !show30D) {
+      setTimeRange('7D');
+    }
+  }, [timeRange, show30D, show1Y]);
 
   const chartData = useMemo(() => {
     const now = new Date();
@@ -113,7 +135,7 @@ const CalorieIntakeChart = () => {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="h-64 w-full outline-none focus:outline-none">
+          <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -16 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
@@ -154,8 +176,12 @@ const CalorieIntakeChart = () => {
           className="w-full bg-muted p-1 rounded-full"
         >
           <ToggleGroupItem value="7D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">7D</ToggleGroupItem>
-          <ToggleGroupItem value="30D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">30D</ToggleGroupItem>
-          <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">1A</ToggleGroupItem>
+          {show30D && (
+            <ToggleGroupItem value="30D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">30D</ToggleGroupItem>
+          )}
+          {show1Y && (
+            <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">1A</ToggleGroupItem>
+          )}
         </ToggleGroup>
       </CardFooter>
     </Card>
