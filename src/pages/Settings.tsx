@@ -27,6 +27,7 @@ import { useSnow } from "@/context/SnowContext";
 
 const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
+const INSTAGRAM_URL = "https://www.instagram.com/calorel.app/";
 const SUPPORT_EMAIL = "calorel.help@gmail.com";
 
 const Settings = () => {
@@ -174,8 +175,8 @@ const Settings = () => {
 
         {/* Social Media Category */}
         <SettingsCategory title={t('settings.social.title')}>
-          <SettingsItem icon={<Instagram size={20} />} label={t('settings.social.instagram')} onClick={handleNotImplemented} />
-          <SettingsItem icon={<TikTokIcon />} label={t('settings.social.tiktok')} onClick={handleNotImplemented} />
+          <SettingsItem icon={<Instagram size={20} />} label={t('settings.social.instagram')} onClick={() => openExternal(INSTAGRAM_URL)} />
+          <SettingsItem icon={<TikTokIcon width={20} height={20} />} label={t('settings.social.tiktok')} onClick={handleNotImplemented} />
         </SettingsCategory>
 
         {/* Account Actions Category */}
