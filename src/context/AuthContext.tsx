@@ -7,6 +7,7 @@ export interface Profile {
   full_name: string;
   updated_at: string;
   onboarding_completed: boolean;
+  diet_onboarding_completed: boolean;
   gender: string | null;
   age: number | null;
   previous_apps_experience: string | null;
