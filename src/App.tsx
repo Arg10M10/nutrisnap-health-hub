@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { NutritionProvider } from "./context/NutritionContext";
+import { NutritionProvider, useNutrition } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
 
@@ -36,6 +36,7 @@ import EditProfile from "./pages/settings/EditProfile";
 import Snowfall from "./components/Snowfall";
 import LightBackground from "./components/LightBackground";
 import { SnowProvider, useSnow } from "./context/SnowContext";
+import BadgeUnlockModal from "./components/BadgeUnlockModal";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,18 @@ const AnimatedRoutes = () => {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
+  );
+};
+
+// Componente separado para manejar el modal, ya que necesita usar el hook useNutrition
+const GlobalBadgeModal = () => {
+  const { unlockedBadge, closeBadgeModal } = useNutrition();
+  return (
+    <BadgeUnlockModal 
+      isOpen={!!unlockedBadge} 
+      onClose={closeBadgeModal} 
+      badge={unlockedBadge} 
+    />
   );
 };
 
@@ -81,10 +94,8 @@ const AppRoutes = () => {
     "/settings/edit-profile",
   ];
 
-  // Eliminamos bg-background aquí para que se vea el LightBackground
   const shellClass = "relative min-h-screen"; 
 
-  // No mostrar nieve en el escáner
   const showSnow = snowEnabled && location.pathname !== "/scanner";
 
   if (fullScreenRoutes.includes(location.pathname)) {
@@ -92,6 +103,7 @@ const AppRoutes = () => {
       <div className={shellClass}>
         <LightBackground />
         <Snowfall enabled={showSnow} />
+        <GlobalBadgeModal />
         <div className="relative z-10">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -143,6 +155,7 @@ const AppRoutes = () => {
     <div className={shellClass}>
       <LightBackground />
       <Snowfall enabled={showSnow} />
+      <GlobalBadgeModal />
       <div className="pb-28 relative z-10">
         <AnimatedRoutes />
       </div>
