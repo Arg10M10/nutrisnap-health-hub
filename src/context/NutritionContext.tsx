@@ -107,32 +107,6 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const [unlockedBadges, setUnlockedBadges] = useState<string[]>([]);
   const [newlyUnlockedBadge, setNewlyUnlockedBadge] = useState<UnlockedBadgeInfo | null>(null);
   const { t } = useTranslation();
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
-  // Effect to load badges from localStorage on initial mount
-  useEffect(() => {
-    try {
-      const storedBadges = window.localStorage.getItem('unlockedBadges');
-      if (storedBadges) {
-        setUnlockedBadges(JSON.parse(storedBadges));
-      }
-    } catch (error) {
-      console.error("Failed to load unlocked badges from localStorage", error);
-    }
-    setIsInitialLoad(false);
-  }, []);
-
-  // Effect to save badges to localStorage whenever the list changes
-  useEffect(() => {
-    if (!isInitialLoad) {
-      try {
-        window.localStorage.setItem('unlockedBadges', JSON.stringify(unlockedBadges));
-      } catch (error) {
-        console.error("Failed to save unlocked badges to localStorage", error);
-      }
-    }
-  }, [unlockedBadges, isInitialLoad]);
-
 
   // Polling inteligente: Si hay algún item "processing", recarga cada 2 segundos.
   const { data: foodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
@@ -391,7 +365,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
   // Check streak badges
   useEffect(() => {
-    if (isLoading || newlyUnlockedBadge || isInitialLoad) return;
+    if (isLoading || newlyUnlockedBadge) return;
 
     for (const badge of streakBadges) {
       if (streak >= badge.days && !unlockedBadges.includes(badge.id)) {
@@ -405,11 +379,11 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     }
-  }, [streak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t, isInitialLoad]);
+  }, [streak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
 
   // Check water badges
   useEffect(() => {
-    if (isLoading || newlyUnlockedBadge || isInitialLoad) return;
+    if (isLoading || newlyUnlockedBadge) return;
 
     for (const badge of waterBadges) {
       if (waterStreak >= badge.days && !unlockedBadges.includes(badge.id)) {
@@ -423,11 +397,11 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     }
-  }, [waterStreak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t, isInitialLoad]);
+  }, [waterStreak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
 
   // Check weight loss badges
   useEffect(() => {
-    if (isLoading || newlyUnlockedBadge || weightLost <= 0 || isInitialLoad) return;
+    if (isLoading || newlyUnlockedBadge || weightLost <= 0) return;
 
     for (const badge of weightLossBadges) {
       if (weightLost >= badge.kg && !unlockedBadges.includes(badge.id)) {
@@ -441,7 +415,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     }
-  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t, isInitialLoad]);
+  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 
