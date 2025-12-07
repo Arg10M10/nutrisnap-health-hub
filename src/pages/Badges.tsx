@@ -11,14 +11,15 @@ import BadgeDetailModal from "@/components/BadgeDetailModal";
 import { UnlockedBadgeInfo } from "@/context/NutritionContext";
 
 const Badges = () => {
-  const { streak, waterStreak } = useNutrition();
+  const { streak, unlockedBadgeIds } = useNutrition();
   const { profile } = useAuth();
   const { t } = useTranslation();
   const [viewingBadge, setViewingBadge] = useState<UnlockedBadgeInfo | null>(null);
 
   const isImperial = profile?.units === 'imperial';
   const weightLost = profile?.starting_weight && profile.weight ? profile.starting_weight - profile.weight : 0;
-  const displayWeightLost = isImperial ? weightLost * 2.20462 : weightLost;
+  // Solo para visualización si es necesario, pero usaremos unlockedBadgeIds para determinar el estado
+  // const displayWeightLost = isImperial ? weightLost * 2.20462 : weightLost;
 
   const dynamicWeightLossBadges = useMemo(() => {
     return weightLossBadges.map(badge => {
@@ -36,11 +37,7 @@ const Badges = () => {
     });
   }, [isImperial, t]);
 
-  const unlockedStreakBadgesCount = streakBadges.filter(badge => streak >= badge.days).length;
-  const unlockedWaterBadgesCount = waterBadges.filter(badge => waterStreak >= badge.days).length;
-  const unlockedWeightBadgesCount = dynamicWeightLossBadges.filter(badge => displayWeightLost >= badge.value).length;
-  
-  const totalUnlocked = unlockedStreakBadgesCount + unlockedWaterBadgesCount + (profile?.goal === 'lose_weight' ? unlockedWeightBadgesCount : 0);
+  const totalUnlocked = unlockedBadgeIds.length;
 
   const handleBadgeClick = (badge: { name: string; description: string; image: string; }, isUnlocked: boolean) => {
     if (isUnlocked) {
@@ -84,7 +81,7 @@ const Badges = () => {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {streakBadges.map((badge) => {
-              const isUnlocked = streak >= badge.days;
+              const isUnlocked = unlockedBadgeIds.includes(badge.id);
               const badgeInfo = {
                 name: t(`badge_names.${badge.id}.name` as any),
                 description: t(`badge_names.${badge.id}.desc` as any),
@@ -126,7 +123,7 @@ const Badges = () => {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {waterBadges.map((badge) => {
-              const isUnlocked = waterStreak >= badge.days;
+              const isUnlocked = unlockedBadgeIds.includes(badge.id);
               const badgeInfo = {
                 name: t(`badge_names.${badge.id}.name` as any),
                 description: t(`badge_names.${badge.id}.desc` as any),
@@ -169,7 +166,7 @@ const Badges = () => {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {dynamicWeightLossBadges.map((badge) => {
-                const isUnlocked = displayWeightLost >= badge.value;
+                const isUnlocked = unlockedBadgeIds.includes(badge.id);
                 return (
                   <button
                     key={badge.id}

@@ -80,6 +80,7 @@ interface NutritionState {
   unlockedBadge: UnlockedBadgeInfo | null;
   closeBadgeModal: () => void;
   triggerBadgeUnlock: (badgeInfo: UnlockedBadgeInfo) => void;
+  unlockedBadgeIds: string[];
 }
 
 const NutritionContext = createContext<NutritionState | undefined>(undefined);
@@ -104,7 +105,6 @@ const healthRatingToScore = (rating: FoodEntry['health_rating']): number => {
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
-  const [unlockedBadges, setUnlockedBadges] = useState<string[]>([]);
   const [newlyUnlockedBadge, setNewlyUnlockedBadge] = useState<UnlockedBadgeInfo | null>(null);
   const { t } = useTranslation();
 
@@ -154,6 +154,30 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       return data || [];
     },
     enabled: !!user,
+  });
+
+  // Fetch unlocked badges from DB
+  const { data: unlockedBadgeIds = [], isLoading: isBadgesLoading } = useQuery<string[]>({
+    queryKey: ['user_badges', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase.from('user_badges').select('badge_id').eq('user_id', user.id);
+      if (error) throw error;
+      return data.map(b => b.badge_id);
+    },
+    enabled: !!user,
+  });
+
+  const unlockBadgeMutation = useMutation({
+    mutationFn: async (badgeId: string) => {
+      if (!user) return;
+      const { error } = await supabase.from('user_badges').insert({ user_id: user.id, badge_id: badgeId });
+      // Ignore unique violation error (badge already exists)
+      if (error && error.code !== '23505') throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user_badges', user?.id] });
+    }
   });
 
   useEffect(() => {
@@ -358,64 +382,64 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     setNewlyUnlockedBadge(badgeInfo);
   };
 
-  const isLoading = isFoodLoading || isWaterLoading || isExerciseLoading;
+  const isLoading = isFoodLoading || isWaterLoading || isExerciseLoading || isBadgesLoading;
 
   const streak = streakData.streak;
   const waterStreak = waterStreakData.waterStreak;
 
   // Check streak badges
   useEffect(() => {
-    if (isLoading || newlyUnlockedBadge) return;
+    if (isLoading || newlyUnlockedBadge || !user) return;
 
     for (const badge of streakBadges) {
-      if (streak >= badge.days && !unlockedBadges.includes(badge.id)) {
+      if (streak >= badge.days && !unlockedBadgeIds.includes(badge.id)) {
         const badgeInfo = {
           name: t(`badge_names.${badge.id}.name`),
           description: t(`badge_names.${badge.id}.desc`),
           image: badge.image,
         };
         triggerBadgeUnlock(badgeInfo);
-        setUnlockedBadges(prev => [...prev, badge.id]);
-        return;
+        unlockBadgeMutation.mutate(badge.id);
+        return; // Only process one at a time
       }
     }
-  }, [streak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
+  }, [streak, isLoading, newlyUnlockedBadge, unlockedBadgeIds, t, user]);
 
   // Check water badges
   useEffect(() => {
-    if (isLoading || newlyUnlockedBadge) return;
+    if (isLoading || newlyUnlockedBadge || !user) return;
 
     for (const badge of waterBadges) {
-      if (waterStreak >= badge.days && !unlockedBadges.includes(badge.id)) {
+      if (waterStreak >= badge.days && !unlockedBadgeIds.includes(badge.id)) {
         const badgeInfo = {
           name: t(`badge_names.${badge.id}.name`),
           description: t(`badge_names.${badge.id}.desc`),
           image: badge.image,
         };
         triggerBadgeUnlock(badgeInfo);
-        setUnlockedBadges(prev => [...prev, badge.id]);
+        unlockBadgeMutation.mutate(badge.id);
         return;
       }
     }
-  }, [waterStreak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
+  }, [waterStreak, isLoading, newlyUnlockedBadge, unlockedBadgeIds, t, user]);
 
   // Check weight loss badges
   useEffect(() => {
-    if (isLoading || newlyUnlockedBadge || weightLost <= 0) return;
+    if (isLoading || newlyUnlockedBadge || weightLost <= 0 || !user) return;
 
     for (const badge of weightLossBadges) {
-      if (weightLost >= badge.kg && !unlockedBadges.includes(badge.id)) {
+      if (weightLost >= badge.kg && !unlockedBadgeIds.includes(badge.id)) {
         const badgeInfo = {
           name: t(`badge_names.${badge.id}.name`),
           description: t(`badge_names.${badge.id}.desc`),
           image: badge.image,
         };
         triggerBadgeUnlock(badgeInfo);
-        setUnlockedBadges(prev => [...prev, badge.id]);
+        unlockBadgeMutation.mutate(badge.id);
         return;
       }
     }
-  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
+  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadgeIds, t, user]);
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 
@@ -432,7 +456,8 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       isLoading,
       unlockedBadge: newlyUnlockedBadge,
       closeBadgeModal,
-      triggerBadgeUnlock
+      triggerBadgeUnlock,
+      unlockedBadgeIds
     }}>
       {children}
     </NutritionContext.Provider>
