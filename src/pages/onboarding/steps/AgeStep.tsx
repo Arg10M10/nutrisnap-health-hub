@@ -16,7 +16,7 @@ export const AgeStep = ({ age, setAge }: AgeStepProps) => {
     if (age === null) {
       setAge(18);
     }
-  }, [age, setAge]);
+  }, []);
 
   return (
     <div className="space-y-2">

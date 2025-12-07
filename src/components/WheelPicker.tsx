@@ -1,6 +1,5 @@
 import { useRef, useEffect, UIEvent } from 'react';
 import { cn } from '@/lib/utils';
-import { useDebouncedCallback } from 'use-debounce';
 
 interface WheelPickerProps<T extends string | number> {
   items: T[];
@@ -24,14 +23,14 @@ const WheelPicker = <T extends string | number>({ items, value, onValueChange, c
     }
   }, [items]); // Run only once on mount or when items change
 
-  const handleScroll = useDebouncedCallback((e: UIEvent<HTMLDivElement>) => {
+  const handleScroll = (e: UIEvent<HTMLDivElement>) => {
     const scrollTop = e.currentTarget.scrollTop;
     const selectedIndex = Math.round(scrollTop / ITEM_HEIGHT);
     const newValue = items[selectedIndex];
     if (newValue !== undefined && newValue !== value) {
       onValueChange(newValue);
     }
-  }, 150);
+  };
 
   // When the value prop changes from outside, scroll to it
   useEffect(() => {
