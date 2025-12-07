@@ -22,10 +22,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import WheelPicker from './WheelPicker';
+import FeetInchesPicker from './FeetInchesPicker';
 
 const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
   const { profile, user, refetchProfile } = useAuth();
   const { t } = useTranslation();
+  const isMetric = profile?.units !== 'imperial';
 
   const profileSchema = z.object({
     gender: z.string().min(1, t('zod.gender_required')),
@@ -48,12 +50,12 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         gender: profile.gender || '',
         age: profile.age || 18,
         goal: profile.goal || '',
-        height: profile.height || 170,
-        weight: Math.round(profile.weight || 70),
+        height: profile.height || (isMetric ? 170 : 67),
+        weight: Math.round(profile.weight || (isMetric ? 70 : 154)),
         previous_apps_experience: profile.previous_apps_experience || '',
       });
     }
-  }, [profile, isOpen, form]);
+  }, [profile, isOpen, form, isMetric]);
 
   const mutation = useMutation({
     mutationFn: async (values: ProfileFormValues) => {
@@ -65,7 +67,6 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
           gender: values.gender,
           age: values.age,
           goal: values.goal,
-          units: 'metric',
           height: values.height,
           weight: values.weight,
           previous_apps_experience: values.previous_apps_experience,
@@ -120,16 +121,20 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 <FormItem>
                   <FormLabel className="text-center block">{t('edit_profile.height')}</FormLabel>
                   <FormControl>
-                    <div className="flex items-center justify-center">
-                      <WheelPicker
-                        min={100}
-                        max={250}
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        className="w-24"
-                      />
-                      <span className="text-lg text-muted-foreground font-semibold ml-2">cm</span>
-                    </div>
+                    {isMetric ? (
+                      <div className="flex items-center justify-center">
+                        <WheelPicker
+                          min={100}
+                          max={250}
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          className="w-24"
+                        />
+                        <span className="text-lg text-muted-foreground font-semibold ml-2">cm</span>
+                      </div>
+                    ) : (
+                      <FeetInchesPicker value={field.value} onValueChange={field.onChange} />
+                    )}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,13 +146,13 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                   <FormControl>
                     <div className="flex items-center justify-center">
                       <WheelPicker
-                        min={30}
-                        max={200}
+                        min={isMetric ? 30 : 66}
+                        max={isMetric ? 200 : 440}
                         value={field.value}
                         onValueChange={field.onChange}
                         className="w-24"
                       />
-                      <span className="text-lg text-muted-foreground font-semibold ml-2">kg</span>
+                      <span className="text-lg text-muted-foreground font-semibold ml-2">{isMetric ? 'kg' : 'lbs'}</span>
                     </div>
                   </FormControl>
                   <FormMessage />

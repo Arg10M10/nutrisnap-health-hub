@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Label } from '@/components/ui/label';
 import WheelPicker from '@/components/WheelPicker';
 import { useEffect } from 'react';
+import FeetInchesPicker from '@/components/FeetInchesPicker';
 
 interface MetricsStepProps {
   units: 'metric' | 'imperial';
@@ -63,16 +64,20 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
       <div className="flex justify-around items-start text-center">
         <div>
           <Label className="text-lg font-semibold text-center block mb-2">{t('onboarding.metrics.height')}</Label>
-          <div className="flex items-center justify-center">
-            <WheelPicker
-              min={isMetric ? 100 : 40}
-              max={isMetric ? 250 : 100}
-              value={height}
-              onValueChange={setHeight}
-              className="w-24"
-            />
-            <span className="text-2xl text-muted-foreground font-semibold ml-2">{isMetric ? t('onboarding.metrics.cm') : 'in'}</span>
-          </div>
+          {isMetric ? (
+            <div className="flex items-center justify-center">
+              <WheelPicker
+                min={100}
+                max={250}
+                value={height}
+                onValueChange={setHeight}
+                className="w-24"
+              />
+              <span className="text-2xl text-muted-foreground font-semibold ml-2">{t('onboarding.metrics.cm')}</span>
+            </div>
+          ) : (
+            <FeetInchesPicker value={height} onValueChange={setHeight} />
+          )}
         </div>
         <div>
           <Label className="text-lg font-semibold text-center block mb-2">{t('onboarding.metrics.weight')}</Label>
