@@ -12,15 +12,6 @@ import {
   Zap,
   ZapOff,
 } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,6 +20,7 @@ import Viewfinder from "@/components/Viewfinder";
 import { useAuth } from "@/context/AuthContext";
 import { motion, Transition } from "framer-motion";
 import { useAILimit } from "@/hooks/useAILimit";
+import InfoDrawer from "@/components/InfoDrawer";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 
@@ -60,6 +52,7 @@ const Scanner = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -248,119 +241,118 @@ const Scanner = () => {
   const handleClose = () => navigate(-1);
 
   return (
-    <motion.div
-      initial="initial"
-      animate="in"
-      exit="out"
-      variants={pageVariants}
-      transition={pageTransition}
-      className="fixed inset-0 bg-black text-white z-50 flex flex-col"
-    >
-      <div className="absolute inset-0 z-10">
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          onCanPlay={() => setState("camera")}
-          className={cn(
-            "w-full h-full object-cover",
-            state === "captured" || state === "loading" || state === 'error' ? "hidden" : "block"
-          )}
-        />
-        {capturedImage && (state === 'captured' || state === 'loading' || startAnalysisMutation.isPending) && (
-          <img
-            src={capturedImage}
-            alt="Captura de cámara"
-            className="w-full h-full object-cover opacity-50"
+    <>
+      <motion.div
+        initial="initial"
+        animate="in"
+        exit="out"
+        variants={pageVariants}
+        transition={pageTransition}
+        className="fixed inset-0 bg-black text-white z-50 flex flex-col"
+      >
+        <div className="absolute inset-0 z-10">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            onCanPlay={() => setState("camera")}
+            className={cn(
+              "w-full h-full object-cover",
+              state === "captured" || state === "loading" || state === 'error' ? "hidden" : "block"
+            )}
           />
-        )}
-      </div>
-
-      <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
-        <header className="flex justify-between items-center w-full p-4 pointer-events-auto">
-          <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
-            <X className="w-7 h-7 text-white" />
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
-                <HelpCircle className="w-7 h-7 text-white" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>¿Cómo funciona el escáner?</AlertDialogTitle>
-                <AlertDialogDescription className="space-y-3 pt-2">
-                  <p>Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional.</p>
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogAction>Entendido</AlertDialogAction>
-            </AlertDialogContent>
-          </AlertDialog>
-        </header>
-
-        <div className="flex-1 relative flex items-center justify-center">
-          {state === 'camera' && <Viewfinder mode="food" />}
-          {(state === 'loading' || startAnalysisMutation.isPending) && (
-             <div className="flex flex-col items-center gap-4">
-                <Loader2 className="w-16 h-16 text-primary animate-spin" />
-                <p className="text-xl font-bold animate-pulse">Procesando...</p>
-             </div>
+          {capturedImage && (state === 'captured' || state === 'loading' || startAnalysisMutation.isPending) && (
+            <img
+              src={capturedImage}
+              alt="Captura de cámara"
+              className="w-full h-full object-cover opacity-50"
+            />
           )}
         </div>
 
-        <footer className="flex flex-col items-center gap-6 w-full p-4 pointer-events-auto">
-          {state === 'captured' && !startAnalysisMutation.isPending ? (
-            <div className="grid grid-cols-2 gap-4 w-full max-w-md">
-              <Button onClick={handleReset} variant="secondary" size="lg" className="h-16 text-lg rounded-2xl">
-                <RefreshCw className="mr-2 w-6 h-6" /> Repetir
-              </Button>
-              <Button onClick={handleManualAnalyze} size="lg" className="h-16 text-lg rounded-2xl">
-                <Scan className="mr-2 w-6 h-6" /> Reintentar
-              </Button>
-            </div>
-          ) : state === 'camera' ? (
-            <div className="flex items-center justify-around w-full max-w-md">
-              <button
-                onClick={toggleFlash}
-                disabled={!hasFlash}
-                className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
-                aria-label="Activar flash"
-              >{isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}</button>
-              <button
-                onClick={handleCapture}
-                className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
-                aria-label="Tomar foto"
-              />
-              <button
-                onClick={handleUploadClick}
-                className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
-                aria-label="Subir imagen"
-              ><ImageIcon className="w-8 h-8 text-white" /></button>
-            </div>
-          ) : null}
-        </footer>
-      </div>
+        <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
+          <header className="flex justify-between items-center w-full p-4 pointer-events-auto">
+            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
+              <X className="w-7 h-7 text-white" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => setIsInfoOpen(true)} className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
+              <HelpCircle className="w-7 h-7 text-white" />
+            </Button>
+          </header>
 
-      {state === "initializing" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
-          <Loader2 className="w-16 h-16 text-primary animate-spin" />
-          <p className="text-white text-lg">Iniciando cámara...</p>
-        </div>
-      )}
-      {state === "error" && (
-        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-4 text-center space-y-6 z-30">
-          <AlertTriangle className="w-24 h-24 text-destructive" />
-          <p className="text-xl font-semibold">{error}</p>
-          <Button onClick={handleReset} size="lg" className="w-full max-w-sm h-14 text-lg">
-            <RefreshCw className="mr-2 w-6 h-6" /> Intentar de Nuevo
-          </Button>
-        </div>
-      )}
+          <div className="flex-1 relative flex items-center justify-center">
+            {state === 'camera' && <Viewfinder mode="food" />}
+            {(state === 'loading' || startAnalysisMutation.isPending) && (
+               <div className="flex flex-col items-center gap-4">
+                  <Loader2 className="w-16 h-16 text-primary animate-spin" />
+                  <p className="text-xl font-bold animate-pulse">Procesando...</p>
+               </div>
+            )}
+          </div>
 
-      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
-      <canvas ref={canvasRef} className="hidden" />
-    </motion.div>
+          <footer className="flex flex-col items-center gap-6 w-full p-4 pointer-events-auto">
+            {state === 'captured' && !startAnalysisMutation.isPending ? (
+              <div className="grid grid-cols-2 gap-4 w-full max-w-md">
+                <Button onClick={handleReset} variant="secondary" size="lg" className="h-16 text-lg rounded-2xl">
+                  <RefreshCw className="mr-2 w-6 h-6" /> Repetir
+                </Button>
+                <Button onClick={handleManualAnalyze} size="lg" className="h-16 text-lg rounded-2xl">
+                  <Scan className="mr-2 w-6 h-6" /> Reintentar
+                </Button>
+              </div>
+            ) : state === 'camera' ? (
+              <div className="flex items-center justify-around w-full max-w-md">
+                <button
+                  onClick={toggleFlash}
+                  disabled={!hasFlash}
+                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
+                  aria-label="Activar flash"
+                >{isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}</button>
+                <button
+                  onClick={handleCapture}
+                  className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
+                  aria-label="Tomar foto"
+                />
+                <button
+                  onClick={handleUploadClick}
+                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                  aria-label="Subir imagen"
+                ><ImageIcon className="w-8 h-8 text-white" /></button>
+              </div>
+            ) : null}
+          </footer>
+        </div>
+
+        {state === "initializing" && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
+            <Loader2 className="w-16 h-16 text-primary animate-spin" />
+            <p className="text-white text-lg">Iniciando cámara...</p>
+          </div>
+        )}
+        {state === "error" && (
+          <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-4 text-center space-y-6 z-30">
+            <AlertTriangle className="w-24 h-24 text-destructive" />
+            <p className="text-xl font-semibold">{error}</p>
+            <Button onClick={handleReset} size="lg" className="w-full max-w-sm h-14 text-lg">
+              <RefreshCw className="mr-2 w-6 h-6" /> Intentar de Nuevo
+            </Button>
+          </div>
+        )}
+
+        <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
+        <canvas ref={canvasRef} className="hidden" />
+      </motion.div>
+      <InfoDrawer
+        isOpen={isInfoOpen}
+        onClose={() => setIsInfoOpen(false)}
+        title="¿Cómo funciona el escáner?"
+        icon={<Scan className="w-8 h-8" />}
+      >
+        <p>
+          Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional.
+        </p>
+      </InfoDrawer>
+    </>
   );
 };
 

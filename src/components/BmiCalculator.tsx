@@ -1,16 +1,10 @@
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import InfoDrawer from "./InfoDrawer";
 
 const calculateBmi = (weight: number | null, height: number | null, t: (key: string) => string) => {
   if (!weight || !height || height === 0) {
@@ -51,6 +45,7 @@ interface BmiCalculatorProps {
 const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
   const { profile } = useAuth();
   const { t } = useTranslation();
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   const { bmi, category, badgeClasses, position } = calculateBmi(profile?.weight, profile?.height, t);
   const isSmall = size === 'small';
 
@@ -80,53 +75,52 @@ const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
   ];
 
   return (
-    <Card>
-      <CardHeader className="flex-row items-start justify-between pb-2">
-        <CardTitle className={cn(isSmall && "text-lg")}>{t('bmi_calculator.title')}</CardTitle>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
+    <>
+      <Card>
+        <CardHeader className="flex-row items-start justify-between pb-2">
+          <CardTitle className={cn(isSmall && "text-lg")}>{t('bmi_calculator.title')}</CardTitle>
+          <button onClick={() => setIsInfoOpen(true)}>
             <HelpCircle className="w-5 h-5 text-muted-foreground cursor-help" />
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{t('bmi_calculator.title')}</AlertDialogTitle>
-              <p className="text-sm text-muted-foreground pt-2">
-                {t('bmi_calculator.tooltip')}
-              </p>
-            </AlertDialogHeader>
-            <AlertDialogAction>{t('bmi_calculator.dialog_action')}</AlertDialogAction>
-          </AlertDialogContent>
-        </AlertDialog>
-      </CardHeader>
-      <CardContent className={cn("pt-4", isSmall ? "space-y-4" : "space-y-6")}>
-        <div className="flex items-baseline gap-2 flex-wrap">
-          <p className={cn("font-bold text-foreground", isSmall ? "text-4xl" : "text-6xl")}>{bmi}</p>
-          <div className="flex items-center gap-2">
-            <p className={cn("text-muted-foreground", isSmall ? "text-sm" : "")}>{t('bmi_calculator.your_weight_is')}</p>
-            <span className={cn("inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold", badgeClasses, isSmall && "text-xs px-2")}>
-              {category}
-            </span>
+          </button>
+        </CardHeader>
+        <CardContent className={cn("pt-4", isSmall ? "space-y-4" : "space-y-6")}>
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <p className={cn("font-bold text-foreground", isSmall ? "text-4xl" : "text-6xl")}>{bmi}</p>
+            <div className="flex items-center gap-2">
+              <p className={cn("text-muted-foreground", isSmall ? "text-sm" : "")}>{t('bmi_calculator.your_weight_is')}</p>
+              <span className={cn("inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold", badgeClasses, isSmall && "text-xs px-2")}>
+                {category}
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className="space-y-3">
-          <div className="relative h-3 w-full rounded-full bg-gradient-to-r from-blue-500 via-green-500 via-yellow-500 to-red-500">
-            <div
-              className="absolute top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-white shadow-md"
-              style={{ left: `calc(${position}% - 2px)` }}
-            />
+          <div className="space-y-3">
+            <div className="relative h-3 w-full rounded-full bg-gradient-to-r from-blue-500 via-green-500 via-yellow-500 to-red-500">
+              <div
+                className="absolute top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-white shadow-md"
+                style={{ left: `calc(${position}% - 2px)` }}
+              />
+            </div>
+            <div className="flex flex-wrap justify-between text-xs text-muted-foreground gap-x-4 gap-y-1">
+              {legendItems.map((item) => (
+                <div key={item.label} className="flex items-center gap-1.5">
+                  <span className={cn("h-2 w-2 rounded-full", item.color)} />
+                  <span>{item.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-wrap justify-between text-xs text-muted-foreground gap-x-4 gap-y-1">
-            {legendItems.map((item) => (
-              <div key={item.label} className="flex items-center gap-1.5">
-                <span className={cn("h-2 w-2 rounded-full", item.color)} />
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      <InfoDrawer
+        isOpen={isInfoOpen}
+        onClose={() => setIsInfoOpen(false)}
+        title={t('bmi_calculator.title')}
+        icon={<TrendingUp className="w-8 h-8" />}
+      >
+        <p>{t('bmi_calculator.tooltip')}</p>
+      </InfoDrawer>
+    </>
   );
 };
 
