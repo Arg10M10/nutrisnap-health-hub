@@ -365,32 +365,59 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const streak = streakData.streak;
   const waterStreak = waterStreakData.waterStreak;
 
+  // Check streak badges
   useEffect(() => {
     if (isLoading || newlyUnlockedBadge) return;
 
-    const allBadgeChecks = [
-      ...streakBadges.map(b => ({ ...b, progress: streak, reqKey: 'days' as const })),
-      ...waterBadges.map(b => ({ ...b, progress: waterStreak, reqKey: 'days' as const })),
-      ...(weightLost > 0 ? weightLossBadges.map(b => ({ ...b, progress: weightLost, reqKey: 'kg' as const })) : [])
-    ].sort((a, b) => (a.days || a.kg || 0) - (b.days || b.kg || 0));
-
-    for (const badge of allBadgeChecks) {
-      const isUnlocked = badge.progress >= badge[badge.reqKey];
-      const isNew = !unlockedBadges.includes(badge.id);
-
-      if (isUnlocked && isNew) {
+    for (const badge of streakBadges) {
+      if (streak >= badge.days && !unlockedBadges.includes(badge.id)) {
         const badgeInfo = {
-            name: t(`badge_names.${badge.id}.name`),
-            description: t(`badge_names.${badge.id}.desc`),
-            image: badge.image,
+          name: t(`badge_names.${badge.id}.name`),
+          description: t(`badge_names.${badge.id}.desc`),
+          image: badge.image,
         };
-
         triggerBadgeUnlock(badgeInfo);
-        setUnlockedBadges(prev => [...new Set([...prev, badge.id])]);
-        return; 
+        setUnlockedBadges(prev => [...prev, badge.id]);
+        return;
       }
     }
-  }, [isLoading, streak, waterStreak, weightLost, unlockedBadges, setUnlockedBadges, t, newlyUnlockedBadge]);
+  }, [streak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
+
+  // Check water badges
+  useEffect(() => {
+    if (isLoading || newlyUnlockedBadge) return;
+
+    for (const badge of waterBadges) {
+      if (waterStreak >= badge.days && !unlockedBadges.includes(badge.id)) {
+        const badgeInfo = {
+          name: t(`badge_names.${badge.id}.name`),
+          description: t(`badge_names.${badge.id}.desc`),
+          image: badge.image,
+        };
+        triggerBadgeUnlock(badgeInfo);
+        setUnlockedBadges(prev => [...prev, badge.id]);
+        return;
+      }
+    }
+  }, [waterStreak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
+
+  // Check weight loss badges
+  useEffect(() => {
+    if (isLoading || newlyUnlockedBadge || weightLost <= 0) return;
+
+    for (const badge of weightLossBadges) {
+      if (weightLost >= badge.kg && !unlockedBadges.includes(badge.id)) {
+        const badgeInfo = {
+          name: t(`badge_names.${badge.id}.name`),
+          description: t(`badge_names.${badge.id}.desc`),
+          image: badge.image,
+        };
+        triggerBadgeUnlock(badgeInfo);
+        setUnlockedBadges(prev => [...prev, badge.id]);
+        return;
+      }
+    }
+  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 
