@@ -363,44 +363,29 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const isLoading = isFoodLoading || isWaterLoading || isExerciseLoading;
 
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || newlyUnlockedBadge) return;
 
-    const { streak } = streakData;
-    const { waterStreak } = waterStreakData;
+    const allBadgeChecks = [
+      ...streakBadges.map(b => ({ ...b, progress: streakData.streak, reqKey: 'days' })),
+      ...waterBadges.map(b => ({ ...b, progress: waterStreakData.waterStreak, reqKey: 'days' })),
+      ...(weightLost > 0 ? weightLossBadges.map(b => ({ ...b, progress: weightLost, reqKey: 'kg' })) : [])
+    ].sort((a, b) => (b.days || b.kg) - (a.days || a.kg)); // Sort by requirement descending
 
-    let bestNewBadge: (UnlockedBadgeInfo & { value: number }) | null = null;
-    const newlyUnlockedIds: string[] = [];
+    const firstNewBadge = allBadgeChecks.find(badge => 
+        badge.progress >= badge[badge.reqKey] && !unlockedBadges.includes(badge.id)
+    );
 
-    const findBestNewBadge = (badges: any[], currentValue: number, valueKey: string) => {
-      badges.forEach(badge => {
-        if (currentValue >= badge[valueKey] && !unlockedBadges.includes(badge.id)) {
-          const badgeInfo = {
-            name: t(`badge_names.${badge.id}.name` as any),
-            description: t(`badge_names.${badge.id}.desc` as any),
-            image: badge.image,
-            value: badge[valueKey]
-          };
-          
-          if (!bestNewBadge || badgeInfo.value > bestNewBadge.value) {
-            bestNewBadge = badgeInfo;
-          }
-          newlyUnlockedIds.push(badge.id);
-        }
-      });
-    };
+    if (firstNewBadge) {
+        const badgeInfo = {
+            name: t(`badge_names.${firstNewBadge.id}.name`),
+            description: t(`badge_names.${firstNewBadge.id}.desc`),
+            image: firstNewBadge.image,
+        };
 
-    findBestNewBadge(streakBadges, streak, 'days');
-    findBestNewBadge(waterBadges, waterStreak, 'days');
-    if (weightLost > 0) {
-      findBestNewBadge(weightLossBadges, weightLost, 'kg');
+        triggerBadgeUnlock(badgeInfo);
+        setUnlockedBadges(prev => [...new Set([...prev, firstNewBadge.id])]);
     }
-
-    if (bestNewBadge) {
-      const { value, ...badgeToShow } = bestNewBadge;
-      triggerBadgeUnlock(badgeToShow);
-      setUnlockedBadges(prev => [...new Set([...prev, ...newlyUnlockedIds])]);
-    }
-  }, [isLoading, streakData, waterStreakData, weightLost, unlockedBadges, setUnlockedBadges, t]);
+  }, [isLoading, streakData, waterStreakData, weightLost, unlockedBadges, setUnlockedBadges, t, newlyUnlockedBadge]);
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 
