@@ -14,15 +14,16 @@ interface RulerPickerProps {
 }
 
 const TICK_SPACING = 12; // px
-const SUB_TICK_HEIGHT = 20; // h-5
-const TICK_HEIGHT = 30; // h-7.5
-const MAJOR_TICK_HEIGHT = 40; // h-10
+const SUB_TICK_HEIGHT = 16; // h-4
+const TICK_HEIGHT = 24; // h-6
+const MAJOR_TICK_HEIGHT = 32; // h-8
 
 const RulerPicker = ({ min, max, step, value, onValueChange, unit, className }: RulerPickerProps) => {
   const rulerRef = useRef<HTMLDivElement>(null);
   const [isInteracting, setIsInteracting] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
   const scrollEndTimer = useRef<number | null>(null);
+  const [localValue, setLocalValue] = useState(value);
 
   const ticks = useMemo(() => {
     const numTicks = Math.floor((max - min) / step) + 1;
@@ -56,6 +57,12 @@ const RulerPicker = ({ min, max, step, value, onValueChange, unit, className }: 
   };
 
   useEffect(() => {
+    if (!isInteracting) {
+      setLocalValue(value);
+    }
+  }, [value, isInteracting]);
+
+  useEffect(() => {
     if (rulerRef.current && !isInteracting && containerWidth > 0) {
       const targetScroll = valueToScrollLeft(value);
       if (Math.abs(rulerRef.current.scrollLeft - targetScroll) > 1) {
@@ -66,12 +73,13 @@ const RulerPicker = ({ min, max, step, value, onValueChange, unit, className }: 
 
   const debouncedOnChange = useDebouncedCallback((val: number) => {
     onValueChange(val);
-  }, 20);
+  }, 50);
 
   const handleScroll = () => {
     if (rulerRef.current) {
       if (isInteracting) {
         const newValue = scrollLeftToValue(rulerRef.current.scrollLeft);
+        setLocalValue(newValue);
         debouncedOnChange(newValue);
       }
 
@@ -94,7 +102,7 @@ const RulerPicker = ({ min, max, step, value, onValueChange, unit, className }: 
   return (
     <div className={cn("flex flex-col items-center gap-4 w-full", className)}>
       <div className="text-6xl font-bold text-foreground flex items-baseline">
-        <AnimatedNumber value={value} toFixed={step < 1 ? 1 : 0} />
+        <AnimatedNumber value={localValue} toFixed={step < 1 ? 1 : 0} />
         <span className="text-2xl font-medium text-muted-foreground ml-2">{unit}</span>
       </div>
 
@@ -127,13 +135,13 @@ const RulerPicker = ({ min, max, step, value, onValueChange, unit, className }: 
               return (
                 <div
                   key={i}
-                  className="flex-shrink-0"
+                  className="flex-shrink-0 rounded-full"
                   style={{
-                    width: isMajor ? '2px' : '1px',
+                    width: isMajor ? '2px' : '1.5px',
                     height: `${height}px`,
-                    marginRight: `${TICK_SPACING - (isMajor ? 2 : 1)}px`,
+                    marginRight: `${TICK_SPACING - (isMajor ? 2 : 1.5)}px`,
                     backgroundColor: isMajor ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))',
-                    opacity: isMajor ? 1 : 0.5,
+                    opacity: isMajor ? 0.8 : (isSub ? 0.5 : 0.3),
                   }}
                 />
               );

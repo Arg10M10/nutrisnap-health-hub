@@ -70,7 +70,7 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
           onValueChange={setWeight}
           min={units === 'metric' ? 30 : 60}
           max={units === 'metric' ? 200 : 450}
-          step={units === 'metric' ? 0.5 : 1}
+          step={units === 'metric' ? 0.1 : 1}
         />
       </div>
     </div>
