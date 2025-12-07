@@ -1,6 +1,8 @@
 import RulerPicker from '@/components/RulerPicker';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface MetricsStepProps {
   units: 'metric' | 'imperial';
@@ -49,45 +51,27 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
       </ToggleGroup>
 
       <div className="space-y-8">
-        {units === 'metric' ? (
-          <>
-            <RulerPicker
-              unit={t('onboarding.metrics.cm')}
-              value={height ?? 170}
-              onValueChange={setHeight}
-              min={120}
-              max={220}
-              step={1}
+        <div className="space-y-2">
+          <Label className="text-lg font-semibold text-center block">{t('onboarding.metrics.height')}</Label>
+          <div className="flex items-baseline gap-2 justify-center">
+            <Input
+              type="number"
+              value={height ?? ''}
+              onChange={(e) => setHeight(parseInt(e.target.value, 10) || 0)}
+              className="w-32 text-center text-2xl font-bold h-14"
             />
-            <RulerPicker
-              unit={t('onboarding.metrics.kg')}
-              value={weight ?? 70}
-              onValueChange={setWeight}
-              min={30}
-              max={200}
-              step={0.5}
-            />
-          </>
-        ) : (
-          <>
-            <RulerPicker
-              unit="in"
-              value={height ?? 67}
-              onValueChange={setHeight}
-              min={47}
-              max={86}
-              step={1}
-            />
-            <RulerPicker
-              unit={t('onboarding.metrics.lbs')}
-              value={weight ?? 154}
-              onValueChange={setWeight}
-              min={60}
-              max={450}
-              step={1}
-            />
-          </>
-        )}
+            <span className="text-lg text-muted-foreground">{units === 'metric' ? t('onboarding.metrics.cm') : 'in'}</span>
+          </div>
+        </div>
+        
+        <RulerPicker
+          unit={units === 'metric' ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}
+          value={weight ?? (units === 'metric' ? 70 : 154)}
+          onValueChange={setWeight}
+          min={units === 'metric' ? 30 : 60}
+          max={units === 'metric' ? 200 : 450}
+          step={units === 'metric' ? 0.5 : 1}
+        />
       </div>
     </div>
   );
