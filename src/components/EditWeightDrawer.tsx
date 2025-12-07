@@ -9,8 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { weightLossBadges } from '@/data/badges';
-import RulerPicker from './RulerPicker';
 import { useNutrition } from '@/context/NutritionContext';
+import { Input } from '@/components/ui/input';
 
 interface EditWeightDrawerProps {
   isOpen: boolean;
@@ -92,15 +92,18 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
         <DrawerHeader>
           <DrawerTitle className="text-center">{t('edit_weight.title')}</DrawerTitle>
         </DrawerHeader>
-        <div className="px-4 py-8">
-          <RulerPicker
-            min={30}
-            max={200}
-            step={0.1}
-            value={newWeight}
-            onValueChange={setNewWeight}
-            unit={t('edit_weight.weight_unit')}
-          />
+        <div className="px-4 py-8 flex flex-col items-center gap-4">
+          <div className="flex items-baseline gap-2 justify-center">
+              <Input
+                  type="number"
+                  step="0.1"
+                  value={newWeight}
+                  onChange={(e) => setNewWeight(parseFloat(e.target.value) || 0)}
+                  className="w-40 text-center text-4xl font-bold h-20"
+                  autoFocus
+              />
+              <span className="text-2xl text-muted-foreground">{t('edit_weight.weight_unit')}</span>
+          </div>
         </div>
         <DrawerFooter>
           <Button size="lg" onClick={handleSave} disabled={mutation.isPending}>

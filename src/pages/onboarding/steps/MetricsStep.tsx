@@ -1,4 +1,4 @@
-import RulerPicker from '@/components/RulerPicker';
+import { Input } from '@/components/ui/input';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
 import { Label } from '@/components/ui/label';
@@ -52,25 +52,28 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
       <div className="space-y-8">
         <div>
           <Label className="text-lg font-semibold text-center block mb-4">{t('onboarding.metrics.height')}</Label>
-          <RulerPicker
-            unit={isMetric ? t('onboarding.metrics.cm') : 'in'}
-            value={height ?? (isMetric ? 170 : 67)}
-            onValueChange={setHeight}
-            min={isMetric ? 100 : 40}
-            max={isMetric ? 220 : 87}
-            step={1}
-          />
+          <div className="flex items-baseline gap-2 justify-center">
+            <Input
+                type="number"
+                value={height ?? ''}
+                onChange={(e) => setHeight(parseInt(e.target.value, 10) || 0)}
+                className="w-32 text-center text-2xl font-bold h-14"
+            />
+            <span className="text-lg text-muted-foreground">{isMetric ? t('onboarding.metrics.cm') : 'in'}</span>
+          </div>
         </div>
         <div>
           <Label className="text-lg font-semibold text-center block mb-4">{t('onboarding.metrics.weight')}</Label>
-          <RulerPicker
-            unit={isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}
-            value={weight ?? (isMetric ? 70 : 154)}
-            onValueChange={setWeight}
-            min={isMetric ? 30 : 60}
-            max={isMetric ? 200 : 450}
-            step={isMetric ? 0.1 : 1}
-          />
+          <div className="flex items-baseline gap-2 justify-center">
+            <Input
+                type="number"
+                step={isMetric ? "0.1" : "1"}
+                value={weight ?? ''}
+                onChange={(e) => setWeight(parseFloat(e.target.value) || 0)}
+                className="w-32 text-center text-2xl font-bold h-14"
+            />
+            <span className="text-lg text-muted-foreground">{isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}</span>
+          </div>
         </div>
       </div>
     </div>

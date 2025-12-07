@@ -1,4 +1,4 @@
-import RulerPicker from '@/components/RulerPicker';
+import { Input } from '@/components/ui/input';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
 
@@ -38,14 +38,17 @@ export const GoalWeightStep = ({ goalWeight, setGoalWeight, units, setUnits }: G
         <ToggleGroupItem value="imperial" className="h-12 text-base">{t('onboarding.metrics.imperial')}</ToggleGroupItem>
       </ToggleGroup>
       <div className="space-y-4">
-        <RulerPicker
-          unit={isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}
-          value={goalWeight ?? (isMetric ? 65 : 143)}
-          onValueChange={setGoalWeight}
-          min={isMetric ? 30 : 60}
-          max={isMetric ? 200 : 450}
-          step={isMetric ? 0.1 : 1}
-        />
+        <div className="flex items-baseline gap-2 justify-center">
+            <Input
+                type="number"
+                step={isMetric ? "0.1" : "1"}
+                value={goalWeight ?? ''}
+                onChange={(e) => setGoalWeight(parseFloat(e.target.value) || 0)}
+                className="w-40 text-center text-4xl font-bold h-20"
+                autoFocus
+            />
+            <span className="text-2xl text-muted-foreground">{isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}</span>
+        </div>
         <p className="text-sm text-muted-foreground text-center">
           {t('onboarding.goal_weight.disclaimer')}
         </p>
