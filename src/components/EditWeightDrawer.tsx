@@ -7,9 +7,6 @@ import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import useLocalStorage from '@/hooks/useLocalStorage';
-import { weightLossBadges } from '@/data/badges';
-import { useNutrition } from '@/context/NutritionContext';
 import WheelPicker from './WheelPicker';
 
 interface EditWeightDrawerProps {
@@ -23,8 +20,6 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
-  const [unlockedBadges, setUnlockedBadges] = useLocalStorage<string[]>('unlockedBadges', []);
-  const { triggerBadgeUnlock } = useNutrition();
   const isMetric = profile?.units !== 'imperial';
 
   const weightItems = useMemo(() => {
@@ -38,24 +33,6 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
       setNewWeight(Math.round(currentWeight));
     }
   }, [isOpen, currentWeight]);
-
-  const checkWeightBadges = (updatedProfile: typeof profile) => {
-    if (updatedProfile?.goal !== 'lose_weight' || !updatedProfile.starting_weight || !updatedProfile.weight) return;
-
-    const weightLost = updatedProfile.starting_weight - updatedProfile.weight;
-    weightLossBadges.forEach(badge => {
-      if (weightLost >= badge.kg && !unlockedBadges.includes(badge.id)) {
-        const badgeInfo = {
-          name: t(`badge_names.${badge.id}.name` as any),
-          description: t(`badge_names.${badge.id}.desc` as any),
-          image: badge.image,
-        };
-        
-        triggerBadgeUnlock(badgeInfo);
-        setUnlockedBadges(prev => [...prev, badge.id]);
-      }
-    });
-  };
 
   const mutation = useMutation({
     mutationFn: async (weight: number) => {
@@ -78,10 +55,6 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
         queryClient.invalidateQueries({ queryKey: ['weight_history_all', user?.id] }),
         queryClient.invalidateQueries({ queryKey: ['todays_weight_updates_count', user?.id] })
       ]);
-      const { data: updatedProfileData } = await supabase.from('profiles').select('*').eq('id', user!.id).single();
-      if (updatedProfileData) {
-        checkWeightBadges(updatedProfileData);
-      }
       onClose();
     },
     onError: (error) => {

@@ -6,7 +6,7 @@ import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
 import { format, isSameDay, subDays, parseISO } from 'date-fns';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { streakBadges, waterBadges } from '@/data/badges';
+import { streakBadges, waterBadges, weightLossBadges } from '@/data/badges';
 import { useTranslation } from 'react-i18next';
 
 export interface FoodEntry {
@@ -104,7 +104,7 @@ const healthRatingToScore = (rating: FoodEntry['health_rating']): number => {
 };
 
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const queryClient = useQueryClient();
   const [unlockedBadges, setUnlockedBadges] = useLocalStorage<string[]>('unlockedBadges', []);
   const [newlyUnlockedBadge, setNewlyUnlockedBadge] = useState<UnlockedBadgeInfo | null>(null);
@@ -349,6 +349,13 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     return { waterStreak: currentStreak };
   }, [waterEntries]);
 
+  const weightLost = useMemo(() => {
+    if (profile?.goal === 'lose_weight' && profile.starting_weight && profile.weight) {
+      return profile.starting_weight - profile.weight;
+    }
+    return 0;
+  }, [profile]);
+
   const triggerBadgeUnlock = (badgeInfo: UnlockedBadgeInfo) => {
     setNewlyUnlockedBadge(badgeInfo);
   };
@@ -357,23 +364,39 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     const { streak } = streakData;
     const { waterStreak } = waterStreakData;
 
-    const checkAndNotify = (badges: any[], currentStreak: number, type: 'days') => {
+    let bestNewBadge: (UnlockedBadgeInfo & { value: number }) | null = null;
+    const newlyUnlockedIds: string[] = [];
+
+    const findBestNewBadge = (badges: any[], currentValue: number, valueKey: string) => {
       badges.forEach(badge => {
-        if (currentStreak >= badge[type] && !unlockedBadges.includes(badge.id)) {
-          triggerBadgeUnlock({
+        if (currentValue >= badge[valueKey] && !unlockedBadges.includes(badge.id)) {
+          const badgeInfo = {
             name: t(`badge_names.${badge.id}.name` as any),
             description: t(`badge_names.${badge.id}.desc` as any),
-            image: badge.image
-          });
+            image: badge.image,
+            value: badge[valueKey]
+          };
           
-          setUnlockedBadges(prev => [...prev, badge.id]);
+          if (!bestNewBadge || badgeInfo.value > bestNewBadge.value) {
+            bestNewBadge = badgeInfo;
+          }
+          newlyUnlockedIds.push(badge.id);
         }
       });
     };
 
-    checkAndNotify(streakBadges, streak, 'days');
-    checkAndNotify(waterBadges, waterStreak, 'days');
-  }, [streakData, waterStreakData, unlockedBadges, setUnlockedBadges, t]);
+    findBestNewBadge(streakBadges, streak, 'days');
+    findBestNewBadge(waterBadges, waterStreak, 'days');
+    if (weightLost > 0) {
+      findBestNewBadge(weightLossBadges, weightLost, 'kg');
+    }
+
+    if (bestNewBadge) {
+      const { value, ...badgeToShow } = bestNewBadge;
+      triggerBadgeUnlock(badgeToShow);
+      setUnlockedBadges(prev => [...new Set([...prev, ...newlyUnlockedIds])]);
+    }
+  }, [streakData, waterStreakData, weightLost, unlockedBadges, setUnlockedBadges, t]);
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 
