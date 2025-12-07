@@ -36,7 +36,7 @@ import PersonalDetails from "./pages/settings/PersonalDetails";
 import Snowfall from "./components/Snowfall";
 import LightBackground from "./components/LightBackground";
 import { SnowProvider, useSnow } from "./context/SnowContext";
-import BadgeUnlockModal from "./components/BadgeUnlockModal";
+import BadgeDetailModal from "./components/BadgeDetailModal";
 import Subscribe from "./pages/Subscribe";
 
 const queryClient = new QueryClient();
@@ -62,7 +62,7 @@ const AnimatedRoutes = () => {
 const GlobalBadgeModal = () => {
   const { unlockedBadge, closeBadgeModal } = useNutrition();
   return (
-    <BadgeUnlockModal 
+    <BadgeDetailModal 
       isOpen={!!unlockedBadge} 
       onClose={closeBadgeModal} 
       badge={unlockedBadge} 
