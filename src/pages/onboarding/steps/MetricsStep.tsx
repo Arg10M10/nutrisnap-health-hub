@@ -2,8 +2,6 @@ import { useState } from 'react';
 import RulerPicker from '@/components/RulerPicker';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -53,19 +51,14 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
             <ArrowLeft className="w-4 h-4 mr-2" /> Volver a la selección
           </Button>
           {editing === 'height' && (
-            <div className="space-y-2">
-              <Label className="text-lg font-semibold text-center block">{t('onboarding.metrics.height')}</Label>
-              <div className="flex items-baseline gap-2 justify-center">
-                <Input
-                  type="number"
-                  value={height ?? ''}
-                  onChange={(e) => setHeight(parseInt(e.target.value, 10) || 0)}
-                  className="w-32 text-center text-2xl font-bold h-14"
-                  autoFocus
-                />
-                <span className="text-lg text-muted-foreground">{heightUnit}</span>
-              </div>
-            </div>
+            <RulerPicker
+              unit={heightUnit}
+              value={height ?? (units === 'metric' ? 170 : 67)}
+              onValueChange={setHeight}
+              min={units === 'metric' ? 100 : 40}
+              max={units === 'metric' ? 220 : 87}
+              step={1}
+            />
           )}
           {editing === 'weight' && (
             <RulerPicker
