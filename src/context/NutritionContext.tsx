@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
 import { format, isSameDay, subDays, parseISO } from 'date-fns';
-import useLocalStorage from '@/hooks/useLocalStorage';
+// import useLocalStorage from '@/hooks/useLocalStorage'; // Replaced with useState for reliability
 import { streakBadges, waterBadges, weightLossBadges } from '@/data/badges';
 import { useTranslation } from 'react-i18next';
 
@@ -106,7 +106,8 @@ const healthRatingToScore = (rating: FoodEntry['health_rating']): number => {
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
-  const [unlockedBadges, setUnlockedBadges] = useLocalStorage<string[]>('unlockedBadges', []);
+  // Replaced useLocalStorage with useState to fix a persistent bug with badge notifications.
+  const [unlockedBadges, setUnlockedBadges] = useState<string[]>([]);
   const [newlyUnlockedBadge, setNewlyUnlockedBadge] = useState<UnlockedBadgeInfo | null>(null);
   const { t } = useTranslation();
 
