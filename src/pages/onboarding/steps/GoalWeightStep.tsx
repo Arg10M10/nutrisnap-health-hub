@@ -1,7 +1,7 @@
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
 import WheelPicker from '@/components/WheelPicker';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 interface GoalWeightStepProps {
   goalWeight: number | null;
@@ -34,6 +34,12 @@ export const GoalWeightStep = ({ goalWeight, setGoalWeight, units, setUnits }: G
     setUnits(newUnit);
   };
 
+  const weightItems = useMemo(() => {
+    const min = isMetric ? 30 : 66;
+    const max = isMetric ? 200 : 440;
+    return Array.from({ length: max - min + 1 }, (_, i) => i + min);
+  }, [isMetric]);
+
   return (
     <div className="space-y-6">
       <ToggleGroup
@@ -48,8 +54,7 @@ export const GoalWeightStep = ({ goalWeight, setGoalWeight, units, setUnits }: G
       <div className="space-y-4">
         <div className="flex items-center justify-center">
           <WheelPicker
-            min={isMetric ? 30 : 66}
-            max={isMetric ? 200 : 440}
+            items={weightItems}
             value={goalWeight}
             onValueChange={setGoalWeight}
             className="w-24"

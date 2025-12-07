@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -25,6 +25,13 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
   const { t } = useTranslation();
   const [unlockedBadges, setUnlockedBadges] = useLocalStorage<string[]>('unlockedBadges', []);
   const { triggerBadgeUnlock } = useNutrition();
+  const isMetric = profile?.units !== 'imperial';
+
+  const weightItems = useMemo(() => {
+    const min = isMetric ? 30 : 66;
+    const max = isMetric ? 200 : 440;
+    return Array.from({ length: max - min + 1 }, (_, i) => i + min);
+  }, [isMetric]);
 
   useEffect(() => {
     if (isOpen) {
@@ -95,13 +102,12 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
         <div className="px-4 py-8 flex flex-col items-center gap-4">
           <div className="flex items-center justify-center">
             <WheelPicker
-              min={30}
-              max={200}
+              items={weightItems}
               value={newWeight}
               onValueChange={setNewWeight}
               className="w-24"
             />
-            <span className="text-2xl text-muted-foreground font-semibold ml-2">{t('edit_weight.weight_unit')}</span>
+            <span className="text-2xl text-muted-foreground font-semibold ml-2">{isMetric ? t('edit_weight.weight_unit') : 'lbs'}</span>
           </div>
         </div>
         <DrawerFooter>

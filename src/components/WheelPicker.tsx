@@ -1,35 +1,33 @@
-import { useRef, useEffect, useMemo, UIEvent } from 'react';
+import { useRef, useEffect, UIEvent } from 'react';
 import { cn } from '@/lib/utils';
 import { useDebouncedCallback } from 'use-debounce';
 
-interface WheelPickerProps {
-  min: number;
-  max: number;
-  value: number | null;
-  onValueChange: (value: number) => void;
+interface WheelPickerProps<T extends string | number> {
+  items: T[];
+  value: T | null;
+  onValueChange: (value: T) => void;
   className?: string;
 }
 
 const ITEM_HEIGHT = 48; // h-12 in tailwind
 
-const WheelPicker = ({ min, max, value, onValueChange, className }: WheelPickerProps) => {
+const WheelPicker = <T extends string | number>({ items, value, onValueChange, className }: WheelPickerProps<T>) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const numbers = useMemo(() => Array.from({ length: max - min + 1 }, (_, i) => i + min), [min, max]);
 
-  // Scroll to the initial value when the component mounts
+  // Scroll to the initial value when the component mounts or items change
   useEffect(() => {
     if (scrollRef.current && value !== null) {
-      const index = numbers.indexOf(value);
+      const index = items.indexOf(value);
       if (index !== -1) {
         scrollRef.current.scrollTop = index * ITEM_HEIGHT;
       }
     }
-  }, []); // Run only once on mount
+  }, [items]); // Run only once on mount or when items change
 
   const handleScroll = useDebouncedCallback((e: UIEvent<HTMLDivElement>) => {
     const scrollTop = e.currentTarget.scrollTop;
     const selectedIndex = Math.round(scrollTop / ITEM_HEIGHT);
-    const newValue = numbers[selectedIndex];
+    const newValue = items[selectedIndex];
     if (newValue !== undefined && newValue !== value) {
       onValueChange(newValue);
     }
@@ -38,7 +36,7 @@ const WheelPicker = ({ min, max, value, onValueChange, className }: WheelPickerP
   // When the value prop changes from outside, scroll to it
   useEffect(() => {
     if (scrollRef.current && value !== null) {
-      const index = numbers.indexOf(value);
+      const index = items.indexOf(value);
       if (index !== -1) {
         const targetScrollTop = index * ITEM_HEIGHT;
         if (Math.abs(scrollRef.current.scrollTop - targetScrollTop) > 1) {
@@ -49,7 +47,7 @@ const WheelPicker = ({ min, max, value, onValueChange, className }: WheelPickerP
         }
       }
     }
-  }, [value, numbers]);
+  }, [value, items]);
 
   return (
     <div className={cn("h-60 relative", className)}>
@@ -67,12 +65,12 @@ const WheelPicker = ({ min, max, value, onValueChange, className }: WheelPickerP
         <div style={{ height: `calc(50% - ${ITEM_HEIGHT / 2}px)` }} />
         
         <div className="relative z-10">
-          {numbers.map((num) => (
+          {items.map((item, index) => (
             <div
-              key={num}
+              key={index}
               className="h-12 flex items-center justify-center text-2xl font-semibold snap-center text-foreground"
             >
-              {num}
+              {item}
             </div>
           ))}
         </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -19,6 +19,7 @@ const EditAgeDrawer = ({ isOpen, onClose, currentAge }: EditAgeDrawerProps) => {
   const [newAge, setNewAge] = useState(currentAge);
   const { user, refetchProfile } = useAuth();
   const { t } = useTranslation();
+  const ageItems = useMemo(() => Array.from({ length: 100 - 13 + 1 }, (_, i) => i + 13), []);
 
   useEffect(() => {
     if (isOpen) {
@@ -54,8 +55,7 @@ const EditAgeDrawer = ({ isOpen, onClose, currentAge }: EditAgeDrawerProps) => {
         <div className="px-4 py-8 flex flex-col items-center gap-4">
           <div className="flex items-center justify-center">
             <WheelPicker
-              min={13}
-              max={100}
+              items={ageItems}
               value={newAge}
               onValueChange={setNewAge}
               className="w-24"

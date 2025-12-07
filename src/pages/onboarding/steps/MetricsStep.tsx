@@ -2,8 +2,8 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
 import { Label } from '@/components/ui/label';
 import WheelPicker from '@/components/WheelPicker';
-import { useEffect } from 'react';
-import FeetInchesPicker from '@/components/FeetInchesPicker';
+import { useEffect, useMemo } from 'react';
+import ImperialHeightPicker from '@/components/ImperialHeightPicker';
 
 interface MetricsStepProps {
   units: 'metric' | 'imperial';
@@ -49,6 +49,13 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
 
   const isMetric = units === 'metric';
 
+  const heightItems = useMemo(() => Array.from({ length: 250 - 100 + 1 }, (_, i) => i + 100), []);
+  const weightItems = useMemo(() => {
+    const min = isMetric ? 30 : 66;
+    const max = isMetric ? 200 : 440;
+    return Array.from({ length: max - min + 1 }, (_, i) => i + min);
+  }, [isMetric]);
+
   return (
     <div className="space-y-8">
       <ToggleGroup
@@ -67,8 +74,7 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
           {isMetric ? (
             <div className="flex items-center justify-center">
               <WheelPicker
-                min={100}
-                max={250}
+                items={heightItems}
                 value={height}
                 onValueChange={setHeight}
                 className="w-24"
@@ -76,15 +82,14 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
               <span className="text-2xl text-muted-foreground font-semibold ml-2">{t('onboarding.metrics.cm')}</span>
             </div>
           ) : (
-            <FeetInchesPicker value={height} onValueChange={setHeight} />
+            <ImperialHeightPicker value={height} onValueChange={setHeight} className="w-32" />
           )}
         </div>
         <div>
           <Label className="text-lg font-semibold text-center block mb-2">{t('onboarding.metrics.weight')}</Label>
           <div className="flex items-center justify-center">
             <WheelPicker
-              min={isMetric ? 30 : 66}
-              max={isMetric ? 200 : 440}
+              items={weightItems}
               value={weight}
               onValueChange={setWeight}
               className="w-24"

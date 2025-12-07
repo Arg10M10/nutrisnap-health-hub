@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,7 +8,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import WheelPicker from '../WheelPicker';
-import FeetInchesPicker from '../FeetInchesPicker';
+import ImperialHeightPicker from '../ImperialHeightPicker';
 
 interface EditHeightDrawerProps {
   isOpen: boolean;
@@ -21,6 +21,7 @@ const EditHeightDrawer = ({ isOpen, onClose, currentHeight }: EditHeightDrawerPr
   const { user, profile, refetchProfile } = useAuth();
   const { t } = useTranslation();
   const isMetric = profile?.units !== 'imperial';
+  const heightItems = useMemo(() => Array.from({ length: 250 - 100 + 1 }, (_, i) => i + 100), []);
 
   useEffect(() => {
     if (isOpen) {
@@ -57,8 +58,7 @@ const EditHeightDrawer = ({ isOpen, onClose, currentHeight }: EditHeightDrawerPr
           {isMetric ? (
             <div className="flex items-center justify-center">
               <WheelPicker
-                min={100}
-                max={250}
+                items={heightItems}
                 value={newHeight}
                 onValueChange={setNewHeight}
                 className="w-24"
@@ -66,7 +66,7 @@ const EditHeightDrawer = ({ isOpen, onClose, currentHeight }: EditHeightDrawerPr
               <span className="text-lg text-muted-foreground font-semibold ml-2">cm</span>
             </div>
           ) : (
-            <FeetInchesPicker value={newHeight} onValueChange={setNewHeight} />
+            <ImperialHeightPicker value={newHeight} onValueChange={setNewHeight} className="w-32" />
           )}
         </div>
         <DrawerFooter>
