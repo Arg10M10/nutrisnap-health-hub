@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import EditWeightDrawer from '@/components/EditWeightDrawer';
 import EditHeightDrawer from '@/components/settings/EditHeightDrawer';
-import EditCategoricalDetailsDrawer from '@/components/settings/EditCategoricalDetailsDrawer';
+import EditSelectDetailDrawer from '@/components/settings/EditSelectDetailDrawer';
 
 const InfoRow = ({ label, value, onEdit, editDisabled, disabledText }: { label: string; value: string | number | null; onEdit: () => void; editDisabled?: boolean; disabledText?: string }) => (
   <div className="flex items-center justify-between py-4">
@@ -37,7 +37,7 @@ const WeightGoal = () => {
   const [isGoalDrawerOpen, setIsGoalDrawerOpen] = useState(false);
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
   const [isHeightDrawerOpen, setIsHeightDrawerOpen] = useState(false);
-  const [isCategoricalDrawerOpen, setIsCategoricalDrawerOpen] = useState(false);
+  const [isGenderDrawerOpen, setIsGenderDrawerOpen] = useState(false);
 
   const { data: todaysWeightUpdatesCount } = useQuery({
     queryKey: ['todays_weight_updates_count', user?.id],
@@ -74,6 +74,18 @@ const WeightGoal = () => {
     return `${feet}' ${inches}${heightUnit}`;
   };
 
+  const getTranslationKey = (prefix: string, value: string | null) => {
+    if (!value) return prefix;
+    const key = value.toLowerCase().replace(/, /g, '_').replace(/ /g, '_').replace(/'/g, '');
+    return `${prefix}_${key}`;
+  };
+
+  const genderOptions = [
+    { value: 'Female', label: t('edit_profile.gender_female') },
+    { value: 'Male', label: t('edit_profile.gender_male') },
+    { value: 'Prefer not to say', label: t('edit_profile.gender_not_say') },
+  ];
+
   return (
     <PageLayout>
       <div className="space-y-8">
@@ -104,7 +116,7 @@ const WeightGoal = () => {
               disabledText={t('weight_goal.updated_today')}
             />
             <InfoRow label={t('weight_goal.height')} value={formatHeight(profile?.height)} onEdit={() => setIsHeightDrawerOpen(true)} />
-            <InfoRow label={t('weight_goal.gender')} value={profile?.gender || '-'} onEdit={() => setIsCategoricalDrawerOpen(true)} />
+            <InfoRow label={t('weight_goal.gender')} value={t(getTranslationKey('edit_profile.gender', profile?.gender), { defaultValue: profile?.gender || '-' })} onEdit={() => setIsGenderDrawerOpen(true)} />
           </CardContent>
         </Card>
       </div>
@@ -119,7 +131,14 @@ const WeightGoal = () => {
         currentWeight={profile?.weight || 70}
       />
       <EditHeightDrawer isOpen={isHeightDrawerOpen} onClose={() => setIsHeightDrawerOpen(false)} currentHeight={profile?.height || (isMetric ? 170 : 67)} />
-      <EditCategoricalDetailsDrawer isOpen={isCategoricalDrawerOpen} onClose={() => setIsCategoricalDrawerOpen(false)} />
+      <EditSelectDetailDrawer
+        isOpen={isGenderDrawerOpen}
+        onClose={() => setIsGenderDrawerOpen(false)}
+        title={t('edit_profile.gender')}
+        currentValue={profile?.gender || null}
+        options={genderOptions}
+        profileField="gender"
+      />
     </PageLayout>
   );
 };
