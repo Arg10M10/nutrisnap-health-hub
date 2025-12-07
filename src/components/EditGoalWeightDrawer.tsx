@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import DecimalWheelPicker from './DecimalWheelPicker';
+import WheelPicker from './WheelPicker';
 
 interface EditGoalWeightDrawerProps {
   isOpen: boolean;
@@ -16,14 +16,14 @@ interface EditGoalWeightDrawerProps {
 }
 
 const EditGoalWeightDrawer = ({ isOpen, onClose, currentGoalWeight }: EditGoalWeightDrawerProps) => {
-  const [newGoalWeight, setNewGoalWeight] = useState(currentGoalWeight);
+  const [newGoalWeight, setNewGoalWeight] = useState(Math.round(currentGoalWeight));
   const { user, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
 
   useEffect(() => {
     if (isOpen) {
-      setNewGoalWeight(currentGoalWeight);
+      setNewGoalWeight(Math.round(currentGoalWeight));
     }
   }, [isOpen, currentGoalWeight]);
 
@@ -58,13 +58,16 @@ const EditGoalWeightDrawer = ({ isOpen, onClose, currentGoalWeight }: EditGoalWe
           <DrawerTitle className="text-center">{t('edit_goal_weight.title')}</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 py-8 flex flex-col items-center gap-4">
-          <DecimalWheelPicker
-            min={30}
-            max={200}
-            value={newGoalWeight}
-            onValueChange={setNewGoalWeight}
-            unit={t('edit_goal_weight.weight_unit')}
-          />
+          <div className="flex items-center justify-center">
+            <WheelPicker
+              min={30}
+              max={200}
+              value={newGoalWeight}
+              onValueChange={setNewGoalWeight}
+              className="w-24"
+            />
+            <span className="text-2xl text-muted-foreground font-semibold ml-2">{t('edit_goal_weight.weight_unit')}</span>
+          </div>
         </div>
         <DrawerFooter>
           <Button size="lg" onClick={handleSave} disabled={mutation.isPending}>

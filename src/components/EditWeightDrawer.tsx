@@ -10,7 +10,7 @@ import { Loader2 } from 'lucide-react';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { weightLossBadges } from '@/data/badges';
 import { useNutrition } from '@/context/NutritionContext';
-import DecimalWheelPicker from './DecimalWheelPicker';
+import WheelPicker from './WheelPicker';
 
 interface EditWeightDrawerProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ interface EditWeightDrawerProps {
 }
 
 const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerProps) => {
-  const [newWeight, setNewWeight] = useState(currentWeight);
+  const [newWeight, setNewWeight] = useState(Math.round(currentWeight));
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
 
   useEffect(() => {
     if (isOpen) {
-      setNewWeight(currentWeight);
+      setNewWeight(Math.round(currentWeight));
     }
   }, [isOpen, currentWeight]);
 
@@ -93,13 +93,16 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
           <DrawerTitle className="text-center">{t('edit_weight.title')}</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 py-8 flex flex-col items-center gap-4">
-          <DecimalWheelPicker
-            min={30}
-            max={200}
-            value={newWeight}
-            onValueChange={setNewWeight}
-            unit={t('edit_weight.weight_unit')}
-          />
+          <div className="flex items-center justify-center">
+            <WheelPicker
+              min={30}
+              max={200}
+              value={newWeight}
+              onValueChange={setNewWeight}
+              className="w-24"
+            />
+            <span className="text-2xl text-muted-foreground font-semibold ml-2">{t('edit_weight.weight_unit')}</span>
+          </div>
         </div>
         <DrawerFooter>
           <Button size="lg" onClick={handleSave} disabled={mutation.isPending}>

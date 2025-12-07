@@ -1,6 +1,6 @@
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
-import DecimalWheelPicker from '@/components/DecimalWheelPicker';
+import WheelPicker from '@/components/WheelPicker';
 import { useEffect } from 'react';
 
 interface GoalWeightStepProps {
@@ -17,7 +17,7 @@ export const GoalWeightStep = ({ goalWeight, setGoalWeight, units, setUnits }: G
   // Set a default value if null
   useEffect(() => {
     if (goalWeight === null) {
-      setGoalWeight(isMetric ? 65 : 140);
+      setGoalWeight(isMetric ? 65 : 143);
     }
   }, []);
 
@@ -26,8 +26,8 @@ export const GoalWeightStep = ({ goalWeight, setGoalWeight, units, setUnits }: G
 
     if (goalWeight !== null) {
       const newGoalWeight = newUnit === 'imperial'
-        ? parseFloat((goalWeight * 2.20462).toFixed(1)) // kg to lbs
-        : parseFloat((goalWeight / 2.20462).toFixed(1)); // lbs to kg
+        ? Math.round(goalWeight * 2.20462) // kg to lbs
+        : Math.round(goalWeight / 2.20462); // lbs to kg
       setGoalWeight(newGoalWeight);
     }
     
@@ -46,13 +46,16 @@ export const GoalWeightStep = ({ goalWeight, setGoalWeight, units, setUnits }: G
         <ToggleGroupItem value="imperial" className="h-12 text-base">{t('onboarding.metrics.imperial')}</ToggleGroupItem>
       </ToggleGroup>
       <div className="space-y-4">
-        <DecimalWheelPicker
-          min={isMetric ? 30 : 60}
-          max={isMetric ? 200 : 450}
-          value={goalWeight}
-          onValueChange={setGoalWeight}
-          unit={isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}
-        />
+        <div className="flex items-center justify-center">
+          <WheelPicker
+            min={isMetric ? 30 : 66}
+            max={isMetric ? 200 : 440}
+            value={goalWeight}
+            onValueChange={setGoalWeight}
+            className="w-24"
+          />
+          <span className="text-2xl text-muted-foreground font-semibold ml-2">{isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}</span>
+        </div>
         <p className="text-sm text-muted-foreground text-center">
           {t('onboarding.goal_weight.disclaimer')}
         </p>

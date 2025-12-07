@@ -22,7 +22,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import WheelPicker from './WheelPicker';
-import DecimalWheelPicker from './DecimalWheelPicker';
 
 const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
   const { profile, user, refetchProfile } = useAuth();
@@ -50,7 +49,7 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         age: profile.age || 18,
         goal: profile.goal || '',
         height: profile.height || 170,
-        weight: profile.weight || 70,
+        weight: Math.round(profile.weight || 70),
         previous_apps_experience: profile.previous_apps_experience || '',
       });
     }
@@ -140,13 +139,16 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 <FormItem>
                   <FormLabel className="text-center block">{t('edit_profile.weight')}</FormLabel>
                   <FormControl>
-                    <DecimalWheelPicker
-                      min={30}
-                      max={200}
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      unit="kg"
-                    />
+                    <div className="flex items-center justify-center">
+                      <WheelPicker
+                        min={30}
+                        max={200}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        className="w-24"
+                      />
+                      <span className="text-lg text-muted-foreground font-semibold ml-2">kg</span>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
