@@ -22,6 +22,7 @@ const RulerPicker = ({ min, max, step, value, onValueChange, unit, className }: 
   const rulerRef = useRef<HTMLDivElement>(null);
   const [isInteracting, setIsInteracting] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
+  const scrollEndTimer = useRef<number | null>(null);
 
   const ticks = useMemo(() => {
     const numTicks = Math.floor((max - min) / step) + 1;
@@ -51,35 +52,42 @@ const RulerPicker = ({ min, max, step, value, onValueChange, unit, className }: 
     const percent = scrollLeft / totalWidth;
     const rawValue = min + percent * (max - min);
     const snappedValue = Math.round(rawValue / step) * step;
-    return Math.max(min, Math.min(max, snappedValue));
+    return Math.max(min, Math.min(max, parseFloat(snappedValue.toFixed(String(step).split('.')[1]?.length || 0))));
   };
 
   useEffect(() => {
     if (rulerRef.current && !isInteracting && containerWidth > 0) {
       const targetScroll = valueToScrollLeft(value);
-      rulerRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      if (Math.abs(rulerRef.current.scrollLeft - targetScroll) > 1) {
+        rulerRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      }
     }
-  }, [value, containerWidth]);
+  }, [value, isInteracting, containerWidth]);
 
   const debouncedOnChange = useDebouncedCallback((val: number) => {
     onValueChange(val);
   }, 20);
 
   const handleScroll = () => {
-    if (rulerRef.current && isInteracting) {
-      const newValue = scrollLeftToValue(rulerRef.current.scrollLeft);
-      debouncedOnChange(newValue);
+    if (rulerRef.current) {
+      if (isInteracting) {
+        const newValue = scrollLeftToValue(rulerRef.current.scrollLeft);
+        debouncedOnChange(newValue);
+      }
+
+      if (scrollEndTimer.current) {
+        clearTimeout(scrollEndTimer.current);
+      }
+      scrollEndTimer.current = window.setTimeout(() => {
+        setIsInteracting(false);
+      }, 150);
     }
   };
 
-  const handleInteractionStart = () => setIsInteracting(true);
-  const handleInteractionEnd = () => {
-    setIsInteracting(false);
-    if (rulerRef.current) {
-        const finalValue = scrollLeftToValue(rulerRef.current.scrollLeft);
-        const targetScroll = valueToScrollLeft(finalValue);
-        rulerRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
-        onValueChange(finalValue);
+  const handleInteractionStart = () => {
+    setIsInteracting(true);
+    if (scrollEndTimer.current) {
+      clearTimeout(scrollEndTimer.current);
     }
   };
 
@@ -98,10 +106,7 @@ const RulerPicker = ({ min, max, step, value, onValueChange, unit, className }: 
           className="w-full h-full overflow-x-scroll scrollbar-hide cursor-grab active:cursor-grabbing"
           onScroll={handleScroll}
           onTouchStart={handleInteractionStart}
-          onTouchEnd={handleInteractionEnd}
           onMouseDown={handleInteractionStart}
-          onMouseUp={handleInteractionEnd}
-          onMouseLeave={handleInteractionEnd}
         >
           <div
             className="relative h-full flex items-center"
