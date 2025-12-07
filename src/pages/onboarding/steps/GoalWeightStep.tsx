@@ -1,4 +1,4 @@
-import { NumberPicker } from '@/components/onboarding/NumberPicker';
+import RulerPicker from '@/components/RulerPicker';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
 
@@ -38,17 +38,15 @@ export const GoalWeightStep = ({ goalWeight, setGoalWeight, units, setUnits }: G
         <ToggleGroupItem value="imperial" className="h-12 text-base">{t('onboarding.metrics.imperial')}</ToggleGroupItem>
       </ToggleGroup>
       <div className="space-y-4">
-        <NumberPicker
-          label={t('onboarding.goal_weight.label')}
+        <RulerPicker
           unit={isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}
-          value={goalWeight}
+          value={goalWeight ?? (isMetric ? 65 : 143)}
           onValueChange={setGoalWeight}
           min={isMetric ? 30 : 60}
           max={isMetric ? 200 : 450}
-          displayFormatter={(val) => val.toFixed(1)}
-          step={isMetric ? 0.5 : 1}
+          step={isMetric ? 0.1 : 1}
         />
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground text-center">
           {t('onboarding.goal_weight.disclaimer')}
         </p>
       </div>

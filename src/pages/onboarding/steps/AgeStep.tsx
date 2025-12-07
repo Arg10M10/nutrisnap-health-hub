@@ -1,4 +1,4 @@
-import { NumberPicker } from '@/components/onboarding/NumberPicker';
+import RulerPicker from '@/components/RulerPicker';
 import { useTranslation } from 'react-i18next';
 
 interface AgeStepProps {
@@ -9,13 +9,13 @@ interface AgeStepProps {
 export const AgeStep = ({ age, setAge }: AgeStepProps) => {
   const { t } = useTranslation();
   return (
-    <NumberPicker
-      label={t('onboarding.age.label')}
+    <RulerPicker
       unit={t('onboarding.age.unit')}
-      value={age}
+      value={age ?? 18}
       onValueChange={setAge}
       min={13}
       max={99}
+      step={1}
     />
   );
 };

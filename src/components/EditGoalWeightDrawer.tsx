@@ -6,9 +6,8 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
 import { Loader2 } from 'lucide-react';
-import AnimatedNumber from './AnimatedNumber';
+import RulerPicker from './RulerPicker';
 
 interface EditGoalWeightDrawerProps {
   isOpen: boolean;
@@ -58,19 +57,14 @@ const EditGoalWeightDrawer = ({ isOpen, onClose, currentGoalWeight }: EditGoalWe
         <DrawerHeader>
           <DrawerTitle className="text-center">{t('edit_goal_weight.title')}</DrawerTitle>
         </DrawerHeader>
-        <div className="px-4 py-8 space-y-8">
-          <div className="text-center">
-            <p className="text-6xl font-bold text-foreground">
-              <AnimatedNumber value={newGoalWeight} toFixed={1} />
-            </p>
-            <p className="text-muted-foreground">{t('edit_goal_weight.weight_unit')}</p>
-          </div>
-          <Slider
-            value={[newGoalWeight]}
-            onValueChange={(vals) => setNewGoalWeight(vals[0])}
+        <div className="px-4 py-8">
+          <RulerPicker
             min={30}
             max={200}
-            step={0.5}
+            step={0.1}
+            value={newGoalWeight}
+            onValueChange={setNewGoalWeight}
+            unit={t('edit_goal_weight.weight_unit')}
           />
         </div>
         <DrawerFooter>

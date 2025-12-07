@@ -6,12 +6,11 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
 import { Loader2 } from 'lucide-react';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { weightLossBadges } from '@/data/badges';
 import BadgeNotification from './BadgeNotification';
-import AnimatedNumber from './AnimatedNumber';
+import RulerPicker from './RulerPicker';
 
 interface EditWeightDrawerProps {
   isOpen: boolean;
@@ -97,19 +96,14 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
         <DrawerHeader>
           <DrawerTitle className="text-center">{t('edit_weight.title')}</DrawerTitle>
         </DrawerHeader>
-        <div className="px-4 py-8 space-y-8">
-          <div className="text-center">
-            <p className="text-6xl font-bold text-foreground">
-              <AnimatedNumber value={newWeight} toFixed={1} />
-            </p>
-            <p className="text-muted-foreground">{t('edit_weight.weight_unit')}</p>
-          </div>
-          <Slider
-            value={[newWeight]}
-            onValueChange={(vals) => setNewWeight(vals[0])}
+        <div className="px-4 py-8">
+          <RulerPicker
             min={30}
             max={200}
             step={0.1}
+            value={newWeight}
+            onValueChange={setNewWeight}
+            unit={t('edit_weight.weight_unit')}
           />
         </div>
         <DrawerFooter>

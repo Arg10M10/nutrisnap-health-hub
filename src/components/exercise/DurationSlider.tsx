@@ -1,4 +1,4 @@
-import { Slider } from '@/components/ui/slider';
+import RulerPicker from '@/components/RulerPicker';
 import { useTranslation } from 'react-i18next';
 
 interface DurationSliderProps {
@@ -9,18 +9,13 @@ interface DurationSliderProps {
 export const DurationSlider = ({ value, onValueChange }: DurationSliderProps) => {
   const { t } = useTranslation();
   return (
-    <div className="space-y-4">
-      <div className="text-center">
-        <p className="text-muted-foreground">{t('running.duration')}</p>
-        <p className="text-4xl font-bold text-foreground">{value} {t('running.minutes_unit')}</p>
-      </div>
-      <Slider
-        value={[value]}
-        onValueChange={(vals) => onValueChange(vals[0])}
-        min={5}
-        max={120}
-        step={5}
-      />
-    </div>
+    <RulerPicker
+      min={5}
+      max={120}
+      step={1}
+      value={value}
+      onValueChange={onValueChange}
+      unit={t('running.minutes_unit')}
+    />
   );
 };

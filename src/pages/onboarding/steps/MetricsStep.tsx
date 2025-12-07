@@ -1,4 +1,4 @@
-import { NumberPicker } from '@/components/onboarding/NumberPicker';
+import RulerPicker from '@/components/RulerPicker';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
 
@@ -36,12 +36,6 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
     setUnits(newUnit);
   };
 
-  const formatFeetAndInches = (totalInches: number) => {
-    const feet = Math.floor(totalInches / 12);
-    const inches = totalInches % 12;
-    return `${feet}.${inches.toString().padStart(2, '0')}`;
-  };
-
   return (
     <div className="space-y-6">
       <ToggleGroup
@@ -54,44 +48,43 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
         <ToggleGroupItem value="imperial" className="h-12 text-base">{t('onboarding.metrics.imperial')}</ToggleGroupItem>
       </ToggleGroup>
 
-      <div className="space-y-4">
+      <div className="space-y-8">
         {units === 'metric' ? (
           <>
-            <NumberPicker
-              label={t('onboarding.metrics.height')}
+            <RulerPicker
               unit={t('onboarding.metrics.cm')}
-              value={height}
+              value={height ?? 170}
               onValueChange={setHeight}
               min={120}
               max={220}
+              step={1}
             />
-            <NumberPicker
-              label={t('onboarding.metrics.weight')}
+            <RulerPicker
               unit={t('onboarding.metrics.kg')}
-              value={weight}
+              value={weight ?? 70}
               onValueChange={setWeight}
               min={30}
               max={200}
+              step={0.5}
             />
           </>
         ) : (
           <>
-            <NumberPicker
-              label={t('onboarding.metrics.height')}
-              unit={t('onboarding.metrics.ft')}
-              value={height}
+            <RulerPicker
+              unit="in"
+              value={height ?? 67}
               onValueChange={setHeight}
-              min={47} // 3'11" in inches
-              max={86} // 7'2" in inches
-              displayFormatter={formatFeetAndInches}
+              min={47}
+              max={86}
+              step={1}
             />
-            <NumberPicker
-              label={t('onboarding.metrics.weight')}
+            <RulerPicker
               unit={t('onboarding.metrics.lbs')}
-              value={weight}
+              value={weight ?? 154}
               onValueChange={setWeight}
               min={60}
               max={450}
+              step={1}
             />
           </>
         )}
