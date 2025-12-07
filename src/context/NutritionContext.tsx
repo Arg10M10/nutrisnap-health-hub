@@ -79,9 +79,9 @@ interface NutritionState {
   waterStreak: number;
   streakDays: string[];
   isLoading: boolean;
-  // Nuevos estados para el modal de badge
   unlockedBadge: UnlockedBadgeInfo | null;
   closeBadgeModal: () => void;
+  triggerBadgeUnlock: (badgeInfo: UnlockedBadgeInfo) => void;
 }
 
 const NutritionContext = createContext<NutritionState | undefined>(undefined);
@@ -349,6 +349,10 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     return { waterStreak: currentStreak };
   }, [waterEntries]);
 
+  const triggerBadgeUnlock = (badgeInfo: UnlockedBadgeInfo) => {
+    setNewlyUnlockedBadge(badgeInfo);
+  };
+
   useEffect(() => {
     const { streak } = streakData;
     const { waterStreak } = waterStreakData;
@@ -356,8 +360,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     const checkAndNotify = (badges: any[], currentStreak: number, type: 'days') => {
       badges.forEach(badge => {
         if (currentStreak >= badge[type] && !unlockedBadges.includes(badge.id)) {
-          // Set state instead of toast
-          setNewlyUnlockedBadge({
+          triggerBadgeUnlock({
             name: t(`badge_names.${badge.id}.name` as any),
             description: t(`badge_names.${badge.id}.desc` as any),
             image: badge.image
@@ -385,7 +388,8 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       waterStreak: waterStreakData.waterStreak,
       isLoading: isFoodLoading || isWaterLoading || isExerciseLoading,
       unlockedBadge: newlyUnlockedBadge,
-      closeBadgeModal
+      closeBadgeModal,
+      triggerBadgeUnlock
     }}>
       {children}
     </NutritionContext.Provider>

@@ -9,8 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { weightLossBadges } from '@/data/badges';
-import BadgeNotification from './BadgeNotification';
 import RulerPicker from './RulerPicker';
+import { useNutrition } from '@/context/NutritionContext';
 
 interface EditWeightDrawerProps {
   isOpen: boolean;
@@ -24,6 +24,7 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const [unlockedBadges, setUnlockedBadges] = useLocalStorage<string[]>('unlockedBadges', []);
+  const { triggerBadgeUnlock } = useNutrition();
 
   useEffect(() => {
     if (isOpen) {
@@ -32,22 +33,18 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
   }, [isOpen, currentWeight]);
 
   const checkWeightBadges = (updatedProfile: typeof profile) => {
-    if (updatedProfile?.goal !== 'lose_weight' || !updatedProfile.starting_weight) return;
+    if (updatedProfile?.goal !== 'lose_weight' || !updatedProfile.starting_weight || !updatedProfile.weight) return;
 
     const weightLost = updatedProfile.starting_weight - updatedProfile.weight;
     weightLossBadges.forEach(badge => {
       if (weightLost >= badge.kg && !unlockedBadges.includes(badge.id)) {
-        const translatedBadge = {
-          ...badge,
+        const badgeInfo = {
           name: t(`badge_names.${badge.id}.name` as any),
           description: t(`badge_names.${badge.id}.desc` as any),
+          image: badge.image,
         };
-
-        toast.custom(() => (
-          <div className="bg-card border p-4 rounded-lg shadow-lg w-full max-w-md">
-            <BadgeNotification {...translatedBadge} />
-          </div>
-        ), { duration: 5000 });
+        
+        triggerBadgeUnlock(badgeInfo);
         setUnlockedBadges(prev => [...prev, badge.id]);
       }
     });
@@ -74,8 +71,7 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
         queryClient.invalidateQueries({ queryKey: ['weight_history_all', user?.id] }),
         queryClient.invalidateQueries({ queryKey: ['todays_weight_updates_count', user?.id] })
       ]);
-      // We need to get the fresh profile data to check for badges
-      const { data: updatedProfileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      const { data: updatedProfileData } = await supabase.from('profiles').select('*').eq('id', user!.id).single();
       if (updatedProfileData) {
         checkWeightBadges(updatedProfileData);
       }

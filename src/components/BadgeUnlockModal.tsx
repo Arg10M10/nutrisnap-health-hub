@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
+import ReactConfetti from 'react-confetti';
+import useWindowSize from '@/hooks/useWindowSize';
 
 interface BadgeUnlockModalProps {
   isOpen: boolean;
@@ -15,6 +17,7 @@ interface BadgeUnlockModalProps {
 
 const BadgeUnlockModal = ({ isOpen, onClose, badge }: BadgeUnlockModalProps) => {
   const { t } = useTranslation();
+  const { width, height } = useWindowSize();
 
   const handleShare = async () => {
     if (!badge) return;
@@ -40,6 +43,17 @@ const BadgeUnlockModal = ({ isOpen, onClose, badge }: BadgeUnlockModalProps) => 
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          <ReactConfetti
+            width={width}
+            height={height}
+            recycle={false}
+            numberOfPieces={400}
+            gravity={0.1}
+            initialVelocityY={20}
+            onConfettiComplete={(confetti) => {
+              if (confetti) confetti.reset();
+            }}
+          />
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
