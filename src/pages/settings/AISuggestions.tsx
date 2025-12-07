@@ -10,14 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
-import { Loader2, Wand2, ArrowLeft, Dumbbell, Target, TrendingUp, Activity } from 'lucide-react';
+import { Loader2, Wand2, ArrowLeft, Dumbbell, Target, TrendingUp, Activity, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useAILimit } from '@/hooks/useAILimit';
 import { OnboardingOptionCard } from '@/components/settings/OnboardingOptionCard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 const step1Schema = z.object({
   workoutsPerWeek: z.coerce.number().min(0).max(7),
@@ -174,7 +174,7 @@ const AISuggestions = () => {
           <X className="w-6 h-6" />
         </Button>
       </header>
-      <main className="flex-1 p-4 overflow-hidden flex flex-col">
+      <main className="flex-1 p-4 flex flex-col">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleGenerate)} className="flex flex-col h-full">
             <div className="flex-1">
