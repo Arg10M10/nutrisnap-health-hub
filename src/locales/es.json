@@ -452,6 +452,44 @@
     "toast_success": "¡Todo listo! Bienvenido a Calorel.",
     "toast_error": "Hubo un error al guardar tu perfil."
   },
+  "diets_onboarding": {
+    "step1_title": "Nivel de Actividad",
+    "step2_title": "Preferencias",
+    "step3_title": "Detalles Finales",
+    "step1_desc": "¿Cuánto te mueves en tu día a día?",
+    "step2_desc": "Selecciona si tienes alguna preferencia o restricción.",
+    "step2_tip": "Si no tienes ninguna, puedes continuar.",
+    "step3_desc": "Ajusta el plan a tu estilo de vida.",
+    "cooking_time": "Tiempo para cocinar",
+    "budget": "Presupuesto",
+    "next": "Siguiente",
+    "generate_loading": "Generando con IA... (puede tardar 1 min)",
+    "generate": "Generar mi Plan",
+    "generate_wait": "La IA está creando un plan único para ti. Por favor espera...",
+    "toast_success": "¡Tu plan de dieta personalizado está listo!",
+    "toast_error_title": "No se pudo generar el plan",
+    "preferences": {
+      "vegetarian": "Vegetariano",
+      "lactose_free": "Sin lactosa",
+      "sugar_free": "Sin azúcar",
+      "gluten_free": "Sin gluten"
+    },
+    "activity": {
+      "sedentary": "Sedentario",
+      "sedentary_desc": "Poco o nada de ejercicio",
+      "light": "Ligero",
+      "light_desc": "Ejercicio suave 1-3 días/sem",
+      "moderate": "Moderado",
+      "moderate_desc": "Ejercicio moderado 3-5 días/sem",
+      "high": "Alto",
+      "high_desc": "Ejercicio fuerte 6-7 días/sem"
+    },
+    "levels": {
+      "low": "Bajo",
+      "medium": "Medio",
+      "high": "Alto"
+    }
+  },
   "subscribe": {
     "title": "Vuélvete Premium",
     "trial_tab": "Prueba Gratuita de 3 Días",

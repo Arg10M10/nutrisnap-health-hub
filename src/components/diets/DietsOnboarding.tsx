@@ -13,26 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { useAILimit } from '@/hooks/useAILimit';
-
-const preferencesOptions = [
-  { id: 'vegetarian', label: 'Vegetariano', icon: '🥗' },
-  { id: 'lactose_free', label: 'Sin lactosa', icon: '🥛' },
-  { id: 'sugar_free', label: 'Sin azúcar', icon: '🍬' },
-  { id: 'gluten_free', label: 'Sin gluten', icon: '🍞' },
-];
-
-const activityOptions = [
-  { id: 'sedentary', label: 'Sedentario', desc: 'Poco o nada de ejercicio' },
-  { id: 'light', label: 'Ligero', desc: 'Ejercicio suave 1-3 días/sem' },
-  { id: 'moderate', label: 'Moderado', desc: 'Ejercicio moderado 3-5 días/sem' },
-  { id: 'high', label: 'Alto', desc: 'Ejercicio fuerte 6-7 días/sem' },
-];
-
-const levelOptions = [
-  { id: 'low', label: 'Bajo' },
-  { id: 'medium', label: 'Medio' },
-  { id: 'high', label: 'Alto' },
-];
+import { useTranslation } from 'react-i18next';
 
 const formSchema = z.object({
   activityLevel: z.enum(['sedentary', 'light', 'moderate', 'high']),
@@ -42,11 +23,32 @@ const formSchema = z.object({
 });
 
 export const DietsOnboarding = () => {
+  const { t } = useTranslation();
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
   const { checkLimit, logUsage } = useAILimit();
   
+  const preferencesOptions = [
+    { id: 'vegetarian', label: t('diets_onboarding.preferences.vegetarian'), icon: '🥗' },
+    { id: 'lactose_free', label: t('diets_onboarding.preferences.lactose_free'), icon: '🥛' },
+    { id: 'sugar_free', label: t('diets_onboarding.preferences.sugar_free'), icon: '🍬' },
+    { id: 'gluten_free', label: t('diets_onboarding.preferences.gluten_free'), icon: '🍞' },
+  ];
+  
+  const activityOptions = [
+    { id: 'sedentary', label: t('diets_onboarding.activity.sedentary'), desc: t('diets_onboarding.activity.sedentary_desc') },
+    { id: 'light', label: t('diets_onboarding.activity.light'), desc: t('diets_onboarding.activity.light_desc') },
+    { id: 'moderate', label: t('diets_onboarding.activity.moderate'), desc: t('diets_onboarding.activity.moderate_desc') },
+    { id: 'high', label: t('diets_onboarding.activity.high'), desc: t('diets_onboarding.activity.high_desc') },
+  ];
+  
+  const levelOptions = [
+    { id: 'low', label: t('diets_onboarding.levels.low') },
+    { id: 'medium', label: t('diets_onboarding.levels.medium') },
+    { id: 'high', label: t('diets_onboarding.levels.high') },
+  ];
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,10 +83,10 @@ export const DietsOnboarding = () => {
       logUsage('diet_plan');
       await refetchProfile();
       queryClient.invalidateQueries({ queryKey: ['weekly_diet_plan', user?.id] });
-      toast.success("¡Tu plan de dieta personalizado está listo!");
+      toast.success(t('diets_onboarding.toast_success'));
     },
     onError: (error) => {
-      toast.error("No se pudo generar el plan", { description: error.message });
+      toast.error(t('diets_onboarding.toast_error_title'), { description: error.message });
     },
   });
 
@@ -157,9 +159,9 @@ export const DietsOnboarding = () => {
           ) : <div className="w-10" />}
           
           <h1 className="text-xl font-bold text-center">
-            {step === 1 && "Nivel de Actividad"}
-            {step === 2 && "Preferencias"}
-            {step === 3 && "Detalles Finales"}
+            {step === 1 && t('diets_onboarding.step1_title')}
+            {step === 2 && t('diets_onboarding.step2_title')}
+            {step === 3 && t('diets_onboarding.step3_title')}
           </h1>
           
           <div className="w-10" />
@@ -181,7 +183,7 @@ export const DietsOnboarding = () => {
                 >
                   <div className="text-center mb-6">
                     <Activity className="w-12 h-12 text-primary mx-auto mb-2 opacity-80" />
-                    <p className="text-muted-foreground">¿Cuánto te mueves en tu día a día?</p>
+                    <p className="text-muted-foreground">{t('diets_onboarding.step1_desc')}</p>
                   </div>
                   
                   <FormField control={form.control} name="activityLevel" render={({ field }) => (
@@ -210,7 +212,7 @@ export const DietsOnboarding = () => {
                 >
                   <div className="text-center mb-6">
                     <ChefHat className="w-12 h-12 text-primary mx-auto mb-2 opacity-80" />
-                    <p className="text-muted-foreground">Selecciona si tienes alguna preferencia o restricción.</p>
+                    <p className="text-muted-foreground">{t('diets_onboarding.step2_desc')}</p>
                   </div>
 
                   <FormField control={form.control} name="preferences" render={({ field }) => (
@@ -234,7 +236,7 @@ export const DietsOnboarding = () => {
                       })}
                     </div>
                   )} />
-                  <p className="text-xs text-center text-muted-foreground mt-4">Si no tienes ninguna, puedes continuar.</p>
+                  <p className="text-xs text-center text-muted-foreground mt-4">{t('diets_onboarding.step2_tip')}</p>
                 </motion.div>
               )}
 
@@ -248,13 +250,13 @@ export const DietsOnboarding = () => {
                 >
                   <div className="text-center">
                     <Wallet className="w-12 h-12 text-primary mx-auto mb-2 opacity-80" />
-                    <p className="text-muted-foreground">Ajusta el plan a tu estilo de vida.</p>
+                    <p className="text-muted-foreground">{t('diets_onboarding.step3_desc')}</p>
                   </div>
 
                   <FormField control={form.control} name="cookingTime" render={({ field }) => (
                     <div className="space-y-3">
                       <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                        ⏱️ Tiempo para cocinar
+                        ⏱️ {t('diets_onboarding.cooking_time')}
                       </FormLabel>
                       <div className="grid grid-cols-3 gap-2">
                         {levelOptions.map((opt) => (
@@ -282,7 +284,7 @@ export const DietsOnboarding = () => {
                   <FormField control={form.control} name="budget" render={({ field }) => (
                     <div className="space-y-3">
                       <FormLabel className="text-lg font-semibold flex items-center gap-2">
-                        💰 Presupuesto
+                        💰 {t('diets_onboarding.budget')}
                       </FormLabel>
                       <div className="grid grid-cols-3 gap-2">
                         {levelOptions.map((opt) => (
@@ -314,7 +316,7 @@ export const DietsOnboarding = () => {
           <div className="pt-4 mt-auto">
             {step < 3 ? (
               <Button type="button" size="lg" className="w-full h-14 text-lg rounded-xl" onClick={nextStep}>
-                Siguiente <ArrowRight className="ml-2 w-5 h-5" />
+                {t('diets_onboarding.next')} <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             ) : (
               <div className="space-y-2">
@@ -326,11 +328,11 @@ export const DietsOnboarding = () => {
                   onClick={form.handleSubmit(handleGenerate)} 
                 >
                   {mutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
-                  {mutation.isPending ? "Generando con IA... (puede tardar 1 min)" : "Generar mi Plan"}
+                  {mutation.isPending ? t('diets_onboarding.generate_loading') : t('diets_onboarding.generate')}
                 </Button>
                 {mutation.isPending && (
                   <p className="text-center text-xs text-muted-foreground animate-pulse">
-                    La IA está creando un plan único para ti. Por favor espera...
+                    {t('diets_onboarding.generate_wait')}
                   </p>
                 )}
               </div>

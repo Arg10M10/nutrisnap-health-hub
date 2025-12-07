@@ -452,6 +452,44 @@
     "toast_success": "All set! Welcome to Calorel.",
     "toast_error": "There was an error saving your profile."
   },
+  "diets_onboarding": {
+    "step1_title": "Activity Level",
+    "step2_title": "Preferences",
+    "step3_title": "Final Details",
+    "step1_desc": "How much do you move in your day-to-day?",
+    "step2_desc": "Select if you have any preferences or restrictions.",
+    "step2_tip": "If you don't have any, you can continue.",
+    "step3_desc": "Adjust the plan to your lifestyle.",
+    "cooking_time": "Cooking Time",
+    "budget": "Budget",
+    "next": "Next",
+    "generate_loading": "Generating with AI... (may take 1 min)",
+    "generate": "Generate my Plan",
+    "generate_wait": "The AI is creating a unique plan for you. Please wait...",
+    "toast_success": "Your personalized diet plan is ready!",
+    "toast_error_title": "Could not generate plan",
+    "preferences": {
+      "vegetarian": "Vegetarian",
+      "lactose_free": "Lactose-free",
+      "sugar_free": "Sugar-free",
+      "gluten_free": "Gluten-free"
+    },
+    "activity": {
+      "sedentary": "Sedentary",
+      "sedentary_desc": "Little to no exercise",
+      "light": "Light",
+      "light_desc": "Light exercise 1-3 days/week",
+      "moderate": "Moderate",
+      "moderate_desc": "Moderate exercise 3-5 days/week",
+      "high": "High",
+      "high_desc": "Heavy exercise 6-7 days/week"
+    },
+    "levels": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
+  },
   "subscribe": {
     "title": "Go Premium",
     "trial_tab": "3-Day Free Trial",
