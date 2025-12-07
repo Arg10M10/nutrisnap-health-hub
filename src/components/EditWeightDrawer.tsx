@@ -70,7 +70,6 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
       if (historyError) throw historyError;
     },
     onSuccess: async () => {
-      toast.success(t('edit_weight.save') + '!');
       await Promise.all([
         refetchProfile(),
         queryClient.invalidateQueries({ queryKey: ['weight_history_all', user?.id] }),

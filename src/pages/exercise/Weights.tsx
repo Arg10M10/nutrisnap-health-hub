@@ -58,11 +58,8 @@ const Weights = () => {
       if (error) throw error;
       return { calories_burned };
     },
-    onSuccess: ({ calories_burned }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['exercise_entries', user?.id] });
-      toast.success(t('weights.saved_toast_title'), {
-        description: t('weights.saved_toast_desc', { calories: calories_burned }),
-      });
       navigate('/');
     },
     onError: (error) => {

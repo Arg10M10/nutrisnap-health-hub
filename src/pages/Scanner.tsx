@@ -141,7 +141,6 @@ const Scanner = () => {
       logUsage('food_scan');
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       navigate('/');
-      toast.info('Análisis iniciado...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
       supabase.functions.invoke("analyze-food", {
         body: { entry_id: newEntry.id, imageData: imageData },
       }).then(({ error }) => {

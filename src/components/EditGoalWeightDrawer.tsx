@@ -39,7 +39,6 @@ const EditGoalWeightDrawer = ({ isOpen, onClose, currentGoalWeight }: EditGoalWe
       if (error) throw error;
     },
     onSuccess: async () => {
-      toast.success('¡Peso objetivo actualizado con éxito!');
       await refetchProfile();
       queryClient.invalidateQueries({ queryKey: ['profiles', user?.id] });
       onClose();

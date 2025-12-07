@@ -96,7 +96,7 @@ const AppRoutes = () => {
 
   const shellClass = "relative min-h-screen"; 
 
-  const showSnow = snowEnabled && location.pathname !== "/scanner";
+  const showSnow = snowEnabled && location.pathname !== "/scanner" && !!profile?.onboarding_completed;
 
   if (fullScreenRoutes.includes(location.pathname)) {
     return (

@@ -34,7 +34,6 @@ const ManualExercise = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['exercise_entries', user?.id] });
-      toast.success(t('manual_exercise.saved_toast'));
       navigate('/');
     },
     onError: (error) => {

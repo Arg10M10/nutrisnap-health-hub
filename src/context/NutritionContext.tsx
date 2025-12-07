@@ -241,7 +241,6 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       status: 'completed' as const,
     };
     addEntryMutation.mutate(newEntry);
-    toast.success(`${result.foodName} añadido a tu diario.`);
   };
 
   const addWaterGlass = (date: Date) => waterMutation.mutate({ action: 'add', date });

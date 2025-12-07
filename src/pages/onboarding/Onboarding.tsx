@@ -68,7 +68,6 @@ const Onboarding = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success(t('onboarding.toast_success'));
       navigate('/subscribe');
     },
     onError: (error) => {

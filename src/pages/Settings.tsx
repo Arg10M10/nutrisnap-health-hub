@@ -40,7 +40,6 @@ const Settings = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    toast.success(t('toasts.sign_out_success'));
   };
 
   const handleNotImplemented = () => {

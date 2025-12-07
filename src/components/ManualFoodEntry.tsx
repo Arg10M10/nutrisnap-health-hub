@@ -54,7 +54,6 @@ const ManualFoodEntry = () => {
     onSuccess: ({ newEntry, formValues }) => {
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       navigate('/');
-      toast.info('Análisis manual iniciado...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
       form.reset();
       
       supabase.functions.invoke('analyze-text-food', {

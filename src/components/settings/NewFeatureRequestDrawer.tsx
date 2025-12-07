@@ -44,7 +44,6 @@ const NewFeatureRequestDrawer = ({ isOpen, onClose }: NewFeatureRequestDrawerPro
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feature_requests'] });
-      toast.success(t('new_request_drawer.toast_success'));
       form.reset();
       onClose();
     },

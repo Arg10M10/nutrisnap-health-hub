@@ -43,7 +43,6 @@ const WriteExercise = () => {
       logUsage('exercise_ai');
       queryClient.invalidateQueries({ queryKey: ['exercise_entries', user?.id] });
       navigate('/');
-      toast.info('Análisis de ejercicio iniciado...', { description: 'Verás los resultados en la pantalla de inicio pronto.' });
 
       supabase.functions.invoke('estimate-exercise-calories', {
         body: { entry_id: newEntry.id, description, weight: profile?.weight ?? null },
