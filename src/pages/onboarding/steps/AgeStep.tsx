@@ -1,5 +1,10 @@
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useTranslation } from 'react-i18next';
 
 interface AgeStepProps {
@@ -9,20 +14,25 @@ interface AgeStepProps {
 
 export const AgeStep = ({ age, setAge }: AgeStepProps) => {
   const { t } = useTranslation();
+  const ages = Array.from({ length: 88 }, (_, i) => i + 13); // Ages 13 to 100
+
   return (
     <div className="space-y-2">
-      <Label htmlFor="age" className="text-lg font-semibold text-center block">{t('onboarding.age.label')}</Label>
-      <div className="flex items-baseline gap-2 justify-center">
-        <Input
-          id="age"
-          type="number"
-          value={age ?? ''}
-          onChange={(e) => setAge(parseInt(e.target.value, 10) || 0)}
-          className="w-32 text-center text-2xl font-bold h-14"
-          autoFocus
-        />
-        <span className="text-lg text-muted-foreground">{t('onboarding.age.unit')}</span>
-      </div>
+      <Select
+        value={age ? String(age) : ''}
+        onValueChange={(value) => setAge(Number(value))}
+      >
+        <SelectTrigger className="w-full h-14 text-lg">
+          <SelectValue placeholder={t('onboarding.age.label')} />
+        </SelectTrigger>
+        <SelectContent>
+          {ages.map((a) => (
+            <SelectItem key={a} value={String(a)}>
+              {a} {t('onboarding.age.unit')}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };
