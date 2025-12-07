@@ -61,6 +61,7 @@ const WheelPicker = ({ min, max, value, onValueChange, className }: WheelPickerP
         ref={scrollRef}
         onScroll={handleScroll}
         className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
+        style={{ overscrollBehavior: 'contain' }}
       >
         {/* Padding to allow first and last items to be centered */}
         <div style={{ height: `calc(50% - ${ITEM_HEIGHT / 2}px)` }} />

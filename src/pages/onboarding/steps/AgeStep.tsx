@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import WheelPicker from '@/components/WheelPicker';
 import { useTranslation } from 'react-i18next';
 
@@ -9,14 +10,22 @@ interface AgeStepProps {
 export const AgeStep = ({ age, setAge }: AgeStepProps) => {
   const { t } = useTranslation();
 
+  // If age is null, set a default value to enable the continue button.
+  useEffect(() => {
+    if (age === null) {
+      setAge(18);
+    }
+  }, [age, setAge]);
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-center">
         <WheelPicker
           min={13}
           max={100}
-          value={age ?? 18} // Default to 18 if null
+          value={age ?? 18} // Keep providing a default for the picker's internal state
           onValueChange={setAge}
+          className="w-24"
         />
         <span className="text-2xl text-muted-foreground font-semibold ml-2">{t('onboarding.age.unit')}</span>
       </div>
