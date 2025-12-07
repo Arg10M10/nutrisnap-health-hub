@@ -312,7 +312,6 @@
     "change_button": "Cambiar objetivo",
     "current_weight": "Peso actual",
     "height": "Altura",
-    "dob": "Fecha de nacimiento",
     "gender": "Género",
     "updated_today": "Límite de hoy alcanzado"
   },
@@ -352,7 +351,7 @@
     "description": "Haz los cambios que necesites y guárdalos.",
     "first_name": "Nombre",
     "last_name": "Apellido",
-    "dob": "Fecha de Nacimiento",
+    "age": "Edad",
     "gender": "Género",
     "gender_placeholder": "Selecciona tu género",
     "gender_female": "Femenino",
@@ -379,7 +378,7 @@
     "first_name_required": "El nombre es requerido.",
     "last_name_required": "El apellido es requerido.",
     "gender_required": "El género es requerido.",
-    "dob_required": "La fecha de nacimiento es requerida.",
+    "age_required": "La edad es requerida y debe ser de al menos 13 años.",
     "goal_required": "El objetivo es requerido.",
     "height_required": "La altura es requerida.",
     "weight_required": "El peso es requerido.",
@@ -422,12 +421,13 @@
       "ft": "ft",
       "lbs": "lbs"
     },
-    "dob": {
-      "title": "¿Cuándo naciste?",
-      "description": "Saber tu fecha de nacimiento nos ayuda a verificar tu edad.",
-      "label": "Tu fecha de nacimiento",
-      "placeholder": "Selecciona tu fecha de nacimiento",
-      "disclaimer": "Usamos tu fecha de nacimiento para personalizar tus metas y verificar tu edad."
+    "motivation": {
+      "title": "¿Qué te gustaría conseguir?",
+      "description": "Esto nos ayuda a personalizar tu experiencia.",
+      "healthier": "Comer y vivir más sano",
+      "energy": "Aumentar mi energía y mi estado de ánimo",
+      "motivated": "Mantenerme motivado",
+      "feel_better": "Sentirme mejor"
     },
     "goal": {
       "title": "¿Cuál es tu objetivo principal?",

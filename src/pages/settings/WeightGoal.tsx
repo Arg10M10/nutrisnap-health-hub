@@ -1,8 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { format, isToday, startOfDay } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { isToday, startOfDay } from 'date-fns';
 import { useAuth } from '@/context/AuthContext';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -62,10 +61,6 @@ const WeightGoal = () => {
     setIsWeightDrawerOpen(true);
   };
 
-  const formattedDob = profile?.date_of_birth 
-    ? format(new Date(profile.date_of_birth), 'P', { locale: es })
-    : '-';
-
   return (
     <PageLayout>
       <div className="space-y-8">
@@ -96,7 +91,6 @@ const WeightGoal = () => {
               disabledText={t('weight_goal.updated_today')}
             />
             <InfoRow label={t('weight_goal.height')} value={`${profile?.height || '-'} cm`} onEdit={() => setIsEditDrawerOpen(true)} />
-            <InfoRow label={t('weight_goal.dob')} value={formattedDob} onEdit={() => setIsEditDrawerOpen(true)} />
             <InfoRow label={t('weight_goal.gender')} value={profile?.gender || '-'} onEdit={() => setIsEditDrawerOpen(true)} />
           </CardContent>
         </Card>

@@ -312,7 +312,6 @@
     "change_button": "Change goal",
     "current_weight": "Current weight",
     "height": "Height",
-    "dob": "Date of birth",
     "gender": "Gender",
     "updated_today": "Today's limit reached"
   },
@@ -352,7 +351,7 @@
     "description": "Make the changes you need and save them.",
     "first_name": "First Name",
     "last_name": "Last Name",
-    "dob": "Date of Birth",
+    "age": "Age",
     "gender": "Gender",
     "gender_placeholder": "Select your gender",
     "gender_female": "Female",
@@ -379,7 +378,7 @@
     "first_name_required": "First name is required.",
     "last_name_required": "Last name is required.",
     "gender_required": "Gender is required.",
-    "dob_required": "Date of birth is required.",
+    "age_required": "Age is required and must be at least 13.",
     "goal_required": "Goal is required.",
     "height_required": "Height is required.",
     "weight_required": "Weight is required.",
@@ -422,12 +421,13 @@
       "ft": "ft",
       "lbs": "lbs"
     },
-    "dob": {
-      "title": "When were you born?",
-      "description": "Knowing your date of birth helps us verify your age.",
-      "label": "Your date of birth",
-      "placeholder": "Select your date of birth",
-      "disclaimer": "We use your date of birth to customize your goals and verify your age."
+    "motivation": {
+      "title": "What would you like to achieve?",
+      "description": "This helps us personalize your experience.",
+      "healthier": "Eat and live healthier",
+      "energy": "Increase my energy and mood",
+      "motivated": "Stay motivated",
+      "feel_better": "Feel better"
     },
     "goal": {
       "title": "What is your main goal?",

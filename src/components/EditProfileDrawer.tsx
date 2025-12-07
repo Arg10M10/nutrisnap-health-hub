@@ -6,7 +6,6 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import { differenceInYears } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -23,7 +22,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
-import DatePicker from '@/components/DatePicker';
 
 const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
   const { profile, user, refetchProfile } = useAuth();
@@ -31,7 +29,7 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
   const profileSchema = z.object({
     gender: z.string().min(1, t('zod.gender_required')),
-    date_of_birth: z.date({ required_error: t('zod.dob_required') }),
+    age: z.coerce.number().min(13, t('zod.age_required' as any)),
     goal: z.string().min(1, t('zod.goal_required')),
     height: z.coerce.number().min(1, t('zod.height_required')),
     weight: z.coerce.number().min(1, t('zod.weight_required')),
@@ -48,7 +46,7 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     if (profile && isOpen) {
       form.reset({
         gender: profile.gender || '',
-        date_of_birth: profile.date_of_birth ? new Date(profile.date_of_birth) : new Date('2000-01-01'),
+        age: profile.age || 0,
         goal: profile.goal || '',
         height: profile.height || 0,
         weight: profile.weight || 0,
@@ -61,15 +59,11 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     mutationFn: async (values: ProfileFormValues) => {
       if (!user) throw new Error('User not found');
       
-      const isoDate = values.date_of_birth.toISOString().split('T')[0];
-      const age = differenceInYears(new Date(), values.date_of_birth);
-
       const { error } = await supabase
         .from('profiles')
         .update({
           gender: values.gender,
-          date_of_birth: isoDate,
-          age,
+          age: values.age,
           goal: values.goal,
           units: 'metric',
           height: values.height,
@@ -104,16 +98,10 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pb-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField control={form.control} name="date_of_birth" render={({ field }) => (
+                <FormField control={form.control} name="age" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('edit_profile.dob')}</FormLabel>
-                    <FormControl>
-                      <DatePicker
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder={t('edit_profile.dob')}
-                      />
-                    </FormControl>
+                    <FormLabel>{t('edit_profile.age' as any)}</FormLabel>
+                    <FormControl><Input type="number" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />

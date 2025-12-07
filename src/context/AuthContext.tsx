@@ -14,7 +14,7 @@ export interface Profile {
   weight: number | null;
   height: number | null;
   units: string | null;
-  date_of_birth: string | null;
+  motivation: string | null;
   goal: string | null;
   goal_weight: number | null;
   starting_weight: number | null;

@@ -11,7 +11,7 @@ import { GenderStep } from './steps/GenderStep';
 import { AgeStep } from './steps/AgeStep';
 import { ExperienceStep } from './steps/ExperienceStep';
 import { MetricsStep } from './steps/MetricsStep';
-import { DobStep } from './steps/DobStep';
+import { MotivationStep } from './steps/MotivationStep';
 import { GoalStep } from './steps/GoalStep';
 import { GoalWeightStep } from './steps/GoalWeightStep';
 import { FinalStep } from './steps/FinalStep';
@@ -30,7 +30,7 @@ const Onboarding = () => {
     units: 'metric' as 'metric' | 'imperial',
     weight: null as number | null,
     height: null as number | null,
-    dob: null as Date | null,
+    motivation: null as string | null,
     goal: null as string | null,
     goalWeight: null as number | null,
   });
@@ -53,7 +53,7 @@ const Onboarding = () => {
           weight: formData.weight,
           starting_weight: formData.weight,
           height: formData.height,
-          date_of_birth: formData.dob ? formData.dob.toISOString().split('T')[0] : null,
+          motivation: formData.motivation,
           goal: formData.goal,
           goal_weight: formData.goalWeight,
           onboarding_completed: true,
@@ -121,10 +121,10 @@ const Onboarding = () => {
       canContinue: formData.weight !== null && formData.height !== null,
     },
     {
-      title: t('onboarding.dob.title'),
-      description: t('onboarding.dob.description'),
-      content: <DobStep dob={formData.dob} setDob={(v) => updateFormData('dob', v)} />,
-      canContinue: !!formData.dob,
+      title: t('onboarding.motivation.title'),
+      description: t('onboarding.motivation.description'),
+      content: <MotivationStep motivation={formData.motivation} setMotivation={(v) => updateFormData('motivation', v)} />,
+      canContinue: !!formData.motivation,
     },
     {
       title: t('onboarding.goal.title'),
