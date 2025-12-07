@@ -1,7 +1,9 @@
-import { Input } from '@/components/ui/input';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
 import { Label } from '@/components/ui/label';
+import WheelPicker from '@/components/WheelPicker';
+import DecimalWheelPicker from '@/components/DecimalWheelPicker';
+import { useEffect } from 'react';
 
 interface MetricsStepProps {
   units: 'metric' | 'imperial';
@@ -15,6 +17,16 @@ interface MetricsStepProps {
 export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHeight }: MetricsStepProps) => {
   const { t } = useTranslation();
 
+  // Set default values if null to enable continue button
+  useEffect(() => {
+    if (weight === null) {
+      setWeight(units === 'metric' ? 70 : 150);
+    }
+    if (height === null) {
+      setHeight(units === 'metric' ? 170 : 67);
+    }
+  }, []);
+
   const handleUnitChange = (newUnit: 'metric' | 'imperial') => {
     if (!newUnit || newUnit === units) return;
 
@@ -27,8 +39,8 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
 
     if (height !== null) {
       const newHeight = newUnit === 'imperial'
-        ? Math.round(height / 2.54)
-        : Math.round(height * 2.54);
+        ? Math.round(height / 2.54) // cm to inches
+        : Math.round(height * 2.54); // inches to cm
       setHeight(newHeight);
     }
 
@@ -51,29 +63,27 @@ export const MetricsStep = ({ units, setUnits, weight, setWeight, height, setHei
 
       <div className="space-y-8">
         <div>
-          <Label className="text-lg font-semibold text-center block mb-4">{t('onboarding.metrics.height')}</Label>
-          <div className="flex items-baseline gap-2 justify-center">
-            <Input
-                type="number"
-                value={height ?? ''}
-                onChange={(e) => setHeight(parseInt(e.target.value, 10) || 0)}
-                className="w-32 text-center text-2xl font-bold h-14"
+          <Label className="text-lg font-semibold text-center block mb-2">{t('onboarding.metrics.height')}</Label>
+          <div className="flex items-center justify-center">
+            <WheelPicker
+              min={isMetric ? 100 : 40}
+              max={isMetric ? 250 : 100}
+              value={height}
+              onValueChange={setHeight}
+              className="w-24"
             />
-            <span className="text-lg text-muted-foreground">{isMetric ? t('onboarding.metrics.cm') : 'in'}</span>
+            <span className="text-2xl text-muted-foreground font-semibold ml-2">{isMetric ? t('onboarding.metrics.cm') : 'in'}</span>
           </div>
         </div>
         <div>
-          <Label className="text-lg font-semibold text-center block mb-4">{t('onboarding.metrics.weight')}</Label>
-          <div className="flex items-baseline gap-2 justify-center">
-            <Input
-                type="number"
-                step={isMetric ? "0.1" : "1"}
-                value={weight ?? ''}
-                onChange={(e) => setWeight(parseFloat(e.target.value) || 0)}
-                className="w-32 text-center text-2xl font-bold h-14"
-            />
-            <span className="text-lg text-muted-foreground">{isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}</span>
-          </div>
+          <Label className="text-lg font-semibold text-center block mb-2">{t('onboarding.metrics.weight')}</Label>
+          <DecimalWheelPicker
+            min={isMetric ? 30 : 60}
+            max={isMetric ? 200 : 450}
+            value={weight}
+            onValueChange={setWeight}
+            unit={isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}
+          />
         </div>
       </div>
     </div>

@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
+import WheelPicker from './WheelPicker';
+import DecimalWheelPicker from './DecimalWheelPicker';
 
 const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
   const { profile, user, refetchProfile } = useAuth();
@@ -46,10 +47,10 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     if (profile && isOpen) {
       form.reset({
         gender: profile.gender || '',
-        age: profile.age || 0,
+        age: profile.age || 18,
         goal: profile.goal || '',
-        height: profile.height || 0,
-        weight: profile.weight || 0,
+        height: profile.height || 170,
+        weight: profile.weight || 70,
         previous_apps_experience: profile.previous_apps_experience || '',
       });
     }
@@ -96,43 +97,84 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         </DrawerHeader>
         <div className="overflow-y-auto px-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pb-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField control={form.control} name="age" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('edit_profile.age' as any)}</FormLabel>
-                    <FormControl><Input type="number" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="gender" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('edit_profile.gender')}</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('edit_profile.gender_placeholder')} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Female">{t('edit_profile.gender_female')}</SelectItem>
-                        <SelectItem value="Male">{t('edit_profile.gender_male')}</SelectItem>
-                        <SelectItem value="Prefer not to say">{t('edit_profile.gender_not_say')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </div>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-4">
+              <FormField control={form.control} name="age" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-center block">{t('edit_profile.age' as any)}</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center justify-center">
+                      <WheelPicker
+                        min={13}
+                        max={100}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        className="w-24"
+                      />
+                      <span className="text-lg text-muted-foreground font-semibold ml-2">años</span>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="height" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-center block">{t('edit_profile.height')}</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center justify-center">
+                      <WheelPicker
+                        min={100}
+                        max={250}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        className="w-24"
+                      />
+                      <span className="text-lg text-muted-foreground font-semibold ml-2">cm</span>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="weight" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-center block">{t('edit_profile.weight')}</FormLabel>
+                  <FormControl>
+                    <DecimalWheelPicker
+                      min={30}
+                      max={200}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      unit="kg"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="gender" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('edit_profile.gender')}</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger><SelectValue placeholder={t('edit_profile.gender_placeholder')} /></SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Female">{t('edit_profile.gender_female')}</SelectItem>
+                      <SelectItem value="Male">{t('edit_profile.gender_male')}</SelectItem>
+                      <SelectItem value="Prefer not to say">{t('edit_profile.gender_not_say')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )} />
 
               <FormField control={form.control} name="goal" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('edit_profile.goal')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('edit_profile.goal_placeholder')} />
-                      </SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder={t('edit_profile.goal_placeholder')} /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="lose_weight">{t('edit_profile.goal_lose')}</SelectItem>
@@ -144,31 +186,12 @@ const EditProfileDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 </FormItem>
               )} />
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField control={form.control} name="height" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('edit_profile.height')}</FormLabel>
-                    <FormControl><Input type="number" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="weight" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('edit_profile.weight')}</FormLabel>
-                    <FormControl><Input type="number" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </div>
-
               <FormField control={form.control} name="previous_apps_experience" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('edit_profile.experience')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('edit_profile.experience_placeholder')} />
-                      </SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder={t('edit_profile.experience_placeholder')} /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="Yes, I've used several">{t('edit_profile.experience_several')}</SelectItem>

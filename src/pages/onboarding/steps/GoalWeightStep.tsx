@@ -1,6 +1,7 @@
-import { Input } from '@/components/ui/input';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
+import DecimalWheelPicker from '@/components/DecimalWheelPicker';
+import { useEffect } from 'react';
 
 interface GoalWeightStepProps {
   goalWeight: number | null;
@@ -12,6 +13,13 @@ interface GoalWeightStepProps {
 export const GoalWeightStep = ({ goalWeight, setGoalWeight, units, setUnits }: GoalWeightStepProps) => {
   const { t } = useTranslation();
   const isMetric = units === 'metric';
+
+  // Set a default value if null
+  useEffect(() => {
+    if (goalWeight === null) {
+      setGoalWeight(isMetric ? 65 : 140);
+    }
+  }, []);
 
   const handleUnitChange = (newUnit: 'metric' | 'imperial') => {
     if (!newUnit || newUnit === units) return;
@@ -38,17 +46,13 @@ export const GoalWeightStep = ({ goalWeight, setGoalWeight, units, setUnits }: G
         <ToggleGroupItem value="imperial" className="h-12 text-base">{t('onboarding.metrics.imperial')}</ToggleGroupItem>
       </ToggleGroup>
       <div className="space-y-4">
-        <div className="flex items-baseline gap-2 justify-center">
-            <Input
-                type="number"
-                step={isMetric ? "0.1" : "1"}
-                value={goalWeight ?? ''}
-                onChange={(e) => setGoalWeight(parseFloat(e.target.value) || 0)}
-                className="w-40 text-center text-4xl font-bold h-20"
-                autoFocus
-            />
-            <span className="text-2xl text-muted-foreground">{isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}</span>
-        </div>
+        <DecimalWheelPicker
+          min={isMetric ? 30 : 60}
+          max={isMetric ? 200 : 450}
+          value={goalWeight}
+          onValueChange={setGoalWeight}
+          unit={isMetric ? t('onboarding.metrics.kg') : t('onboarding.metrics.lbs')}
+        />
         <p className="text-sm text-muted-foreground text-center">
           {t('onboarding.goal_weight.disclaimer')}
         </p>
