@@ -16,7 +16,6 @@ import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import EditProfileDrawer from "@/components/EditProfileDrawer";
 import PageLayout from "@/components/PageLayout";
 import { SettingsCategory } from "@/components/settings/SettingsCategory";
 import { SettingsItem } from "@/components/settings/SettingsItem";
@@ -32,7 +31,6 @@ const TIKTOK_URL = "https://www.tiktok.com/@calorel.app?_r=1&_t=ZS-920XYSQSag5";
 
 const Settings = () => {
   const { profile, signOut } = useAuth();
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -40,10 +38,6 @@ const Settings = () => {
 
   const handleSignOut = async () => {
     await signOut();
-  };
-
-  const handleNotImplemented = () => {
-    toast.info(t('toasts.coming_soon_title'), { description: t('toasts.coming_soon_desc') });
   };
 
   const openExternal = (url: string) => {
@@ -130,7 +124,7 @@ const Settings = () => {
 
         {/* Account Category */}
         <SettingsCategory title={t('settings.account.title')}>
-          <SettingsItem icon={<HeartPulse size={20} />} label={t('settings.account.personalDetails')} onClick={() => setIsEditDrawerOpen(true)} />
+          <SettingsItem icon={<HeartPulse size={20} />} label={t('settings.account.personalDetails')} onClick={() => navigate('/settings/personal-details')} />
           <SettingsItem icon={<SlidersHorizontal size={20} />} label={t('settings.account.preferences')} onClick={() => navigate('/settings/preferences')} />
           <SettingsItem icon={<Languages size={20} />} label={t('settings.language')} onClick={() => setIsLanguageDrawerOpen(true)} />
           <div className="flex flex-col gap-1 py-4">
@@ -214,7 +208,6 @@ const Settings = () => {
         </SettingsCategory>
 
       </div>
-      <EditProfileDrawer isOpen={isEditDrawerOpen} onClose={() => setIsEditDrawerOpen(false)} />
       <LanguageDrawer isOpen={isLanguageDrawerOpen} onClose={() => setIsLanguageDrawerOpen(false)} />
     </PageLayout>
   );

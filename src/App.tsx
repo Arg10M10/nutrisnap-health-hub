@@ -32,6 +32,7 @@ import WeightGoal from "./pages/settings/WeightGoal";
 import RingColors from "./pages/settings/RingColors";
 import RequestFeature from "./pages/settings/RequestFeature";
 import EditProfile from "./pages/settings/EditProfile";
+import PersonalDetails from "./pages/settings/PersonalDetails";
 import Snowfall from "./components/Snowfall";
 import LightBackground from "./components/LightBackground";
 import { SnowProvider, useSnow } from "./context/SnowContext";
@@ -91,6 +92,7 @@ const AppRoutes = () => {
     "/settings/ring-colors",
     "/settings/request-feature",
     "/settings/edit-profile",
+    "/settings/personal-details",
     "/subscribe",
   ];
 
@@ -119,6 +121,7 @@ const AppRoutes = () => {
               <Route path="/settings/ring-colors" element={<RingColors />} />
               <Route path="/settings/request-feature" element={<RequestFeature />} />
               <Route path="/settings/edit-profile" element={<EditProfile />} />
+              <Route path="/settings/personal-details" element={<PersonalDetails />} />
               <Route path="/subscribe" element={<Subscribe />} />
             </Routes>
           </AnimatePresence>
