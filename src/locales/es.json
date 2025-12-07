@@ -258,13 +258,20 @@
   "ai_suggestions": {
     "title": "Sugerencias de Metas por IA",
     "subtitle": "Responde unas preguntas para obtener un plan personalizado.",
-    "workouts_label": "¿Cuántas veces entrenas por semana?",
-    "goal_weight_label": "¿Cuál es tu peso objetivo (kg)?",
-    "rate_label": "Ritmo semanal deseado",
+    "workouts_label": "Frecuencia de Entrenamiento",
+    "workouts_per_week": "entrenos/sem",
+    "workouts_light": "Ligero",
+    "workouts_moderate": "Moderado",
+    "workouts_active": "Activo",
+    "workouts_very_active": "Muy Activo",
+    "goal_weight_label": "Peso Objetivo",
+    "rate_label": "Ritmo Semanal Deseado",
     "week": "semana",
-    "generate": "Generar Plan",
+    "generate": "Generar con IA",
     "back": "Atrás",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "summary_title": "Confirma tus Datos",
+    "disclaimer": "Esto usará uno de tus créditos de IA diarios. Las nuevas metas se aplicarán a tu perfil."
   },
   "bmi_calculator": {
     "title": "Tu IMC",

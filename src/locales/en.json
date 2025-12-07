@@ -258,13 +258,20 @@
   "ai_suggestions": {
     "title": "AI Goal Suggestions",
     "subtitle": "Answer a few questions to get a personalized plan.",
-    "workouts_label": "How many times do you work out per week?",
-    "goal_weight_label": "What is your goal weight (kg)?",
-    "rate_label": "Desired weekly rate",
+    "workouts_label": "Workout Frequency",
+    "workouts_per_week": "workouts/week",
+    "workouts_light": "Light",
+    "workouts_moderate": "Moderate",
+    "workouts_active": "Active",
+    "workouts_very_active": "Very Active",
+    "goal_weight_label": "Goal Weight",
+    "rate_label": "Desired Weekly Rate",
     "week": "week",
-    "generate": "Generate Plan",
+    "generate": "Generate with AI",
     "back": "Back",
-    "continue": "Continue"
+    "continue": "Continue",
+    "summary_title": "Confirm Your Details",
+    "disclaimer": "This will use one of your daily AI credits. The new goals will be applied to your profile."
   },
   "bmi_calculator": {
     "title": "Your BMI",
