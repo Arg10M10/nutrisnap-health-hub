@@ -1,5 +1,6 @@
 import { useRef, useEffect, UIEvent } from 'react';
 import { cn } from '@/lib/utils';
+import { useDebouncedCallback } from 'use-debounce';
 
 interface WheelPickerProps<T extends string | number> {
   items: T[];
@@ -13,6 +14,12 @@ const ITEM_HEIGHT = 48; // h-12 in tailwind
 const WheelPicker = <T extends string | number>({ items, value, onValueChange, className }: WheelPickerProps<T>) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const debouncedOnValueChange = useDebouncedCallback((newValue: T) => {
+    if (newValue !== value) {
+      onValueChange(newValue);
+    }
+  }, 50);
+
   // Scroll to the initial value when the component mounts or items change
   useEffect(() => {
     if (scrollRef.current && value !== null) {
@@ -21,16 +28,7 @@ const WheelPicker = <T extends string | number>({ items, value, onValueChange, c
         scrollRef.current.scrollTop = index * ITEM_HEIGHT;
       }
     }
-  }, [items]); // Run only once on mount or when items change
-
-  const handleScroll = (e: UIEvent<HTMLDivElement>) => {
-    const scrollTop = e.currentTarget.scrollTop;
-    const selectedIndex = Math.round(scrollTop / ITEM_HEIGHT);
-    const newValue = items[selectedIndex];
-    if (newValue !== undefined && newValue !== value) {
-      onValueChange(newValue);
-    }
-  };
+  }, [items]);
 
   // When the value prop changes from outside, scroll to it
   useEffect(() => {
@@ -47,6 +45,22 @@ const WheelPicker = <T extends string | number>({ items, value, onValueChange, c
       }
     }
   }, [value, items]);
+  
+  // Flush any pending updates when the component unmounts
+  useEffect(() => {
+    return () => {
+      debouncedOnValueChange.flush();
+    };
+  }, [debouncedOnValueChange]);
+
+  const handleScroll = (e: UIEvent<HTMLDivElement>) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    const selectedIndex = Math.round(scrollTop / ITEM_HEIGHT);
+    const newValue = items[selectedIndex];
+    if (newValue !== undefined) {
+      debouncedOnValueChange(newValue);
+    }
+  };
 
   return (
     <div className={cn("h-60 relative", className)}>
