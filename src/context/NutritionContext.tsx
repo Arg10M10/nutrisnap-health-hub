@@ -360,7 +360,11 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     setNewlyUnlockedBadge(badgeInfo);
   };
 
+  const isLoading = isFoodLoading || isWaterLoading || isExerciseLoading;
+
   useEffect(() => {
+    if (isLoading) return;
+
     const { streak } = streakData;
     const { waterStreak } = waterStreakData;
 
@@ -396,7 +400,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       triggerBadgeUnlock(badgeToShow);
       setUnlockedBadges(prev => [...new Set([...prev, ...newlyUnlockedIds])]);
     }
-  }, [streakData, waterStreakData, weightLost, unlockedBadges, setUnlockedBadges, t]);
+  }, [isLoading, streakData, waterStreakData, weightLost, unlockedBadges, setUnlockedBadges, t]);
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 
@@ -409,7 +413,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       isWaterUpdating: waterMutation.isPending,
       ...streakData,
       waterStreak: waterStreakData.waterStreak,
-      isLoading: isFoodLoading || isWaterLoading || isExerciseLoading,
+      isLoading,
       unlockedBadge: newlyUnlockedBadge,
       closeBadgeModal,
       triggerBadgeUnlock
