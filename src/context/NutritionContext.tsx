@@ -362,14 +362,17 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
   const isLoading = isFoodLoading || isWaterLoading || isExerciseLoading;
 
+  const streak = streakData.streak;
+  const waterStreak = waterStreakData.waterStreak;
+
   useEffect(() => {
     if (isLoading || newlyUnlockedBadge) return;
 
     const allBadgeChecks = [
-      ...streakBadges.map(b => ({ ...b, progress: streakData.streak, reqKey: 'days' })),
-      ...waterBadges.map(b => ({ ...b, progress: waterStreakData.waterStreak, reqKey: 'days' })),
-      ...(weightLost > 0 ? weightLossBadges.map(b => ({ ...b, progress: weightLost, reqKey: 'kg' })) : [])
-    ].sort((a, b) => (b.days || b.kg) - (a.days || a.kg)); // Sort by requirement descending
+      ...streakBadges.map(b => ({ ...b, progress: streak, reqKey: 'days' as const })),
+      ...waterBadges.map(b => ({ ...b, progress: waterStreak, reqKey: 'days' as const })),
+      ...(weightLost > 0 ? weightLossBadges.map(b => ({ ...b, progress: weightLost, reqKey: 'kg' as const })) : [])
+    ].sort((a, b) => (b.days || b.kg || 0) - (a.days || a.kg || 0));
 
     const firstNewBadge = allBadgeChecks.find(badge => 
         badge.progress >= badge[badge.reqKey] && !unlockedBadges.includes(badge.id)
@@ -385,7 +388,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         triggerBadgeUnlock(badgeInfo);
         setUnlockedBadges(prev => [...new Set([...prev, firstNewBadge.id])]);
     }
-  }, [isLoading, streakData, waterStreakData, weightLost, unlockedBadges, setUnlockedBadges, t, newlyUnlockedBadge]);
+  }, [isLoading, streak, waterStreak, weightLost, unlockedBadges, setUnlockedBadges, t, newlyUnlockedBadge]);
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 
@@ -396,8 +399,9 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       addWaterGlass,
       removeWaterGlass,
       isWaterUpdating: waterMutation.isPending,
-      ...streakData,
-      waterStreak: waterStreakData.waterStreak,
+      streak: streak,
+      waterStreak: waterStreak,
+      streakDays: streakData.streakDays,
       isLoading,
       unlockedBadge: newlyUnlockedBadge,
       closeBadgeModal,
