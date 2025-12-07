@@ -372,21 +372,23 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       ...streakBadges.map(b => ({ ...b, progress: streak, reqKey: 'days' as const })),
       ...waterBadges.map(b => ({ ...b, progress: waterStreak, reqKey: 'days' as const })),
       ...(weightLost > 0 ? weightLossBadges.map(b => ({ ...b, progress: weightLost, reqKey: 'kg' as const })) : [])
-    ].sort((a, b) => (b.days || b.kg || 0) - (a.days || a.kg || 0));
+    ].sort((a, b) => (a.days || a.kg || 0) - (b.days || b.kg || 0));
 
-    const firstNewBadge = allBadgeChecks.find(badge => 
-        badge.progress >= badge[badge.reqKey] && !unlockedBadges.includes(badge.id)
-    );
+    for (const badge of allBadgeChecks) {
+      const isUnlocked = badge.progress >= badge[badge.reqKey];
+      const isNew = !unlockedBadges.includes(badge.id);
 
-    if (firstNewBadge) {
+      if (isUnlocked && isNew) {
         const badgeInfo = {
-            name: t(`badge_names.${firstNewBadge.id}.name`),
-            description: t(`badge_names.${firstNewBadge.id}.desc`),
-            image: firstNewBadge.image,
+            name: t(`badge_names.${badge.id}.name`),
+            description: t(`badge_names.${badge.id}.desc`),
+            image: badge.image,
         };
 
         triggerBadgeUnlock(badgeInfo);
-        setUnlockedBadges(prev => [...new Set([...prev, firstNewBadge.id])]);
+        setUnlockedBadges(prev => [...new Set([...prev, badge.id])]);
+        return; 
+      }
     }
   }, [isLoading, streak, waterStreak, weightLost, unlockedBadges, setUnlockedBadges, t, newlyUnlockedBadge]);
 
