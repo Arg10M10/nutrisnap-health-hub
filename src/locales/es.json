@@ -160,11 +160,11 @@
     "water_3": { "name": "Hidratación Constante", "desc": "Racha de 3 días de agua." },
     "water_6": { "name": "Hidratación Pro", "desc": "Racha de 6 días de agua." },
     "water_10": { "name": "Maestro del Agua", "desc": "Racha de 10 días de agua." },
-    "weight_1": { "name": "Primer Kilo", "desc": "Pierde tu primer kilogramo." },
-    "weight_10": { "name": "Meta 10kg", "desc": "Alcanza 10kg perdidos." },
-    "weight_20": { "name": "Meta 20kg", "desc": "Has perdido 20kg." },
-    "weight_50": { "name": "Meta 50kg", "desc": "¡Increíble! 50kg menos." },
-    "weight_70": { "name": "Meta 70kg", "desc": "Un logro monumental: 70kg." }
+    "weight_1": { "name": "Primer Kilogramo", "desc": "Pierde tu primer kilogramo." },
+    "weight_10": { "name": "Meta 10 kg", "desc": "Alcanza 10 kg perdidos." },
+    "weight_20": { "name": "Meta 20 kg", "desc": "Has perdido 20 kg." },
+    "weight_50": { "name": "Meta 50 kg", "desc": "¡Increíble! 50 kg menos." },
+    "weight_70": { "name": "Meta 70 kg", "desc": "Un logro monumental: 70 kg." }
   },
   "exercise": {
     "title": "Registrar Ejercicio",

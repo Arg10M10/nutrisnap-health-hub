@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PageLayout from "@/components/PageLayout";
 import { useNutrition } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
@@ -16,19 +16,37 @@ const Badges = () => {
   const { t } = useTranslation();
   const [viewingBadge, setViewingBadge] = useState<UnlockedBadgeInfo | null>(null);
 
+  const isImperial = profile?.units === 'imperial';
   const weightLost = profile?.starting_weight && profile.weight ? profile.starting_weight - profile.weight : 0;
+  const displayWeightLost = isImperial ? weightLost * 2.20462 : weightLost;
+
+  const dynamicWeightLossBadges = useMemo(() => {
+    return weightLossBadges.map(badge => {
+      const value = isImperial ? Math.round(badge.kg * 2.20462) : badge.kg;
+      const unit = isImperial ? 'lbs' : 'kg';
+      const name = t(`badge_names.${badge.id}.name` as any).replace(/kilogramo|kilogram|kg/gi, unit);
+      const description = t(`badge_names.${badge.id}.desc` as any).replace(/kilogramo|kilogram|kg/gi, unit);
+
+      return {
+        ...badge,
+        value,
+        name,
+        description
+      };
+    });
+  }, [isImperial, t]);
 
   const unlockedStreakBadgesCount = streakBadges.filter(badge => streak >= badge.days).length;
   const unlockedWaterBadgesCount = waterBadges.filter(badge => waterStreak >= badge.days).length;
-  const unlockedWeightBadgesCount = weightLossBadges.filter(badge => weightLost >= badge.kg).length;
+  const unlockedWeightBadgesCount = dynamicWeightLossBadges.filter(badge => displayWeightLost >= badge.value).length;
   
   const totalUnlocked = unlockedStreakBadgesCount + unlockedWaterBadgesCount + (profile?.goal === 'lose_weight' ? unlockedWeightBadgesCount : 0);
 
-  const handleBadgeClick = (badge: { id: string; image: string }, isUnlocked: boolean) => {
+  const handleBadgeClick = (badge: { name: string; description: string; image: string; }, isUnlocked: boolean) => {
     if (isUnlocked) {
       setViewingBadge({
-        name: t(`badge_names.${badge.id}.name` as any),
-        description: t(`badge_names.${badge.id}.desc` as any),
+        name: badge.name,
+        description: badge.description,
         image: badge.image,
       });
     }
@@ -67,17 +85,22 @@ const Badges = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {streakBadges.map((badge) => {
               const isUnlocked = streak >= badge.days;
+              const badgeInfo = {
+                name: t(`badge_names.${badge.id}.name` as any),
+                description: t(`badge_names.${badge.id}.desc` as any),
+                image: badge.image,
+              };
               return (
                 <button
                   key={badge.id}
-                  onClick={() => handleBadgeClick(badge, isUnlocked)}
+                  onClick={() => handleBadgeClick(badgeInfo, isUnlocked)}
                   disabled={!isUnlocked}
                   className="text-left disabled:cursor-not-allowed"
                 >
                   <Card className={cn("text-center p-4 transition-all h-full", !isUnlocked && "opacity-50 bg-muted", isUnlocked && "hover:border-primary")}>
                     <CardHeader className="p-2">
                       <div className="relative w-24 h-24 mx-auto">
-                        <img src={badge.image} alt={t(`badge_names.${badge.id}.name` as any)} className="w-full h-full" />
+                        <img src={badge.image} alt={badgeInfo.name} className="w-full h-full" />
                         {!isUnlocked && (
                           <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
                             <Lock className="w-8 h-8 text-white" />
@@ -86,8 +109,8 @@ const Badges = () => {
                       </div>
                     </CardHeader>
                     <CardContent className="p-2">
-                      <CardTitle className="text-base font-semibold">{t(`badge_names.${badge.id}.name` as any)}</CardTitle>
-                      <CardDescription className="text-xs">{t(`badge_names.${badge.id}.desc` as any)}</CardDescription>
+                      <CardTitle className="text-base font-semibold">{badgeInfo.name}</CardTitle>
+                      <CardDescription className="text-xs">{badgeInfo.description}</CardDescription>
                     </CardContent>
                   </Card>
                 </button>
@@ -104,17 +127,22 @@ const Badges = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {waterBadges.map((badge) => {
               const isUnlocked = waterStreak >= badge.days;
+              const badgeInfo = {
+                name: t(`badge_names.${badge.id}.name` as any),
+                description: t(`badge_names.${badge.id}.desc` as any),
+                image: badge.image,
+              };
               return (
                 <button
                   key={badge.id}
-                  onClick={() => handleBadgeClick(badge, isUnlocked)}
+                  onClick={() => handleBadgeClick(badgeInfo, isUnlocked)}
                   disabled={!isUnlocked}
                   className="text-left disabled:cursor-not-allowed"
                 >
                   <Card className={cn("text-center p-4 transition-all h-full", !isUnlocked && "opacity-50 bg-muted", isUnlocked && "hover:border-primary")}>
                     <CardHeader className="p-2">
                       <div className="relative w-24 h-24 mx-auto">
-                        <img src={badge.image} alt={t(`badge_names.${badge.id}.name` as any)} className="w-full h-full" />
+                        <img src={badge.image} alt={badgeInfo.name} className="w-full h-full" />
                         {!isUnlocked && (
                           <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
                             <Lock className="w-8 h-8 text-white" />
@@ -123,8 +151,8 @@ const Badges = () => {
                       </div>
                     </CardHeader>
                     <CardContent className="p-2">
-                      <CardTitle className="text-base font-semibold">{t(`badge_names.${badge.id}.name` as any)}</CardTitle>
-                      <CardDescription className="text-xs">{t(`badge_names.${badge.id}.desc` as any)}</CardDescription>
+                      <CardTitle className="text-base font-semibold">{badgeInfo.name}</CardTitle>
+                      <CardDescription className="text-xs">{badgeInfo.description}</CardDescription>
                     </CardContent>
                   </Card>
                 </button>
@@ -140,8 +168,8 @@ const Badges = () => {
               {t('badges.weight_loss')}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {weightLossBadges.map((badge) => {
-                const isUnlocked = weightLost >= badge.kg;
+              {dynamicWeightLossBadges.map((badge) => {
+                const isUnlocked = displayWeightLost >= badge.value;
                 return (
                   <button
                     key={badge.id}
@@ -152,7 +180,7 @@ const Badges = () => {
                     <Card className={cn("text-center p-4 transition-all h-full", !isUnlocked && "opacity-50 bg-muted", isUnlocked && "hover:border-primary")}>
                       <CardHeader className="p-2">
                         <div className="relative w-24 h-24 mx-auto">
-                          <img src={badge.image} alt={t(`badge_names.${badge.id}.name` as any)} className="w-full h-full" />
+                          <img src={badge.image} alt={badge.name} className="w-full h-full" />
                           {!isUnlocked && (
                             <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
                               <Lock className="w-8 h-8 text-white" />
@@ -161,8 +189,8 @@ const Badges = () => {
                         </div>
                       </CardHeader>
                       <CardContent className="p-2">
-                        <CardTitle className="text-base font-semibold">{t(`badge_names.${badge.id}.name` as any)}</CardTitle>
-                        <CardDescription className="text-xs">{t(`badge_names.${badge.id}.desc` as any)}</CardDescription>
+                        <CardTitle className="text-base font-semibold">{badge.name}</CardTitle>
+                        <CardDescription className="text-xs">{badge.description}</CardDescription>
                       </CardContent>
                     </Card>
                   </button>
