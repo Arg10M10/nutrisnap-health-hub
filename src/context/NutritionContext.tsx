@@ -5,7 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
 import { format, isSameDay, subDays, parseISO } from 'date-fns';
-// import useLocalStorage from '@/hooks/useLocalStorage'; // Replaced with useState for reliability
 import { streakBadges, waterBadges, weightLossBadges } from '@/data/badges';
 import { useTranslation } from 'react-i18next';
 
@@ -62,7 +61,6 @@ interface DailyData {
   waterIntake: number;
 }
 
-// Estructura para el badge recién desbloqueado
 export interface UnlockedBadgeInfo {
   name: string;
   description: string;
@@ -106,10 +104,35 @@ const healthRatingToScore = (rating: FoodEntry['health_rating']): number => {
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
-  // Replaced useLocalStorage with useState to fix a persistent bug with badge notifications.
   const [unlockedBadges, setUnlockedBadges] = useState<string[]>([]);
   const [newlyUnlockedBadge, setNewlyUnlockedBadge] = useState<UnlockedBadgeInfo | null>(null);
   const { t } = useTranslation();
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  // Effect to load badges from localStorage on initial mount
+  useEffect(() => {
+    try {
+      const storedBadges = window.localStorage.getItem('unlockedBadges');
+      if (storedBadges) {
+        setUnlockedBadges(JSON.parse(storedBadges));
+      }
+    } catch (error) {
+      console.error("Failed to load unlocked badges from localStorage", error);
+    }
+    setIsInitialLoad(false);
+  }, []);
+
+  // Effect to save badges to localStorage whenever the list changes
+  useEffect(() => {
+    if (!isInitialLoad) {
+      try {
+        window.localStorage.setItem('unlockedBadges', JSON.stringify(unlockedBadges));
+      } catch (error) {
+        console.error("Failed to save unlocked badges to localStorage", error);
+      }
+    }
+  }, [unlockedBadges, isInitialLoad]);
+
 
   // Polling inteligente: Si hay algún item "processing", recarga cada 2 segundos.
   const { data: foodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
@@ -368,7 +391,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
   // Check streak badges
   useEffect(() => {
-    if (isLoading || newlyUnlockedBadge) return;
+    if (isLoading || newlyUnlockedBadge || isInitialLoad) return;
 
     for (const badge of streakBadges) {
       if (streak >= badge.days && !unlockedBadges.includes(badge.id)) {
@@ -382,11 +405,11 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     }
-  }, [streak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
+  }, [streak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t, isInitialLoad]);
 
   // Check water badges
   useEffect(() => {
-    if (isLoading || newlyUnlockedBadge) return;
+    if (isLoading || newlyUnlockedBadge || isInitialLoad) return;
 
     for (const badge of waterBadges) {
       if (waterStreak >= badge.days && !unlockedBadges.includes(badge.id)) {
@@ -400,11 +423,11 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     }
-  }, [waterStreak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
+  }, [waterStreak, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t, isInitialLoad]);
 
   // Check weight loss badges
   useEffect(() => {
-    if (isLoading || newlyUnlockedBadge || weightLost <= 0) return;
+    if (isLoading || newlyUnlockedBadge || weightLost <= 0 || isInitialLoad) return;
 
     for (const badge of weightLossBadges) {
       if (weightLost >= badge.kg && !unlockedBadges.includes(badge.id)) {
@@ -418,7 +441,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     }
-  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t]);
+  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadges, setUnlockedBadges, t, isInitialLoad]);
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 
