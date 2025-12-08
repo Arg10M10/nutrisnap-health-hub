@@ -527,5 +527,9 @@
       "no_payment_note": "No tienes que pagar nada ahora",
       "skip": "Quizás más tarde"
     }
+  },
+  "scanner": {
+    "help_title": "¿Cómo funciona el escáner?",
+    "help_desc": "Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional."
   }
 }

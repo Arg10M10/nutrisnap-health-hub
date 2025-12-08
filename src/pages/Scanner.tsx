@@ -21,6 +21,7 @@ import { useAuth } from "@/context/AuthContext";
 import { motion, Transition } from "framer-motion";
 import { useAILimit } from "@/hooks/useAILimit";
 import InfoDrawer from "@/components/InfoDrawer";
+import { useTranslation } from "react-i18next";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 
@@ -39,6 +40,7 @@ const pageTransition: Transition = {
 };
 
 const Scanner = () => {
+  const { t } = useTranslation();
   const [state, setState] = useState<ScannerState>("initializing");
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -345,11 +347,11 @@ const Scanner = () => {
       <InfoDrawer
         isOpen={isInfoOpen}
         onClose={() => setIsInfoOpen(false)}
-        title="¿Cómo funciona el escáner?"
+        title={t('scanner.help_title')}
         icon={<Scan className="w-8 h-8" />}
       >
         <p>
-          Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional.
+          {t('scanner.help_desc')}
         </p>
       </InfoDrawer>
     </>

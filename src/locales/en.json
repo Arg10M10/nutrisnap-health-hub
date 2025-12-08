@@ -527,5 +527,9 @@
       "no_payment_note": "You don't have to pay anything now",
       "skip": "Maybe later"
     }
+  },
+  "scanner": {
+    "help_title": "How does the scanner work?",
+    "help_desc": "Center your meal in the viewfinder and take a photo. Our AI will analyze it to give you a nutritional estimate."
   }
 }
