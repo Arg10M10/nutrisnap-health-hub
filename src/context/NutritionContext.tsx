@@ -108,7 +108,6 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const [newlyUnlockedBadge, setNewlyUnlockedBadge] = useState<UnlockedBadgeInfo | null>(null);
   const { t } = useTranslation();
 
-  // Polling inteligente: Si hay algún item "processing", recarga cada 2 segundos.
   const { data: foodEntries = [], isLoading: isFoodLoading } = useQuery<FoodEntry[]>({
     queryKey: ['food_entries', user?.id],
     queryFn: async () => {
@@ -156,7 +155,6 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     enabled: !!user,
   });
 
-  // Fetch unlocked badges from DB
   const { data: unlockedBadgeIds = [], isLoading: isBadgesLoading } = useQuery<string[]>({
     queryKey: ['user_badges', user?.id],
     queryFn: async () => {
@@ -172,7 +170,6 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     mutationFn: async (badgeId: string) => {
       if (!user) return;
       const { error } = await supabase.from('user_badges').insert({ user_id: user.id, badge_id: badgeId });
-      // Ignore unique violation error (badge already exists)
       if (error && error.code !== '23505') throw error;
     },
     onSuccess: () => {
@@ -371,12 +368,17 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     return { waterStreak: currentStreak };
   }, [waterEntries]);
 
+  const isImperial = profile?.units === 'imperial';
+
   const weightLost = useMemo(() => {
     if (profile?.goal === 'lose_weight' && profile.starting_weight && profile.weight) {
-      return profile.starting_weight - profile.weight;
+      const diff = profile.starting_weight - profile.weight;
+      // Normalizar a KG para la comparación con badges (que están definidos en kg)
+      // Si es imperial, diff está en lbs. 1 lb = 0.453592 kg.
+      return isImperial ? diff * 0.453592 : diff;
     }
     return 0;
-  }, [profile]);
+  }, [profile, isImperial]);
 
   const triggerBadgeUnlock = (badgeInfo: UnlockedBadgeInfo) => {
     setNewlyUnlockedBadge(badgeInfo);
@@ -400,7 +402,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         };
         triggerBadgeUnlock(badgeInfo);
         unlockBadgeMutation.mutate(badge.id);
-        return; // Only process one at a time
+        return; 
       }
     }
   }, [streak, isLoading, newlyUnlockedBadge, unlockedBadgeIds, t, user]);
@@ -429,9 +431,24 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
     for (const badge of weightLossBadges) {
       if (weightLost >= badge.kg && !unlockedBadgeIds.includes(badge.id)) {
+        
+        // Transformar textos a Imperial si aplica
+        let name = t(`badge_names.${badge.id}.name`);
+        let description = t(`badge_names.${badge.id}.desc`);
+
+        if (isImperial) {
+          const convertedValue = Math.round(badge.kg * 2.20462);
+          const regexKg = new RegExp(`${badge.kg}\\s*(kg|kilogramos|kilograms)`, 'gi');
+          if (regexKg.test(name)) name = name.replace(regexKg, `${convertedValue} lbs`);
+          else name = name.replace(/kilogramo|kilogram|kg/gi, 'lbs');
+
+          if (regexKg.test(description)) description = description.replace(regexKg, `${convertedValue} lbs`);
+          else description = description.replace(/kilogramo|kilogram|kg/gi, 'lbs');
+        }
+
         const badgeInfo = {
-          name: t(`badge_names.${badge.id}.name`),
-          description: t(`badge_names.${badge.id}.desc`),
+          name,
+          description,
           image: badge.image,
         };
         triggerBadgeUnlock(badgeInfo);
@@ -439,7 +456,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     }
-  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadgeIds, t, user]);
+  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadgeIds, t, user, isImperial]);
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 

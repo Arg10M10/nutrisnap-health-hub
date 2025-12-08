@@ -49,7 +49,8 @@ const Progress = () => {
 
   const isImperial = profile?.units === 'imperial';
   
-  // El peso se guarda en la unidad preferida del usuario, no necesitamos convertirlo aquí
+  // CORRECCIÓN: El peso ya está guardado en la unidad preferida (ej. 184 lbs).
+  // No debemos multiplicarlo de nuevo.
   const displayWeight = profile?.weight || 0;
   const weightUnit = isImperial ? 'lbs' : 'kg';
 

@@ -11,8 +11,8 @@ const calculateBmi = (weight: number | null, height: number | null, t: (key: str
     return { bmi: 0, category: "Incomplete data", badgeClasses: "bg-gray-100 text-gray-800", position: 0 };
   }
 
-  // height is usually passed in cm or converted to cm-equivalent before this function if standard metric
-  // But here we receive raw values. Calculation expects KG and METERS.
+  // La fórmula del IMC requiere Metros y Kilogramos.
+  // Aquí recibimos los valores YA normalizados a Kg y Cm desde el componente padre.
   
   const heightInMeters = height / 100;
   const bmi = weight / (heightInMeters * heightInMeters);
@@ -54,7 +54,9 @@ const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
   let weight = profile?.weight;
   let height = profile?.height;
 
-  // Normalizar a métrico (kg, cm) solo para el cálculo del IMC
+  // CORRECCIÓN CRÍTICA:
+  // Si es imperial, 'weight' viene en libras y 'height' en pulgadas (o el valor raw guardado).
+  // Debemos convertir a métrico para que la fórmula del IMC funcione.
   if (isImperial && weight && height) {
     weight = weight * 0.453592; // lbs a kg
     height = height * 2.54;     // pulgadas a cm
