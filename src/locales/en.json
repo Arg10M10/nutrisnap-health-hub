@@ -100,7 +100,11 @@
     "weight_progress_goal": "Goal Weight",
     "weight_progress_no_data": "No weight data logged.",
     "weight_progress_start_logging": "Log your weight to start seeing your progress.",
-    "weight_updated_today": "Today's update limit reached"
+    "weight_updated_today": "Today's update limit reached",
+    "of_goal": "of goal",
+    "chart_goal": "Goal",
+    "chart_all": "All",
+    "1y": "1Y"
   },
   "diets": {
     "title": "Diet Plans",

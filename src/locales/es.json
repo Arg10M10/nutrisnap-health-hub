@@ -100,7 +100,11 @@
     "weight_progress_goal": "Peso Deseado",
     "weight_progress_no_data": "No hay datos de peso registrados.",
     "weight_progress_start_logging": "Registra tu peso para empezar a ver tu progreso.",
-    "weight_updated_today": "Límite de actualizaciones de hoy"
+    "weight_updated_today": "Límite de actualizaciones de hoy",
+    "of_goal": "del objetivo",
+    "chart_goal": "Meta",
+    "chart_all": "Todo",
+    "1y": "1A"
   },
   "diets": {
     "title": "Planes de Dieta",

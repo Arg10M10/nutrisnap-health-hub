@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format, subDays, isAfter } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -16,8 +16,10 @@ type TimeRange = '30D' | '90D' | '1Y' | 'ALL';
 
 const WeightChart = () => {
   const { user, profile } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [timeRange, setTimeRange] = useState<TimeRange>('30D');
+
+  const dateLocale = i18n.language === 'es' ? es : enUS;
 
   const { data, isLoading } = useQuery({
     queryKey: ['weight_history_all', user?.id],
@@ -45,7 +47,7 @@ const WeightChart = () => {
     
     if (timeRange === 'ALL') {
       return data.map((entry) => ({
-        date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
+        date: format(new Date(entry.created_at), 'd MMM', { locale: dateLocale }),
         weight: entry.weight,
       }));
     }
@@ -59,10 +61,10 @@ const WeightChart = () => {
     const filteredData = data.filter(entry => isAfter(new Date(entry.created_at), startDate));
 
     return filteredData.map((entry) => ({
-      date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
+      date: format(new Date(entry.created_at), 'd MMM', { locale: dateLocale }),
       weight: entry.weight,
     }));
-  }, [data, timeRange]);
+  }, [data, timeRange, dateLocale]);
 
   const percentageToGoal = useMemo(() => {
     if (profile?.starting_weight && profile.goal_weight && profile.weight) {
@@ -107,7 +109,7 @@ const WeightChart = () => {
             <span className="font-semibold">
               <AnimatedNumber value={percentageToGoal} toFixed={0} />%
             </span>
-            <span className="hidden sm:inline">del objetivo</span>
+            <span className="hidden sm:inline">{t('progress.of_goal')}</span>
           </Badge>
         </div>
       </CardHeader>
@@ -144,7 +146,7 @@ const WeightChart = () => {
                     stroke="hsl(var(--muted-foreground))"
                     strokeDasharray="3 3"
                     label={{ 
-                      value: `Meta: ${displayGoalWeight}${unitLabel}`, 
+                      value: `${t('progress.chart_goal')}: ${displayGoalWeight}${unitLabel}`, 
                       position: 'insideBottomRight', 
                       fill: 'hsl(var(--muted-foreground))',
                       fontSize: 10
@@ -180,8 +182,8 @@ const WeightChart = () => {
         >
           <ToggleGroupItem value="30D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">30D</ToggleGroupItem>
           <ToggleGroupItem value="90D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">90D</ToggleGroupItem>
-          <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">1A</ToggleGroupItem>
-          <ToggleGroupItem value="ALL" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">Todo</ToggleGroupItem>
+          <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">{t('progress.1y')}</ToggleGroupItem>
+          <ToggleGroupItem value="ALL" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">{t('progress.chart_all')}</ToggleGroupItem>
         </ToggleGroup>
       </CardFooter>
     </Card>
