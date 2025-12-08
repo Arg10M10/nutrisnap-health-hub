@@ -48,11 +48,9 @@ const Progress = () => {
   };
 
   const isImperial = profile?.units === 'imperial';
-  // Convert kg to lbs if imperial (1 kg = 2.20462 lbs)
-  const displayWeight = isImperial && profile?.weight 
-    ? profile.weight * 2.20462 
-    : (profile?.weight || 0);
   
+  // El peso se guarda en la unidad preferida del usuario, no necesitamos convertirlo aquí
+  const displayWeight = profile?.weight || 0;
   const weightUnit = isImperial ? 'lbs' : 'kg';
 
   return (

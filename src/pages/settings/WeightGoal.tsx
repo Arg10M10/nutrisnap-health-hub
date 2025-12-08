@@ -75,11 +75,10 @@ const WeightGoal = () => {
     return `${feet}' ${inches}${heightUnit}`;
   };
 
-  // Helper to convert kg to lbs for display
-  const displayWeight = (kg: number | null) => {
-    if (kg === null) return '-';
-    if (isMetric) return kg;
-    return Math.round(kg * 2.20462);
+  // El valor ya está almacenado en la unidad preferida
+  const displayWeight = (val: number | null) => {
+    if (val === null) return '-';
+    return val;
   };
 
   const getTranslationKey = (prefix: string, value: string | null) => {
@@ -128,16 +127,15 @@ const WeightGoal = () => {
           </CardContent>
         </Card>
       </div>
-      {/* Pass the CONVERTED value to the drawer, so the wheel starts at the right place in lbs */}
       <EditGoalWeightDrawer 
         isOpen={isGoalDrawerOpen} 
         onClose={() => setIsGoalDrawerOpen(false)} 
-        currentGoalWeight={displayWeight(profile?.goal_weight) as number}
+        currentGoalWeight={profile?.goal_weight || (isMetric ? 65 : 143)}
       />
       <EditWeightDrawer 
         isOpen={isWeightDrawerOpen} 
         onClose={() => setIsWeightDrawerOpen(false)} 
-        currentWeight={displayWeight(profile?.weight) as number}
+        currentWeight={profile?.weight || (isMetric ? 70 : 154)}
       />
       <EditHeightDrawer isOpen={isHeightDrawerOpen} onClose={() => setIsHeightDrawerOpen(false)} currentHeight={profile?.height || (isMetric ? 170 : 67)} />
       <EditSelectDetailDrawer

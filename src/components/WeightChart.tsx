@@ -40,13 +40,13 @@ const WeightChart = () => {
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
-    // Function to convert weight based on preference
-    const getWeight = (kg: number) => isImperial ? Number((kg * 2.20462).toFixed(1)) : kg;
-
+    // Los datos históricos ya están guardados en la unidad que el usuario usó al momento de guardarlos.
+    // Asumimos consistencia en la unidad actual.
+    
     if (timeRange === 'ALL') {
       return data.map((entry) => ({
         date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
-        weight: getWeight(entry.weight),
+        weight: entry.weight,
       }));
     }
 
@@ -60,9 +60,9 @@ const WeightChart = () => {
 
     return filteredData.map((entry) => ({
       date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
-      weight: getWeight(entry.weight),
+      weight: entry.weight,
     }));
-  }, [data, timeRange, isImperial]);
+  }, [data, timeRange]);
 
   const percentageToGoal = useMemo(() => {
     if (profile?.starting_weight && profile.goal_weight && profile.weight) {
@@ -80,10 +80,7 @@ const WeightChart = () => {
   const domainMin = Math.floor(minWeight - 5);
   const domainMax = Math.ceil(maxWeight + 5);
 
-  const displayGoalWeight = useMemo(() => {
-    if (!profile?.goal_weight) return null;
-    return isImperial ? Number((profile.goal_weight * 2.20462).toFixed(1)) : profile.goal_weight;
-  }, [profile?.goal_weight, isImperial]);
+  const displayGoalWeight = profile?.goal_weight || null;
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {

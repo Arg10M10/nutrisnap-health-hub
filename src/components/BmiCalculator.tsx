@@ -11,6 +11,9 @@ const calculateBmi = (weight: number | null, height: number | null, t: (key: str
     return { bmi: 0, category: "Incomplete data", badgeClasses: "bg-gray-100 text-gray-800", position: 0 };
   }
 
+  // height is usually passed in cm or converted to cm-equivalent before this function if standard metric
+  // But here we receive raw values. Calculation expects KG and METERS.
+  
   const heightInMeters = height / 100;
   const bmi = weight / (heightInMeters * heightInMeters);
 
@@ -46,7 +49,18 @@ const BmiCalculator = ({ size = 'large' }: BmiCalculatorProps) => {
   const { profile } = useAuth();
   const { t } = useTranslation();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
-  const { bmi, category, badgeClasses, position } = calculateBmi(profile?.weight, profile?.height, t);
+  
+  const isImperial = profile?.units === 'imperial';
+  let weight = profile?.weight;
+  let height = profile?.height;
+
+  // Normalizar a métrico (kg, cm) solo para el cálculo del IMC
+  if (isImperial && weight && height) {
+    weight = weight * 0.453592; // lbs a kg
+    height = height * 2.54;     // pulgadas a cm
+  }
+
+  const { bmi, category, badgeClasses, position } = calculateBmi(weight, height, t);
   const isSmall = size === 'small';
 
   if (!profile?.weight || !profile?.height) {
