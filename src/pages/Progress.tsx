@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { isToday, startOfDay } from "date-fns";
+import { startOfDay } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
@@ -47,6 +47,14 @@ const Progress = () => {
     setIsWeightDrawerOpen(true);
   };
 
+  const isImperial = profile?.units === 'imperial';
+  // Convert kg to lbs if imperial (1 kg = 2.20462 lbs)
+  const displayWeight = isImperial && profile?.weight 
+    ? profile.weight * 2.20462 
+    : (profile?.weight || 0);
+  
+  const weightUnit = isImperial ? 'lbs' : 'kg';
+
   return (
     <PageLayout>
       <div className="space-y-6">
@@ -62,9 +70,9 @@ const Progress = () => {
           <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
             <Weight className="w-10 h-10 text-primary" />
             <p className="text-5xl font-bold text-foreground mt-2">
-              <AnimatedNumber value={profile?.weight || 0} toFixed={1} />
+              <AnimatedNumber value={displayWeight} toFixed={1} />
             </p>
-            <p className="text-sm text-muted-foreground">{t('progress.weight_unit')}</p>
+            <p className="text-sm text-muted-foreground">{weightUnit}</p>
           </Card>
           <Card className="aspect-square flex flex-col items-center justify-center p-4 text-center">
             <p className="text-5xl font-bold text-foreground">
@@ -110,7 +118,7 @@ const Progress = () => {
       <EditWeightDrawer 
         isOpen={isWeightDrawerOpen} 
         onClose={() => setIsWeightDrawerOpen(false)} 
-        currentWeight={profile?.weight || 70}
+        currentWeight={displayWeight}
       />
     </PageLayout>
   );

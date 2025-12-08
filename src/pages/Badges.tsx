@@ -17,20 +17,40 @@ const Badges = () => {
   const [viewingBadge, setViewingBadge] = useState<UnlockedBadgeInfo | null>(null);
 
   const isImperial = profile?.units === 'imperial';
-  const weightLost = profile?.starting_weight && profile.weight ? profile.starting_weight - profile.weight : 0;
-  // Solo para visualización si es necesario, pero usaremos unlockedBadgeIds para determinar el estado
-  // const displayWeightLost = isImperial ? weightLost * 2.20462 : weightLost;
 
   const dynamicWeightLossBadges = useMemo(() => {
     return weightLossBadges.map(badge => {
-      const value = isImperial ? Math.round(badge.kg * 2.20462) : badge.kg;
+      // Calculamos el valor convertido (ej. 10kg -> 22lbs)
+      const convertedValue = isImperial ? Math.round(badge.kg * 2.20462) : badge.kg;
       const unit = isImperial ? 'lbs' : 'kg';
-      const name = t(`badge_names.${badge.id}.name` as any).replace(/kilogramo|kilogram|kg/gi, unit);
-      const description = t(`badge_names.${badge.id}.desc` as any).replace(/kilogramo|kilogram|kg/gi, unit);
+      
+      // Obtenemos las traducciones base
+      let name = t(`badge_names.${badge.id}.name` as any);
+      let description = t(`badge_names.${badge.id}.desc` as any);
+
+      if (isImperial) {
+        // Reemplazo inteligente: Buscamos el número original (kg) y lo cambiamos por el convertido (lbs)
+        // Ejemplo: "Meta 10 kg" -> "Meta 22 lbs"
+        const regexKg = new RegExp(`${badge.kg}\\s*(kg|kilogramos|kilograms)`, 'gi');
+        
+        // Si la traducción contiene el número exacto y la unidad, lo reemplazamos
+        if (regexKg.test(name)) {
+          name = name.replace(regexKg, `${convertedValue} ${unit}`);
+        } else {
+          // Fallback genérico: solo reemplaza la unidad si no encuentra el patrón numérico
+          name = name.replace(/kilogramo|kilogram|kg/gi, unit);
+        }
+
+        if (regexKg.test(description)) {
+          description = description.replace(regexKg, `${convertedValue} ${unit}`);
+        } else {
+          description = description.replace(/kilogramo|kilogram|kg/gi, unit);
+        }
+      }
 
       return {
         ...badge,
-        value,
+        value: convertedValue,
         name,
         description
       };

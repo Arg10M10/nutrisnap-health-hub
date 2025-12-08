@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { isToday, startOfDay } from 'date-fns';
+import { startOfDay } from 'date-fns';
 import { useAuth } from '@/context/AuthContext';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -65,6 +65,7 @@ const WeightGoal = () => {
 
   const isMetric = profile?.units !== 'imperial';
   const heightUnit = isMetric ? 'cm' : '"';
+  const weightUnit = isMetric ? 'kg' : 'lbs';
 
   const formatHeight = (height: number | null) => {
     if (height === null) return '-';
@@ -72,6 +73,13 @@ const WeightGoal = () => {
     const feet = Math.floor(height / 12);
     const inches = height % 12;
     return `${feet}' ${inches}${heightUnit}`;
+  };
+
+  // Helper to convert kg to lbs for display
+  const displayWeight = (kg: number | null) => {
+    if (kg === null) return '-';
+    if (isMetric) return kg;
+    return Math.round(kg * 2.20462);
   };
 
   const getTranslationKey = (prefix: string, value: string | null) => {
@@ -100,7 +108,7 @@ const WeightGoal = () => {
           <CardContent className="p-6 flex items-center justify-between">
             <div>
               <p className="text-muted-foreground">{t('weight_goal.title')}</p>
-              <p className="text-2xl font-bold text-foreground">{profile?.goal_weight || '-'} kg</p>
+              <p className="text-2xl font-bold text-foreground">{displayWeight(profile?.goal_weight)} {weightUnit}</p>
             </div>
             <Button onClick={() => setIsGoalDrawerOpen(true)}>{t('weight_goal.change_button')}</Button>
           </CardContent>
@@ -110,7 +118,7 @@ const WeightGoal = () => {
           <CardContent className="p-4 divide-y">
             <InfoRow 
               label={t('weight_goal.current_weight')} 
-              value={`${profile?.weight || '-'} kg`} 
+              value={`${displayWeight(profile?.weight)} ${weightUnit}`} 
               onEdit={handleOpenWeightDrawer} 
               editDisabled={hasReachedDailyWeightUpdateLimit}
               disabledText={t('weight_goal.updated_today')}
@@ -120,15 +128,16 @@ const WeightGoal = () => {
           </CardContent>
         </Card>
       </div>
+      {/* Pass the CONVERTED value to the drawer, so the wheel starts at the right place in lbs */}
       <EditGoalWeightDrawer 
         isOpen={isGoalDrawerOpen} 
         onClose={() => setIsGoalDrawerOpen(false)} 
-        currentGoalWeight={profile?.goal_weight || 70}
+        currentGoalWeight={displayWeight(profile?.goal_weight) as number}
       />
       <EditWeightDrawer 
         isOpen={isWeightDrawerOpen} 
         onClose={() => setIsWeightDrawerOpen(false)} 
-        currentWeight={profile?.weight || 70}
+        currentWeight={displayWeight(profile?.weight) as number}
       />
       <EditHeightDrawer isOpen={isHeightDrawerOpen} onClose={() => setIsHeightDrawerOpen(false)} currentHeight={profile?.height || (isMetric ? 170 : 67)} />
       <EditSelectDetailDrawer

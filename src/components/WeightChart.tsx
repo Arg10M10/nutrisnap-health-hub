@@ -34,13 +34,19 @@ const WeightChart = () => {
     enabled: !!user,
   });
 
+  const isImperial = profile?.units === 'imperial';
+  const unitLabel = isImperial ? 'lbs' : 'kg';
+
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
+    // Function to convert weight based on preference
+    const getWeight = (kg: number) => isImperial ? Number((kg * 2.20462).toFixed(1)) : kg;
+
     if (timeRange === 'ALL') {
       return data.map((entry) => ({
         date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
-        weight: entry.weight,
+        weight: getWeight(entry.weight),
       }));
     }
 
@@ -54,9 +60,9 @@ const WeightChart = () => {
 
     return filteredData.map((entry) => ({
       date: format(new Date(entry.created_at), 'd MMM', { locale: es }),
-      weight: entry.weight,
+      weight: getWeight(entry.weight),
     }));
-  }, [data, timeRange]);
+  }, [data, timeRange, isImperial]);
 
   const percentageToGoal = useMemo(() => {
     if (profile?.starting_weight && profile.goal_weight && profile.weight) {
@@ -74,12 +80,17 @@ const WeightChart = () => {
   const domainMin = Math.floor(minWeight - 5);
   const domainMax = Math.ceil(maxWeight + 5);
 
+  const displayGoalWeight = useMemo(() => {
+    if (!profile?.goal_weight) return null;
+    return isImperial ? Number((profile.goal_weight * 2.20462).toFixed(1)) : profile.goal_weight;
+  }, [profile?.goal_weight, isImperial]);
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-background/80 backdrop-blur-sm p-2 px-4 border rounded-lg shadow-lg">
           <p className="label text-sm text-muted-foreground">{`${label}`}</p>
-          <p className="intro font-bold text-foreground">{`${payload[0].value} kg`}</p>
+          <p className="intro font-bold text-foreground">{`${payload[0].value} ${unitLabel}`}</p>
         </div>
       );
     }
@@ -130,13 +141,13 @@ const WeightChart = () => {
                   width={40}
                 />
                 <Tooltip content={<CustomTooltip />} cursor={false} />
-                {profile?.goal_weight && (
+                {displayGoalWeight && (
                   <ReferenceLine
-                    y={profile.goal_weight}
+                    y={displayGoalWeight}
                     stroke="hsl(var(--muted-foreground))"
                     strokeDasharray="3 3"
                     label={{ 
-                      value: `Meta: ${profile.goal_weight}kg`, 
+                      value: `Meta: ${displayGoalWeight}${unitLabel}`, 
                       position: 'insideBottomRight', 
                       fill: 'hsl(var(--muted-foreground))',
                       fontSize: 10
