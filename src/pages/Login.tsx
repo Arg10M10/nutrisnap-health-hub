@@ -8,12 +8,22 @@ import { toast } from 'sonner';
 export default function Login() {
   const [loading, setLoading] = useState(false);
 
-  const signInWithProvider = async (provider: 'google') => {
+  const signInWithGoogle = async () => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-    });
-    if (error) {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: "calorel://auth",
+          queryParams: {
+            client_id: "522700969452-vahnkkv9fr8l1rqvfb1e9do2opsp8p2k.apps.googleusercontent.com"
+          }
+        }
+      });
+      
+      if (error) throw error;
+      // No need to set loading false here as the browser will open
+    } catch (error: any) {
       toast.error(error.message);
       setLoading(false);
     }
@@ -38,7 +48,7 @@ export default function Login() {
             <Button 
               variant="outline"
               className="w-full h-16 text-lg rounded-full" 
-              onClick={() => signInWithProvider('google')} 
+              onClick={signInWithGoogle} 
               disabled={loading}
             >
               {loading ? (
