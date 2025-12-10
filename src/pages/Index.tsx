@@ -64,6 +64,7 @@ const Index = () => {
     fats: profile?.goal_fats || 65,
     water: 8,
     sugars: profile?.goal_sugars || 25,
+    steps: profile?.goal_steps || 10000,
   };
 
   const getSafePercentage = (current?: number | null, goal?: number | null) => {
@@ -186,7 +187,7 @@ const Index = () => {
                 <motion.div variants={cardVariants} animate={current === 2 ? "active" : "inactive"}>
                   <div className="p-1 h-[360px] flex flex-col gap-2">
                     <div className="grid grid-cols-2 gap-2 h-full">
-                      <StepsCard steps={steps} />
+                      <StepsCard steps={steps} goal={dailyGoals.steps} />
                       <ActivityCaloriesCard calories={activityCalories} />
                     </div>
                   </div>

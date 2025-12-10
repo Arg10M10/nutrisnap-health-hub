@@ -253,8 +253,12 @@
     "carbs": "Carbs",
     "fats": "Fats",
     "sugars": "Sugars",
+    "steps": "Steps",
+    "steps_unit": "steps",
     "save": "Save Goals",
-    "ai_suggestions": "AI Suggestions"
+    "ai_suggestions": "AI Suggestions",
+    "save_success": "Goals saved successfully.",
+    "save_error": "Could not save goals."
   },
   "ai_suggestions": {
     "title": "AI Goal Suggestions",

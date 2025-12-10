@@ -25,6 +25,7 @@ export interface Profile {
   goal_sugars: number | null;
   weekly_rate: number | null;
   avatar_color: string | null;
+  goal_steps: number | null;
 }
 
 interface AuthContextType {
