@@ -1,6 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
-import { HealthConnect } from 'capacitor-plugin-health-connect';
+import { HealthConnect } from '@capacitor-community/health-connect';
 
 const isAvailable = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android';
 
