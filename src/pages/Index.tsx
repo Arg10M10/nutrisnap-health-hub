@@ -19,6 +19,9 @@ import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import RecentExerciseCard from "@/components/RecentExerciseCard";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import AnalysisDetailDrawer from "@/components/AnalysisDetailDrawer";
+import { HealthConnect } from "@/integrations/health-connect/client";
+import StepsCard from "@/components/StepsCard";
+import ActivityCaloriesCard from "@/components/ActivityCaloriesCard";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -30,6 +33,8 @@ const Index = () => {
   const [count, setCount] = useState(0);
   const { t } = useTranslation();
   const [selectedAnalysis, setSelectedAnalysis] = useState<FoodEntry | null>(null);
+  const [steps, setSteps] = useState(0);
+  const [activityCalories, setActivityCalories] = useState(0);
 
   useEffect(() => {
     if (!api) {
@@ -41,6 +46,16 @@ const Index = () => {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
+
+  useEffect(() => {
+    const fetchHealthData = async () => {
+      if (HealthConnect.isAvailable()) {
+        HealthConnect.getSteps().then(setSteps);
+        HealthConnect.getCalories().then(setActivityCalories);
+      }
+    };
+    fetchHealthData();
+  }, []);
 
   const dailyGoals = {
     calories: profile?.goal_calories || 2000,
@@ -161,6 +176,18 @@ const Index = () => {
                           unit="g"
                           label={t('home.sugars')}
                       />
+                    </div>
+                  </div>
+                </motion.div>
+              </CarouselItem>
+
+              {/* Page 3: Activity */}
+              <CarouselItem>
+                <motion.div variants={cardVariants} animate={current === 2 ? "active" : "inactive"}>
+                  <div className="p-1 h-[360px] flex flex-col gap-2">
+                    <div className="grid grid-cols-2 gap-2 h-full">
+                      <StepsCard steps={steps} />
+                      <ActivityCaloriesCard calories={activityCalories} />
                     </div>
                   </div>
                 </motion.div>
