@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { HealthConnect } from '@/integrations/health-connect/client';
+import { HealthConnectClient } from '@/integrations/health-connect/client';
 
 interface HealthConnectStepProps {
   onContinue: () => void;
@@ -16,18 +16,13 @@ export const HealthConnectStep = ({ onContinue }: HealthConnectStepProps) => {
   const handleConnect = async () => {
     setIsLoading(true);
     try {
-      const granted = await HealthConnect.requestPermissions();
+      const granted = await HealthConnectClient.requestPermissions();
       if (granted) {
         toast.success(t('onboarding.health_connect.connect_success_title'), {
           description: t('onboarding.health_connect.connect_success_desc'),
         });
-        // Aquí podrías obtener datos iniciales si fuera necesario
-        // const steps = await HealthConnect.getSteps();
-        // console.log(`Pasos iniciales: ${steps}`);
       } else {
-        toast.info(t('onboarding.health_connect.permission_denied_title'), {
-          description: t('onboarding.health_connect.permission_denied_desc'),
-        });
+        // La toast de permisos denegados ya se muestra dentro de `requestPermissions`
       }
     } catch (error) {
       toast.error(t('onboarding.health_connect.connect_error_title'), {

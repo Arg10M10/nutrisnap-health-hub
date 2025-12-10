@@ -19,7 +19,7 @@ import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import RecentExerciseCard from "@/components/RecentExerciseCard";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import AnalysisDetailDrawer from "@/components/AnalysisDetailDrawer";
-import { HealthConnect } from "@/integrations/health-connect/client";
+import { HealthConnectClient } from "@/integrations/health-connect/client";
 import StepsCard from "@/components/StepsCard";
 import ActivityCaloriesCard from "@/components/ActivityCaloriesCard";
 
@@ -49,9 +49,9 @@ const Index = () => {
 
   useEffect(() => {
     const fetchHealthData = async () => {
-      if (HealthConnect.isAvailable()) {
-        HealthConnect.getSteps().then(setSteps);
-        HealthConnect.getCalories().then(setActivityCalories);
+      if (HealthConnectClient.isAvailable()) {
+        HealthConnectClient.getSteps().then(setSteps);
+        HealthConnectClient.getCalories().then(setActivityCalories);
       }
     };
     fetchHealthData();
