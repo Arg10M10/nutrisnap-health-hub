@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
   User, Edit, HeartPulse, SlidersHorizontal, Languages, Target, Goal, Palette,
-  Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, ChevronRight, Snowflake
+  Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, ChevronRight
 } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -12,7 +12,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,7 +20,6 @@ import { SettingsCategory } from "@/components/settings/SettingsCategory";
 import { SettingsItem } from "@/components/settings/SettingsItem";
 import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
 import UserAvatar from "@/components/UserAvatar";
-import { useSnow } from "@/context/SnowContext";
 
 const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
@@ -34,7 +32,6 @@ const Settings = () => {
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { snowEnabled, setSnowEnabled } = useSnow();
 
   const handleSignOut = async () => {
     await signOut();
@@ -127,28 +124,6 @@ const Settings = () => {
           <SettingsItem icon={<HeartPulse size={20} />} label={t('settings.account.personalDetails')} onClick={() => navigate('/settings/personal-details')} />
           <SettingsItem icon={<SlidersHorizontal size={20} />} label={t('settings.account.preferences')} onClick={() => navigate('/settings/preferences')} />
           <SettingsItem icon={<Languages size={20} />} label={t('settings.language')} onClick={() => setIsLanguageDrawerOpen(true)} />
-          <div className="flex flex-col gap-1 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-6 text-primary">
-                  <Snowflake size={20} />
-                </div>
-                <div>
-                  <p className="font-medium text-foreground">{t('settings.snow_effect_title')}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {t('settings.snow_effect_desc')}
-                  </p>
-                </div>
-              </div>
-              <Switch
-                checked={snowEnabled}
-                onCheckedChange={setSnowEnabled}
-              />
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-1 pl-9">
-              {t('settings.snow_effect_tip')}
-            </p>
-          </div>
         </SettingsCategory>
 
         {/* Goals and Tracking Category */}

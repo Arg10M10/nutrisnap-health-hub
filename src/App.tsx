@@ -36,9 +36,6 @@ import RingColors from "./pages/settings/RingColors";
 import RequestFeature from "./pages/settings/RequestFeature";
 import EditProfile from "./pages/settings/EditProfile";
 import PersonalDetails from "./pages/settings/PersonalDetails";
-import Snowfall from "./components/Snowfall";
-import LightBackground from "./components/LightBackground";
-import { SnowProvider, useSnow } from "./context/SnowContext";
 import BadgeDetailModal from "./components/BadgeDetailModal";
 import Subscribe from "./pages/Subscribe";
 
@@ -75,7 +72,6 @@ const GlobalBadgeModal = () => {
 const AppRoutes = () => {
   const { session, profile, loading } = useAuth();
   const location = useLocation();
-  const { snowEnabled } = useSnow();
 
   // Initialize Google Auth
   useEffect(() => {
@@ -111,13 +107,9 @@ const AppRoutes = () => {
 
   const shellClass = "relative min-h-screen"; 
 
-  const showSnow = snowEnabled && location.pathname !== "/scanner" && !!profile?.onboarding_completed;
-
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
-        <LightBackground />
-        <Snowfall enabled={showSnow} />
         <GlobalBadgeModal />
         <div className="relative z-10">
           <AnimatePresence mode="wait">
@@ -146,8 +138,6 @@ const AppRoutes = () => {
   if (!session) {
     return (
       <div className={shellClass}>
-        <LightBackground />
-        <Snowfall enabled={showSnow} />
         <div className="relative z-10">
           <Login />
         </div>
@@ -158,8 +148,6 @@ const AppRoutes = () => {
   if (!profile?.onboarding_completed) {
     return (
       <div className={shellClass}>
-        <LightBackground />
-        <Snowfall enabled={showSnow} />
         <div className="relative z-10">
           <Onboarding />
         </div>
@@ -169,8 +157,6 @@ const AppRoutes = () => {
 
   return (
     <div className={shellClass}>
-      <LightBackground />
-      <Snowfall enabled={showSnow} />
       <GlobalBadgeModal />
       <div className="pb-28 relative z-10">
         <AnimatedRoutes />
@@ -188,11 +174,9 @@ const App = () => (
           <ScrollToTop />
           <AuthProvider>
             <NutritionProvider>
-              <SnowProvider>
-                <Toaster />
-                <Sonner />
-                <AppRoutes />
-              </SnowProvider>
+              <Toaster />
+              <Sonner />
+              <AppRoutes />
             </NutritionProvider>
           </AuthProvider>
         </BrowserRouter>

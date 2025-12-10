@@ -8,8 +8,8 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* MODO CLARO: fondo definido ahora por el componente LightBackground */
-    --background: 140 80% 98%;              /* muy claro para componentes que usen bg-background */
+    /* MODO CLARO: fondo blanco estándar */
+    --background: 0 0% 100%;
     --foreground: 150 30% 15%;
 
     --card: 0 0% 100%;
@@ -50,8 +50,8 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* MODO OSCURO: fondo negro (muy oscuro) para que los copos blancos destaquen */
-    --background: 220 15% 6%;                 /* casi negro abajo */
+    /* MODO OSCURO: fondo negro (muy oscuro) */
+    --background: 220 15% 6%;
     --foreground: 150 10% 95%;
 
     --card: 220 15% 10%;
@@ -102,13 +102,10 @@ All colors MUST be HSL.
   }
 
   body {
-    /* Quitamos el bg-background predeterminado para que el componente LightBackground se vea */
-    /* Pero mantenemos un color base para modo oscuro */
-    @apply text-foreground dark:bg-background;
+    @apply bg-background text-foreground;
     font-size: 16px;
   }
 
-  /* Sin marco blanco de Vite: el fondo se ve en todas las pantallas */
   #root {
     max-width: 100%;
     margin: 0;
@@ -126,19 +123,6 @@ All colors MUST be HSL.
 
   h3 {
     @apply text-xl md:text-2xl font-semibold;
-  }
-}
-
-/* Animación de nieve suave */
-@keyframes calorel-snowfall {
-  0% {
-    transform: translate3d(0, -10%, 0);
-  }
-  50% {
-    transform: translate3d(10px, 50vh, 0);
-  }
-  100% {
-    transform: translate3d(-10px, 110vh, 0);
   }
 }
 
