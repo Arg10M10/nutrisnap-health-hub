@@ -81,7 +81,7 @@ const AppRoutes = () => {
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
       GoogleAuth.initialize({
-        clientId: '522700969452-vahnkkv9fr8l1rqvfb1e9do2opsp8p2k.apps.googleusercontent.com',
+        clientId: '522700969452-gof3re6i21fc0eotfbk4q496ke3gdl0k.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
         grantOfflineAccess: true,
       });
