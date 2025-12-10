@@ -15,9 +15,9 @@ import { ArrowLeft, Check, Loader2 } from 'lucide-react';
 import UserAvatar from '@/components/UserAvatar';
 import { cn } from '@/lib/utils';
 
-const profileSchema = z.object({
-  firstName: z.string().min(1, "El nombre es requerido."),
-  lastName: z.string().min(1, "El apellido es requerido."),
+const getProfileSchema = (t: (key: string) => string) => z.object({
+  firstName: z.string().min(1, t('zod.first_name_required')),
+  lastName: z.string().min(1, t('zod.last_name_required')),
 });
 
 const colorOptions = ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#6366F1', '#8B5CF6', '#EC4899'];
@@ -27,6 +27,8 @@ const EditProfile = () => {
   const { t } = useTranslation();
   const { profile, user, refetchProfile } = useAuth();
   const [selectedColor, setSelectedColor] = useState(profile?.avatar_color || colorOptions[7]);
+
+  const profileSchema = getProfileSchema(t);
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -45,7 +47,7 @@ const EditProfile = () => {
 
   const mutation = useMutation({
     mutationFn: async (values: z.infer<typeof profileSchema>) => {
-      if (!user) throw new Error('Usuario no encontrado');
+      if (!user) throw new Error('User not found');
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -57,11 +59,11 @@ const EditProfile = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success('Perfil actualizado con éxito');
+      toast.success(t('edit_profile.toast_success'));
       navigate(-1);
     },
     onError: (error) => {
-      toast.error('No se pudo actualizar el perfil.', { description: error.message });
+      toast.error(t('edit_profile.toast_error'), { description: error.message });
     },
   });
 
@@ -77,7 +79,7 @@ const EditProfile = () => {
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
           <ArrowLeft className="w-6 h-6" />
         </Button>
-        <h1 className="text-2xl font-bold text-primary">Editar Perfil</h1>
+        <h1 className="text-2xl font-bold text-primary">{t('edit_profile.title')}</h1>
       </header>
       <main className="flex-1 p-4">
         <Form {...form}>
@@ -100,15 +102,15 @@ const EditProfile = () => {
             </div>
             <div className="space-y-4">
               <FormField control={form.control} name="firstName" render={({ field }) => (
-                <FormItem><FormLabel>Nombre</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>{t('edit_profile.first_name')}</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="lastName" render={({ field }) => (
-                <FormItem><FormLabel>Apellido</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>{t('edit_profile.last_name')}</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
               )} />
             </div>
             <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={mutation.isPending}>
               {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Guardar Cambios
+              {t('edit_profile.save')}
             </Button>
           </form>
         </Form>
