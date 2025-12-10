@@ -274,11 +274,11 @@ const Scanner = () => {
 
         <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
           <header className="flex justify-between items-center w-full p-4 pointer-events-auto">
-            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 w-12 h-12">
-              <X className="w-7 h-7 text-white" />
+            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full w-12 h-12">
+              <X className="w-8 h-8 text-white" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => setIsInfoOpen(true)} className="rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 w-12 h-12">
-              <HelpCircle className="w-7 h-7 text-white" />
+            <Button variant="ghost" size="icon" onClick={() => setIsInfoOpen(true)} className="rounded-full w-12 h-12">
+              <HelpCircle className="w-8 h-8 text-white" />
             </Button>
           </header>
 
@@ -304,30 +304,26 @@ const Scanner = () => {
               </div>
             ) : state === 'camera' ? (
               <div className="flex items-center justify-around w-full max-w-md">
-                <Button
-                  variant="ghost"
-                  size="icon"
+                <button
                   onClick={toggleFlash}
                   disabled={!hasFlash}
-                  className="w-16 h-16 rounded-full disabled:opacity-50"
+                  className="p-2 rounded-full disabled:opacity-50 transition-opacity hover:opacity-80"
                   aria-label="Activar flash"
                 >
-                  {isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}
-                </Button>
+                  {isFlashOn ? <Zap className="w-10 h-10 text-yellow-300" /> : <ZapOff className="w-10 h-10 text-white" />}
+                </button>
                 <button
                   onClick={handleCapture}
                   className="w-20 h-20 rounded-full border-[6px] border-white bg-transparent transition-transform active:scale-95"
                   aria-label="Tomar foto"
                 />
-                <Button
-                  variant="ghost"
-                  size="icon"
+                <button
                   onClick={handleUploadClick}
-                  className="w-16 h-16 rounded-full"
+                  className="p-2 rounded-full transition-opacity hover:opacity-80"
                   aria-label="Subir imagen"
                 >
-                  <ImageIcon className="w-8 h-8 text-white" />
-                </Button>
+                  <ImageIcon className="w-10 h-10 text-white" />
+                </button>
               </div>
             ) : null}
           </footer>
