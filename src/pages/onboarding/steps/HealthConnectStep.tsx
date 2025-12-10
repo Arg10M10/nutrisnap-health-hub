@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, Zap } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { HealthConnect } from '@/integrations/health-connect/client';
@@ -42,9 +42,7 @@ export const HealthConnectStep = ({ onContinue }: HealthConnectStepProps) => {
   return (
     <div className="space-y-6 text-center">
       <div className="flex justify-center">
-        <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
-          <Zap className="w-12 h-12 text-primary" />
-        </div>
+        <img src="/health-connect-logo.png" alt="Health Connect Logo" className="w-48" />
       </div>
       <p className="text-muted-foreground">
         {t('onboarding.health_connect.description')}
