@@ -267,17 +267,17 @@ const Scanner = () => {
             <img
               src={capturedImage}
               alt="Captura de cámara"
-              className="w-full h-full object-cover opacity-50"
+              className="w-full h-full object-cover"
             />
           )}
         </div>
 
         <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
           <header className="flex justify-between items-center w-full p-4 pointer-events-auto">
-            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
+            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 w-12 h-12">
               <X className="w-7 h-7 text-white" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => setIsInfoOpen(true)} className="rounded-full bg-black/50 hover:bg-black/70 w-12 h-12">
+            <Button variant="ghost" size="icon" onClick={() => setIsInfoOpen(true)} className="rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 w-12 h-12">
               <HelpCircle className="w-7 h-7 text-white" />
             </Button>
           </header>
@@ -285,7 +285,7 @@ const Scanner = () => {
           <div className="flex-1 relative flex items-center justify-center">
             {state === 'camera' && <Viewfinder mode="food" />}
             {(state === 'loading' || startAnalysisMutation.isPending) && (
-               <div className="flex flex-col items-center gap-4">
+               <div className="flex flex-col items-center gap-4 bg-black/30 backdrop-blur-sm p-8 rounded-2xl">
                   <Loader2 className="w-16 h-16 text-primary animate-spin" />
                   <p className="text-xl font-bold animate-pulse">Procesando...</p>
                </div>
@@ -295,31 +295,39 @@ const Scanner = () => {
           <footer className="flex flex-col items-center gap-6 w-full p-4 pointer-events-auto">
             {state === 'captured' && !startAnalysisMutation.isPending ? (
               <div className="grid grid-cols-2 gap-4 w-full max-w-md">
-                <Button onClick={handleReset} variant="secondary" size="lg" className="h-16 text-lg rounded-2xl">
+                <Button onClick={handleReset} variant="outline" size="lg" className="h-16 text-lg rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20">
                   <RefreshCw className="mr-2 w-6 h-6" /> Repetir
                 </Button>
-                <Button onClick={handleManualAnalyze} size="lg" className="h-16 text-lg rounded-2xl">
+                <Button onClick={handleManualAnalyze} size="lg" className="h-16 text-lg rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
                   <Scan className="mr-2 w-6 h-6" /> Reintentar
                 </Button>
               </div>
             ) : state === 'camera' ? (
               <div className="flex items-center justify-around w-full max-w-md">
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={toggleFlash}
                   disabled={!hasFlash}
-                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
+                  className="w-14 h-14 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 disabled:opacity-50"
                   aria-label="Activar flash"
-                >{isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}</button>
+                >
+                  {isFlashOn ? <Zap className="w-7 h-7 text-yellow-300" /> : <ZapOff className="w-7 h-7 text-white" />}
+                </Button>
                 <button
                   onClick={handleCapture}
-                  className="w-20 h-20 rounded-full bg-white active:bg-gray-200 transition-all active:scale-95 border-4 border-transparent hover:border-gray-200"
+                  className="w-20 h-20 rounded-full border-[6px] border-white bg-transparent transition-transform active:scale-95"
                   aria-label="Tomar foto"
                 />
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={handleUploadClick}
-                  className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                  className="w-14 h-14 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50"
                   aria-label="Subir imagen"
-                ><ImageIcon className="w-8 h-8 text-white" /></button>
+                >
+                  <ImageIcon className="w-7 h-7 text-white" />
+                </Button>
               </div>
             ) : null}
           </footer>
