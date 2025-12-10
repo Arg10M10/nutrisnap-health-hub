@@ -61,7 +61,6 @@ const AnimatedRoutes = () => {
   );
 };
 
-// Componente separado para manejar el modal
 const GlobalBadgeModal = () => {
   const { unlockedBadge, closeBadgeModal } = useNutrition();
   return (
@@ -78,13 +77,13 @@ const AppRoutes = () => {
   const location = useLocation();
   const { snowEnabled } = useSnow();
 
-  // Initialize Google Auth on App Start
+  // Initialize Google Auth on App Start with the specific Client ID
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
       GoogleAuth.initialize({
         clientId: '522700969452-vahnkkv9fr8l1rqvfb1e9do2opsp8p2k.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
-        grantOfflineAccess: true,
+        grantOfflineAccess: false,
       });
     }
   }, []);

@@ -17,6 +17,12 @@ export default function Login() {
       if (Capacitor.isNativePlatform()) {
         const googleUser = await GoogleAuth.signIn();
         
+        console.log('Google User:', googleUser); // Debug log
+
+        if (!googleUser.authentication.idToken) {
+          throw new Error('No se recibió idToken de Google');
+        }
+
         const { error } = await supabase.auth.signInWithIdToken({
           provider: 'google',
           token: googleUser.authentication.idToken,
@@ -39,7 +45,9 @@ export default function Login() {
       }
     } catch (error: any) {
       console.error('Google Sign-In Error:', error);
-      toast.error('Error al iniciar sesión', { description: error.message || JSON.stringify(error) });
+      // Muestra el mensaje de error exacto para ayudar a depurar
+      const errorMessage = error.message || JSON.stringify(error);
+      toast.error('Error al iniciar sesión', { description: errorMessage });
     } finally {
       setLoading(false);
     }
