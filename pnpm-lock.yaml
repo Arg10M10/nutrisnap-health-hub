@@ -125,6 +125,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.90.11(react@18.3.1)
+      capacitor-health-connect:
+        specifier: ^0.7.0
+        version: 0.7.0(@capacitor/core@7.4.4)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -1895,6 +1898,11 @@ packages:
 
   caniuse-lite@1.0.30001757:
     resolution: {integrity: sha512-r0nnL/I28Zi/yjk1el6ilj27tKcdjLsNqAOZr0yVjWPrSQyHgKI2INaEWw21bAQSv2LXRt1XuCS/GomNpWOxsQ==}
+
+  capacitor-health-connect@0.7.0:
+    resolution: {integrity: sha512-QQJpnCoFU9x4A9//PgbVT1kqpiFFiGWoiEl/+oprR03YXDTHi9BjCqotIwgVl0HT9fxVqEfkyrFXhcBsSNIZrA==}
+    peerDependencies:
+      '@capacitor/core': ^5.0.0
 
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
@@ -4656,6 +4664,10 @@ snapshots:
   camelcase-css@2.0.1: {}
 
   caniuse-lite@1.0.30001757: {}
+
+  capacitor-health-connect@0.7.0(@capacitor/core@7.4.4):
+    dependencies:
+      '@capacitor/core': 7.4.4
 
   chalk@4.1.2:
     dependencies:

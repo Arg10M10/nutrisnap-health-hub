@@ -1,8 +1,8 @@
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
 // Importamos el plugin real de Health Connect.
-// Asegúrate de que el nombre coincida con el plugin que instales.
-import { HealthConnect as HealthConnectPlugin } from '@capacitor-community/health-connect';
+// Este es el nombre correcto del paquete.
+import { HealthConnect as HealthConnectPlugin } from 'capacitor-health-connect';
 
 const isAvailable = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android';
 
