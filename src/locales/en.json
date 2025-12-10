@@ -455,7 +455,12 @@
       "main_description": "Automatically sync your activity data.",
       "description": "Connect with Health Connect to import your steps, workouts, and more for more accurate calorie tracking.",
       "connect_button": "Connect & Continue",
-      "skip": "Skip for now"
+      "skip": "Skip for now",
+      "connect_success_title": "Connected with Health Connect!",
+      "connect_success_desc": "Your activity data will now sync automatically.",
+      "permission_denied_title": "Permissions not granted.",
+      "permission_denied_desc": "You can connect later from the settings.",
+      "connect_error_title": "Connection Error"
     },
     "final": {
       "title": "You're one step away!",

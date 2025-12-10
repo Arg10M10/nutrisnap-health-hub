@@ -455,7 +455,12 @@
       "main_description": "Sincroniza automáticamente tus datos de actividad.",
       "description": "Conecta con Health Connect para importar tus pasos, entrenamientos y más, y así obtener un seguimiento calórico más preciso.",
       "connect_button": "Conectar y Continuar",
-      "skip": "Omitir por ahora"
+      "skip": "Omitir por ahora",
+      "connect_success_title": "¡Conectado con Health Connect!",
+      "connect_success_desc": "Tus datos de actividad se sincronizarán automáticamente.",
+      "permission_denied_title": "No se concedieron los permisos.",
+      "permission_denied_desc": "Puedes conectarlo más tarde desde los ajustes.",
+      "connect_error_title": "Error al conectar"
     },
     "final": {
       "title": "¡Estás a un paso!",
