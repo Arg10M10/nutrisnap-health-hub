@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
@@ -10,13 +9,14 @@ import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ArrowLeft, Sun, Moon, Monitor } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
 const Preferences = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { t } = useTranslation();
-  const [badgeCelebrations, setBadgeCelebrations] = useState(true);
-  const [dailyReminders, setDailyReminders] = useState(false);
+  const [badgeCelebrations, setBadgeCelebrations] = useLocalStorage('preferences:badgeCelebrations', true);
+  const [dailyReminders, setDailyReminders] = useLocalStorage('preferences:dailyReminders', false);
 
   const themeOptions = [
     { value: 'light', label: t('preferences.theme_light'), icon: Sun, image: '/light-theme-preview.png' },
