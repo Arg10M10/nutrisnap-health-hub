@@ -15,6 +15,7 @@ interface OnboardingLayoutProps {
   canContinue: boolean;
   isPending: boolean;
   continueText?: string;
+  hideContinueButton?: boolean;
 }
 
 export const OnboardingLayout = ({
@@ -28,6 +29,7 @@ export const OnboardingLayout = ({
   canContinue,
   isPending,
   continueText,
+  hideContinueButton = false,
 }: OnboardingLayoutProps) => {
   const { t } = useTranslation();
   const progressValue = (step / totalSteps) * 100;
@@ -56,14 +58,16 @@ export const OnboardingLayout = ({
             <p className="mt-3 text-lg text-muted-foreground">{description}</p>
           </div>
           <div className="text-left">{children}</div>
-          <Button
-            size="lg"
-            className="w-full h-14 text-lg"
-            onClick={onContinue}
-            disabled={!canContinue || isPending}
-          >
-            {continueText || t('onboarding.continue')}
-          </Button>
+          {!hideContinueButton && (
+            <Button
+              size="lg"
+              className="w-full h-14 text-lg"
+              onClick={onContinue}
+              disabled={!canContinue || isPending}
+            >
+              {continueText || t('onboarding.continue')}
+            </Button>
+          )}
         </div>
       </main>
     </div>

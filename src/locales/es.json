@@ -40,10 +40,7 @@
       "description": "Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y tus datos de nuestros servidores.",
       "confirm": "Sí, eliminar cuenta",
       "cancel": "Cancelar"
-    },
-    "snow_effect_title": "Efecto de Nieve",
-    "snow_effect_desc": "Activa copos de nieve cayendo suavemente en el fondo.",
-    "snow_effect_tip": "Consejo: Se ve mejor en modo oscuro."
+    }
   },
   "languages": {
     "es": "Español",
@@ -452,6 +449,13 @@
       "description": "¿Cuál es el peso que te gustaría alcanzar?",
       "label": "Peso Objetivo",
       "disclaimer": "Este será el objetivo que verás en tu gráfica de progreso."
+    },
+    "health_connect": {
+      "title": "Conecta tu Salud",
+      "main_description": "Sincroniza automáticamente tus datos de actividad.",
+      "description": "Conecta con Health Connect para importar tus pasos, entrenamientos y más, y así obtener un seguimiento calórico más preciso.",
+      "connect_button": "Conectar y Continuar",
+      "skip": "Omitir por ahora"
     },
     "final": {
       "title": "¡Estás a un paso!",

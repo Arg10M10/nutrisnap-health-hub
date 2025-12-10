@@ -40,10 +40,7 @@
       "description": "This action cannot be undone. This will permanently delete your account and your data from our servers.",
       "confirm": "Yes, delete account",
       "cancel": "Cancel"
-    },
-    "snow_effect_title": "Holiday Snow Effect",
-    "snow_effect_desc": "Enable snowflakes falling gently in the background.",
-    "snow_effect_tip": "Tip: Looks best in dark mode."
+    }
   },
   "languages": {
     "es": "Spanish",
@@ -452,6 +449,13 @@
       "description": "What is the weight you would like to reach?",
       "label": "Goal Weight",
       "disclaimer": "This will be the target you'll see on your progress chart."
+    },
+    "health_connect": {
+      "title": "Connect Your Health",
+      "main_description": "Automatically sync your activity data.",
+      "description": "Connect with Health Connect to import your steps, workouts, and more for more accurate calorie tracking.",
+      "connect_button": "Connect & Continue",
+      "skip": "Skip for now"
     },
     "final": {
       "title": "You're one step away!",
