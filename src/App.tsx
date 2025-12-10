@@ -80,6 +80,7 @@ const AppRoutes = () => {
   // Initialize Google Auth on App Start with the specific Client ID
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
+      console.log("Initializing Google Auth with Client ID: 522700969452-...");
       GoogleAuth.initialize({
         clientId: '522700969452-vahnkkv9fr8l1rqvfb1e9do2opsp8p2k.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
