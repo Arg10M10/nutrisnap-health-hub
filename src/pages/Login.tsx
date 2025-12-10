@@ -1,30 +1,52 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Leaf, Loader2 } from "lucide-react";
 import { toast } from 'sonner';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { Capacitor } from '@capacitor/core';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      GoogleAuth.initialize();
+    }
+  }, []);
+
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: "calorel://auth",
-          queryParams: {
-            client_id: "522700969452-vahnkkv9fr8l1rqvfb1e9do2opsp8p2k.apps.googleusercontent.com"
-          }
-        }
-      });
-      
-      if (error) throw error;
-      // No need to set loading false here as the browser will open
+      // Nativo (Android/iOS)
+      if (Capacitor.isNativePlatform()) {
+        const googleUser = await GoogleAuth.signIn();
+        
+        const { error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: googleUser.authentication.idToken,
+        });
+        
+        if (error) throw error;
+      } else {
+        // Web Fallback (por si acaso se prueba en navegador)
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin,
+            queryParams: {
+              access_type: 'offline',
+              prompt: 'consent',
+            },
+          },
+        });
+        if (error) throw error;
+      }
     } catch (error: any) {
-      toast.error(error.message);
+      console.error('Google Sign-In Error:', error);
+      toast.error('Error al iniciar sesión', { description: error.message || JSON.stringify(error) });
+    } finally {
       setLoading(false);
     }
   };
@@ -37,10 +59,10 @@ export default function Login() {
             <Leaf className="w-16 h-16 text-primary" />
             <div className="space-y-1.5 flex flex-col items-center text-center">
               <h2 className="text-3xl font-bold text-foreground">
-                Welcome to Calorel
+                Bienvenido a Calorel
               </h2>
               <p className="text-muted-foreground px-4">
-                Your smart health companion. Start your journey with a single click.
+                Tu compañero de salud inteligente. Comienza tu viaje con un solo clic.
               </p>
             </div>
           </CardHeader>
@@ -56,20 +78,20 @@ export default function Login() {
               ) : (
                 <>
                   <img src="/google-logo.png" alt="Google logo" className="mr-3 h-6 w-6" />
-                  Continue with Google
+                  Continuar con Google
                 </>
               )}
             </Button>
           </CardContent>
           <CardFooter className="flex justify-center !py-6 mt-4">
             <p className="text-center text-xs text-muted-foreground px-4">
-              By continuing, you agree to our{" "}
+              Al continuar, aceptas nuestros{" "}
               <a href="#" className="text-primary hover:underline">
-                Terms of Service
+                Términos de Servicio
               </a>{" "}
-              and{" "}
+              y{" "}
               <a href="#" className="text-primary hover:underline">
-                Privacy Policy
+                Política de Privacidad
               </a>.
             </p>
           </CardFooter>

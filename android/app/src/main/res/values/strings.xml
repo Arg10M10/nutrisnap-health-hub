@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">nutrisnap-health-hub</string>
-    <string name="title_activity_main">nutrisnap-health-hub</string>
-    <string name="package_name">com.example.nutrisnaphealthhub</string>
-    <string name="custom_url_scheme">com.example.nutrisnaphealthhub</string>
+    <string name="app_name">Calorel</string>
+    <string name="title_activity_main">Calorel</string>
+    <string name="package_name">com.calorel.app</string>
+    <string name="custom_url_scheme">com.calorel.app</string>
 </resources>

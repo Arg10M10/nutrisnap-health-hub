@@ -1,12 +1,9 @@
-import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { App as CapacitorApp } from '@capacitor/app';
-import { supabase } from "@/integrations/supabase/client";
 import { NutritionProvider, useNutrition } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -77,19 +74,6 @@ const AppRoutes = () => {
   const { session, profile, loading } = useAuth();
   const location = useLocation();
   const { snowEnabled } = useSnow();
-
-  // Handle Deep Links for Auth
-  useEffect(() => {
-    CapacitorApp.addListener('appUrlOpen', async ({ url }) => {
-      if (url.startsWith('calorel://auth')) {
-        // Al regresar a la app, Supabase detectará los tokens en la URL hash automáticamente
-        // si la URL se pasa correctamente, pero en Capacitor a veces hay que forzar la actualización
-        // o dejar que el AuthContext (que ya corre getSession y onAuthStateChange) lo maneje.
-        // Forzamos un chequeo de sesión para asegurar.
-        await supabase.auth.getSession();
-      }
-    });
-  }, []);
 
   if (loading) {
     return <SplashScreen />;
