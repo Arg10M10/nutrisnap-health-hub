@@ -1,57 +1,109 @@
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
-
-// Esto es una implementación simulada de un plugin de Health Connect.
-// En un escenario real, instalarías un plugin de Capacitor
-// y estas funciones llamarían a la API nativa de Health Connect de Android.
+// Importamos el plugin real de Health Connect.
+// Asegúrate de que el nombre coincida con el plugin que instales.
+import { HealthConnect as HealthConnectPlugin } from '@capacitor-community/health-connect';
 
 const isAvailable = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android';
 
 /**
- * Simula la solicitud de permisos al usuario.
- * En una implementación real, esto abriría un diálogo nativo.
+ * Solicita permisos al usuario para leer datos de Health Connect.
+ * Llama al plugin nativo si está en Android, de lo contrario no hace nada en web.
  */
 const requestPermissions = async (): Promise<boolean> => {
   if (!isAvailable()) {
-    toast.info("Health Connect no está disponible en esta plataforma.");
-    console.log("Health Connect is not available on this platform.");
-    // Devolvemos true para que el flujo continúe en web sin bloquear.
+    console.log("Health Connect no está disponible en esta plataforma (usando simulación web).");
+    // En la web, no pedimos permisos reales, así que asumimos que se conceden para continuar el flujo.
     return true;
   }
 
-  // Simulamos la interacción del usuario con el diálogo de permisos.
-  // Usamos un diálogo de confirmación para esta simulación.
-  const granted = confirm(
-    "Calorel quiere acceder a tus datos de Health Connect para leer tus pasos y calorías quemadas. ¿Permitir?"
-  );
-
-  if (granted) {
-    console.log("Permisos de Health Connect concedidos (simulación).");
-    return true;
-  } else {
-    console.log("Permisos de Health Connect denegados (simulación).");
+  try {
+    // Esta es la llamada real al plugin nativo.
+    const result = await HealthConnectPlugin.requestPermissions({
+      // NOTA: Adapta estos permisos a los que necesites exactamente.
+      read: ['Steps', 'TotalCaloriesBurned']
+    });
+    
+    if (result.granted) {
+      console.log("Permisos de Health Connect concedidos.");
+      return true;
+    } else {
+      console.log("Permisos de Health Connect denegados.");
+      toast.info("Permisos denegados", { description: "No se pudo acceder a Health Connect." });
+      return false;
+    }
+  } catch (error) {
+    console.error("Error al solicitar permisos de Health Connect:", error);
+    toast.error("Error de Health Connect", { description: "No se pudo solicitar permisos." });
     return false;
   }
 };
 
 /**
- * Simula la lectura del conteo de pasos de hoy.
+ * Obtiene el conteo de pasos de hoy desde Health Connect.
+ * Si no está en un dispositivo nativo, devuelve un valor simulado.
  */
 const getSteps = async (): Promise<number> => {
-    if (!isAvailable()) return 0;
-    // Devuelve un número aleatorio para la demostración.
-    return Math.floor(Math.random() * 5000) + 1000;
+    if (!isAvailable()) {
+        // Simulación para desarrollo en web.
+        return Math.floor(Math.random() * 5000) + 1000;
+    }
+    
+    try {
+        // Llamada real al plugin para obtener los pasos de hoy.
+        const today = new Date();
+        const startTime = new Date(today.setHours(0, 0, 0, 0));
+
+        const response = await HealthConnectPlugin.readRecords({
+            recordType: 'Steps',
+            timeRange: {
+                operator: 'between',
+                startTime: startTime.toISOString(),
+                endTime: new Date().toISOString(),
+            }
+        });
+        
+        const totalSteps = response.records.reduce((sum, record) => sum + (record.count as number), 0);
+        return totalSteps;
+
+    } catch (error) {
+        console.error("Error al leer los pasos de Health Connect:", error);
+        return 0;
+    }
 };
 
 /**
- * Simula la lectura de las calorías activas quemadas hoy.
+ * Obtiene las calorías activas quemadas hoy desde Health Connect.
+ * Si no está en un dispositivo nativo, devuelve un valor simulado.
  */
 const getCalories = async (): Promise<number> => {
-    if (!isAvailable()) return 0;
-    // Devuelve un número aleatorio para la demostración.
-    return Math.floor(Math.random() * 300) + 50;
-};
+    if (!isAvailable()) {
+        // Simulación para desarrollo en web.
+        return Math.floor(Math.random() * 300) + 50;
+    }
 
+    try {
+        // Llamada real al plugin para obtener las calorías de hoy.
+        const today = new Date();
+        const startTime = new Date(today.setHours(0, 0, 0, 0));
+
+        const response = await HealthConnectPlugin.readRecords({
+            recordType: 'TotalCaloriesBurned',
+            timeRange: {
+                operator: 'between',
+                startTime: startTime.toISOString(),
+                endTime: new Date().toISOString(),
+            }
+        });
+
+        const totalCalories = response.records.reduce((sum, record) => sum + (record.energy as any)?.value, 0);
+        return Math.round(totalCalories);
+
+    } catch (error) {
+        console.error("Error al leer las calorías de Health Connect:", error);
+        return 0;
+    }
+};
 
 export const HealthConnect = {
   isAvailable,
