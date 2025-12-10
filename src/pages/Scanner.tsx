@@ -309,10 +309,10 @@ const Scanner = () => {
                   size="icon"
                   onClick={toggleFlash}
                   disabled={!hasFlash}
-                  className="w-14 h-14 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 disabled:opacity-50"
+                  className="w-16 h-16 rounded-full disabled:opacity-50"
                   aria-label="Activar flash"
                 >
-                  {isFlashOn ? <Zap className="w-7 h-7 text-yellow-300" /> : <ZapOff className="w-7 h-7 text-white" />}
+                  {isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}
                 </Button>
                 <button
                   onClick={handleCapture}
@@ -323,10 +323,10 @@ const Scanner = () => {
                   variant="ghost"
                   size="icon"
                   onClick={handleUploadClick}
-                  className="w-14 h-14 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50"
+                  className="w-16 h-16 rounded-full"
                   aria-label="Subir imagen"
                 >
-                  <ImageIcon className="w-7 h-7 text-white" />
+                  <ImageIcon className="w-8 h-8 text-white" />
                 </Button>
               </div>
             ) : null}
