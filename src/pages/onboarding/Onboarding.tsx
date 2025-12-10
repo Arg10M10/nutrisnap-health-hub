@@ -14,10 +14,9 @@ import { MetricsStep } from './steps/MetricsStep';
 import { MotivationStep } from './steps/MotivationStep';
 import { GoalStep } from './steps/GoalStep';
 import { GoalWeightStep } from './steps/GoalWeightStep';
-import { HealthConnectStep } from './steps/HealthConnectStep';
 import { FinalStep } from './steps/FinalStep';
 
-const TOTAL_STEPS = 9;
+const TOTAL_STEPS = 8;
 
 const Onboarding = () => {
   const { user, refetchProfile } = useAuth();
@@ -142,13 +141,6 @@ const Onboarding = () => {
                   setUnits={(v) => updateFormData('units', v)}
                 />,
       canContinue: formData.goalWeight !== null,
-    },
-    {
-      title: t('onboarding.health_connect.title'),
-      description: t('onboarding.health_connect.main_description'),
-      content: <HealthConnectStep onContinue={onContinue} />,
-      canContinue: true,
-      hideContinueButton: true,
     },
     {
       title: t('onboarding.final.title'),
