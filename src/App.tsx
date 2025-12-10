@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { Capacitor } from '@capacitor/core';
 import { NutritionProvider, useNutrition } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -58,7 +61,7 @@ const AnimatedRoutes = () => {
   );
 };
 
-// Componente separado para manejar el modal, ya que necesita usar el hook useNutrition
+// Componente separado para manejar el modal
 const GlobalBadgeModal = () => {
   const { unlockedBadge, closeBadgeModal } = useNutrition();
   return (
@@ -74,6 +77,17 @@ const AppRoutes = () => {
   const { session, profile, loading } = useAuth();
   const location = useLocation();
   const { snowEnabled } = useSnow();
+
+  // Initialize Google Auth on App Start
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      GoogleAuth.initialize({
+        clientId: '522700969452-vahnkkv9fr8l1rqvfb1e9do2opsp8p2k.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+        grantOfflineAccess: true,
+      });
+    }
+  }, []);
 
   if (loading) {
     return <SplashScreen />;

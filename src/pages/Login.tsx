@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -9,12 +9,6 @@ import { Capacitor } from '@capacitor/core';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      GoogleAuth.initialize();
-    }
-  }, []);
 
   const signInWithGoogle = async () => {
     setLoading(true);
@@ -30,7 +24,7 @@ export default function Login() {
         
         if (error) throw error;
       } else {
-        // Web Fallback (por si acaso se prueba en navegador)
+        // Web Fallback
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {

@@ -4,4 +4,5 @@
     <string name="title_activity_main">Calorel</string>
     <string name="package_name">com.calorel.app</string>
     <string name="custom_url_scheme">com.calorel.app</string>
+    <string name="server_client_id">522700969452-vahnkkv9fr8l1rqvfb1e9do2opsp8p2k.apps.googleusercontent.com</string>
 </resources>
