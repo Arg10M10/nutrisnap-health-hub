@@ -13,41 +13,46 @@ export default function Login() {
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      // Nativo (Android/iOS)
-      if (Capacitor.isNativePlatform()) {
-        const googleUser = await GoogleAuth.signIn();
-        
-        console.log('Google User:', googleUser); // Debug log
+      // 1. Iniciar sesión con el Plugin Nativo
+      console.log("Iniciando GoogleAuth.signIn()...");
+      const googleUser = await GoogleAuth.signIn();
+      
+      console.log('Respuesta completa de Google:', JSON.stringify(googleUser));
 
-        if (!googleUser.authentication.idToken) {
-          throw new Error('No se recibió idToken de Google');
-        }
+      // 2. Extraer el ID Token. 
+      // El plugin suele devolverlo en 'authentication.idToken', pero a veces en la raíz dependiendo de la versión.
+      const idToken = googleUser.authentication?.idToken || googleUser.idToken;
 
-        const { error } = await supabase.auth.signInWithIdToken({
-          provider: 'google',
-          token: googleUser.authentication.idToken,
-        });
-        
-        if (error) throw error;
-      } else {
-        // Web Fallback
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: {
-            redirectTo: window.location.origin,
-            queryParams: {
-              access_type: 'offline',
-              prompt: 'consent',
-            },
-          },
-        });
-        if (error) throw error;
+      if (!idToken) {
+        throw new Error('No se recibió el ID Token de Google. Revisa la consola para ver el objeto completo.');
       }
+
+      console.log("ID Token recibido, enviando a Supabase...");
+
+      // 3. Autenticar en Supabase usando el ID Token
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: idToken, // IMPORTANTE: Supabase v2 usa 'token', no 'id_token'
+      });
+      
+      if (error) {
+        console.error("Error de Supabase:", error);
+        throw error;
+      }
+
+      console.log("Sesión iniciada correctamente:", data);
+
     } catch (error: any) {
-      console.error('Google Sign-In Error:', error);
-      // Muestra el mensaje de error exacto para ayudar a depurar
-      const errorMessage = error.message || JSON.stringify(error);
-      toast.error('Error al iniciar sesión', { description: errorMessage });
+      console.error('Error General en Login:', error);
+      
+      // Manejo de errores comunes
+      let message = error.message || JSON.stringify(error);
+      
+      if (message.includes("10") || message.includes("Something went wrong")) {
+        message = "Error de configuración de Google (Código 10). Verifica el SHA-1 en la consola de Google Cloud.";
+      }
+
+      toast.error('Error al iniciar sesión', { description: message });
     } finally {
       setLoading(false);
     }
