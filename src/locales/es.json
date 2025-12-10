@@ -360,6 +360,7 @@
     "first_name": "Nombre",
     "last_name": "Apellido",
     "age": "Edad",
+    "years_unit": "años",
     "gender": "Género",
     "gender_placeholder": "Selecciona tu género",
     "gender_female": "Femenino",

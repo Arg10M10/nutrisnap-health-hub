@@ -60,7 +60,7 @@ const EditAgeDrawer = ({ isOpen, onClose, currentAge }: EditAgeDrawerProps) => {
               onValueChange={setNewAge}
               className="w-24"
             />
-            <span className="text-2xl text-muted-foreground font-semibold ml-2">años</span>
+            <span className="text-2xl text-muted-foreground font-semibold ml-2">{t('edit_profile.years_unit')}</span>
           </div>
         </div>
         <DrawerFooter>

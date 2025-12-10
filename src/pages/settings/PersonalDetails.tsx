@@ -81,7 +81,7 @@ const PersonalDetails = () => {
 
         <Card>
           <CardContent className="p-4 divide-y">
-            <InfoRow label={t('edit_profile.age')} value={`${profile?.age || '-'} años`} onEdit={() => setIsAgeDrawerOpen(true)} />
+            <InfoRow label={t('edit_profile.age')} value={`${profile?.age || '-'} ${t('edit_profile.years_unit')}`} onEdit={() => setIsAgeDrawerOpen(true)} />
             <InfoRow label={t('edit_profile.height')} value={formatHeight(profile?.height)} onEdit={() => setIsHeightDrawerOpen(true)} />
             <InfoRow label={t('edit_profile.weight')} value={`${profile?.weight || '-'} ${weightUnit}`} onEdit={() => setIsWeightDrawerOpen(true)} />
             <InfoRow label={t('edit_profile.gender')} value={t(getTranslationKey('edit_profile.gender', profile?.gender), { defaultValue: profile?.gender || '-' })} onEdit={() => setEditingField('gender')} />
