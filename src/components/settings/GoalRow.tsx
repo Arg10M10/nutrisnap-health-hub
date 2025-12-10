@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 
 interface GoalRowProps {
   icon: ReactNode;
@@ -12,6 +12,26 @@ interface GoalRowProps {
 }
 
 export const GoalRow = ({ icon, label, value, unit, onChange, color }: GoalRowProps) => {
+  const [displayValue, setDisplayValue] = useState(String(value));
+
+  useEffect(() => {
+    // Sincroniza el valor de la UI con el estado del padre, pero solo si no están ya en sintonía.
+    // Esto evita que se sobrescriba un campo vacío (que el usuario está editando) con un '0' del estado del padre.
+    if (Number(displayValue) !== value) {
+      setDisplayValue(String(value));
+    }
+  }, [value, displayValue]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    // Permite un string vacío o cualquier cadena de dígitos.
+    if (val === '' || /^[0-9]+$/.test(val)) {
+      setDisplayValue(val);
+      // Notifica al padre del cambio numérico. Number('') se convierte en 0.
+      onChange(Number(val));
+    }
+  };
+
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex items-center gap-4">
@@ -24,9 +44,11 @@ export const GoalRow = ({ icon, label, value, unit, onChange, color }: GoalRowPr
         </div>
       </div>
       <Input
-        type="number"
-        value={value}
-        onChange={(e) => onChange(parseInt(e.target.value, 10) || 0)}
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        value={displayValue}
+        onChange={handleChange}
         className="w-24 text-center text-lg font-semibold h-12"
       />
     </div>
