@@ -253,12 +253,8 @@
     "carbs": "Carbohidratos",
     "fats": "Grasas",
     "sugars": "Azúcares",
-    "steps": "Pasos",
-    "steps_unit": "pasos",
     "save": "Guardar Metas",
-    "ai_suggestions": "Sugerencias de la IA",
-    "save_success": "Metas guardadas con éxito.",
-    "save_error": "No se pudieron guardar las metas."
+    "ai_suggestions": "Sugerencias de la IA"
   },
   "ai_suggestions": {
     "title": "Sugerencias de Metas por IA",

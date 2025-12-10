@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ArrowLeft, Sun, Moon, Monitor } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -12,6 +15,8 @@ const Preferences = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { t } = useTranslation();
+  const [badgeCelebrations, setBadgeCelebrations] = useState(true);
+  const [dailyReminders, setDailyReminders] = useState(false);
 
   const themeOptions = [
     { value: 'light', label: t('preferences.theme_light'), icon: Sun, image: '/light-theme-preview.png' },
@@ -60,6 +65,44 @@ const Preferences = () => {
                   </TooltipTrigger>
                 </Tooltip>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('preferences.notifications_title')}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="badge-celebrations" className="font-semibold text-base">
+                  {t('preferences.badge_celebrations')}
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  {t('preferences.badge_celebrations_desc')}
+                </p>
+              </div>
+              <Switch
+                id="badge-celebrations"
+                checked={badgeCelebrations}
+                onCheckedChange={setBadgeCelebrations}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="daily-reminders" className="font-semibold text-base">
+                  {t('preferences.daily_reminders')}
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  {t('preferences.daily_reminders_desc')}
+                </p>
+              </div>
+              <Switch
+                id="daily-reminders"
+                checked={dailyReminders}
+                onCheckedChange={setDailyReminders}
+              />
             </div>
           </CardContent>
         </Card>
