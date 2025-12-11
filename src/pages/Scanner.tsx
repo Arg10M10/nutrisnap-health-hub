@@ -260,7 +260,7 @@ const Scanner = () => {
             onCanPlay={() => setState("camera")}
             className={cn(
               "w-full h-full object-cover",
-              state === "camera" ? "block" : "hidden"
+              state === "captured" || state === "loading" || state === 'error' ? "hidden" : "block"
             )}
           />
           {capturedImage && (state === 'captured' || state === 'loading' || startAnalysisMutation.isPending) && (
@@ -300,7 +300,7 @@ const Scanner = () => {
             )}
           </div>
 
-          <footer className="flex flex-col items-center gap-6 w-full p-4 pointer-events-auto">
+          <footer className="flex flex-col items-center gap-6 w-full p-4 pb-16 pointer-events-auto">
             {state === 'captured' && !startAnalysisMutation.isPending ? (
               <div className="grid grid-cols-2 gap-4 w-full max-w-md">
                 <Button onClick={handleReset} variant="outline" size="lg" className="h-16 text-lg rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20">
@@ -321,12 +321,16 @@ const Scanner = () => {
                 >
                   {isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}
                 </motion.button>
+                
                 <motion.button
                   onClick={handleCapture}
-                  className="w-20 h-20 rounded-full border-[6px] border-white bg-transparent"
+                  className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center bg-transparent"
                   whileTap={{ scale: 0.9 }}
                   aria-label="Tomar foto"
-                />
+                >
+                  <div className="w-16 h-16 rounded-full bg-white" />
+                </motion.button>
+
                 <motion.button
                   onClick={handleUploadClick}
                   className="w-16 h-16 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm"
