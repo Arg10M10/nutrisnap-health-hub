@@ -19,6 +19,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const formSchema = z.object({
   title: z.string().min(5, "El título debe tener al menos 5 caracteres.").max(100),
@@ -33,19 +34,27 @@ interface NewFeatureRequestDrawerProps {
 const NewFeatureRequestDrawer = ({ isOpen, onClose }: NewFeatureRequestDrawerProps) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   const mutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const { error } = await supabase.from('feature_requests').insert(values);
+      if (!user) throw new Error("Usuario no autenticado");
+      
+      const { error } = await supabase.from('feature_requests').insert({
+        ...values,
+        user_id: user.id
+      });
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feature_requests'] });
       form.reset();
       onClose();
+      toast.success(t('new_request_drawer.toast_success'));
     },
     onError: (error) => {
       toast.error(t('new_request_drawer.toast_error'), { description: error.message });

@@ -10,8 +10,8 @@ interface LanguageDrawerProps {
 }
 
 const languages = [
-  { code: 'es', name: 'Español', flag: '/es-flag.png' },
-  { code: 'en', name: 'Inglés', flag: '/us-flag.png' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'en', name: 'Inglés', flag: '🇺🇸' },
 ];
 
 export const LanguageDrawer = ({ isOpen, onClose }: LanguageDrawerProps) => {
@@ -35,16 +35,16 @@ export const LanguageDrawer = ({ isOpen, onClose }: LanguageDrawerProps) => {
               variant="outline"
               size="lg"
               className={cn(
-                'w-full h-14 text-lg justify-between p-6',
+                'w-full h-16 text-lg justify-between p-6',
                 i18n.language.startsWith(lang.code) && 'border-primary ring-2 ring-primary'
               )}
               onClick={() => changeLanguage(lang.code)}
             >
               <div className="flex items-center gap-4">
-                <img src={lang.flag} alt={`${lang.name} flag`} className="w-8 h-6 rounded-sm object-cover" />
+                <span className="text-3xl">{lang.flag}</span>
                 <span>{t(`languages.${lang.code}` as any)}</span>
               </div>
-              {i18n.language.startsWith(lang.code) && <Check className="w-5 h-5 text-primary" />}
+              {i18n.language.startsWith(lang.code) && <Check className="w-6 h-6 text-primary" />}
             </Button>
           ))}
         </div>
