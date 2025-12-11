@@ -273,7 +273,7 @@ const Scanner = () => {
         </div>
 
         <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
-          <header className="flex justify-between items-center w-full p-4 pointer-events-auto">
+          <header className="flex justify-between items-center w-full p-4 pt-8 pointer-events-auto">
             <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full w-12 h-12">
               <X className="w-8 h-8 text-white" />
             </Button>

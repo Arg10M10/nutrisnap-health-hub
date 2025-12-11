@@ -36,7 +36,7 @@ export const OnboardingLayout = ({
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="p-4">
+      <header className="p-4 pt-8">
         <div className="flex items-center gap-4 mx-auto max-w-xl">
           {step > 1 && (
             <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full">

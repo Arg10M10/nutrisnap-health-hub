@@ -73,7 +73,7 @@ const EditProfile = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="p-4 flex items-center gap-4 sticky top-0 bg-background/80 backdrop-blur-sm z-10 border-b">
+      <header className="p-4 pt-8 flex items-center gap-4 sticky top-0 bg-background/80 backdrop-blur-sm z-10 border-b">
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
           <ArrowLeft className="w-6 h-6" />
         </Button>
