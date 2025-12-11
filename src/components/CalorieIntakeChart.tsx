@@ -98,7 +98,8 @@ const CalorieIntakeChart = () => {
       const day = subDays(now, daysInRange - 1 - i);
       const dayKey = format(day, 'yyyy-MM-dd');
       return {
-        day: format(day, "d MMM", { locale: dateLocale }),
+        day: format(day, timeRange === '1Y' ? "MMM" : "d MMM", { locale: dateLocale }),
+        fullDate: format(day, "PPP", { locale: dateLocale }), // For tooltip
         calories: dailyCalories[dayKey] || 0,
       };
     });
@@ -108,81 +109,90 @@ const CalorieIntakeChart = () => {
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      // Usamos los datos completos (fullDate) si están disponibles, sino el label del eje X
+      const dateLabel = payload[0].payload.fullDate || label;
       return (
-        <div className="bg-background/80 backdrop-blur-sm p-2 px-4 border rounded-lg shadow-lg">
-          <p className="label text-sm text-muted-foreground">{`${label}`}</p>
-          <p className="intro font-bold text-foreground">{`${payload[0].value} kcal`}</p>
+        <div className="bg-popover border border-border px-3 py-2 rounded-lg shadow-lg">
+          <p className="text-xs text-muted-foreground mb-1">{dateLabel}</p>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-primary" />
+            <p className="font-bold text-popover-foreground text-sm">
+              {Math.round(payload[0].value)} kcal
+            </p>
+          </div>
         </div>
       );
     }
     return null;
   };
 
+  const toggleItemClasses = "flex-1 rounded-full text-xs font-medium transition-all data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm text-muted-foreground hover:text-foreground";
+
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-none shadow-none bg-transparent sm:bg-card sm:border sm:shadow-sm">
+      <CardHeader className="px-0 sm:px-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Flame className="w-6 h-6 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Flame className="w-5 h-5 text-primary" />
               {t('progress.calorie_intake')}
             </CardTitle>
             <CardDescription>{t('progress.last_7_days')}</CardDescription>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-0 sm:px-6">
         {isLoading ? (
-          <div className="flex justify-center items-center h-64">
+          <div className="flex justify-center items-center h-52">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="h-64 w-full">
+          <div className="h-52 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -16 }}>
-                <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
+              <BarChart data={chartData} margin={{ top: 10, right: 0, bottom: 0, left: -20 }}>
+                <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 4" />
                 <XAxis
                   dataKey="day"
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={8}
-                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  tickMargin={10}
+                  minTickGap={30}
+                  tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
                 />
                 <YAxis
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={8}
-                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  tickMargin={10}
+                  tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={false}
+                  cursor={{ fill: 'transparent' }} // Elimina el fondo gris al hacer hover
                 />
                 <Bar
                   dataKey="calories"
                   fill="hsl(var(--primary))"
                   radius={[4, 4, 0, 0]}
+                  maxBarSize={50}
                 />
               </BarChart>
             </ResponsiveContainer>
           </div>
         )}
       </CardContent>
-      <CardFooter>
+      <CardFooter className="px-0 sm:px-6">
         <ToggleGroup
           type="single"
-          variant="outline"
-          size="sm"
           value={timeRange}
           onValueChange={(value: TimeRange) => value && setTimeRange(value)}
-          className="w-full bg-muted p-1 rounded-full"
+          className="w-full bg-muted/50 p-1 rounded-full border border-border/50"
         >
-          <ToggleGroupItem value="7D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">7D</ToggleGroupItem>
+          <ToggleGroupItem value="7D" className={toggleItemClasses}>7D</ToggleGroupItem>
           {show30D && (
-            <ToggleGroupItem value="30D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">30D</ToggleGroupItem>
+            <ToggleGroupItem value="30D" className={toggleItemClasses}>30D</ToggleGroupItem>
           )}
           {show1Y && (
-            <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">{t('progress.1y')}</ToggleGroupItem>
+            <ToggleGroupItem value="1Y" className={toggleItemClasses}>{t('progress.1y')}</ToggleGroupItem>
           )}
         </ToggleGroup>
       </CardFooter>

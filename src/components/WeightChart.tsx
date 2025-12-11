@@ -42,26 +42,27 @@ const WeightChart = () => {
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
-    // Los datos históricos ya están guardados en la unidad que el usuario usó al momento de guardarlos.
-    // Asumimos consistencia en la unidad actual.
-    
-    if (timeRange === 'ALL') {
-      return data.map((entry) => ({
-        date: format(new Date(entry.created_at), 'd MMM', { locale: dateLocale }),
-        weight: entry.weight,
-      }));
-    }
-
     const now = new Date();
     let startDate: Date;
-    if (timeRange === '30D') startDate = subDays(now, 30);
-    else if (timeRange === '90D') startDate = subDays(now, 90);
-    else startDate = subDays(now, 365); // 1Y
+    
+    if (timeRange === 'ALL') {
+      startDate = new Date(0); // Epoch
+    } else if (timeRange === '30D') {
+      startDate = subDays(now, 30);
+    } else if (timeRange === '90D') {
+      startDate = subDays(now, 90);
+    } else {
+      startDate = subDays(now, 365); // 1Y
+    }
 
+    // Filtrar primero
     const filteredData = data.filter(entry => isAfter(new Date(entry.created_at), startDate));
 
+    // Luego mapear
     return filteredData.map((entry) => ({
+      rawDate: new Date(entry.created_at),
       date: format(new Date(entry.created_at), 'd MMM', { locale: dateLocale }),
+      fullDate: format(new Date(entry.created_at), 'PPP', { locale: dateLocale }),
       weight: entry.weight,
     }));
   }, [data, timeRange, dateLocale]);
@@ -79,111 +80,114 @@ const WeightChart = () => {
   const minWeight = chartData.length > 0 ? Math.min(...chartData.map(d => d.weight)) : 0;
   const maxWeight = chartData.length > 0 ? Math.max(...chartData.map(d => d.weight)) : 100;
   
-  const domainMin = Math.floor(minWeight - 5);
-  const domainMax = Math.ceil(maxWeight + 5);
+  const domainMin = Math.floor(minWeight - 2);
+  const domainMax = Math.ceil(maxWeight + 2);
 
   const displayGoalWeight = profile?.goal_weight || null;
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      const dateLabel = payload[0].payload.fullDate || label;
       return (
-        <div className="bg-background/80 backdrop-blur-sm p-2 px-4 border rounded-lg shadow-lg">
-          <p className="label text-sm text-muted-foreground">{`${label}`}</p>
-          <p className="intro font-bold text-foreground">{`${payload[0].value} ${unitLabel}`}</p>
+        <div className="bg-popover border border-border px-3 py-2 rounded-lg shadow-lg">
+          <p className="text-xs text-muted-foreground mb-1">{dateLabel}</p>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-primary" />
+            <p className="font-bold text-popover-foreground text-sm">
+              {payload[0].value} {unitLabel}
+            </p>
+          </div>
         </div>
       );
     }
     return null;
   };
 
+  const toggleItemClasses = "flex-1 rounded-full text-xs font-medium transition-all data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm text-muted-foreground hover:text-foreground";
+
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-none shadow-none bg-transparent sm:bg-card sm:border sm:shadow-sm">
+      <CardHeader className="px-0 sm:px-6">
         <div className="flex justify-between items-center">
-          <CardTitle className="flex items-center gap-2">
-            <TrendingDown className="w-6 h-6 text-primary" />
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <TrendingDown className="w-5 h-5 text-primary" />
             {t('progress.weight_progress_title')}
           </CardTitle>
-          <Badge variant="outline" className="flex items-center gap-1.5 py-1 px-2">
-            <Flag className="w-4 h-4" />
-            <span className="font-semibold">
+          <Badge variant="outline" className="flex items-center gap-1.5 py-1 px-2 border-primary/20 bg-primary/5 text-primary">
+            <Flag className="w-3.5 h-3.5" />
+            <span className="font-semibold text-xs">
               <AnimatedNumber value={percentageToGoal} toFixed={0} />%
             </span>
-            <span className="hidden sm:inline">{t('progress.of_goal')}</span>
           </Badge>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-0 sm:px-6">
         {isLoading ? (
-          <div className="flex justify-center items-center h-64">
+          <div className="flex justify-center items-center h-52">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : chartData.length > 1 ? (
-          <div className="h-64 w-full outline-none focus:outline-none">
+          <div className="h-52 w-full outline-none focus:outline-none">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: 0 }}>
-                <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
+              <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: -20 }}>
+                <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 4" />
                 <XAxis
                   dataKey="date"
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={12}
-                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                  interval="preserveStartEnd"
+                  tickMargin={10}
+                  minTickGap={30}
+                  tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
                 />
                 <YAxis
                   domain={[domainMin, domainMax]}
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={8}
-                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                  width={40}
+                  tickMargin={10}
+                  tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                  width={35}
                 />
-                <Tooltip content={<CustomTooltip />} cursor={false} />
+                <Tooltip 
+                  content={<CustomTooltip />} 
+                  cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }} 
+                />
                 {displayGoalWeight && (
                   <ReferenceLine
                     y={displayGoalWeight}
                     stroke="hsl(var(--muted-foreground))"
                     strokeDasharray="3 3"
-                    label={{ 
-                      value: `${t('progress.chart_goal')}: ${displayGoalWeight}${unitLabel}`, 
-                      position: 'insideBottomRight', 
-                      fill: 'hsl(var(--muted-foreground))',
-                      fontSize: 10
-                    }}
+                    strokeOpacity={0.5}
                   />
                 )}
                 <Line
                   type="monotone"
                   dataKey="weight"
                   stroke="hsl(var(--primary))"
-                  strokeWidth={3}
-                  dot={{ r: 4, strokeWidth: 2, fill: 'hsl(var(--background))', stroke: 'hsl(var(--primary))' }}
-                  activeDot={{ r: 8, strokeWidth: 2, fill: 'hsl(var(--background))', stroke: 'hsl(var(--primary))' }}
+                  strokeWidth={2.5}
+                  dot={false} // Eliminamos los puntos constantes para limpieza
+                  activeDot={{ r: 6, strokeWidth: 0, fill: 'hsl(var(--primary))' }} // Punto suave al interactuar
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="text-center text-muted-foreground h-64 flex flex-col justify-center items-center bg-muted/20 rounded-lg border border-dashed">
-            <p>{t('progress.weight_progress_no_data')}</p>
-            <p className="text-sm mt-1">{t('progress.weight_progress_start_logging')}</p>
+          <div className="text-center text-muted-foreground h-52 flex flex-col justify-center items-center bg-muted/20 rounded-lg border border-dashed border-border/50">
+            <p className="text-sm">{t('progress.weight_progress_no_data')}</p>
+            <p className="text-xs mt-1 opacity-70">{t('progress.weight_progress_start_logging')}</p>
           </div>
         )}
       </CardContent>
-      <CardFooter>
+      <CardFooter className="px-0 sm:px-6">
         <ToggleGroup
           type="single"
-          variant="outline"
-          size="sm"
           value={timeRange}
           onValueChange={(value: TimeRange) => value && setTimeRange(value)}
-          className="w-full bg-muted p-1 rounded-full"
+          className="w-full bg-muted/50 p-1 rounded-full border border-border/50"
         >
-          <ToggleGroupItem value="30D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">30D</ToggleGroupItem>
-          <ToggleGroupItem value="90D" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">90D</ToggleGroupItem>
-          <ToggleGroupItem value="1Y" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">{t('progress.1y')}</ToggleGroupItem>
-          <ToggleGroupItem value="ALL" className="w-full rounded-full data-[state=on]:bg-background data-[state=on]:shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0">{t('progress.chart_all')}</ToggleGroupItem>
+          <ToggleGroupItem value="30D" className={toggleItemClasses}>30D</ToggleGroupItem>
+          <ToggleGroupItem value="90D" className={toggleItemClasses}>90D</ToggleGroupItem>
+          <ToggleGroupItem value="1Y" className={toggleItemClasses}>{t('progress.1y')}</ToggleGroupItem>
+          <ToggleGroupItem value="ALL" className={toggleItemClasses}>{t('progress.chart_all')}</ToggleGroupItem>
         </ToggleGroup>
       </CardFooter>
     </Card>
