@@ -260,7 +260,7 @@ const Scanner = () => {
             onCanPlay={() => setState("camera")}
             className={cn(
               "w-full h-full object-cover",
-              state === "captured" || state === "loading" || state === 'error' ? "hidden" : "block"
+              state === "camera" ? "block" : "hidden"
             )}
           />
           {capturedImage && (state === 'captured' || state === 'loading' || startAnalysisMutation.isPending) && (
@@ -273,13 +273,21 @@ const Scanner = () => {
         </div>
 
         <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
-          <header className="flex justify-between items-center w-full p-4 pt-8 pointer-events-auto">
-            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-full w-12 h-12">
-              <X className="w-8 h-8 text-white" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => setIsInfoOpen(true)} className="rounded-full w-12 h-12">
-              <HelpCircle className="w-8 h-8 text-white" />
-            </Button>
+          <header className="flex justify-between items-center w-full p-4 pt-12 pointer-events-auto">
+            <motion.button
+              onClick={handleClose}
+              className="w-12 h-12 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm"
+              whileTap={{ scale: 0.9 }}
+            >
+              <X className="w-7 h-7 text-white" />
+            </motion.button>
+            <motion.button
+              onClick={() => setIsInfoOpen(true)}
+              className="w-12 h-12 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm"
+              whileTap={{ scale: 0.9 }}
+            >
+              <HelpCircle className="w-7 h-7 text-white" />
+            </motion.button>
           </header>
 
           <div className="flex-1 relative flex items-center justify-center">
@@ -304,26 +312,29 @@ const Scanner = () => {
               </div>
             ) : state === 'camera' ? (
               <div className="flex items-center justify-around w-full max-w-md">
-                <button
+                <motion.button
                   onClick={toggleFlash}
                   disabled={!hasFlash}
-                  className="p-2 rounded-full disabled:opacity-50 transition-opacity hover:opacity-80"
+                  className="w-16 h-16 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm disabled:opacity-50"
+                  whileTap={{ scale: 0.9 }}
                   aria-label="Activar flash"
                 >
-                  {isFlashOn ? <Zap className="w-10 h-10 text-yellow-300" /> : <ZapOff className="w-10 h-10 text-white" />}
-                </button>
-                <button
+                  {isFlashOn ? <Zap className="w-8 h-8 text-yellow-300" /> : <ZapOff className="w-8 h-8 text-white" />}
+                </motion.button>
+                <motion.button
                   onClick={handleCapture}
-                  className="w-20 h-20 rounded-full border-[6px] border-white bg-transparent transition-transform active:scale-95"
+                  className="w-20 h-20 rounded-full border-[6px] border-white bg-transparent"
+                  whileTap={{ scale: 0.9 }}
                   aria-label="Tomar foto"
                 />
-                <button
+                <motion.button
                   onClick={handleUploadClick}
-                  className="p-2 rounded-full transition-opacity hover:opacity-80"
+                  className="w-16 h-16 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm"
+                  whileTap={{ scale: 0.9 }}
                   aria-label="Subir imagen"
                 >
-                  <ImageIcon className="w-10 h-10 text-white" />
-                </button>
+                  <ImageIcon className="w-8 h-8 text-white" />
+                </motion.button>
               </div>
             ) : null}
           </footer>
