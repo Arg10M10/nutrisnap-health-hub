@@ -46,16 +46,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data: userProfile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+      // Timeout de seguridad para el perfil
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 10000)
+      );
+
+      const { data: userProfile, error } = await Promise.race([
+        supabase.from('profiles').select('*').eq('id', userId).single(),
+        timeoutPromise
+      ]) as { data: Profile | null, error: any };
       
       if (error) {
         console.error("Error fetching profile:", error);
-        // No seteamos profile a null inmediatamente para evitar parpadeos si es un error transitorio,
-        // pero para la inicialización está bien.
       } else {
         setProfile(userProfile);
       }
@@ -69,12 +71,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeAuth = async () => {
       try {
-        // Timeout de seguridad: si Supabase tarda más de 10s, forzamos el fin de carga
+        // Timeout de seguridad global para la sesión
         const timeoutPromise = new Promise((_, reject) => 
           setTimeout(() => reject(new Error('Auth initialization timeout')), 10000)
         );
 
-        // 1. Get Session con carrera contra el timeout
+        // 1. Get Session
         const { data } = await Promise.race([
           supabase.auth.getSession(),
           timeoutPromise
@@ -87,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(initialSession?.user ?? null);
 
           if (initialSession?.user) {
-            // 2. Si hay usuario, buscamos el perfil
+            // 2. Si hay usuario, buscamos el perfil (ahora con su propio timeout interno)
             await fetchProfile(initialSession.user.id);
           }
         }

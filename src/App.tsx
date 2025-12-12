@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -74,6 +74,7 @@ const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
   const { isLoading: nutritionLoading } = useNutrition();
   const location = useLocation();
+  const [forceShow, setForceShow] = useState(false);
 
   // Initialize Google Auth
   useEffect(() => {
@@ -86,10 +87,19 @@ const AppRoutes = () => {
     }
   }, []);
 
+  // Safety timeout: if app loads for too long (e.g. 12s), force show content
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setForceShow(true);
+    }, 12000);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Lógica de Carga Combinada:
   // Mostramos el Splash si la autenticación está cargando
   // O SI el usuario está logueado pero los datos de nutrición (dashboard) aún cargan.
-  const isAppLoading = authLoading || (!!session && nutritionLoading);
+  // EXCEPCIÓN: Si forceShow es true (timeout alcanzado), dejamos de mostrar Splash.
+  const isAppLoading = !forceShow && (authLoading || (!!session && nutritionLoading));
 
   if (isAppLoading) {
     return <SplashScreen />;
