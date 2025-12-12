@@ -95,7 +95,7 @@ export const DietsOnboarding = () => {
   });
 
   const handleGenerate = async (values: z.infer<typeof formSchema>) => {
-    const canProceed = await checkLimit('diet_plan', 2, 'weekly');
+    const canProceed = await checkLimit('diet_plan', 1, 'weekly');
     if (canProceed) {
       mutation.mutate(values);
     }

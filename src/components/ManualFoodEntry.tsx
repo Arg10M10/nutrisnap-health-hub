@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Utensils, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAILimit } from '@/hooks/useAILimit';
 
 const formSchema = z.object({
   foodName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -28,6 +29,8 @@ const ManualFoodEntry = () => {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { checkLimit, logUsage } = useAILimit();
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,6 +55,7 @@ const ManualFoodEntry = () => {
       return { newEntry: data, formValues: values };
     },
     onSuccess: ({ newEntry, formValues }) => {
+      logUsage('manual_food_scan');
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       navigate('/');
       form.reset();
@@ -74,8 +78,11 @@ const ManualFoodEntry = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    mutation.mutate(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const canProceed = await checkLimit('manual_food_scan', 4, 'daily');
+    if (canProceed) {
+      mutation.mutate(values);
+    }
   };
 
   return (

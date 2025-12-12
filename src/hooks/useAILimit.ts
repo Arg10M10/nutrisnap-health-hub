@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { startOfDay, subDays } from 'date-fns';
 
-type AIFeature = 'food_scan' | 'exercise_ai' | 'diet_plan' | 'ai_suggestions';
+type AIFeature = 'food_scan' | 'exercise_ai' | 'diet_plan' | 'ai_suggestions' | 'manual_food_scan';
 type TimeFrame = 'daily' | 'weekly';
 
 export const useAILimit = () => {

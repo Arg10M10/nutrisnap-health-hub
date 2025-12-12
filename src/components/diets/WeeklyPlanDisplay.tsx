@@ -31,7 +31,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
   const currentDayKey = dayKeys[defaultIndex];
 
   const handleRegenerateClick = async () => {
-    const canProceed = await checkLimit('diet_plan', 2, 'weekly');
+    const canProceed = await checkLimit('diet_plan', 1, 'weekly');
     if (canProceed) {
       onRegenerate();
     }

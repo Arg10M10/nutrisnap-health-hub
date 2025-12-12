@@ -17,10 +17,6 @@ const Subscribe = () => {
     navigate('/');
   };
 
-  const handleSkip = () => {
-    navigate('/');
-  };
-
   const timelineItems = [
     {
       icon: Lock,
@@ -143,9 +139,6 @@ const Subscribe = () => {
               {t('subscribe.buttons.no_payment_note')}
             </p>
           )}
-          <Button variant="link" onClick={handleSkip} className="text-muted-foreground">
-            {t('subscribe.buttons.skip')}
-          </Button>
         </div>
       </motion.div>
     </div>
