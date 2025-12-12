@@ -136,7 +136,19 @@
     "go_explore": "Ve a 'Explorar' para encontrar una.",
     "drawer_eat": "Qué comer",
     "drawer_avoid": "Qué evitar",
-    "drawer_close": "Cerrar"
+    "drawer_close": "Cerrar",
+    "weekly_plan_title": "Tu Plan Semanal",
+    "weekly_plan_subtitle": "Menú personalizado",
+    "regenerate_tooltip": "Regenerar plan",
+    "days_short": {
+      "monday": "Lun",
+      "tuesday": "Mar",
+      "wednesday": "Mié",
+      "thursday": "Jue",
+      "friday": "Vie",
+      "saturday": "Sáb",
+      "sunday": "Dom"
+    }
   },
   "badges": {
     "title": "Mis Insignias",

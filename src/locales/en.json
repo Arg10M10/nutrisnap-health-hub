@@ -136,7 +136,19 @@
     "go_explore": "Go to 'Explore' to find one.",
     "drawer_eat": "What to eat",
     "drawer_avoid": "What to avoid",
-    "drawer_close": "Close"
+    "drawer_close": "Close",
+    "weekly_plan_title": "Your Weekly Plan",
+    "weekly_plan_subtitle": "Personalized Menu",
+    "regenerate_tooltip": "Regenerate plan",
+    "days_short": {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    }
   },
   "badges": {
     "title": "My Badges",

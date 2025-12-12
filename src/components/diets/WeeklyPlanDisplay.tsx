@@ -4,6 +4,7 @@ import { RefreshCw, Sun, Moon, Coffee, Apple } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from '@/lib/utils';
 import { useAILimit } from '@/hooks/useAILimit';
+import { useTranslation } from 'react-i18next';
 
 type MealPlan = {
   [day: string]: {
@@ -20,19 +21,10 @@ interface WeeklyPlanDisplayProps {
   isRegenerating: boolean;
 }
 
-const dayMapping: { [key: string]: string } = {
-  monday: "Lun",
-  tuesday: "Mar",
-  wednesday: "Mié",
-  thursday: "Jue",
-  friday: "Vie",
-  saturday: "Sáb",
-  sunday: "Dom"
-};
-
 const dayKeys = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
 export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: WeeklyPlanDisplayProps) => {
+  const { t } = useTranslation();
   const { checkLimit } = useAILimit();
   const todayIndex = new Date().getDay(); 
   const defaultIndex = todayIndex === 0 ? 6 : todayIndex - 1;
@@ -49,10 +41,10 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
     <div className="space-y-6">
       <div className="flex justify-between items-center px-1">
         <div>
-          <h2 className="text-2xl font-bold text-primary">Tu Plan Semanal</h2>
-          <p className="text-sm text-muted-foreground">Menú personalizado</p>
+          <h2 className="text-2xl font-bold text-primary">{t('diets.weekly_plan_title')}</h2>
+          <p className="text-sm text-muted-foreground">{t('diets.weekly_plan_subtitle')}</p>
         </div>
-        <Button variant="ghost" size="icon" onClick={handleRegenerateClick} disabled={isRegenerating} title="Regenerar plan">
+        <Button variant="ghost" size="icon" onClick={handleRegenerateClick} disabled={isRegenerating} title={t('diets.regenerate_tooltip')}>
           <RefreshCw className={cn("w-5 h-5 text-muted-foreground", isRegenerating && "animate-spin")} />
         </Button>
       </div>
@@ -66,7 +58,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
                 value={dayKey}
                 className="h-10 rounded-full px-4 border border-transparent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary hover:bg-muted"
               >
-                {dayMapping[dayKey]}
+                {t(`diets.days_short.${dayKey}` as any)}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -79,12 +71,12 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           return (
             <TabsContent key={dayKey} value={dayKey} className="mt-4 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="grid gap-4">
-                {/* Desayuno */}
+                {/* Breakfast */}
                 <Card className="border-l-4 border-l-yellow-400">
                   <CardHeader className="pb-2 pt-4 px-4">
                     <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                       <Coffee className="w-5 h-5 text-yellow-500" />
-                      Desayuno
+                      {t('diets.breakfast')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="px-4 pb-4">
@@ -92,12 +84,12 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
                   </CardContent>
                 </Card>
 
-                {/* Almuerzo */}
+                {/* Lunch */}
                 <Card className="border-l-4 border-l-orange-400">
                   <CardHeader className="pb-2 pt-4 px-4">
                     <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                       <Sun className="w-5 h-5 text-orange-500" />
-                      Almuerzo
+                      {t('diets.lunch')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="px-4 pb-4">
@@ -110,7 +102,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
                   <CardHeader className="pb-2 pt-4 px-4">
                     <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                       <Apple className="w-5 h-5 text-green-500" />
-                      Snack
+                      {t('diets.snack')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="px-4 pb-4">
@@ -118,12 +110,12 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
                   </CardContent>
                 </Card>
 
-                {/* Cena */}
+                {/* Dinner */}
                 <Card className="border-l-4 border-l-indigo-400">
                   <CardHeader className="pb-2 pt-4 px-4">
                     <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                       <Moon className="w-5 h-5 text-indigo-500" />
-                      Cena
+                      {t('diets.dinner')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="px-4 pb-4">
