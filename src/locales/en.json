@@ -552,5 +552,22 @@
   "scanner": {
     "help_title": "How does the scanner work?",
     "help_desc": "Center your meal in the viewfinder and take a photo. Our AI will analyze it to give you a nutritional estimate."
+  },
+  "analysis": {
+    "details_title": "Analysis Details",
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fats": "Fats",
+    "sugars": "Sugars",
+    "recommendation": "Recommendation",
+    "close": "Close",
+    "save_to_diary": "Save to Diary",
+    "health_rating": {
+      "healthy": "Healthy",
+      "moderate": "Moderate",
+      "avoid": "Avoid"
+    },
+    "default_reason": "No reason provided."
   }
 }

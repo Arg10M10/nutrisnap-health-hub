@@ -552,5 +552,22 @@
   "scanner": {
     "help_title": "¿Cómo funciona el escáner?",
     "help_desc": "Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional."
+  },
+  "analysis": {
+    "details_title": "Detalles del Análisis",
+    "calories": "Calorías",
+    "protein": "Proteína",
+    "carbs": "Carbs",
+    "fats": "Grasas",
+    "sugars": "Azúcares",
+    "recommendation": "Recomendación",
+    "close": "Cerrar",
+    "save_to_diary": "Guardar en Diario",
+    "health_rating": {
+      "healthy": "Saludable",
+      "moderate": "Moderado",
+      "avoid": "Evitar"
+    },
+    "default_reason": "No se proporcionó ninguna razón."
   }
 }
