@@ -10,6 +10,7 @@ import { Capacitor } from '@capacitor/core';
 import { NutritionProvider, useNutrition } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { StatusBarSync } from "./components/StatusBarSync";
 
 import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
@@ -170,6 +171,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" storageKey="vite-ui-theme">
       <TooltipProvider>
+        <StatusBarSync />
         <BrowserRouter>
           <ScrollToTop />
           <AuthProvider>

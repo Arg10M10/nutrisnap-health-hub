@@ -23,6 +23,9 @@ importers:
       '@capacitor/ios':
         specifier: ^7.4.4
         version: 7.4.4(@capacitor/core@7.4.4)
+      '@capacitor/status-bar':
+        specifier: ^8.0.0
+        version: 8.0.0(@capacitor/core@7.4.4)
       '@codetrix-studio/capacitor-google-auth':
         specifier: 3.4.0-rc.4
         version: 3.4.0-rc.4(@capacitor/core@7.4.4)
@@ -302,6 +305,11 @@ packages:
     resolution: {integrity: sha512-Xp3bGWlSQAwsZGngRMWTdoD2agdMV12Whnm+/xsYPxfQSj+Tksbr7r/8Mso7VWkpnTKO4iMlx762g3PjW+wi4w==}
     peerDependencies:
       '@capacitor/core': ^7.4.0
+
+  '@capacitor/status-bar@8.0.0':
+    resolution: {integrity: sha512-aIj3bc7z8lfPgOen8HlrBrkfnxpFnh21OCx6jCUx4Mvv+B6eEkUQ49b32DOddgVfr+igRHLX2SYi7duqIsNDXg==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
 
   '@codetrix-studio/capacitor-google-auth@3.4.0-rc.4':
     resolution: {integrity: sha512-d548/xKrbMHHbzMYSWnlgZCLZYo2zzY7Onrh3x8ujojrb7atkNK68I6su5WgmaBt4E+R4gxBsWams4554aOFjA==}
@@ -3162,6 +3170,10 @@ snapshots:
       tslib: 2.8.1
 
   '@capacitor/ios@7.4.4(@capacitor/core@7.4.4)':
+    dependencies:
+      '@capacitor/core': 7.4.4
+
+  '@capacitor/status-bar@8.0.0(@capacitor/core@7.4.4)':
     dependencies:
       '@capacitor/core': 7.4.4
 
