@@ -8,6 +8,9 @@ import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { Capacitor } from '@capacitor/core';
 import { useTranslation, Trans } from 'react-i18next';
 
+const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
+const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
+
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
@@ -55,6 +58,10 @@ export default function Login() {
     }
   };
 
+  const openLink = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <div className="w-full max-w-md">
@@ -91,11 +98,23 @@ export default function Login() {
             <p className="text-center text-xs text-muted-foreground px-4">
               <Trans i18nKey="login.terms_privacy">
                 Al continuar, aceptas nuestros{" "}
-                <a href="#" className="text-primary hover:underline">
+                <a 
+                  href={TERMS_URL} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline cursor-pointer"
+                  onClick={(e) => { e.preventDefault(); openLink(TERMS_URL); }}
+                >
                   Términos de Servicio
                 </a>{" "}
                 y{" "}
-                <a href="#" className="text-primary hover:underline">
+                <a 
+                  href={PRIVACY_URL} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline cursor-pointer"
+                  onClick={(e) => { e.preventDefault(); openLink(PRIVACY_URL); }}
+                >
                   Política de Privacidad
                 </a>.
               </Trans>
