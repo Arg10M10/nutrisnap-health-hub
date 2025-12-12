@@ -164,8 +164,8 @@ const WeightChart = () => {
                   dataKey="weight"
                   stroke="hsl(var(--primary))"
                   strokeWidth={2.5}
-                  dot={false} // Eliminamos los puntos constantes para limpieza
-                  activeDot={{ r: 6, strokeWidth: 0, fill: 'hsl(var(--primary))' }} // Punto suave al interactuar
+                  dot={{ r: 4, fill: "hsl(var(--primary))", strokeWidth: 2, stroke: "hsl(var(--background))" }}
+                  activeDot={{ r: 6, strokeWidth: 0, fill: 'hsl(var(--primary))' }}
                 />
               </LineChart>
             </ResponsiveContainer>
