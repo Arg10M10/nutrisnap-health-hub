@@ -273,17 +273,18 @@ const Scanner = () => {
         </div>
 
         <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
-          <header className="flex justify-between items-center w-full p-4 pt-12 pointer-events-auto">
+          {/* Añadido z-50 relative para asegurar que esté sobre el Viewfinder */}
+          <header className="flex justify-between items-center w-full p-4 pt-12 pointer-events-auto z-50 relative">
             <motion.button
               onClick={handleClose}
-              className="w-14 h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md shadow-lg"
+              className="w-14 h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md shadow-lg border border-white/10"
               whileTap={{ scale: 0.9 }}
             >
               <X className="w-8 h-8 text-white" />
             </motion.button>
             <motion.button
               onClick={() => setIsInfoOpen(true)}
-              className="w-14 h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md shadow-lg"
+              className="w-14 h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md shadow-lg border border-white/10"
               whileTap={{ scale: 0.9 }}
             >
               <HelpCircle className="w-8 h-8 text-white" />
@@ -293,14 +294,15 @@ const Scanner = () => {
           <div className="flex-1 relative flex items-center justify-center">
             {state === 'camera' && <Viewfinder mode="food" />}
             {(state === 'loading' || startAnalysisMutation.isPending) && (
-               <div className="flex flex-col items-center gap-4 bg-black/30 backdrop-blur-sm p-8 rounded-2xl">
+               <div className="flex flex-col items-center gap-4 bg-black/30 backdrop-blur-sm p-8 rounded-2xl z-50 relative">
                   <Loader2 className="w-16 h-16 text-primary animate-spin" />
                   <p className="text-xl font-bold animate-pulse">Procesando...</p>
                </div>
             )}
           </div>
 
-          <footer className="flex flex-col items-center gap-6 w-full p-4 pb-16 pointer-events-auto">
+          {/* Añadido z-50 relative para asegurar que esté sobre el Viewfinder */}
+          <footer className="flex flex-col items-center gap-6 w-full p-4 pb-16 pointer-events-auto z-50 relative">
             {state === 'captured' && !startAnalysisMutation.isPending ? (
               <div className="grid grid-cols-2 gap-4 w-full max-w-md">
                 <Button onClick={handleReset} variant="outline" size="lg" className="h-16 text-lg rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20">
@@ -315,7 +317,7 @@ const Scanner = () => {
                 <motion.button
                   onClick={toggleFlash}
                   disabled={!hasFlash}
-                  className="w-16 h-16 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm disabled:opacity-50"
+                  className="w-16 h-16 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm disabled:opacity-50 border border-white/10"
                   whileTap={{ scale: 0.9 }}
                   aria-label="Activar flash"
                 >
@@ -324,7 +326,7 @@ const Scanner = () => {
                 
                 <motion.button
                   onClick={handleCapture}
-                  className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center bg-transparent"
+                  className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center bg-transparent shadow-lg"
                   whileTap={{ scale: 0.9 }}
                   aria-label="Tomar foto"
                 >
@@ -333,7 +335,7 @@ const Scanner = () => {
 
                 <motion.button
                   onClick={handleUploadClick}
-                  className="w-16 h-16 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm"
+                  className="w-16 h-16 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm border border-white/10"
                   whileTap={{ scale: 0.9 }}
                   aria-label="Subir imagen"
                 >
