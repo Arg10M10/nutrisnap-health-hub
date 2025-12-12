@@ -127,9 +127,19 @@ const WeightChart = () => {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : chartData.length > 1 ? (
-          <div className="h-52 w-full outline-none focus:outline-none">
+          <div 
+            className="h-52 w-full select-none touch-pan-y" 
+            style={{ 
+              WebkitTapHighlightColor: 'transparent',
+              outline: 'none'
+            }}
+          >
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: -20 }}>
+              <LineChart 
+                data={chartData} 
+                margin={{ top: 10, right: 10, bottom: 0, left: -20 }}
+                accessibilityLayer={false}
+              >
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 4" />
                 <XAxis
                   dataKey="date"
@@ -150,6 +160,7 @@ const WeightChart = () => {
                 <Tooltip 
                   content={<CustomTooltip />} 
                   cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }} 
+                  isAnimationActive={false}
                 />
                 {displayGoalWeight && (
                   <ReferenceLine
@@ -164,8 +175,20 @@ const WeightChart = () => {
                   dataKey="weight"
                   stroke="hsl(var(--primary))"
                   strokeWidth={2.5}
-                  dot={{ r: 4, fill: "hsl(var(--primary))", strokeWidth: 2, stroke: "hsl(var(--background))" }}
-                  activeDot={{ r: 6, strokeWidth: 0, fill: 'hsl(var(--primary))' }}
+                  dot={{ 
+                    r: 4, 
+                    fill: "hsl(var(--primary))", 
+                    strokeWidth: 2, 
+                    stroke: "hsl(var(--background))",
+                    cursor: 'pointer'
+                  }}
+                  activeDot={{ 
+                    r: 6, 
+                    strokeWidth: 0, 
+                    fill: 'hsl(var(--primary))',
+                    cursor: 'pointer'
+                  }}
+                  isAnimationActive={false}
                 />
               </LineChart>
             </ResponsiveContainer>
