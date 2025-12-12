@@ -165,7 +165,8 @@ const WeightChart = () => {
                 <Tooltip 
                   content={<CustomTooltip />} 
                   cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
-                  isAnimationActive={false} // Desactiva animación del tooltip para respuesta instantánea en touch
+                  isAnimationActive={false}
+                  trigger="hover"
                 />
                 {displayGoalWeight && (
                   <ReferenceLine
@@ -188,7 +189,7 @@ const WeightChart = () => {
                     stroke: "hsl(var(--background))", 
                     fill: "hsl(var(--primary))" 
                   }}
-                  isAnimationActive={true}
+                  isAnimationActive={false}
                 />
               </AreaChart>
             </ResponsiveContainer>
