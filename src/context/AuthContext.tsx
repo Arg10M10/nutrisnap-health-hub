@@ -44,10 +44,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Separamos la lógica de carga para tener control fino
-  // "initialLoad" es para la primera verificación de sesión.
-  // "profileLoad" es para cuando tenemos usuario pero esperamos perfil.
-
   const fetchProfile = async (userId: string) => {
     try {
       const { data: userProfile, error } = await supabase
@@ -58,7 +54,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (error) {
         console.error("Error fetching profile:", error);
-        setProfile(null);
+        // No seteamos profile a null inmediatamente para evitar parpadeos si es un error transitorio,
+        // pero para la inicialización está bien.
       } else {
         setProfile(userProfile);
       }
@@ -72,15 +69,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeAuth = async () => {
       try {
-        // 1. Get Session
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        // Timeout de seguridad: si Supabase tarda más de 10s, forzamos el fin de carga
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Auth initialization timeout')), 10000)
+        );
+
+        // 1. Get Session con carrera contra el timeout
+        const { data } = await Promise.race([
+          supabase.auth.getSession(),
+          timeoutPromise
+        ]) as { data: { session: Session | null } };
+        
+        const initialSession = data.session;
         
         if (mounted) {
           setSession(initialSession);
           setUser(initialSession?.user ?? null);
 
           if (initialSession?.user) {
-            // 2. If user exists, fetch profile BEFORE stopping loading
+            // 2. Si hay usuario, buscamos el perfil
             await fetchProfile(initialSession.user.id);
           }
         }
@@ -101,8 +108,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(newSession?.user ?? null);
         
         if (newSession?.user) {
-          // Si cambia la sesión a un usuario válido, refrescamos perfil
-          // No seteamos loading a true aquí para evitar parpadeos si solo es un refresh de token
           await fetchProfile(newSession.user.id);
         } else {
           setProfile(null);

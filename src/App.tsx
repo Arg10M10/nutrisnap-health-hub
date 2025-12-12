@@ -71,7 +71,8 @@ const GlobalBadgeModal = () => {
 };
 
 const AppRoutes = () => {
-  const { session, profile, loading } = useAuth();
+  const { session, profile, loading: authLoading } = useAuth();
+  const { isLoading: nutritionLoading } = useNutrition();
   const location = useLocation();
 
   // Initialize Google Auth
@@ -85,7 +86,12 @@ const AppRoutes = () => {
     }
   }, []);
 
-  if (loading) {
+  // Lógica de Carga Combinada:
+  // Mostramos el Splash si la autenticación está cargando
+  // O SI el usuario está logueado pero los datos de nutrición (dashboard) aún cargan.
+  const isAppLoading = authLoading || (!!session && nutritionLoading);
+
+  if (isAppLoading) {
     return <SplashScreen />;
   }
 
