@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Line, LineChart, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, ReferenceLine } from "recharts";
+import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, ReferenceLine } from "recharts";
 import { TrendingDown, Loader2, Flag } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Badge } from "@/components/ui/badge";
@@ -80,23 +80,23 @@ const WeightChart = () => {
   const minWeight = chartData.length > 0 ? Math.min(...chartData.map(d => d.weight)) : 0;
   const maxWeight = chartData.length > 0 ? Math.max(...chartData.map(d => d.weight)) : 100;
   
-  const domainMin = Math.floor(minWeight - 2);
-  const domainMax = Math.ceil(maxWeight + 2);
+  // Ajuste dinámico del eje Y para que la gráfica se vea bien
+  const padding = (maxWeight - minWeight) * 0.1;
+  const domainMin = Math.floor(minWeight - padding);
+  const domainMax = Math.ceil(maxWeight + padding);
 
   const displayGoalWeight = profile?.goal_weight || null;
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      // payload[0].payload contiene el objeto de datos original (con fullDate)
       const dateLabel = payload[0].payload.fullDate || label;
       return (
-        <div className="bg-popover border border-border px-3 py-2 rounded-lg shadow-lg">
-          <p className="text-xs text-muted-foreground mb-1">{dateLabel}</p>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary" />
-            <p className="font-bold text-popover-foreground text-sm">
-              {payload[0].value} {unitLabel}
-            </p>
-          </div>
+        <div className="bg-zinc-900 text-white px-4 py-3 rounded-xl shadow-2xl border-none outline-none">
+          <p className="text-xl font-bold text-center leading-none mb-1">
+            {payload[0].value} <span className="text-sm font-medium text-zinc-400">{unitLabel}</span>
+          </p>
+          <p className="text-xs text-zinc-400 text-center capitalize">{dateLabel}</p>
         </div>
       );
     }
@@ -123,23 +123,28 @@ const WeightChart = () => {
       </CardHeader>
       <CardContent className="px-0 sm:px-6">
         {isLoading ? (
-          <div className="flex justify-center items-center h-52">
+          <div className="flex justify-center items-center h-64">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : chartData.length > 1 ? (
           <div 
-            className="h-52 w-full select-none touch-pan-y" 
+            className="h-64 w-full select-none touch-none" 
             style={{ 
               WebkitTapHighlightColor: 'transparent',
               outline: 'none'
             }}
           >
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart 
+              <AreaChart 
                 data={chartData} 
                 margin={{ top: 10, right: 10, bottom: 0, left: -20 }}
-                accessibilityLayer={false}
               >
+                <defs>
+                  <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 4" />
                 <XAxis
                   dataKey="date"
@@ -159,8 +164,8 @@ const WeightChart = () => {
                 />
                 <Tooltip 
                   content={<CustomTooltip />} 
-                  cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }} 
-                  isAnimationActive={false}
+                  cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
+                  isAnimationActive={false} // Desactiva animación del tooltip para respuesta instantánea en touch
                 />
                 {displayGoalWeight && (
                   <ReferenceLine
@@ -170,31 +175,26 @@ const WeightChart = () => {
                     strokeOpacity={0.5}
                   />
                 )}
-                <Line
+                <Area
                   type="monotone"
                   dataKey="weight"
                   stroke="hsl(var(--primary))"
-                  strokeWidth={2.5}
-                  dot={{ 
-                    r: 4, 
-                    fill: "hsl(var(--primary))", 
-                    strokeWidth: 2, 
-                    stroke: "hsl(var(--background))",
-                    cursor: 'pointer'
-                  }}
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#colorWeight)"
                   activeDot={{ 
                     r: 6, 
-                    strokeWidth: 0, 
-                    fill: 'hsl(var(--primary))',
-                    cursor: 'pointer'
+                    strokeWidth: 4, 
+                    stroke: "hsl(var(--background))", 
+                    fill: "hsl(var(--primary))" 
                   }}
-                  isAnimationActive={false}
+                  isAnimationActive={true}
                 />
-              </LineChart>
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="text-center text-muted-foreground h-52 flex flex-col justify-center items-center bg-muted/20 rounded-lg border border-dashed border-border/50">
+          <div className="text-center text-muted-foreground h-64 flex flex-col justify-center items-center bg-muted/20 rounded-lg border border-dashed border-border/50">
             <p className="text-sm">{t('progress.weight_progress_no_data')}</p>
             <p className="text-xs mt-1 opacity-70">{t('progress.weight_progress_start_logging')}</p>
           </div>
