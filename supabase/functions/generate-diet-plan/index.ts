@@ -15,22 +15,30 @@ serve(async (req) => {
   }
 
   try {
-    const { goal, activityLevel, preferences, cookingTime, budget } = await req.json();
+    const { goal, activityLevel, preferences, cookingTime, budget, language } = await req.json();
+
+    const targetLanguage = language && language.startsWith('es') ? 'Spanish' : 'English';
 
     const prompt = `
-      Eres un nutricionista experto. Crea un plan de comidas semanal personalizado para un usuario con los siguientes datos:
-      - Objetivo principal: ${goal} (lose_weight: perder peso, maintain_weight: mantener, gain_weight: ganar)
-      - Nivel de actividad: ${activityLevel}
-      - Preferencias dietéticas: ${preferences.join(', ')}
-      - Tiempo para cocinar: ${cookingTime}
-      - Presupuesto: ${budget}
+      You are an expert nutritionist AI. Create a personalized weekly meal plan based on the user's data.
 
-      Instrucciones:
-      1. Genera un plan de comidas para 7 días (de lunes a domingo).
-      2. Para cada día, incluye desayuno, almuerzo, cena y un snack.
-      3. Las comidas deben ser variadas, saludables y alineadas con el objetivo, preferencias y restricciones del usuario.
-      4. Proporciona ideas de comidas simples y realistas según el tiempo de cocina y presupuesto.
-      5. Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional. La estructura debe ser:
+      User Profile:
+      - Main Goal: ${goal} (lose_weight, maintain_weight, or gain_weight)
+      - Activity Level: ${activityLevel}
+      - Dietary Preferences: ${preferences.join(', ')}
+      - Cooking Time Availability: ${cookingTime}
+      - Budget: ${budget}
+
+      CRITICAL INSTRUCTION:
+      The user's preferred language is ${targetLanguage}. 
+      All names of meals and descriptions MUST be written in ${targetLanguage}.
+
+      Instructions:
+      1. Generate a meal plan for 7 days (Monday to Sunday).
+      2. For each day, include breakfast, lunch, dinner, and a snack.
+      3. Meals must be varied, healthy, and aligned with user goals.
+      4. Provide simple and realistic meal ideas compatible with the cooking time and budget.
+      5. Respond ONLY with a valid JSON object, no extra text or markdown. Use this exact structure:
       {
         "monday": { "breakfast": "...", "lunch": "...", "dinner": "...", "snack": "..." },
         "tuesday": { "breakfast": "...", "lunch": "...", "dinner": "...", "snack": "..." },
@@ -56,7 +64,7 @@ serve(async (req) => {
 
     if (!aiRes.ok) {
       const errorBody = await aiRes.text();
-      throw new Error(`Error de la API de IA: ${errorBody}`);
+      throw new Error(`AI API Error: ${errorBody}`);
     }
 
     const aiData = await aiRes.json();

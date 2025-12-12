@@ -23,7 +23,7 @@ const formSchema = z.object({
 });
 
 export const DietsOnboarding = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
@@ -64,7 +64,11 @@ export const DietsOnboarding = () => {
       if (!user || !profile?.goal) throw new Error("Perfil incompleto");
 
       const { data: plan, error: planError } = await supabase.functions.invoke('generate-diet-plan', {
-        body: { ...values, goal: profile.goal },
+        body: { 
+          ...values, 
+          goal: profile.goal,
+          language: i18n.language 
+        },
       });
       if (planError) throw new Error(`IA Error: ${planError.message}`);
 
