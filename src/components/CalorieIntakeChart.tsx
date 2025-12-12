@@ -109,7 +109,6 @@ const CalorieIntakeChart = () => {
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
-      // Usamos los datos completos (fullDate) si están disponibles, sino el label del eje X
       const dateLabel = payload[0].payload.fullDate || label;
       return (
         <div className="bg-popover border border-border px-3 py-2 rounded-lg shadow-lg">
@@ -147,7 +146,13 @@ const CalorieIntakeChart = () => {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="h-52 w-full">
+          <div 
+            className="h-52 w-full select-none touch-none"
+            style={{ 
+              WebkitTapHighlightColor: 'transparent',
+              outline: 'none'
+            }}
+          >
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 0, bottom: 0, left: -20 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 4" />
@@ -167,13 +172,15 @@ const CalorieIntakeChart = () => {
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'transparent' }} // Elimina el fondo gris al hacer hover
+                  cursor={{ fill: 'transparent' }}
+                  isAnimationActive={false}
                 />
                 <Bar
                   dataKey="calories"
                   fill="hsl(var(--primary))"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={50}
+                  isAnimationActive={false}
                 />
               </BarChart>
             </ResponsiveContainer>
