@@ -1,7 +1,9 @@
+import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Share2, X } from 'lucide-react';
+import { Share2, X, Leaf, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
+import { shareElement } from '@/lib/share';
 
 interface BadgeDetailModalProps {
   isOpen: boolean;
@@ -15,22 +17,24 @@ interface BadgeDetailModalProps {
 
 const BadgeDetailModal = ({ isOpen, onClose, badge }: BadgeDetailModalProps) => {
   const { t } = useTranslation();
+  const shareRef = useRef<HTMLDivElement>(null);
+  const [isSharing, setIsSharing] = useState(false);
 
   const handleShare = async () => {
-    if (!badge) return;
+    if (!badge || !shareRef.current) return;
     
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: t('badges.notification_title'),
-          text: `¡Desbloqueé la insignia "${badge.name}" en Calorel! ${badge.description}`,
-          url: window.location.href,
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-      }
-    } else {
-      alert('Tu navegador no soporta la función de compartir nativa.');
+    setIsSharing(true);
+    try {
+      await shareElement(
+        shareRef.current, 
+        `badge-${badge.name.replace(/\s+/g, '-').toLowerCase()}`,
+        t('badges.notification_title'),
+        `¡He desbloqueado la insignia "${badge.name}" en Calorel! 🏆`
+      );
+    } catch (error) {
+      console.error('Error sharing badge:', error);
+    } finally {
+      setIsSharing(false);
     }
   };
 
@@ -85,13 +89,49 @@ const BadgeDetailModal = ({ isOpen, onClose, badge }: BadgeDetailModalProps) => 
                     size="lg" 
                     className="w-full h-14 text-lg font-semibold"
                     onClick={handleShare}
+                    disabled={isSharing}
                   >
-                    <Share2 className="mr-2 w-5 h-5" /> Compartir
+                    {isSharing ? <Loader2 className="mr-2 w-5 h-5 animate-spin"/> : <Share2 className="mr-2 w-5 h-5" />}
+                    Compartir
                   </Button>
                 </div>
               </div>
             </div>
           </motion.div>
+
+          {/* Plantilla oculta para generar la imagen a compartir */}
+          <div 
+            ref={shareRef}
+            className="fixed top-0 left-0 w-[400px] bg-white p-8 flex flex-col items-center justify-center text-center gap-6 z-[-1]"
+            style={{ transform: 'translateX(-9999px)' }} // Oculto fuera de pantalla
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className="bg-green-600 p-2 rounded-full">
+                <Leaf className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-green-700">Calorel</h1>
+            </div>
+            
+            <div className="w-full h-px bg-gray-200" />
+
+            <h2 className="text-xl font-medium text-gray-500 uppercase tracking-widest mt-2">¡Logro Desbloqueado!</h2>
+            
+            <img 
+              src={badge.image} 
+              alt={badge.name} 
+              className="w-48 h-48 object-contain my-4 drop-shadow-xl" 
+            />
+
+            <div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-2">{badge.name}</h3>
+              <p className="text-lg text-gray-600 px-4">{badge.description}</p>
+            </div>
+
+            <div className="mt-8 bg-gray-100 px-6 py-2 rounded-full">
+              <p className="text-sm font-semibold text-gray-500">calorel.app</p>
+            </div>
+          </div>
+
         </div>
       )}
     </AnimatePresence>
