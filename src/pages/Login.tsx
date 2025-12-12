@@ -6,33 +6,31 @@ import { Leaf, Loader2 } from "lucide-react";
 import { toast } from 'sonner';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { Capacitor } from '@capacitor/core';
+import { useTranslation, Trans } from 'react-i18next';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      // 1. Iniciar sesión con el Plugin Nativo
       console.log("Iniciando GoogleAuth.signIn()...");
       const googleUser = await GoogleAuth.signIn();
       
       console.log('Respuesta completa de Google:', JSON.stringify(googleUser));
 
-      // 2. Extraer el ID Token. 
-      // El plugin suele devolverlo en 'authentication.idToken', pero a veces en la raíz dependiendo de la versión.
       const idToken = googleUser.authentication?.idToken || googleUser.idToken;
 
       if (!idToken) {
-        throw new Error('No se recibió el ID Token de Google. Revisa la consola para ver el objeto completo.');
+        throw new Error('No se recibió el ID Token de Google.');
       }
 
       console.log("ID Token recibido, enviando a Supabase...");
 
-      // 3. Autenticar en Supabase usando el ID Token
       const { data, error } = await supabase.auth.signInWithIdToken({
         provider: 'google',
-        token: idToken, // IMPORTANTE: Supabase v2 usa 'token', no 'id_token'
+        token: idToken,
       });
       
       if (error) {
@@ -45,14 +43,13 @@ export default function Login() {
     } catch (error: any) {
       console.error('Error General en Login:', error);
       
-      // Manejo de errores comunes
       let message = error.message || JSON.stringify(error);
       
       if (message.includes("10") || message.includes("Something went wrong")) {
-        message = "Error de configuración de Google (Código 10). Verifica el SHA-1 en la consola de Google Cloud.";
+        message = "Error de configuración de Google (Código 10). Verifica el SHA-1.";
       }
 
-      toast.error('Error al iniciar sesión', { description: message });
+      toast.error(t('login.error_title'), { description: message });
     } finally {
       setLoading(false);
     }
@@ -66,10 +63,10 @@ export default function Login() {
             <Leaf className="w-16 h-16 text-primary" />
             <div className="space-y-1.5 flex flex-col items-center text-center">
               <h2 className="text-3xl font-bold text-foreground">
-                Bienvenido a Calorel
+                {t('login.welcome')}
               </h2>
               <p className="text-muted-foreground px-4">
-                Tu compañero de salud inteligente. Comienza tu viaje con un solo clic.
+                {t('login.subtitle')}
               </p>
             </div>
           </CardHeader>
@@ -85,21 +82,23 @@ export default function Login() {
               ) : (
                 <>
                   <img src="/google-logo.png" alt="Google logo" className="mr-3 h-6 w-6" />
-                  Continuar con Google
+                  {t('login.google_button')}
                 </>
               )}
             </Button>
           </CardContent>
           <CardFooter className="flex justify-center !py-6 mt-4">
             <p className="text-center text-xs text-muted-foreground px-4">
-              Al continuar, aceptas nuestros{" "}
-              <a href="#" className="text-primary hover:underline">
-                Términos de Servicio
-              </a>{" "}
-              y{" "}
-              <a href="#" className="text-primary hover:underline">
-                Política de Privacidad
-              </a>.
+              <Trans i18nKey="login.terms_privacy">
+                Al continuar, aceptas nuestros{" "}
+                <a href="#" className="text-primary hover:underline">
+                  Términos de Servicio
+                </a>{" "}
+                y{" "}
+                <a href="#" className="text-primary hover:underline">
+                  Política de Privacidad
+                </a>.
+              </Trans>
             </p>
           </CardFooter>
         </Card>

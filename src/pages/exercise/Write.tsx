@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 
 const WriteExercise = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
@@ -45,7 +45,7 @@ const WriteExercise = () => {
       navigate('/');
 
       supabase.functions.invoke('estimate-exercise-calories', {
-        body: { entry_id: newEntry.id, description, weight: profile?.weight ?? null },
+        body: { entry_id: newEntry.id, description, weight: profile?.weight ?? null, language: i18n.language },
       }).then(({ error }) => {
         if (error) {
           console.error("Function invocation failed:", error);

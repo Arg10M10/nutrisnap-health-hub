@@ -49,6 +49,13 @@
   "language_drawer": {
     "title": "Seleccionar Idioma"
   },
+  "login": {
+    "welcome": "Bienvenido a Calorel",
+    "subtitle": "Tu compañero de salud inteligente. Comienza tu viaje con un solo clic.",
+    "google_button": "Continuar con Google",
+    "terms_privacy": "Al continuar, aceptas nuestros <1>Términos de Servicio</1> y <3>Política de Privacidad</3>.",
+    "error_title": "Error al iniciar sesión"
+  },
   "bottom_nav": {
     "home": "Inicio",
     "settings": "Ajustes",
@@ -136,7 +143,7 @@
     "subtitle": "Tus logros y rachas desbloqueadas.",
     "meal_streak": "Racha de Comidas",
     "total_badges": "Insignias Totales",
-    "hydration_streak": "Racha de Hidratación",
+    "hydration_streak": "Días de Hidratación",
     "weight_loss": "Pérdida de Peso",
     "notification_title": "¡Insignia Desbloqueada!"
   },
@@ -158,9 +165,9 @@
     "streak_450": { "name": "Maestro", "desc": "450 días de disciplina total." },
     "streak_500": { "name": "Más Allá", "desc": "Has superado los 500 días. ¡Wow!" },
     "water_1": { "name": "Primer Vaso", "desc": "Registra agua por 1 día." },
-    "water_3": { "name": "Hidratación Constante", "desc": "Racha de 3 días de agua." },
-    "water_6": { "name": "Hidratación Pro", "desc": "Racha de 6 días de agua." },
-    "water_10": { "name": "Maestro del Agua", "desc": "Racha de 10 días de agua." },
+    "water_3": { "name": "Hidratación Constante", "desc": "3 días cumpliendo tu meta de agua." },
+    "water_6": { "name": "Hidratación Pro", "desc": "6 días cumpliendo tu meta de agua." },
+    "water_10": { "name": "Maestro del Agua", "desc": "10 días cumpliendo tu meta de agua." },
     "weight_1": { "name": "Primer Kilogramo", "desc": "Pierde tu primer kilogramo." },
     "weight_10": { "name": "Meta 10 kg", "desc": "Alcanza 10 kg perdidos." },
     "weight_20": { "name": "Meta 20 kg", "desc": "Has perdido 20 kg." },

@@ -38,13 +38,15 @@ serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  const { entry_id, imageData } = await req.json();
+  const { entry_id, imageData, language } = await req.json();
   if (!entry_id || !imageData) {
     return new Response(JSON.stringify({ error: "entry_id and imageData are required." }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 400,
     });
   }
+
+  const userLang = language && language.startsWith('es') ? 'Español' : 'Inglés';
 
   const supabaseAdmin = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
@@ -55,16 +57,19 @@ serve(async (req) => {
     const base64Image = imageData.split(",")[1];
     const prompt = `
       Analiza la imagen de este plato de comida y proporciona una estimación nutricional.
-      Responde ÚNICA y EXCLUSIVAMENTE con un objeto JSON con la siguiente estructura:
+      Responde ÚNICA y EXCLUSIVAMENTE con un objeto JSON.
+      IMPORTANTE: Todos los textos (foodName, healthRating, reason) deben estar en ${userLang}.
+
+      Estructura JSON:
       {
-        "foodName": "Nombre del plato",
+        "foodName": "Nombre del plato (en ${userLang})",
         "calories": "Estimación de calorías (ej. '350-450 kcal')",
         "protein": "Estimación de proteínas (ej. '20-25g')",
         "carbs": "Estimación de carbohidratos (ej. '30-40g')",
         "fats": "Estimación de grasas (ej. '15-20g')",
         "sugars": "Estimación de azúcares (ej. '5-10g')",
-        "healthRating": "Clasificación ('Saludable', 'Moderado', 'Evitar')",
-        "reason": "Breve explicación (máx 20 palabras)."
+        "healthRating": "Clasificación ('Saludable', 'Moderado', 'Evitar' - Traducido al ${userLang})",
+        "reason": "Breve explicación (máx 20 palabras, en ${userLang})."
       }
     `;
 

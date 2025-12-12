@@ -43,53 +43,84 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [profileLoading, setProfileLoading] = useState(false);
+
+  // Separamos la lógica de carga para tener control fino
+  // "initialLoad" es para la primera verificación de sesión.
+  // "profileLoad" es para cuando tenemos usuario pero esperamos perfil.
 
   const fetchProfile = async (userId: string) => {
-    setProfileLoading(true);
-    const { data: userProfile, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-    if (error) {
-      console.error("Error fetching profile:", error);
-      setProfile(null);
-    } else {
-      setProfile(userProfile);
+    try {
+      const { data: userProfile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (error) {
+        console.error("Error fetching profile:", error);
+        setProfile(null);
+      } else {
+        setProfile(userProfile);
+      }
+    } catch (e) {
+      console.error("Fetch profile exception:", e);
     }
-    setProfileLoading(false);
   };
 
   useEffect(() => {
-    // First, check for an existing session on initial load.
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false); // Initial auth check is done.
+    let mounted = true;
+
+    const initializeAuth = async () => {
+      try {
+        // 1. Get Session
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        
+        if (mounted) {
+          setSession(initialSession);
+          setUser(initialSession?.user ?? null);
+
+          if (initialSession?.user) {
+            // 2. If user exists, fetch profile BEFORE stopping loading
+            await fetchProfile(initialSession.user.id);
+          }
+        }
+      } catch (error) {
+        console.error("Auth initialization error:", error);
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    initializeAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      if (mounted) {
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+        
+        if (newSession?.user) {
+          // Si cambia la sesión a un usuario válido, refrescamos perfil
+          // No seteamos loading a true aquí para evitar parpadeos si solo es un refresh de token
+          await fetchProfile(newSession.user.id);
+        } else {
+          setProfile(null);
+        }
+      }
     });
 
-    // Then, set up a listener for future auth state changes.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
-
-  // Fetch profile whenever the user object changes (e.g., on login)
-  useEffect(() => {
-    if (user) {
-      fetchProfile(user.id);
-    } else {
-      setProfile(null);
-    }
-  }, [user]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    // The onAuthStateChange listener will handle navigation implicitly
+    setProfile(null);
+    setUser(null);
+    setSession(null);
   };
 
   const refetchProfile = async () => {
@@ -102,7 +133,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     session,
     user,
     profile,
-    loading: loading || profileLoading,
+    loading,
     signOut,
     refetchProfile,
   };

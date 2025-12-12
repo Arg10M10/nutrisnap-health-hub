@@ -40,7 +40,7 @@ const pageTransition: Transition = {
 };
 
 const Scanner = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [state, setState] = useState<ScannerState>("initializing");
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -137,7 +137,7 @@ const Scanner = () => {
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       navigate('/');
       supabase.functions.invoke("analyze-food", {
-        body: { entry_id: newEntry.id, imageData: imageData },
+        body: { entry_id: newEntry.id, imageData: imageData, language: i18n.language },
       }).then(({ error }) => {
         if (error) {
           console.error("Function invocation failed:", error);
@@ -276,17 +276,17 @@ const Scanner = () => {
           <header className="flex justify-between items-center w-full p-4 pt-12 pointer-events-auto">
             <motion.button
               onClick={handleClose}
-              className="w-12 h-12 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm"
+              className="w-14 h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md shadow-lg"
               whileTap={{ scale: 0.9 }}
             >
-              <X className="w-7 h-7 text-white" />
+              <X className="w-8 h-8 text-white" />
             </motion.button>
             <motion.button
               onClick={() => setIsInfoOpen(true)}
-              className="w-12 h-12 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm"
+              className="w-14 h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md shadow-lg"
               whileTap={{ scale: 0.9 }}
             >
-              <HelpCircle className="w-7 h-7 text-white" />
+              <HelpCircle className="w-8 h-8 text-white" />
             </motion.button>
           </header>
 

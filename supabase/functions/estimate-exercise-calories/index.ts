@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { entry_id, description, weight } = await req.json();
+    const { entry_id, description, weight, language } = await req.json();
     if (!entry_id || !description) {
       return new Response(JSON.stringify({ error: "entry_id and description are required" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -24,24 +24,25 @@ serve(async (req) => {
       });
     }
 
+    const userLang = language && language.startsWith('es') ? 'Español' : 'Inglés';
+
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
     const prompt = `
-      Eres una IA experta en fitness. Analiza la descripción de un ejercicio y extrae el nombre, la duración en minutos y estima las calorías quemadas.
-      Datos del usuario:
+      Eres una IA experta en fitness. Analiza la descripción de un ejercicio.
       - Descripción: "${description}"
-      - Peso (kg): ${weight ?? '70'} (Usa 70kg como referencia si no se proporciona)
-
+      - Peso: ${weight ?? '70'} kg
+      
       Reglas:
-      1. Extrae el nombre del ejercicio principal. Sé conciso (ej. "Yoga", "Correr", "Entrenamiento de fuerza").
-      2. Extrae la duración total en minutos. Si se da un rango, usa el promedio. Si no se especifica, haz una estimación razonable.
-      3. Estima las calorías quemadas basándote en el ejercicio, duración, intensidad implícita y peso.
-      4. Responde SOLO con un objeto JSON válido con la siguiente estructura, sin texto adicional:
+      1. Extrae el nombre del ejercicio (en ${userLang}).
+      2. Extrae la duración en minutos.
+      3. Estima las calorías quemadas.
+      4. Responde SOLO JSON válido:
       {
-        "name": "string",
+        "name": "Nombre en ${userLang}",
         "duration": number,
         "calories": number
       }
@@ -72,7 +73,8 @@ serve(async (req) => {
     const { error: updateError } = await supabaseAdmin
       .from('exercise_entries')
       .update({
-        exercise_type: estimation.name.toLowerCase(),
+        exercise_type: 'other', // Mantener 'other' para ícono genérico, o mapear si es posible
+        description: estimation.name, // Guardamos el nombre traducido en la descripción para mostrarlo
         duration_minutes: estimation.duration,
         calories_burned: estimation.calories,
         status: 'completed',

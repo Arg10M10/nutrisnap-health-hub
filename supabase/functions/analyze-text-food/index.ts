@@ -38,13 +38,15 @@ serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  const { entry_id, foodName, description, portionSize } = await req.json();
+  const { entry_id, foodName, description, portionSize, language } = await req.json();
   if (!entry_id || !foodName || !portionSize) {
     return new Response(JSON.stringify({ error: "entry_id, foodName, and portionSize are required." }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 400,
     });
   }
+
+  const userLang = language && language.startsWith('es') ? 'Español' : 'Inglés';
 
   const supabaseAdmin = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
@@ -53,23 +55,24 @@ serve(async (req) => {
 
   try {
     const prompt = `
-      Analiza esta comida basándote en su nombre, una descripción opcional y el tamaño de la porción.
+      Analiza esta comida basándote en su nombre, descripción y porción.
       - Nombre: "${foodName}"
-      - Descripción del usuario (para darte contexto): "${description || 'No proporcionada'}"
-      - Tamaño de la porción: "${portionSize}"
+      - Descripción: "${description || 'No proporcionada'}"
+      - Tamaño: "${portionSize}"
       
-      Proporciona una estimación razonable de sus valores nutricionales.
-      Responde únicamente con un objeto JSON válido, sin ningún texto adicional antes o después.
-      El objeto JSON debe tener la siguiente estructura:
+      Responde ÚNICAMENTE con un objeto JSON.
+      IMPORTANTE: Todos los textos explicativos deben estar en ${userLang}.
+
+      Estructura JSON:
       {
         "foodName": "${foodName}",
-        "calories": "Estimación de calorías (ej. '350-450 kcal')",
-        "protein": "Estimación de proteínas (ej. '20-25g')",
-        "carbs": "Estimación de carbohidratos (ej. '30-40g')",
-        "fats": "Estimación de grasas (ej. '15-20g')",
-        "sugars": "Estimación de azúcares (ej. '5-10g')",
-        "healthRating": "Clasificación de salud ('Saludable', 'Moderado', o 'Evitar')",
-        "reason": "Una breve explicación (máximo 20 palabras) de por qué le diste esa clasificación."
+        "calories": "Estimación (ej. '350-450 kcal')",
+        "protein": "Estimación (ej. '20-25g')",
+        "carbs": "Estimación (ej. '30-40g')",
+        "fats": "Estimación (ej. '15-20g')",
+        "sugars": "Estimación (ej. '5-10g')",
+        "healthRating": "Clasificación ('Saludable', 'Moderado', 'Evitar' - en ${userLang})",
+        "reason": "Explicación breve (máx 20 palabras, en ${userLang})."
       }
     `;
 

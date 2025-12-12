@@ -25,7 +25,7 @@ const formSchema = z.object({
 
 const ManualFoodEntry = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -57,7 +57,7 @@ const ManualFoodEntry = () => {
       form.reset();
       
       supabase.functions.invoke('analyze-text-food', {
-        body: { ...formValues, entry_id: newEntry.id },
+        body: { ...formValues, entry_id: newEntry.id, language: i18n.language },
       }).then(({ error }) => {
         if (error) {
           console.error("Function invocation failed:", error);
