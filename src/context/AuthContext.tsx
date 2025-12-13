@@ -46,15 +46,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = async (userId: string) => {
     try {
-      // Timeout de seguridad para el perfil (Reducido a 5s)
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
-      );
-
-      const { data: userProfile, error } = await Promise.race([
-        supabase.from('profiles').select('*').eq('id', userId).single(),
-        timeoutPromise
-      ]) as { data: Profile | null, error: any };
+      const { data: userProfile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle(); // Usamos maybeSingle para no lanzar error si no existe, aunque debería.
       
       if (error) {
         console.error("Error fetching profile:", error);
@@ -71,25 +67,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeAuth = async () => {
       try {
-        // Timeout de seguridad global para la sesión (Reducido a 5s)
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Auth initialization timeout')), 5000)
-        );
-
-        // 1. Get Session
-        const { data } = await Promise.race([
-          supabase.auth.getSession(),
-          timeoutPromise
-        ]) as { data: { session: Session | null } };
+        // 1. Obtener sesión inicial
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
-        const initialSession = data.session;
+        if (error) throw error;
         
         if (mounted) {
           setSession(initialSession);
           setUser(initialSession?.user ?? null);
 
           if (initialSession?.user) {
-            // 2. Si hay usuario, buscamos el perfil
+            // 2. Si hay usuario, esperamos a tener el perfil ANTES de quitar el loading
             await fetchProfile(initialSession.user.id);
           }
         }
@@ -104,14 +92,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     initializeAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (mounted) {
+        // Si es un cambio de sesión (login/logout), actualizamos estado
         setSession(newSession);
         setUser(newSession?.user ?? null);
         
         if (newSession?.user) {
+          // Si iniciamos sesión, buscamos el perfil
           await fetchProfile(newSession.user.id);
-        } else {
+        } else if (event === 'SIGNED_OUT') {
+          // Limpiamos todo al cerrar sesión
           setProfile(null);
         }
       }

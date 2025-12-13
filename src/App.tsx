@@ -73,7 +73,6 @@ const GlobalBadgeModal = () => {
 const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
   const location = useLocation();
-  const [forceShow, setForceShow] = useState(false);
 
   // Initialize Google Auth
   useEffect(() => {
@@ -86,20 +85,8 @@ const AppRoutes = () => {
     }
   }, []);
 
-  // Safety timeout: if app loads for too long (e.g. 6s), force show content
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setForceShow(true);
-    }, 6000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Lógica de Carga Optimizada:
-  // Solo esperamos a que la autenticación (sesión + perfil) esté lista.
-  // NO esperamos a que carguen todos los datos de nutrición (eso ocurre en segundo plano).
-  const isAppLoading = !forceShow && authLoading;
-
-  if (isAppLoading) {
+  // Si está cargando la autenticación, mostramos SplashScreen.
+  if (authLoading) {
     return <SplashScreen />;
   }
 
@@ -122,6 +109,35 @@ const AppRoutes = () => {
 
   const shellClass = "relative min-h-screen"; 
 
+  // 1. Si no hay sesión, vamos al Login.
+  if (!session) {
+    return (
+      <div className={shellClass}>
+        <div className="relative z-10">
+          <Login />
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Si hay sesión pero NO hay perfil cargado todavía, seguimos esperando.
+  // Esto evita que salte al Onboarding por error si profile es null momentáneamente.
+  if (!profile) {
+    return <SplashScreen />;
+  }
+
+  // 3. Solo si tenemos perfil Y no ha completado onboarding, mostramos Onboarding.
+  if (!profile.onboarding_completed) {
+    return (
+      <div className={shellClass}>
+        <div className="relative z-10">
+          <Onboarding />
+        </div>
+      </div>
+    );
+  }
+
+  // Rutas a pantalla completa (sin BottomNav)
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
@@ -150,26 +166,7 @@ const AppRoutes = () => {
     );
   }
 
-  if (!session) {
-    return (
-      <div className={shellClass}>
-        <div className="relative z-10">
-          <Login />
-        </div>
-      </div>
-    );
-  }
-
-  if (!profile?.onboarding_completed) {
-    return (
-      <div className={shellClass}>
-        <div className="relative z-10">
-          <Onboarding />
-        </div>
-      </div>
-    );
-  }
-
+  // App Principal (Dashboard)
   return (
     <div className={shellClass}>
       <GlobalBadgeModal />
