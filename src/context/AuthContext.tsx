@@ -46,9 +46,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = async (userId: string) => {
     try {
-      // Timeout de seguridad para el perfil
+      // Timeout de seguridad para el perfil (Reducido a 5s)
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Profile fetch timeout')), 10000)
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
       );
 
       const { data: userProfile, error } = await Promise.race([
@@ -71,9 +71,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeAuth = async () => {
       try {
-        // Timeout de seguridad global para la sesión
+        // Timeout de seguridad global para la sesión (Reducido a 5s)
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Auth initialization timeout')), 10000)
+          setTimeout(() => reject(new Error('Auth initialization timeout')), 5000)
         );
 
         // 1. Get Session
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(initialSession?.user ?? null);
 
           if (initialSession?.user) {
-            // 2. Si hay usuario, buscamos el perfil (ahora con su propio timeout interno)
+            // 2. Si hay usuario, buscamos el perfil
             await fetchProfile(initialSession.user.id);
           }
         }

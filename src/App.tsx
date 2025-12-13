@@ -72,7 +72,6 @@ const GlobalBadgeModal = () => {
 
 const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
-  const { isLoading: nutritionLoading } = useNutrition();
   const location = useLocation();
   const [forceShow, setForceShow] = useState(false);
 
@@ -87,19 +86,18 @@ const AppRoutes = () => {
     }
   }, []);
 
-  // Safety timeout: if app loads for too long (e.g. 12s), force show content
+  // Safety timeout: if app loads for too long (e.g. 6s), force show content
   useEffect(() => {
     const timer = setTimeout(() => {
       setForceShow(true);
-    }, 12000);
+    }, 6000);
     return () => clearTimeout(timer);
   }, []);
 
-  // Lógica de Carga Combinada:
-  // Mostramos el Splash si la autenticación está cargando
-  // O SI el usuario está logueado pero los datos de nutrición (dashboard) aún cargan.
-  // EXCEPCIÓN: Si forceShow es true (timeout alcanzado), dejamos de mostrar Splash.
-  const isAppLoading = !forceShow && (authLoading || (!!session && nutritionLoading));
+  // Lógica de Carga Optimizada:
+  // Solo esperamos a que la autenticación (sesión + perfil) esté lista.
+  // NO esperamos a que carguen todos los datos de nutrición (eso ocurre en segundo plano).
+  const isAppLoading = !forceShow && authLoading;
 
   if (isAppLoading) {
     return <SplashScreen />;
