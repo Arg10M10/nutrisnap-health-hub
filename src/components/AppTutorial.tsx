@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
+import Joyride, { CallBackProps, STATUS, Step, TooltipRenderProps } from 'react-joyride';
 import { useTranslation } from 'react-i18next';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { useTheme } from 'next-themes';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Check, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const AppTutorial = () => {
   const { t } = useTranslation();
   const [run, setRun] = useState(false);
-  const [hasSeenTutorial, setHasSeenTutorial] = useLocalStorage('has_seen_tutorial_v1', false);
+  const [hasSeenTutorial, setHasSeenTutorial] = useLocalStorage('has_seen_tutorial_v2', false); // Updated version key
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -66,6 +70,85 @@ const AppTutorial = () => {
 
   const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
+  // Componente de Tooltip Personalizado y Moderno
+  const CustomTooltip = ({
+    index,
+    step,
+    backProps,
+    primaryProps,
+    skipProps,
+    tooltipProps,
+    isLastStep,
+    size
+  }: TooltipRenderProps) => {
+    return (
+      <div {...tooltipProps} className="max-w-xs sm:max-w-sm z-50">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={{ type: "spring", damping: 20, stiffness: 300 }}
+          className="bg-card text-card-foreground p-6 rounded-[2rem] shadow-2xl border border-border/50 relative overflow-hidden"
+        >
+          {/* Fondo decorativo sutil */}
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
+
+          {/* Botón Cerrar (Skip) */}
+          <button 
+            {...skipProps} 
+            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Skip tutorial"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          <div className="relative z-10">
+            {step.title && (
+              <h3 className="text-xl font-bold mb-2 text-primary pr-6 leading-tight">
+                {step.title}
+              </h3>
+            )}
+            <div className="text-muted-foreground mb-6 text-base leading-relaxed">
+              {step.content}
+            </div>
+
+            <div className="flex items-center justify-between mt-4">
+              {/* Indicadores de Puntos (Dots) */}
+              <div className="flex gap-1.5">
+                {Array.from({ length: size }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      "w-2 h-2 rounded-full transition-all duration-300",
+                      i === index ? "bg-primary w-4" : "bg-muted-foreground/30"
+                    )}
+                  />
+                ))}
+              </div>
+
+              {/* Botón Principal */}
+              <Button
+                {...primaryProps}
+                className="rounded-full px-6 h-10 shadow-lg shadow-primary/20"
+                size="sm"
+              >
+                {isLastStep ? (
+                  <span className="flex items-center gap-2">
+                    {t('tutorial.finish')} <Check className="w-4 h-4" />
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    {t('diets_onboarding.next')} <ArrowRight className="w-4 h-4" />
+                  </span>
+                )}
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  };
+
   return (
     <Joyride
       steps={steps}
@@ -73,34 +156,17 @@ const AppTutorial = () => {
       continuous
       showSkipButton
       showProgress
-      callback={handleJoyrideCallback}
+      disableOverlayClose={true}
+      spotlightClicks={false}
+      tooltipComponent={CustomTooltip} // Usamos nuestro componente personalizado
       styles={{
         options: {
-          primaryColor: 'hsl(150 70% 45%)', // App Primary Green
-          backgroundColor: isDark ? 'hsl(220 15% 10%)' : '#fff',
-          textColor: isDark ? '#fff' : '#333',
-          arrowColor: isDark ? 'hsl(220 15% 10%)' : '#fff',
-          zIndex: 1000,
+          zIndex: 10000,
+          overlayColor: 'rgba(0, 0, 0, 0.75)', // Fondo oscuro más elegante
         },
-        buttonNext: {
-          borderRadius: '9999px',
-          padding: '8px 16px',
-          fontWeight: 600,
-        },
-        buttonBack: {
-          marginRight: 10,
-          color: isDark ? '#ccc' : '#666',
-        },
-        buttonSkip: {
-          color: isDark ? '#ccc' : '#666',
-        },
-      }}
-      locale={{
-        back: t('ai_suggestions.back'),
-        close: t('analysis.close'),
-        last: t('tutorial.finish'),
-        next: t('diets_onboarding.next'),
-        skip: t('subscribe.buttons.skip'),
+        spotlight: {
+          borderRadius: 20, // Bordes redondeados en el área resaltada
+        }
       }}
     />
   );
