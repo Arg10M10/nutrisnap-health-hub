@@ -81,8 +81,8 @@ const WeightChart = () => {
   const maxWeight = chartData.length > 0 ? Math.max(...chartData.map(d => d.weight)) : 100;
   
   // Ajuste dinámico del eje Y para que la gráfica se vea bien
-  const padding = (maxWeight - minWeight) * 0.1;
-  const domainMin = Math.floor(minWeight - padding);
+  const padding = (maxWeight - minWeight) * 0.2; // Aumentado padding para mejor visualización
+  const domainMin = Math.floor(Math.max(0, minWeight - padding));
   const domainMax = Math.ceil(maxWeight + padding);
 
   const displayGoalWeight = profile?.goal_weight || null;
@@ -128,7 +128,7 @@ const WeightChart = () => {
           </div>
         ) : chartData.length > 1 ? (
           <div 
-            className="h-64 w-full select-none touch-none" 
+            className="h-64 w-full select-none touch-none pl-2" // Added pl-2 for axis space
             style={{ 
               WebkitTapHighlightColor: 'transparent',
               outline: 'none'
@@ -137,7 +137,7 @@ const WeightChart = () => {
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart 
                 data={chartData} 
-                margin={{ top: 10, right: 10, bottom: 0, left: -20 }}
+                margin={{ top: 10, right: 10, bottom: 0, left: 0 }}
               >
                 <defs>
                   <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
@@ -158,9 +158,10 @@ const WeightChart = () => {
                   domain={[domainMin, domainMax]}
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={10}
-                  tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
-                  width={35}
+                  tickMargin={8} // Reduced tickMargin slightly
+                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))', fontWeight: 500 }}
+                  width={40} // Increased width for labels
+                  unit={isImperial ? '' : ''} // Removed unit from axis to save space, it's clear from context
                 />
                 <Tooltip 
                   content={<CustomTooltip />} 
