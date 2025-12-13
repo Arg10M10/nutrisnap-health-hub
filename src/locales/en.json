@@ -340,7 +340,7 @@
     "current_weight": "Current weight",
     "height": "Height",
     "gender": "Gender",
-    "updated_today": "Today's limit reached"
+    "updated_today": "Today's update limit reached"
   },
   "ring_colors": {
     "title": "Ring Colors",
@@ -581,5 +581,18 @@
       "avoid": "Avoid"
     },
     "default_reason": "No reason provided."
+  },
+  "tutorial": {
+    "welcome_title": "Welcome to Calorel!",
+    "welcome_content": "Let's take a quick tour so you can use the app like an expert.",
+    "carousel_title": "Your Daily Summary",
+    "carousel_content": "Here you'll see your calories and macros for the day. Swipe sideways to see your hydration level and health score.",
+    "scanner_title": "Let's Scan!",
+    "scanner_content": "This is the magic button. Tap it to use AI to scan your food, or to log exercise manually.",
+    "progress_title": "Your Progress",
+    "progress_content": "Here you can see charts of your weight and evolution over time.",
+    "settings_title": "Settings",
+    "settings_content": "Configure your goals, preferences, and profile here.",
+    "finish": "Let's start!"
   }
 }

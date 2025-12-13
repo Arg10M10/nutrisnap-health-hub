@@ -19,6 +19,7 @@ import RecentAnalysisCard from "@/components/RecentAnalysisCard";
 import RecentExerciseCard from "@/components/RecentExerciseCard";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import AnalysisDetailDrawer from "@/components/AnalysisDetailDrawer";
+import AppTutorial from "@/components/AppTutorial";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -77,6 +78,7 @@ const Index = () => {
 
   return (
     <PageLayout>
+      <AppTutorial />
       <div className="space-y-6">
         <header className="flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -98,7 +100,7 @@ const Index = () => {
           calorieGoal={dailyGoals.calories}
         />
 
-        <div>
+        <div id="daily-summary-carousel">
           <Carousel className="w-full" opts={{ align: "start", duration: 20 }} setApi={setApi}>
             <CarouselContent>
               {/* Page 1: Main Macros */}

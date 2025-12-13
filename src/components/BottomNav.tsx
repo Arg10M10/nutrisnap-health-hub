@@ -33,6 +33,7 @@ const BottomNav = () => {
 
   const NavItem = ({ item }: { item: typeof navItems[0] }) => (
     <NavLink
+      id={`nav-${item.path.replace('/', '') || 'home'}`}
       to={item.path}
       className="flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg transition-colors flex-shrink-0 w-1/5"
       activeClassName="bg-primary/10 text-primary"
@@ -55,6 +56,7 @@ const BottomNav = () => {
           <DrawerTrigger asChild>
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2">
               <motion.button
+                id="scan-action-button"
                 whileTap={{ scale: 0.9 }}
                 className="flex items-center justify-center w-14 h-14 bg-primary rounded-full shadow-lg hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 aria-label="Open actions menu"

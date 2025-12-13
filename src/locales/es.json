@@ -581,5 +581,18 @@
       "avoid": "Evitar"
     },
     "default_reason": "No se proporcionó ninguna razón."
+  },
+  "tutorial": {
+    "welcome_title": "¡Bienvenido a Calorel!",
+    "welcome_content": "Vamos a dar un recorrido rápido para que aprendas a usar la app como un experto.",
+    "carousel_title": "Tu Resumen Diario",
+    "carousel_content": "Aquí verás tus calorías y macros del día. Desliza hacia los lados para ver tu nivel de hidratación y puntaje de salud.",
+    "scanner_title": "¡A Escanear!",
+    "scanner_content": "Este es el botón mágico. Tócalo para usar la IA y escanear tu comida, o para registrar ejercicio manualmente.",
+    "progress_title": "Tu Progreso",
+    "progress_content": "Aquí podrás ver gráficas de tu peso y evolución a lo largo del tiempo.",
+    "settings_title": "Ajustes",
+    "settings_content": "Configura tus metas, preferencias y perfil aquí.",
+    "finish": "¡Empecemos!"
   }
 }
