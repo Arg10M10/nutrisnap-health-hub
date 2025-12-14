@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -9,11 +9,16 @@ import { Capacitor } from '@capacitor/core';
 import { useTranslation, Trans } from 'react-i18next';
 
 const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
-const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
+const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    // Inicializar Google Auth solo en plataformas nativas si es necesario aquí,
+    // aunque generalmente se hace en App.tsx. Lo mantenemos limpio.
+  }, []);
 
   const signInWithGoogle = async () => {
     setLoading(true);
@@ -59,6 +64,7 @@ export default function Login() {
   };
 
   const openLink = (url: string) => {
+    // Abrir en una nueva pestaña/navegador del sistema
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -95,29 +101,36 @@ export default function Login() {
             </Button>
           </CardContent>
           <CardFooter className="flex justify-center !py-6 mt-4">
-            <p className="text-center text-xs text-muted-foreground px-4">
-              <Trans i18nKey="login.terms_privacy">
-                Al continuar, aceptas nuestros{" "}
-                <a 
-                  href={TERMS_URL} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline cursor-pointer"
-                  onClick={(e) => { e.preventDefault(); openLink(TERMS_URL); }}
-                >
-                  Términos de Servicio
-                </a>{" "}
-                y{" "}
-                <a 
-                  href={PRIVACY_URL} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline cursor-pointer"
-                  onClick={(e) => { e.preventDefault(); openLink(PRIVACY_URL); }}
-                >
-                  Política de Privacidad
-                </a>.
-              </Trans>
+            <p className="text-center text-xs text-muted-foreground px-4 leading-relaxed">
+              <Trans
+                i18nKey="login.terms_privacy"
+                components={{
+                  1: (
+                    <a
+                      href={TERMS_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary font-semibold hover:underline cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        openLink(TERMS_URL);
+                      }}
+                    />
+                  ),
+                  3: (
+                    <a
+                      href={PRIVACY_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary font-semibold hover:underline cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        openLink(PRIVACY_URL);
+                      }}
+                    />
+                  ),
+                }}
+              />
             </p>
           </CardFooter>
         </Card>
