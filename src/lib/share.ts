@@ -11,6 +11,7 @@ export const shareElement = async (element: HTMLElement, fileName: string, title
       scale: 2, // Mejor resolución
       backgroundColor: '#ffffff', // Asegurar fondo blanco
       logging: false,
+      imageTimeout: 15000, // Dar más tiempo para cargar imágenes
     });
 
     // 2. Obtener Base64 de la imagen
