@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 const AppTutorial = () => {
   const { t } = useTranslation();
   const [run, setRun] = useState(false);
-  const [hasSeenTutorial, setHasSeenTutorial] = useLocalStorage('has_seen_tutorial_v2', false); // Updated version key
+  const [hasSeenTutorial, setHasSeenTutorial] = useLocalStorage('has_seen_tutorial_v3', false); // Version bumped to reset for users
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -47,28 +47,30 @@ const AppTutorial = () => {
       content: t('tutorial.carousel_content'),
       title: t('tutorial.carousel_title'),
       placement: 'bottom',
+      scrollOffset: 100, // Deja espacio arriba para que se vea bien centrado
     },
     {
       target: '#scan-action-button',
       content: t('tutorial.scanner_content'),
       title: t('tutorial.scanner_title'),
       placement: 'top',
+      disableScrolling: true, // Importante para elementos 'fixed'
     },
     {
       target: '#nav-progress',
       content: t('tutorial.progress_content'),
       title: t('tutorial.progress_title'),
       placement: 'top',
+      disableScrolling: true, // Importante para elementos 'fixed'
     },
     {
       target: '#nav-settings',
       content: t('tutorial.settings_content'),
       title: t('tutorial.settings_title'),
       placement: 'top',
+      disableScrolling: true, // Importante para elementos 'fixed'
     },
   ];
-
-  const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   // Componente de Tooltip Personalizado y Moderno
   const CustomTooltip = ({
@@ -158,6 +160,7 @@ const AppTutorial = () => {
       showProgress
       disableOverlayClose={true}
       spotlightClicks={false}
+      callback={handleJoyrideCallback}
       tooltipComponent={CustomTooltip} // Usamos nuestro componente personalizado
       styles={{
         options: {
