@@ -50,12 +50,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .maybeSingle(); // Usamos maybeSingle para no lanzar error si no existe, aunque debería.
+        .maybeSingle();
       
       if (error) {
         console.error("Error fetching profile:", error);
-      } else {
+      } else if (userProfile) {
         setProfile(userProfile);
+      } else {
+        // Fallback: If profile doesn't exist (trigger failed or old user), create it.
+        // This prevents the app from getting stuck on SplashScreen.
+        console.warn("Profile not found, creating default profile for user:", userId);
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert([{ id: userId }])
+          .select()
+          .single();
+        
+        if (createError) {
+          console.error("Error creating fallback profile:", createError);
+        } else {
+          setProfile(newProfile);
+        }
       }
     } catch (e) {
       console.error("Fetch profile exception:", e);
@@ -67,17 +82,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeAuth = async () => {
       try {
-        // 1. Obtener sesión inicial
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
-        if (error) throw error;
-        
-        if (mounted) {
+        if (error) {
+          // If session is invalid, clear state
+          if (mounted) {
+            setSession(null);
+            setUser(null);
+            setProfile(null);
+          }
+        } else if (mounted) {
           setSession(initialSession);
           setUser(initialSession?.user ?? null);
 
           if (initialSession?.user) {
-            // 2. Si hay usuario, esperamos a tener el perfil ANTES de quitar el loading
             await fetchProfile(initialSession.user.id);
           }
         }
@@ -94,15 +112,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (mounted) {
-        // Si es un cambio de sesión (login/logout), actualizamos estado
         setSession(newSession);
         setUser(newSession?.user ?? null);
         
         if (newSession?.user) {
-          // Si iniciamos sesión, buscamos el perfil
+          // Fetch profile on sign in or token refresh
           await fetchProfile(newSession.user.id);
         } else if (event === 'SIGNED_OUT') {
-          // Limpiamos todo al cerrar sesión
           setProfile(null);
         }
       }
