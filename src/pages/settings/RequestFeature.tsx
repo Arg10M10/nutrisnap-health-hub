@@ -91,10 +91,10 @@ const RequestFeature = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feature_requests'] });
-      toast.success("Solicitud eliminada.");
+      toast.success(t('request_feature.delete_toast_success'));
     },
     onError: (error) => {
-      toast.error("No se pudo eliminar la solicitud.", { description: error.message });
+      toast.error(t('request_feature.delete_toast_error'), { description: error.message });
     },
   });
 

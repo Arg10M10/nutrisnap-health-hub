@@ -2,7 +2,10 @@
   "common": {
     "understood": "Understood",
     "loading": "Loading...",
-    "error": "Error"
+    "error": "Error",
+    "taking_too_long": "Taking too long?",
+    "sign_out": "Sign Out",
+    "retry": "Retry"
   },
   "settings": {
     "title": "Settings",
@@ -295,11 +298,14 @@
     "rate_label": "Desired Weekly Rate",
     "week": "week",
     "generate": "Generate with AI",
+    "generate_loading": "Generating with AI...",
     "continue": "Continue",
     "back": "Back",
     "continue": "Continue",
     "summary_title": "Confirm Your Details",
-    "disclaimer": "This will use one of your daily AI credits. The new goals will be applied to your profile."
+    "disclaimer": "This will use one of your daily AI credits. The new goals will be applied to your profile.",
+    "toast_success": "Nutritional plan updated with AI suggestions!",
+    "toast_error": "Error generating suggestions"
   },
   "bmi_calculator": {
     "title": "Your BMI",
@@ -368,7 +374,9 @@
     "subtitle": "Community Suggestions",
     "description": "Vote for the ideas you like or submit your own. We prioritize the most voted features.",
     "search_placeholder": "Search for ideas...",
-    "create_button": "Create"
+    "create_button": "Create",
+    "delete_toast_success": "Request deleted.",
+    "delete_toast_error": "Could not delete request."
   },
   "new_request_drawer": {
     "title": "Submit a New Idea",
@@ -572,15 +580,7 @@
   },
   "scanner": {
     "help_title": "How does the scanner work?",
-    "help_desc": "Center your meal in the viewfinder and take a photo. Our AI will analyze it to give you a nutritional estimate.",
-    "retake": "Retake",
-    "retry": "Retry",
-    "processing": "Processing...",
-    "starting": "Starting camera...",
-    "error_camera_title": "Camera Error",
-    "error_camera_desc": "Could not access camera. Check permissions.",
-    "error_analysis": "Analysis failed.",
-    "flash_unavailable": "Flash unavailable."
+    "help_desc": "Center your meal in the viewfinder and take a photo. Our AI will analyze it to give you a nutritional estimate."
   },
   "analysis": {
     "details_title": "Analysis Details",

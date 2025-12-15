@@ -2,7 +2,10 @@
   "common": {
     "understood": "Entendido",
     "loading": "Cargando...",
-    "error": "Error"
+    "error": "Error",
+    "taking_too_long": "¿Tarda demasiado?",
+    "sign_out": "Cerrar Sesión",
+    "retry": "Reintentar"
   },
   "settings": {
     "title": "Configuración",
@@ -295,11 +298,14 @@
     "rate_label": "Ritmo Semanal Deseado",
     "week": "semana",
     "generate": "Generar con IA",
+    "generate_loading": "Generando con IA...",
     "continue": "Continuar",
     "back": "Atrás",
     "continue": "Continuar",
     "summary_title": "Confirma tus Datos",
-    "disclaimer": "Esto usará uno de tus créditos de IA diarios. Las nuevas metas se aplicarán a tu perfil."
+    "disclaimer": "Esto usará uno de tus créditos de IA diarios. Las nuevas metas se aplicarán a tu perfil.",
+    "toast_success": "¡Plan nutricional actualizado con las sugerencias de la IA!",
+    "toast_error": "Error al generar sugerencias"
   },
   "bmi_calculator": {
     "title": "Tu IMC",
@@ -368,7 +374,9 @@
     "subtitle": "Sugerencias de la Comunidad",
     "description": "Vota por las ideas que te gusten o envía la tuya. Priorizamos las funciones más votadas.",
     "search_placeholder": "Buscar ideas...",
-    "create_button": "Crear"
+    "create_button": "Crear",
+    "delete_toast_success": "Solicitud eliminada.",
+    "delete_toast_error": "No se pudo eliminar la solicitud."
   },
   "new_request_drawer": {
     "title": "Enviar una Nueva Idea",

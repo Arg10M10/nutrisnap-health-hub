@@ -64,7 +64,6 @@ const AISuggestions = () => {
     if (profile?.weight) {
       let initialGoalWeight = 0;
       
-      // Lógica de peso objetivo inicial
       if (profile.goal === 'lose_weight') {
         initialGoalWeight = profile.weight * 0.9;
       } else if (profile.goal === 'gain_weight') {
@@ -73,13 +72,7 @@ const AISuggestions = () => {
         initialGoalWeight = profile.weight;
       }
 
-      // Si es imperial, el peso en el perfil YA está en libras (guardado así en Onboarding/Settings),
-      // o debemos asegurarnos. En este app, profile.weight guarda el valor en la unidad del usuario.
-      // Pero para la IA/Calculos internos, a veces necesitamos normalizar.
-      // Asumiremos que profile.weight es el valor visual correcto.
-      
-      // Ajustar tasa semanal por defecto según unidad
-      const defaultRate = isImperial ? 1.0 : 0.5; // ~0.5kg o ~1lb
+      const defaultRate = isImperial ? 1.0 : 0.5;
 
       form.reset({
         workoutsPerWeek: 3,
@@ -93,20 +86,15 @@ const AISuggestions = () => {
     mutationFn: async (values: z.infer<typeof fullSchema>) => {
       if (!profile || !user) throw new Error("Profile not loaded");
 
-      // PREPARAR DATOS PARA LA IA (Convertir a Métrico si es necesario)
-      // La función 'calculate-macros' espera KG y CM.
-      
       let weightInKg = profile.weight || 70;
       let heightInCm = profile.height || 170;
       let goalWeightInKg = values.goalWeight;
       let weeklyRateInKg = values.weeklyRate;
 
       if (isImperial) {
-        // Convertir Lbs a Kg para el cálculo
         weightInKg = toKg(weightInKg);
         goalWeightInKg = toKg(goalWeightInKg);
         weeklyRateInKg = toKg(weeklyRateInKg);
-        // Convertir Pulgadas a Cm
         heightInCm = heightInCm * 2.54;
       }
 
@@ -125,8 +113,6 @@ const AISuggestions = () => {
 
       if (suggestionError) throw new Error(suggestionError.message);
 
-      // Guardar en Supabase
-      // IMPORTANTE: goal_weight y weekly_rate se guardan en la unidad del usuario (como el resto del perfil)
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -135,8 +121,8 @@ const AISuggestions = () => {
           goal_carbs: suggestions.carbs,
           goal_fats: suggestions.fats,
           goal_sugars: suggestions.sugars,
-          goal_weight: values.goalWeight, // Guardamos el valor del form (ya sea kg o lbs)
-          weekly_rate: values.weeklyRate, // Guardamos el valor del form
+          goal_weight: values.goalWeight,
+          weekly_rate: values.weeklyRate,
         })
         .eq('id', user.id);
 
@@ -147,11 +133,11 @@ const AISuggestions = () => {
     onSuccess: async () => {
       logUsage('ai_suggestions');
       await refetchProfile();
-      toast.success("¡Plan nutricional actualizado con las sugerencias de la IA!");
+      toast.success(t('ai_suggestions.toast_success'));
       navigate(-1);
     },
     onError: (error) => {
-      toast.error("Error al generar sugerencias", { description: error.message });
+      toast.error(t('ai_suggestions.toast_error'), { description: error.message });
     },
   });
 
@@ -179,7 +165,6 @@ const AISuggestions = () => {
     setStep(s => s - 1);
   };
 
-  // Prevenir envío con Enter
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -213,10 +198,9 @@ const AISuggestions = () => {
     </div>
   );
 
-  // Configuración del Slider según unidad
   const sliderConfig = isImperial 
-    ? { min: 0.2, max: 3.5, step: 0.1 } // Libras
-    : { min: 0.1, max: 1.5, step: 0.1 }; // Kilos
+    ? { min: 0.2, max: 3.5, step: 0.1 }
+    : { min: 0.1, max: 1.5, step: 0.1 };
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -228,7 +212,7 @@ const AISuggestions = () => {
         )}
         <div className="flex-1" style={{ marginLeft: step === 1 ? '3.5rem' : '0' }}>
           <p className="text-sm font-semibold text-primary">
-            Paso {step} de {TOTAL_STEPS}
+            {t('onboarding.step', { step, totalSteps: TOTAL_STEPS })}
           </p>
           <Progress value={(step / TOTAL_STEPS) * 100} className="mt-1 h-2" />
         </div>
@@ -287,7 +271,6 @@ const AISuggestions = () => {
                               type="number" 
                               {...field} 
                               className="h-24 text-5xl text-center font-bold pr-16" 
-                              // Evitamos que al dar enter pase algo raro, aunque ya bloqueamos form onKeyDown
                             />
                             <span className="absolute right-6 top-1/2 -translate-y-1/2 text-2xl text-muted-foreground font-semibold">{weightUnit}</span>
                           </div>
@@ -340,7 +323,7 @@ const AISuggestions = () => {
               ) : (
                 <Button type="submit" size="lg" className="flex-1 h-14 text-lg" disabled={mutation.isPending}>
                   {mutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-5 w-5" />}
-                  {mutation.isPending ? "Generando con IA..." : t('ai_suggestions.generate')}
+                  {mutation.isPending ? t('ai_suggestions.generate_loading') : t('ai_suggestions.generate')}
                 </Button>
               )}
             </div>

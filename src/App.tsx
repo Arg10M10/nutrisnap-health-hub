@@ -11,6 +11,7 @@ import { NutritionProvider, useNutrition } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { StatusBarSync } from "./components/StatusBarSync";
+import { useTranslation } from "react-i18next";
 
 import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
@@ -40,6 +41,7 @@ import PersonalDetails from "./pages/settings/PersonalDetails";
 import BadgeDetailModal from "./components/BadgeDetailModal";
 import Subscribe from "./pages/Subscribe";
 import { Button } from "./components/ui/button";
+import { RefreshCw } from "lucide-react";
 
 const queryClient = new QueryClient();
 
@@ -72,9 +74,10 @@ const GlobalBadgeModal = () => {
 };
 
 const AppRoutes = () => {
-  const { session, profile, loading: authLoading, signOut } = useAuth();
+  const { session, profile, loading: authLoading, signOut, refetchProfile } = useAuth();
   const location = useLocation();
   const [isLongLoading, setIsLongLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -97,15 +100,28 @@ const AppRoutes = () => {
     }
   }, []);
 
+  const handleRetry = async () => {
+    setIsLongLoading(false);
+    await refetchProfile();
+  };
+
   // 1. Loading state (Authenticating or Fetching Profile)
   if (authLoading || (session && !profile)) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-background">
         <SplashScreen />
         {isLongLoading && (
-          <div className="absolute bottom-10 flex flex-col items-center gap-4 animate-fade-in">
-            <p className="text-muted-foreground text-sm">¿Tarda demasiado?</p>
-            <Button variant="outline" onClick={signOut}>Cerrar Sesión</Button>
+          <div className="absolute bottom-10 flex flex-col items-center gap-4 animate-fade-in px-4 text-center">
+            <p className="text-muted-foreground text-sm">{t('common.taking_too_long')}</p>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={handleRetry} className="gap-2">
+                <RefreshCw className="w-4 h-4" />
+                {t('common.retry')}
+              </Button>
+              <Button variant="ghost" onClick={signOut}>
+                {t('common.sign_out')}
+              </Button>
+            </div>
           </div>
         )}
       </div>
