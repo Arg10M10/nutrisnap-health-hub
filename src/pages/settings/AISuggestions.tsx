@@ -19,14 +19,15 @@ import { useAILimit } from '@/hooks/useAILimit';
 import { OnboardingOptionCard } from '@/components/settings/OnboardingOptionCard';
 import { Card, CardContent } from '@/components/ui/card';
 
+// Validaciones dinámicas (se ajustan en el componente según la unidad)
 const step1Schema = z.object({
   workoutsPerWeek: z.coerce.number().min(0).max(7),
 });
 const step2Schema = z.object({
-  goalWeight: z.coerce.number().min(30, "El peso objetivo debe ser de al menos 30 kg."),
+  goalWeight: z.coerce.number().min(1, "El peso objetivo es requerido."),
 });
 const step3Schema = z.object({
-  weeklyRate: z.coerce.number().min(0.1).max(1.5),
+  weeklyRate: z.coerce.number().min(0.1),
 });
 
 const fullSchema = step1Schema.merge(step2Schema).merge(step3Schema);
@@ -41,43 +42,91 @@ const AISuggestions = () => {
   const [direction, setDirection] = useState(1);
   const { checkLimit, logUsage } = useAILimit();
 
+  const isImperial = profile?.units === 'imperial';
+  const weightUnit = isImperial ? 'lbs' : 'kg';
+
+  // Factores de conversión
+  const toLbs = (kg: number) => Math.round(kg * 2.20462);
+  const toKg = (lbs: number) => lbs / 2.20462;
+
   const form = useForm<z.infer<typeof fullSchema>>({
     resolver: zodResolver(fullSchema),
     mode: 'onChange',
     defaultValues: {
       workoutsPerWeek: 3,
-      goalWeight: profile?.weight ? Math.round(profile.weight * 0.9) : 65,
+      goalWeight: 0,
       weeklyRate: 0.5,
     },
   });
 
+  // Inicializar valores cuando carga el perfil
   useEffect(() => {
     if (profile?.weight) {
+      let initialGoalWeight = 0;
+      
+      // Lógica de peso objetivo inicial
+      if (profile.goal === 'lose_weight') {
+        initialGoalWeight = profile.weight * 0.9;
+      } else if (profile.goal === 'gain_weight') {
+        initialGoalWeight = profile.weight * 1.1;
+      } else {
+        initialGoalWeight = profile.weight;
+      }
+
+      // Si es imperial, el peso en el perfil YA está en libras (guardado así en Onboarding/Settings),
+      // o debemos asegurarnos. En este app, profile.weight guarda el valor en la unidad del usuario.
+      // Pero para la IA/Calculos internos, a veces necesitamos normalizar.
+      // Asumiremos que profile.weight es el valor visual correcto.
+      
+      // Ajustar tasa semanal por defecto según unidad
+      const defaultRate = isImperial ? 1.0 : 0.5; // ~0.5kg o ~1lb
+
       form.reset({
         workoutsPerWeek: 3,
-        goalWeight: profile.goal === 'lose_weight' 
-          ? Math.round(profile.weight * 0.9) 
-          : (profile.goal === 'gain_weight' ? Math.round(profile.weight * 1.1) : profile.weight),
-        weeklyRate: 0.5,
+        goalWeight: Math.round(initialGoalWeight),
+        weeklyRate: defaultRate,
       });
     }
-  }, [profile, form]);
+  }, [profile, form, isImperial]);
 
   const mutation = useMutation({
     mutationFn: async (values: z.infer<typeof fullSchema>) => {
       if (!profile || !user) throw new Error("Profile not loaded");
+
+      // PREPARAR DATOS PARA LA IA (Convertir a Métrico si es necesario)
+      // La función 'calculate-macros' espera KG y CM.
+      
+      let weightInKg = profile.weight || 70;
+      let heightInCm = profile.height || 170;
+      let goalWeightInKg = values.goalWeight;
+      let weeklyRateInKg = values.weeklyRate;
+
+      if (isImperial) {
+        // Convertir Lbs a Kg para el cálculo
+        weightInKg = toKg(weightInKg);
+        goalWeightInKg = toKg(goalWeightInKg);
+        weeklyRateInKg = toKg(weeklyRateInKg);
+        // Convertir Pulgadas a Cm
+        heightInCm = heightInCm * 2.54;
+      }
+
       const { data: suggestions, error: suggestionError } = await supabase.functions.invoke('calculate-macros', {
         body: {
           ...values,
+          weight: weightInKg,
+          height: heightInCm,
+          goalWeight: goalWeightInKg,
+          weeklyRate: weeklyRateInKg,
           gender: profile.gender,
           age: profile.age,
-          height: profile.height,
-          weight: profile.weight,
           goal: profile.goal,
         },
       });
+
       if (suggestionError) throw new Error(suggestionError.message);
 
+      // Guardar en Supabase
+      // IMPORTANTE: goal_weight y weekly_rate se guardan en la unidad del usuario (como el resto del perfil)
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -86,10 +135,11 @@ const AISuggestions = () => {
           goal_carbs: suggestions.carbs,
           goal_fats: suggestions.fats,
           goal_sugars: suggestions.sugars,
-          goal_weight: values.goalWeight,
-          weekly_rate: values.weeklyRate,
+          goal_weight: values.goalWeight, // Guardamos el valor del form (ya sea kg o lbs)
+          weekly_rate: values.weeklyRate, // Guardamos el valor del form
         })
         .eq('id', user.id);
+
       if (updateError) throw updateError;
 
       return suggestions;
@@ -129,6 +179,13 @@ const AISuggestions = () => {
     setStep(s => s - 1);
   };
 
+  // Prevenir envío con Enter
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
+
   const pageVariants = {
     initial: (direction: number) => ({ x: `${direction * 100}%`, opacity: 0 }),
     animate: { x: 0, opacity: 1 },
@@ -144,7 +201,7 @@ const AISuggestions = () => {
 
   const canContinue = () => {
     if (step === 1) return !form.formState.errors.workoutsPerWeek;
-    if (step === 2) return !form.formState.errors.goalWeight;
+    if (step === 2) return !form.formState.errors.goalWeight && form.getValues('goalWeight') > 0;
     if (step === 3) return !form.formState.errors.weeklyRate;
     return true;
   };
@@ -155,6 +212,11 @@ const AISuggestions = () => {
       <p className="font-semibold text-foreground">{value}</p>
     </div>
   );
+
+  // Configuración del Slider según unidad
+  const sliderConfig = isImperial 
+    ? { min: 0.2, max: 3.5, step: 0.1 } // Libras
+    : { min: 0.1, max: 1.5, step: 0.1 }; // Kilos
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -176,7 +238,11 @@ const AISuggestions = () => {
       </header>
       <main className="flex-1 p-4 flex flex-col">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleGenerate)} className="flex flex-col h-full">
+          <form 
+            onSubmit={form.handleSubmit(handleGenerate)} 
+            onKeyDown={handleKeyDown}
+            className="flex flex-col h-full"
+          >
             <div className="flex-1">
               <AnimatePresence initial={false} custom={direction}>
                 <motion.div
@@ -217,8 +283,13 @@ const AISuggestions = () => {
                         <FormLabel className="text-xl font-semibold text-center block mb-6 flex items-center justify-center gap-2"><Target /> {t('ai_suggestions.goal_weight_label')}</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <Input type="number" {...field} className="h-24 text-5xl text-center font-bold pr-16" />
-                            <span className="absolute right-6 top-1/2 -translate-y-1/2 text-2xl text-muted-foreground font-semibold">kg</span>
+                            <Input 
+                              type="number" 
+                              {...field} 
+                              className="h-24 text-5xl text-center font-bold pr-16" 
+                              // Evitamos que al dar enter pase algo raro, aunque ya bloqueamos form onKeyDown
+                            />
+                            <span className="absolute right-6 top-1/2 -translate-y-1/2 text-2xl text-muted-foreground font-semibold">{weightUnit}</span>
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -229,9 +300,17 @@ const AISuggestions = () => {
                     <FormField control={form.control} name="weeklyRate" render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xl font-semibold text-center block mb-6 flex items-center justify-center gap-2"><TrendingUp /> {t('ai_suggestions.rate_label')}</FormLabel>
-                        <p className="text-center text-5xl font-bold text-primary my-4">{field.value} kg/{t('ai_suggestions.week')}</p>
+                        <p className="text-center text-5xl font-bold text-primary my-4">
+                          {field.value} <span className="text-2xl text-muted-foreground font-normal">{weightUnit}/{t('ai_suggestions.week')}</span>
+                        </p>
                         <FormControl>
-                          <Slider value={[field.value]} onValueChange={(v) => field.onChange(v[0])} min={0.1} max={1.5} step={0.1} />
+                          <Slider 
+                            value={[field.value]} 
+                            onValueChange={(v) => field.onChange(v[0])} 
+                            min={sliderConfig.min} 
+                            max={sliderConfig.max} 
+                            step={sliderConfig.step} 
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -243,8 +322,8 @@ const AISuggestions = () => {
                       <Card>
                         <CardContent className="p-4 divide-y">
                           <SummaryItem label={t('ai_suggestions.workouts_label')} value={workoutOptions.find(o => o.value === form.watch('workoutsPerWeek'))?.label} />
-                          <SummaryItem label={t('ai_suggestions.goal_weight_label')} value={`${form.watch('goalWeight')} kg`} />
-                          <SummaryItem label={t('ai_suggestions.rate_label')} value={`${form.watch('weeklyRate')} kg/${t('ai_suggestions.week')}`} />
+                          <SummaryItem label={t('ai_suggestions.goal_weight_label')} value={`${form.watch('goalWeight')} ${weightUnit}`} />
+                          <SummaryItem label={t('ai_suggestions.rate_label')} value={`${form.watch('weeklyRate')} ${weightUnit}/${t('ai_suggestions.week')}`} />
                         </CardContent>
                       </Card>
                       <p className="text-center text-xs text-muted-foreground mt-4 px-4">{t('ai_suggestions.disclaimer')}</p>
