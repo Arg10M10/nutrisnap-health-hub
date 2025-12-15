@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 const AppTutorial = () => {
   const { t } = useTranslation();
   const [run, setRun] = useState(false);
-  const [hasSeenTutorial, setHasSeenTutorial] = useLocalStorage('has_seen_tutorial_v3', false); // Version bumped to reset for users
+  const [hasSeenTutorial, setHasSeenTutorial] = useLocalStorage('has_seen_tutorial_v4', false); // Updated to v4
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -47,28 +47,28 @@ const AppTutorial = () => {
       content: t('tutorial.carousel_content'),
       title: t('tutorial.carousel_title'),
       placement: 'bottom',
-      scrollOffset: 100, // Deja espacio arriba para que se vea bien centrado
+      scrollOffset: 100,
     },
     {
       target: '#scan-action-button',
       content: t('tutorial.scanner_content'),
       title: t('tutorial.scanner_title'),
       placement: 'top',
-      disableScrolling: true, // Importante para elementos 'fixed'
+      disableScrolling: true,
     },
     {
       target: '#nav-progress',
       content: t('tutorial.progress_content'),
       title: t('tutorial.progress_title'),
       placement: 'top',
-      disableScrolling: true, // Importante para elementos 'fixed'
+      disableScrolling: true,
     },
     {
       target: '#nav-settings',
       content: t('tutorial.settings_content'),
       title: t('tutorial.settings_title'),
       placement: 'top',
-      disableScrolling: true, // Importante para elementos 'fixed'
+      disableScrolling: true,
     },
   ];
 

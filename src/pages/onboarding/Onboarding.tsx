@@ -68,6 +68,9 @@ const Onboarding = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
+      // Reset tutorial flag so it shows for this new user (or re-onboarded user)
+      // This ensures "create account from scratch" users see the tutorial even if they used the browser before.
+      window.localStorage.removeItem('has_seen_tutorial_v4');
       navigate('/subscribe');
     },
     onError: (error) => {
