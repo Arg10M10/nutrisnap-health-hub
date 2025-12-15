@@ -13,11 +13,9 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { ArrowLeft, Check, Loader2 } from 'lucide-react';
 import UserAvatar from '@/components/UserAvatar';
-import { cn } from '@/lib/utils';
 
 const profileSchema = z.object({
-  firstName: z.string().min(1, "Required"),
-  lastName: z.string().min(1, "Required"),
+  fullName: z.string().min(2, "El nombre es requerido."),
 });
 
 const colorOptions = ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#6366F1', '#8B5CF6', '#EC4899'];
@@ -30,14 +28,15 @@ const EditProfile = () => {
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
+    defaultValues: {
+      fullName: '',
+    },
   });
 
   useEffect(() => {
     if (profile) {
-      const [firstName, ...lastNameParts] = profile.full_name?.split(' ') || ['', ''];
       form.reset({
-        firstName: firstName,
-        lastName: lastNameParts.join(' '),
+        fullName: profile.full_name || '',
       });
       setSelectedColor(profile.avatar_color || colorOptions[7]);
     }
@@ -49,7 +48,7 @@ const EditProfile = () => {
       const { error } = await supabase
         .from('profiles')
         .update({
-          full_name: `${values.firstName} ${values.lastName}`,
+          full_name: values.fullName,
           avatar_color: selectedColor,
         })
         .eq('id', user.id);
@@ -69,7 +68,8 @@ const EditProfile = () => {
     mutation.mutate(values);
   };
 
-  const currentFullName = `${form.watch('firstName') || ''} ${form.watch('lastName') || ''}`.trim();
+  // Watch current name for preview
+  const currentName = form.watch('fullName');
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -83,7 +83,7 @@ const EditProfile = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="flex flex-col items-center gap-6">
-              <UserAvatar name={currentFullName} color={selectedColor} className="w-32 h-32 text-7xl" />
+              <UserAvatar name={currentName || profile?.full_name} color={selectedColor} className="w-32 h-32 text-7xl" />
               <div className="flex flex-wrap justify-center gap-3">
                 {colorOptions.map(color => (
                   <button
@@ -99,11 +99,14 @@ const EditProfile = () => {
               </div>
             </div>
             <div className="space-y-4">
-              <FormField control={form.control} name="firstName" render={({ field }) => (
-                <FormItem><FormLabel>{t('edit_profile.first_name')}</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="lastName" render={({ field }) => (
-                <FormItem><FormLabel>{t('edit_profile.last_name')}</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
+              <FormField control={form.control} name="fullName" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('edit_profile.full_name', 'Nombre Completo')}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="h-12 text-lg" placeholder="Tu nombre" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )} />
             </div>
             <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={mutation.isPending}>
