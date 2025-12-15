@@ -54,11 +54,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (error) {
         console.error("Error fetching profile:", error);
+        return null;
       } else if (userProfile) {
         setProfile(userProfile);
+        return userProfile;
       } else {
-        // Fallback: If profile doesn't exist (trigger failed or old user), create it.
-        // This prevents the app from getting stuck on SplashScreen.
         console.warn("Profile not found, creating default profile for user:", userId);
         const { data: newProfile, error: createError } = await supabase
           .from('profiles')
@@ -68,12 +68,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         if (createError) {
           console.error("Error creating fallback profile:", createError);
+          return null;
         } else {
           setProfile(newProfile);
+          return newProfile;
         }
       }
     } catch (e) {
       console.error("Fetch profile exception:", e);
+      return null;
     }
   };
 
@@ -85,22 +88,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
         if (error) {
-          // If session is invalid, clear state
+          console.error("Auth initialization error:", error);
           if (mounted) {
             setSession(null);
             setUser(null);
             setProfile(null);
           }
         } else if (mounted) {
-          setSession(initialSession);
-          setUser(initialSession?.user ?? null);
-
           if (initialSession?.user) {
+            setSession(initialSession);
+            setUser(initialSession.user);
+            // Wait for profile BEFORE setting loading to false
             await fetchProfile(initialSession.user.id);
+          } else {
+            setSession(null);
+            setUser(null);
+            setProfile(null);
           }
         }
       } catch (error) {
-        console.error("Auth initialization error:", error);
+        console.error("Auth initialization unexpected error:", error);
       } finally {
         if (mounted) {
           setLoading(false);
@@ -112,14 +119,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (mounted) {
-        setSession(newSession);
-        setUser(newSession?.user ?? null);
-        
-        if (newSession?.user) {
-          // Fetch profile on sign in or token refresh
-          await fetchProfile(newSession.user.id);
+        // When signing in, we might want to show loading state again or handle it gracefully
+        if (event === 'SIGNED_IN' && newSession?.user) {
+           setSession(newSession);
+           setUser(newSession.user);
+           // Fetch profile immediately
+           await fetchProfile(newSession.user.id);
         } else if (event === 'SIGNED_OUT') {
+          setSession(null);
+          setUser(null);
           setProfile(null);
+        } else if (event === 'TOKEN_REFRESHED' && newSession) {
+           setSession(newSession);
+           setUser(newSession.user);
         }
       }
     });
@@ -131,10 +143,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setProfile(null);
-    setUser(null);
-    setSession(null);
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    } finally {
+      setProfile(null);
+      setUser(null);
+      setSession(null);
+    }
   };
 
   const refetchProfile = async () => {

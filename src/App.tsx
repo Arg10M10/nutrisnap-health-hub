@@ -39,6 +39,7 @@ import EditProfile from "./pages/settings/EditProfile";
 import PersonalDetails from "./pages/settings/PersonalDetails";
 import BadgeDetailModal from "./components/BadgeDetailModal";
 import Subscribe from "./pages/Subscribe";
+import { Button } from "./components/ui/button";
 
 const queryClient = new QueryClient();
 
@@ -71,8 +72,19 @@ const GlobalBadgeModal = () => {
 };
 
 const AppRoutes = () => {
-  const { session, profile, loading: authLoading } = useAuth();
+  const { session, profile, loading: authLoading, signOut } = useAuth();
   const location = useLocation();
+  const [isLongLoading, setIsLongLoading] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (authLoading || (session && !profile)) {
+      timer = setTimeout(() => setIsLongLoading(true), 5000); // 5 seconds threshold
+    } else {
+      setIsLongLoading(false);
+    }
+    return () => clearTimeout(timer);
+  }, [authLoading, session, profile]);
 
   // Initialize Google Auth
   useEffect(() => {
@@ -85,9 +97,19 @@ const AppRoutes = () => {
     }
   }, []);
 
-  // Si está cargando la autenticación, mostramos SplashScreen.
-  if (authLoading) {
-    return <SplashScreen />;
+  // 1. Loading state (Authenticating or Fetching Profile)
+  if (authLoading || (session && !profile)) {
+    return (
+      <div className="relative min-h-screen flex flex-col items-center justify-center bg-background">
+        <SplashScreen />
+        {isLongLoading && (
+          <div className="absolute bottom-10 flex flex-col items-center gap-4 animate-fade-in">
+            <p className="text-muted-foreground text-sm">¿Tarda demasiado?</p>
+            <Button variant="outline" onClick={signOut}>Cerrar Sesión</Button>
+          </div>
+        )}
+      </div>
+    );
   }
 
   const fullScreenRoutes = [
@@ -109,7 +131,7 @@ const AppRoutes = () => {
 
   const shellClass = "relative min-h-screen"; 
 
-  // 1. Si no hay sesión, vamos al Login.
+  // 2. No session -> Login
   if (!session) {
     return (
       <div className={shellClass}>
@@ -120,14 +142,8 @@ const AppRoutes = () => {
     );
   }
 
-  // 2. Si hay sesión pero NO hay perfil cargado todavía, seguimos esperando.
-  // Esto evita que salte al Onboarding por error si profile es null momentáneamente.
-  if (!profile) {
-    return <SplashScreen />;
-  }
-
-  // 3. Solo si tenemos perfil Y no ha completado onboarding, mostramos Onboarding.
-  if (!profile.onboarding_completed) {
+  // 3. New User -> Onboarding
+  if (profile && !profile.onboarding_completed) {
     return (
       <div className={shellClass}>
         <div className="relative z-10">
@@ -137,7 +153,7 @@ const AppRoutes = () => {
     );
   }
 
-  // Rutas a pantalla completa (sin BottomNav)
+  // 4. Authenticated & Onboarded -> App
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
@@ -166,7 +182,6 @@ const AppRoutes = () => {
     );
   }
 
-  // App Principal (Dashboard)
   return (
     <div className={shellClass}>
       <GlobalBadgeModal />
