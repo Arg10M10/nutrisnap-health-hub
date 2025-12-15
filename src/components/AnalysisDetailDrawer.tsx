@@ -48,7 +48,7 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
         shareRef.current,
         `meal-${entry.food_name.replace(/\s+/g, '-').toLowerCase()}`,
         'Calorel Meal',
-        `Mira lo que estoy comiendo: ${entry.food_name} 🥗 - vía Calorel`
+        t('share.meal_message', { food: entry.food_name })
       );
     } catch (error) {
       console.error('Error sharing meal:', error);
@@ -83,7 +83,7 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
         </DrawerContent>
       </Drawer>
 
-      {/* Plantilla oculta para compartir comida - MOVIDA FUERA DEL DRAWER */}
+      {/* Plantilla oculta para compartir - MOVIDA FUERA DEL DRAWER */}
       {/* Usamos 'left: -9999px' en lugar de transform para mejor compatibilidad con html2canvas */}
       <div 
         ref={shareRef}
@@ -128,22 +128,22 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
             <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl">
               <Beef className="w-6 h-6 text-red-500 mb-1" />
               <span className="font-bold text-gray-800 text-sm">{entry.protein_value || 0}g</span>
-              <span className="text-xs text-gray-500">Prot</span>
+              <span className="text-xs text-gray-500">{t('share.prot_short')}</span>
             </div>
             <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl">
               <Wheat className="w-6 h-6 text-yellow-500 mb-1" />
               <span className="font-bold text-gray-800 text-sm">{entry.carbs_value || 0}g</span>
-              <span className="text-xs text-gray-500">Carb</span>
+              <span className="text-xs text-gray-500">{t('share.carb_short')}</span>
             </div>
             <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl">
               <Droplets className="w-6 h-6 text-blue-500 mb-1" />
               <span className="font-bold text-gray-800 text-sm">{entry.fats_value || 0}g</span>
-              <span className="text-xs text-gray-500">Grasa</span>
+              <span className="text-xs text-gray-500">{t('share.fat_short')}</span>
             </div>
           </div>
           
           <div className="mt-6 text-center">
-             <p className="text-sm text-gray-400">Generado con Calorel App</p>
+             <p className="text-sm text-gray-400">{t('share.generated_with')}</p>
           </div>
         </div>
       </div>

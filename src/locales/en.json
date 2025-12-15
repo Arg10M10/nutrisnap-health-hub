@@ -582,6 +582,15 @@
     },
     "default_reason": "No reason provided."
   },
+  "share": {
+    "achievement_unlocked": "Achievement Unlocked!",
+    "badge_message": "I just unlocked the \"{{name}}\" badge on Calorel! 🏆",
+    "meal_message": "Check out what I'm eating: {{food}} 🥗 - via Calorel",
+    "generated_with": "Generated with Calorel App",
+    "prot_short": "Prot",
+    "carb_short": "Carbs",
+    "fat_short": "Fat"
+  },
   "tutorial": {
     "welcome_title": "Welcome to Calorel!",
     "welcome_content": "Let's take a quick tour so you can use the app like an expert.",

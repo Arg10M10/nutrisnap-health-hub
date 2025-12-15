@@ -582,6 +582,15 @@
     },
     "default_reason": "No se proporcionó ninguna razón."
   },
+  "share": {
+    "achievement_unlocked": "¡Logro Desbloqueado!",
+    "badge_message": "¡He desbloqueado la insignia \"{{name}}\" en Calorel! 🏆",
+    "meal_message": "Mira lo que estoy comiendo: {{food}} 🥗 - vía Calorel",
+    "generated_with": "Generado con Calorel App",
+    "prot_short": "Prot",
+    "carb_short": "Carb",
+    "fat_short": "Grasa"
+  },
   "tutorial": {
     "welcome_title": "¡Bienvenido a Calorel!",
     "welcome_content": "Vamos a dar un recorrido rápido para que aprendas a usar la app como un experto.",

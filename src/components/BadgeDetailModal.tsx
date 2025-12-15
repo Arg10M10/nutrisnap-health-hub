@@ -29,7 +29,7 @@ const BadgeDetailModal = ({ isOpen, onClose, badge }: BadgeDetailModalProps) => 
         shareRef.current, 
         `badge-${badge.name.replace(/\s+/g, '-').toLowerCase()}`,
         t('badges.notification_title'),
-        `¡He desbloqueado la insignia "${badge.name}" en Calorel! 🏆`
+        t('share.badge_message', { name: badge.name })
       );
     } catch (error) {
       console.error('Error sharing badge:', error);
@@ -118,7 +118,7 @@ const BadgeDetailModal = ({ isOpen, onClose, badge }: BadgeDetailModalProps) => 
         
         <div className="w-full h-px bg-gray-200" />
 
-        <h2 className="text-xl font-medium text-gray-500 uppercase tracking-widest mt-2">¡Logro Desbloqueado!</h2>
+        <h2 className="text-xl font-medium text-gray-500 uppercase tracking-widest mt-2">{t('share.achievement_unlocked')}</h2>
         
         <img 
           src={badge.image} 
