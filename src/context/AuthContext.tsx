@@ -44,12 +44,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Helper to create a minimal safe profile so the app doesn't crash while loading DB data
-  const createTempProfile = (userId: string, email?: string): Profile => ({
+  // Helper to create a safe fallback profile from user metadata
+  // This ensures the app can ALWAYS render something, avoiding the white screen death
+  const createFallbackProfile = (userId: string, email?: string): Profile => ({
     id: userId,
     full_name: email?.split('@')[0] || 'User',
     updated_at: new Date().toISOString(),
-    onboarding_completed: false, // Will redirect to onboarding if db fetch fails, safer than crashing
+    onboarding_completed: false, 
     diet_onboarding_completed: false,
     gender: null,
     age: null,
@@ -70,82 +71,86 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     avatar_color: null
   });
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (userId: string, userEmail?: string) => {
     try {
+      // 1. Try to get from Supabase
       const { data: userProfile, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .maybeSingle();
       
-      if (error) {
-        console.error("Error fetching profile:", error);
-        return;
-      } 
-      
       if (userProfile) {
         setProfile(userProfile);
-        // Update cache
         localStorage.setItem(`profile_${userId}`, JSON.stringify(userProfile));
-      } else {
-        // Profile doesn't exist in DB, create one
-        const { data: newProfile } = await supabase
-          .from('profiles')
-          .insert([{ id: userId }])
-          .select()
-          .single();
-        if (newProfile) {
-          setProfile(newProfile);
-          localStorage.setItem(`profile_${userId}`, JSON.stringify(newProfile));
-        }
+        return;
       }
+
+      if (error) {
+        console.error("Error fetching profile from DB:", error);
+      }
+
+      // 2. If DB failed or returned null, try Local Storage
+      const cachedProfile = localStorage.getItem(`profile_${userId}`);
+      if (cachedProfile) {
+        console.log("Using cached profile due to DB error/miss");
+        setProfile(JSON.parse(cachedProfile));
+        return;
+      }
+
+      // 3. Absolute failsafe: Use synthetic profile
+      // If we are here, we have a session but NO profile data anywhere.
+      // We must set a profile so the app doesn't hang.
+      console.log("Creating fallback profile");
+      const fallback = createFallbackProfile(userId, userEmail);
+      setProfile(fallback);
+      
+      // Optionally try to insert this fallback to DB to fix the account
+      supabase.from('profiles').insert([fallback]).then(({ error }) => {
+        if (error) console.error("Auto-fix profile insertion failed", error);
+      });
+
     } catch (e) {
-      console.error("Exception fetching profile:", e);
+      console.error("Critical profile fetch error:", e);
+      // Even in a crash, set fallback
+      setProfile(createFallbackProfile(userId, userEmail));
     }
   };
 
   useEffect(() => {
+    let mounted = true;
+
     const initializeAuth = async () => {
       try {
-        // 1. Get Session from local storage (fastest)
+        // Get session from storage (very fast)
         const { data: { session: initialSession } } = await supabase.auth.getSession();
         
         if (initialSession?.user) {
-          setSession(initialSession);
-          setUser(initialSession.user);
-          
-          // 2. Try to load profile from Cache IMMEDIATELY
-          const cachedProfile = localStorage.getItem(`profile_${initialSession.user.id}`);
-          if (cachedProfile) {
-            setProfile(JSON.parse(cachedProfile));
-          } else {
-            // 3. If no cache, set a temp profile so we don't block UI
-            // This prevents the white screen "leaf" hang
-            setProfile(createTempProfile(initialSession.user.id, initialSession.user.email));
+          if (mounted) {
+            setSession(initialSession);
+            setUser(initialSession.user);
+            // WAIT for profile before finishing loading
+            await fetchProfile(initialSession.user.id, initialSession.user.email);
           }
-
-          // 4. Fetch fresh data in background (don't await this for the loading state)
-          fetchProfile(initialSession.user.id);
         }
       } catch (error) {
         console.error("Auth init error:", error);
       } finally {
-        // 5. Always release loading state immediately after checking local session
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
     initializeAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      if (!mounted) return;
+
       if (event === 'SIGNED_IN' && newSession?.user) {
          setSession(newSession);
          setUser(newSession.user);
-         // Try cache first on sign in too
-         const cached = localStorage.getItem(`profile_${newSession.user.id}`);
-         if (cached) setProfile(JSON.parse(cached));
-         
-         await fetchProfile(newSession.user.id);
+         await fetchProfile(newSession.user.id, newSession.user.email);
       } else if (event === 'SIGNED_OUT') {
         setSession(null);
         setUser(null);
@@ -158,20 +163,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setProfile(null);
-    setUser(null);
-    setSession(null);
+    try {
+      await supabase.auth.signOut();
+    } finally {
+      setProfile(null);
+      setUser(null);
+      setSession(null);
+    }
   };
 
   const refetchProfile = async () => {
     if (user) {
-      await fetchProfile(user.id);
+      await fetchProfile(user.id, user.email);
     }
   };
 

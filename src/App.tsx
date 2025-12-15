@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -74,7 +74,7 @@ const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
   const location = useLocation();
 
-  // Initialize Google Auth once
+  // Initialize Google Auth
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
       GoogleAuth.initialize({
@@ -85,8 +85,10 @@ const AppRoutes = () => {
     }
   }, []);
 
-  // 1. Loading state
-  // Only show splash screen while strictly initializing auth (reading local storage)
+  // 1. Loading state (Authenticating)
+  // We strictly show the splash screen while AuthContext is doing its work.
+  // AuthContext now GUARANTEES that if session exists, profile will also exist (or be created fallback),
+  // so this won't hang indefinitely.
   if (authLoading) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-background">
@@ -126,10 +128,6 @@ const AppRoutes = () => {
   }
 
   // 3. New User -> Onboarding
-  // Note: If profile is temporarily loading (cached or temp), it might briefly show onboarding check
-  // But our createTempProfile sets onboarding_completed to false by default,
-  // however, if we are restoring a user, we likely have cache.
-  // The logic in AuthContext prioritizes cache, so this should be fine.
   if (profile && !profile.onboarding_completed) {
     return (
       <div className={shellClass}>
