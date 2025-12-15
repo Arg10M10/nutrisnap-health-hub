@@ -7,15 +7,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 
 const AppTutorial = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [run, setRun] = useState(false);
-  const [hasSeenTutorial, setHasSeenTutorial] = useLocalStorage('has_seen_tutorial_v4', false); // Updated to v4
+  
+  // Usamos una clave única por usuario. Si el usuario cambia (o es nuevo), la clave es nueva y el tutorial se reinicia (false).
+  // Una vez completado, se guarda 'true' para ese usuario específico.
+  const storageKey = user?.id ? `tutorial_seen_v4_${user.id}` : 'tutorial_seen_v4_guest';
+  const [hasSeenTutorial, setHasSeenTutorial] = useLocalStorage(storageKey, false);
+  
   const { theme } = useTheme();
 
   useEffect(() => {
-    // Small delay to ensure everything is rendered
+    // Pequeño delay para asegurar que la UI esté lista antes de lanzar el tutorial
     const timer = setTimeout(() => {
       if (!hasSeenTutorial) {
         setRun(true);

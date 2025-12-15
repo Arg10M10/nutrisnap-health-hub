@@ -68,9 +68,14 @@ const Onboarding = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      // Reset tutorial flag so it shows for this new user (or re-onboarded user)
-      // This ensures "create account from scratch" users see the tutorial even if they used the browser before.
-      window.localStorage.removeItem('has_seen_tutorial_v4');
+      
+      // Reiniciamos explícitamente la bandera del tutorial para ESTE usuario específico.
+      // Esto asegura que al terminar el onboarding, el tutorial se muestre en la pantalla principal.
+      // Al ser específico por ID, no afecta a otros usuarios ni se repite si ya se marcó como visto después.
+      if (user?.id) {
+        window.localStorage.removeItem(`tutorial_seen_v4_${user.id}`);
+      }
+      
       navigate('/subscribe');
     },
     onError: (error) => {
