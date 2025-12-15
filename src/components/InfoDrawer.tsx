@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 interface InfoDrawerProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ interface InfoDrawerProps {
 }
 
 const InfoDrawer = ({ isOpen, onClose, title, children, icon }: InfoDrawerProps) => {
+  const { t } = useTranslation();
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent className="max-h-[90vh] flex flex-col">
@@ -34,7 +36,7 @@ const InfoDrawer = ({ isOpen, onClose, title, children, icon }: InfoDrawerProps)
         </div>
 
         <DrawerFooter className="pt-4 border-t flex-shrink-0">
-          <Button onClick={onClose} size="lg">Entendido</Button>
+          <Button onClick={onClose} size="lg">{t('common.understood')}</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

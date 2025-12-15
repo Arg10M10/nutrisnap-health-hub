@@ -16,8 +16,8 @@ import UserAvatar from '@/components/UserAvatar';
 import { cn } from '@/lib/utils';
 
 const profileSchema = z.object({
-  firstName: z.string().min(1, "El nombre es requerido."),
-  lastName: z.string().min(1, "El apellido es requerido."),
+  firstName: z.string().min(1, "Required"),
+  lastName: z.string().min(1, "Required"),
 });
 
 const colorOptions = ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#6366F1', '#8B5CF6', '#EC4899'];
@@ -57,11 +57,11 @@ const EditProfile = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success('Perfil actualizado con éxito');
+      toast.success(t('edit_profile.toast_success'));
       navigate(-1);
     },
     onError: (error) => {
-      toast.error('No se pudo actualizar el perfil.', { description: error.message });
+      toast.error(t('edit_profile.toast_error'), { description: error.message });
     },
   });
 
@@ -77,7 +77,7 @@ const EditProfile = () => {
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
           <ArrowLeft className="w-6 h-6" />
         </Button>
-        <h1 className="text-2xl font-bold text-primary">Editar Perfil</h1>
+        <h1 className="text-2xl font-bold text-primary">{t('edit_profile.title')}</h1>
       </header>
       <main className="flex-1 p-4">
         <Form {...form}>
@@ -100,15 +100,15 @@ const EditProfile = () => {
             </div>
             <div className="space-y-4">
               <FormField control={form.control} name="firstName" render={({ field }) => (
-                <FormItem><FormLabel>Nombre</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>{t('edit_profile.first_name')}</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="lastName" render={({ field }) => (
-                <FormItem><FormLabel>Apellido</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>{t('edit_profile.last_name')}</FormLabel><FormControl><Input {...field} className="h-12 text-lg" /></FormControl><FormMessage /></FormItem>
               )} />
             </div>
             <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={mutation.isPending}>
               {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Guardar Cambios
+              {t('edit_profile.save')}
             </Button>
           </form>
         </Form>

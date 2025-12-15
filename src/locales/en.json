@@ -1,4 +1,9 @@
 {
+  "common": {
+    "understood": "Understood",
+    "loading": "Loading...",
+    "error": "Error"
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "Manage your profile and app preferences.",
@@ -273,6 +278,8 @@
     "fats": "Fats",
     "sugars": "Sugars",
     "save": "Save Goals",
+    "save_success": "Goals saved successfully!",
+    "save_error": "Error saving goals",
     "ai_suggestions": "AI Suggestions"
   },
   "ai_suggestions": {
@@ -288,6 +295,7 @@
     "rate_label": "Desired Weekly Rate",
     "week": "week",
     "generate": "Generate with AI",
+    "continue": "Continue",
     "back": "Back",
     "continue": "Continue",
     "summary_title": "Confirm Your Details",
@@ -314,7 +322,8 @@
     "portion_small": "Small",
     "portion_medium": "Medium",
     "portion_large": "Large",
-    "submit": "Analyze and Add"
+    "submit": "Analyze and Add",
+    "error_analysis": "Error starting analysis"
   },
   "edit_weight": {
     "title": "Update Weight",
@@ -563,7 +572,15 @@
   },
   "scanner": {
     "help_title": "How does the scanner work?",
-    "help_desc": "Center your meal in the viewfinder and take a photo. Our AI will analyze it to give you a nutritional estimate."
+    "help_desc": "Center your meal in the viewfinder and take a photo. Our AI will analyze it to give you a nutritional estimate.",
+    "retake": "Retake",
+    "retry": "Retry",
+    "processing": "Processing...",
+    "starting": "Starting camera...",
+    "error_camera_title": "Camera Error",
+    "error_camera_desc": "Could not access camera. Check permissions.",
+    "error_analysis": "Analysis failed.",
+    "flash_unavailable": "Flash unavailable."
   },
   "analysis": {
     "details_title": "Analysis Details",
@@ -588,7 +605,7 @@
     "meal_message": "Check out what I'm eating: {{food}} 🥗 - via Calorel",
     "generated_with": "Generated with Calorel App",
     "prot_short": "Prot",
-    "carb_short": "Carbs",
+    "carb_short": "Carb",
     "fat_short": "Fat"
   },
   "tutorial": {

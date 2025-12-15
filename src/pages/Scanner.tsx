@@ -97,17 +97,17 @@ const Scanner = () => {
       }
     } catch (err) {
       console.error("Error accessing camera:", err);
-      toast.error("No se pudo acceder a la cámara.", {
-        description: "Asegúrate de haber dado los permisos necesarios.",
+      toast.error(t('scanner.error_camera_title'), {
+        description: t('scanner.error_camera_desc'),
       });
-      setError("No se pudo acceder a la cámara. Revisa los permisos de tu navegador.");
+      setError(t('scanner.error_camera_desc'));
       setState("error");
     }
   };
 
   const toggleFlash = async () => {
     if (!hasFlash || !streamRef.current) {
-      toast.info("Flash no disponible en este dispositivo.");
+      toast.info(t('scanner.flash_unavailable'));
       return;
     }
     const videoTrack = streamRef.current.getVideoTracks()[0];
@@ -118,7 +118,7 @@ const Scanner = () => {
       setIsFlashOn(!isFlashOn);
     } catch (err) {
       console.error("Error toggling flash:", err);
-      toast.error("No se pudo activar el flash.");
+      toast.error("Error toggling flash.");
     }
   };
 
@@ -149,7 +149,7 @@ const Scanner = () => {
     },
     onError: (err: Error) => {
       console.error("Analysis start error:", err);
-      toast.error("No se pudo iniciar el análisis.", { description: err.message });
+      toast.error(t('scanner.error_analysis'), { description: err.message });
       setState("captured");
     },
   });
@@ -296,7 +296,7 @@ const Scanner = () => {
             {(state === 'loading' || startAnalysisMutation.isPending) && (
                <div className="flex flex-col items-center gap-4 bg-black/30 backdrop-blur-sm p-8 rounded-2xl z-50 relative">
                   <Loader2 className="w-16 h-16 text-primary animate-spin" />
-                  <p className="text-xl font-bold animate-pulse">Procesando...</p>
+                  <p className="text-xl font-bold animate-pulse">{t('scanner.processing')}</p>
                </div>
             )}
           </div>
@@ -306,10 +306,10 @@ const Scanner = () => {
             {state === 'captured' && !startAnalysisMutation.isPending ? (
               <div className="grid grid-cols-2 gap-4 w-full max-w-md">
                 <Button onClick={handleReset} variant="outline" size="lg" className="h-16 text-lg rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20">
-                  <RefreshCw className="mr-2 w-6 h-6" /> Repetir
+                  <RefreshCw className="mr-2 w-6 h-6" /> {t('scanner.retake')}
                 </Button>
                 <Button onClick={handleManualAnalyze} size="lg" className="h-16 text-lg rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
-                  <Scan className="mr-2 w-6 h-6" /> Reintentar
+                  <Scan className="mr-2 w-6 h-6" /> {t('scanner.retry')}
                 </Button>
               </div>
             ) : state === 'camera' ? (
@@ -349,7 +349,7 @@ const Scanner = () => {
         {state === "initializing" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 space-y-4 z-30">
             <Loader2 className="w-16 h-16 text-primary animate-spin" />
-            <p className="text-white text-lg">Iniciando cámara...</p>
+            <p className="text-white text-lg">{t('scanner.starting')}</p>
           </div>
         )}
         {state === "error" && (
@@ -357,7 +357,7 @@ const Scanner = () => {
             <AlertTriangle className="w-24 h-24 text-destructive" />
             <p className="text-xl font-semibold">{error}</p>
             <Button onClick={handleReset} size="lg" className="w-full max-w-sm h-14 text-lg">
-              <RefreshCw className="mr-2 w-6 h-6" /> Intentar de Nuevo
+              <RefreshCw className="mr-2 w-6 h-6" /> {t('scanner.retry')}
             </Button>
           </div>
         )}

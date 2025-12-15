@@ -72,7 +72,7 @@ const ManualFoodEntry = () => {
       });
     },
     onError: (error) => {
-      toast.error('Error al iniciar el análisis', {
+      toast.error(t('manual_food.error_analysis'), {
         description: error.message,
       });
     },

@@ -1,4 +1,9 @@
 {
+  "common": {
+    "understood": "Entendido",
+    "loading": "Cargando...",
+    "error": "Error"
+  },
   "settings": {
     "title": "Configuración",
     "subtitle": "Gestiona tu perfil y preferencias de la aplicación.",
@@ -273,6 +278,8 @@
     "fats": "Grasas",
     "sugars": "Azúcares",
     "save": "Guardar Metas",
+    "save_success": "¡Metas guardadas con éxito!",
+    "save_error": "Error al guardar metas",
     "ai_suggestions": "Sugerencias de la IA"
   },
   "ai_suggestions": {
@@ -288,6 +295,7 @@
     "rate_label": "Ritmo Semanal Deseado",
     "week": "semana",
     "generate": "Generar con IA",
+    "continue": "Continuar",
     "back": "Atrás",
     "continue": "Continuar",
     "summary_title": "Confirma tus Datos",
@@ -314,7 +322,8 @@
     "portion_small": "Pequeña",
     "portion_medium": "Mediana",
     "portion_large": "Grande",
-    "submit": "Analizar y Añadir"
+    "submit": "Analizar y Añadir",
+    "error_analysis": "Error al iniciar el análisis"
   },
   "edit_weight": {
     "title": "Actualizar Peso",
@@ -563,7 +572,15 @@
   },
   "scanner": {
     "help_title": "¿Cómo funciona el escáner?",
-    "help_desc": "Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional."
+    "help_desc": "Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional.",
+    "retake": "Repetir",
+    "retry": "Reintentar",
+    "processing": "Procesando...",
+    "starting": "Iniciando cámara...",
+    "error_camera_title": "Error de Cámara",
+    "error_camera_desc": "No se pudo acceder a la cámara. Revisa los permisos.",
+    "error_analysis": "Análisis fallido.",
+    "flash_unavailable": "Flash no disponible."
   },
   "analysis": {
     "details_title": "Detalles del Análisis",
