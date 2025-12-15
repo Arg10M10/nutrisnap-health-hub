@@ -82,7 +82,8 @@ const AppRoutes = () => {
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (authLoading || (session && !profile)) {
-      timer = setTimeout(() => setIsLongLoading(true), 5000); // 5 seconds threshold
+      // Reducido a 2.5 segundos para que el usuario no espere tanto si falla
+      timer = setTimeout(() => setIsLongLoading(true), 2500);
     } else {
       setIsLongLoading(false);
     }

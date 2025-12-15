@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = async (userId: string) => {
     try {
+      // 1. Primero intentamos obtenerlo de Supabase
       const { data: userProfile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -53,10 +54,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .maybeSingle();
       
       if (error) {
-        console.error("Error fetching profile:", error);
+        console.error("Error fetching profile from network:", error);
+        // Fallback: Intentar cargar de caché local si la red falla
+        const cachedProfile = localStorage.getItem(`profile_${userId}`);
+        if (cachedProfile) {
+          console.log("Loaded profile from cache due to network error");
+          const parsedProfile = JSON.parse(cachedProfile);
+          setProfile(parsedProfile);
+          return parsedProfile;
+        }
         return null;
       } else if (userProfile) {
+        // Éxito: Guardar en estado y actualizar caché
         setProfile(userProfile);
+        localStorage.setItem(`profile_${userId}`, JSON.stringify(userProfile));
         return userProfile;
       } else {
         console.warn("Profile not found, creating default profile for user:", userId);
@@ -71,11 +82,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           return null;
         } else {
           setProfile(newProfile);
+          localStorage.setItem(`profile_${userId}`, JSON.stringify(newProfile));
           return newProfile;
         }
       }
     } catch (e) {
       console.error("Fetch profile exception:", e);
+      // Fallback en caso de excepción crítica
+      const cachedProfile = localStorage.getItem(`profile_${userId}`);
+      if (cachedProfile) {
+        setProfile(JSON.parse(cachedProfile));
+      }
       return null;
     }
   };
@@ -98,7 +115,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           if (initialSession?.user) {
             setSession(initialSession);
             setUser(initialSession.user);
-            // Wait for profile BEFORE setting loading to false
+            
+            // Optimización: Intentar cargar caché inmediatamente para mostrar UI rápido
+            const cachedProfile = localStorage.getItem(`profile_${initialSession.user.id}`);
+            if (cachedProfile) {
+              setProfile(JSON.parse(cachedProfile));
+            }
+
+            // Luego actualizar desde la red (esto actualizará el estado si hay cambios)
             await fetchProfile(initialSession.user.id);
           } else {
             setSession(null);
@@ -119,16 +143,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (mounted) {
-        // When signing in, we might want to show loading state again or handle it gracefully
         if (event === 'SIGNED_IN' && newSession?.user) {
            setSession(newSession);
            setUser(newSession.user);
-           // Fetch profile immediately
            await fetchProfile(newSession.user.id);
         } else if (event === 'SIGNED_OUT') {
           setSession(null);
           setUser(null);
           setProfile(null);
+          // Opcional: Limpiar caché al cerrar sesión, o dejarlo para el siguiente inicio rápido
+          // localStorage.removeItem(`profile_${user?.id}`); 
         } else if (event === 'TOKEN_REFRESHED' && newSession) {
            setSession(newSession);
            setUser(newSession.user);
@@ -148,9 +172,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Error signing out:", error);
     } finally {
+      // Limpiar estado local
       setProfile(null);
       setUser(null);
       setSession(null);
+      // Opcional: localStorage.clear(); // Cuidado con borrar items de otros usuarios si es compartido
     }
   };
 
