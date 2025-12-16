@@ -81,7 +81,6 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           icon: Coffee,
           color: "text-yellow-500",
           borderColor: "border-l-yellow-500",
-          bgTint: "bg-yellow-500/5"
         };
       case 'lunch':
         return {
@@ -90,7 +89,6 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           icon: Sun,
           color: "text-orange-500",
           borderColor: "border-l-orange-500",
-          bgTint: "bg-orange-500/5"
         };
       case 'snack':
         return {
@@ -99,7 +97,6 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           icon: Apple,
           color: "text-green-500",
           borderColor: "border-l-green-500",
-          bgTint: "bg-green-500/5"
         };
       case 'dinner':
         return {
@@ -108,7 +105,6 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           icon: Moon,
           color: "text-blue-500",
           borderColor: "border-l-blue-500",
-          bgTint: "bg-blue-500/5"
         };
       default:
         return {
@@ -117,7 +113,6 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           icon: Ban,
           color: "text-muted-foreground",
           borderColor: "border-l-muted",
-          bgTint: "bg-muted/20"
         };
     }
   };
@@ -191,20 +186,21 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           </TabsList>
         </div>
 
-        {/* Dynamic Meal Card (Redesigned) */}
-        <div className={cn(
-          "mt-6 rounded-2xl p-6 shadow-lg border-l-8 flex flex-col items-center justify-center text-center transition-all duration-500 bg-card",
-          currentConfig.borderColor,
-          currentConfig.bgTint
+        {/* Dynamic Meal Card (Unified Style) */}
+        <Card className={cn(
+          "mt-6 shadow-lg border-l-[10px] transition-all duration-500",
+          currentConfig.borderColor
         )}>
-          <div className={cn("text-5xl font-bold mb-3 tracking-tight", currentConfig.color)}>
-            {format(currentTime, 'h:mm a', { locale: es }).toUpperCase()}
-          </div>
-          <div className={cn("flex items-center justify-center gap-3", currentConfig.color)}>
-            <currentConfig.icon className="w-7 h-7" />
-            <h3 className="text-2xl font-bold leading-tight">{currentConfig.message}</h3>
-          </div>
-        </div>
+          <CardContent className="p-6 flex flex-col items-center justify-center text-center">
+            <div className={cn("text-5xl font-bold mb-3 tracking-tight", currentConfig.color)}>
+              {format(currentTime, 'h:mm a', { locale: es }).toUpperCase()}
+            </div>
+            <div className={cn("flex items-center justify-center gap-3", currentConfig.color)}>
+              <currentConfig.icon className="w-7 h-7" />
+              <h3 className="text-2xl font-bold leading-tight">{currentConfig.message}</h3>
+            </div>
+          </CardContent>
+        </Card>
 
         {dayKeys.map((dayKey) => {
           const meals = plan[dayKey];
