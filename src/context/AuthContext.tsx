@@ -44,107 +44,64 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fallback profile if DB fetch fails (prevents UI crash)
-  const createFallbackProfile = (userId: string, email?: string): Profile => ({
-    id: userId,
-    full_name: email?.split('@')[0] || 'User',
-    updated_at: new Date().toISOString(),
-    onboarding_completed: false, 
-    diet_onboarding_completed: false,
-    gender: null,
-    age: null,
-    previous_apps_experience: null,
-    weight: null,
-    height: null,
-    units: 'metric',
-    motivation: null,
-    goal: null,
-    goal_weight: null,
-    starting_weight: null,
-    goal_calories: 2000,
-    goal_protein: 90,
-    goal_carbs: 220,
-    goal_fats: 65,
-    goal_sugars: 25,
-    weekly_rate: null,
-    avatar_color: null
-  });
-
-  const fetchProfile = async (userId: string, userEmail?: string) => {
+  const fetchProfile = async (userId: string) => {
     try {
-      // Direct fetch from Supabase. No local caching as requested.
       const { data: userProfile, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .maybeSingle();
       
-      if (userProfile) {
-        setProfile(userProfile);
-      } else {
-        // If no profile exists yet (new user), use fallback until created
-        if (error) console.error("Error fetching profile:", error);
-        setProfile(createFallbackProfile(userId, userEmail));
+      if (error) {
+        console.error("Error fetching profile:", error);
       }
+      
+      // If profile is null (row missing), we set null. 
+      // The App logic will handle this by showing Onboarding or waiting.
+      setProfile(userProfile);
     } catch (e) {
       console.error("Critical profile fetch error:", e);
-      setProfile(createFallbackProfile(userId, userEmail));
+      setProfile(null);
     }
   };
 
   useEffect(() => {
-    let mounted = true;
-
-    // Standard, simple Supabase Auth initialization
+    // Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (mounted) {
-        if (session?.user) {
-          setSession(session);
-          setUser(session.user);
-          fetchProfile(session.user.id, session.user.email);
-        }
-        setLoading(false);
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
       }
+      setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
-      if (!mounted) return;
-
-      if (newSession?.user) {
-         setSession(newSession);
-         setUser(newSession.user);
-         // Only fetch profile if it's a different user or initial load
-         if (newSession.user.id !== user?.id) {
-            fetchProfile(newSession.user.id, newSession.user.email);
-         }
-         setLoading(false);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        // Simple optimization: only refetch if we don't have a profile or user changed
+        fetchProfile(session.user.id);
       } else {
-        setSession(null);
-        setUser(null);
         setProfile(null);
-        setLoading(false);
       }
+      setLoading(false);
     });
 
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
   const signOut = async () => {
-    try {
-      await supabase.auth.signOut();
-    } finally {
-      setProfile(null);
-      setUser(null);
-      setSession(null);
-    }
+    await supabase.auth.signOut();
+    setProfile(null);
+    setUser(null);
+    setSession(null);
   };
 
   const refetchProfile = async () => {
     if (user) {
-      await fetchProfile(user.id, user.email);
+      await fetchProfile(user.id);
     }
   };
 

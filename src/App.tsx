@@ -74,9 +74,6 @@ const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
   const location = useLocation();
 
-  // Initialize Google Auth ONLY on Web
-  // On native (Android/iOS), configuration is loaded from capacitor.config.json automatically.
-  // Calling initialize() on native can cause crashes or conflicts.
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) {
       GoogleAuth.initialize({
@@ -87,7 +84,6 @@ const AppRoutes = () => {
     }
   }, []);
 
-  // 1. Loading state (Authenticating)
   if (authLoading) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-background">
@@ -115,7 +111,7 @@ const AppRoutes = () => {
 
   const shellClass = "relative min-h-screen"; 
 
-  // 2. No session -> Login
+  // 1. Not logged in
   if (!session) {
     return (
       <div className={shellClass}>
@@ -126,8 +122,9 @@ const AppRoutes = () => {
     );
   }
 
-  // 3. New User -> Onboarding
-  if (profile && !profile.onboarding_completed) {
+  // 2. Logged in but Profile not ready OR Onboarding not completed
+  // If profile is null, it might be loading or missing row. We send to Onboarding to create/fix it.
+  if (!profile || !profile.onboarding_completed) {
     return (
       <div className={shellClass}>
         <div className="relative z-10">
@@ -137,7 +134,7 @@ const AppRoutes = () => {
     );
   }
 
-  // 4. Authenticated & Onboarded -> App
+  // 3. Authenticated & Onboarded -> App
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
