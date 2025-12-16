@@ -122,6 +122,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let mounted = true;
 
+    // Safety timeout: If auth takes more than 3 seconds, force stop loading.
+    // This prevents the "White Screen" if getSession hangs.
+    const safetyTimeout = setTimeout(() => {
+      if (mounted && loading) {
+        console.warn("Auth initialization timed out. Forcing app load.");
+        setLoading(false);
+      }
+    }, 3000);
+
     const initializeAuth = async () => {
       try {
         // Get session from storage (very fast)
@@ -146,18 +155,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
 
             if (!profileLoaded) {
-               // If no cache or bad cache, set a temp profile immediately
                setProfile(createFallbackProfile(initialSession.user.id, initialSession.user.email));
             }
 
             // Fetch fresh data in background
-            fetchProfile(initialSession.user.id, initialSession.user.email);
+            await fetchProfile(initialSession.user.id, initialSession.user.email);
           }
         }
       } catch (error) {
         console.error("Auth init error:", error);
       } finally {
         if (mounted) {
+          clearTimeout(safetyTimeout);
           setLoading(false);
         }
       }
@@ -185,6 +194,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => {
       mounted = false;
+      clearTimeout(safetyTimeout);
       subscription.unsubscribe();
     };
   }, []);
