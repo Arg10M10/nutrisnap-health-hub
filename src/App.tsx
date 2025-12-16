@@ -74,22 +74,17 @@ const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
   const location = useLocation();
 
-  // Initialize Google Auth safely
+  // Initialize Google Auth ONLY on Web
+  // On native (Android/iOS), configuration is loaded from capacitor.config.json automatically.
+  // Calling initialize() on native can cause crashes or conflicts.
   useEffect(() => {
-    const initGoogle = async () => {
-      if (Capacitor.isNativePlatform()) {
-        try {
-          await GoogleAuth.initialize({
-            clientId: '522700969452-gof3re6i21fc0eotfbk4q496ke3gdl0k.apps.googleusercontent.com',
-            scopes: ['profile', 'email'],
-            grantOfflineAccess: true,
-          });
-        } catch (error) {
-          console.error("Google Auth init failed (non-fatal):", error);
-        }
-      }
-    };
-    initGoogle();
+    if (!Capacitor.isNativePlatform()) {
+      GoogleAuth.initialize({
+        clientId: '522700969452-gof3re6i21fc0eotfbk4q496ke3gdl0k.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+        grantOfflineAccess: true,
+      });
+    }
   }, []);
 
   // 1. Loading state (Authenticating)
