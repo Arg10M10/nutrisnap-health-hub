@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Sun, Moon, Coffee, Apple, Ban } from 'lucide-react';
+import { RefreshCw, Sun, Moon, Coffee, Apple, Ban, Scan } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from '@/lib/utils';
 import { useAILimit } from '@/hooks/useAILimit';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useNavigate } from 'react-router-dom';
 
 type MealPlan = {
   [day: string]: {
@@ -31,6 +32,7 @@ type MealType = 'breakfast' | 'lunch' | 'snack' | 'dinner' | 'gap';
 export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: WeeklyPlanDisplayProps) => {
   const { t } = useTranslation();
   const { checkLimit } = useAILimit();
+  const navigate = useNavigate();
   const todayIndex = new Date().getDay(); 
   const defaultIndex = todayIndex === 0 ? 6 : todayIndex - 1;
   const currentDayKey = dayKeys[defaultIndex];
@@ -201,6 +203,15 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
             </div>
           </CardContent>
         </Card>
+
+        <Button
+          size="lg"
+          className="w-full h-14 text-lg mt-4"
+          onClick={() => navigate('/scanner')}
+        >
+          <Scan className="mr-2 w-5 h-5" />
+          {t('diets.scan_food_button')}
+        </Button>
 
         {dayKeys.map((dayKey) => {
           const meals = plan[dayKey];
