@@ -190,6 +190,40 @@ const Index = () => {
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold">{t('home.todays_analysis')}</h2>
           
+          {analyses.length > 0 ? (
+            <div className="space-y-3">
+              {analyses.map((item) => {
+                if ('food_name' in item) {
+                  return (
+                    <RecentAnalysisCard 
+                      key={item.id} 
+                      imageUrl={item.image_url}
+                      foodName={item.food_name}
+                      time={format(new Date(item.created_at), 'p', { locale: es })}
+                      calories={item.calories_value}
+                      protein={item.protein_value}
+                      carbs={item.carbs_value}
+                      fats={item.fats_value}
+                      sugars={item.sugars_value}
+                      status={item.status}
+                      reason={item.reason}
+                      onClick={() => setSelectedAnalysis(item)}
+                    />
+                  );
+                } else if ('exercise_type' in item) {
+                  return <RecentExerciseCard key={item.id} entry={item as ExerciseEntry} />;
+                }
+                return null;
+              })}
+            </div>
+          ) : (
+            <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
+              <Plus className="w-12 h-12 text-muted-foreground/50" />
+              <p className="text-muted-foreground">{t('home.no_data')}</p>
+              <p className="text-sm text-muted-foreground">{t('home.start_logging')}</p>
+            </Card>
+          )}
+
           <div 
             className={cn(
                 "rounded-xl border-2 border-dashed transition-all duration-300 overflow-hidden",
@@ -225,40 +259,6 @@ const Index = () => {
                 )}
             </AnimatePresence>
           </div>
-
-          {analyses.length > 0 ? (
-            <div className="space-y-3">
-              {analyses.map((item) => {
-                if ('food_name' in item) {
-                  return (
-                    <RecentAnalysisCard 
-                      key={item.id} 
-                      imageUrl={item.image_url}
-                      foodName={item.food_name}
-                      time={format(new Date(item.created_at), 'p', { locale: es })}
-                      calories={item.calories_value}
-                      protein={item.protein_value}
-                      carbs={item.carbs_value}
-                      fats={item.fats_value}
-                      sugars={item.sugars_value}
-                      status={item.status}
-                      reason={item.reason}
-                      onClick={() => setSelectedAnalysis(item)}
-                    />
-                  );
-                } else if ('exercise_type' in item) {
-                  return <RecentExerciseCard key={item.id} entry={item as ExerciseEntry} />;
-                }
-                return null;
-              })}
-            </div>
-          ) : (
-            <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
-              <Plus className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground">{t('home.no_data')}</p>
-              <p className="text-sm text-muted-foreground">{t('home.start_logging')}</p>
-            </Card>
-          )}
         </div>
       </div>
       <AnalysisDetailDrawer
