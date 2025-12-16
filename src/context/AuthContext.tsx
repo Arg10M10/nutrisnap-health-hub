@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   // Helper to create a safe fallback profile from user metadata
-  // This ensures the app can ALWAYS render something, avoiding the white screen death
   const createFallbackProfile = (userId: string, email?: string): Profile => ({
     id: userId,
     full_name: email?.split('@')[0] || 'User',
@@ -90,17 +89,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error("Error fetching profile from DB:", error);
       }
 
-      // 2. If DB failed or returned null, try Local Storage
-      const cachedProfile = localStorage.getItem(`profile_${userId}`);
-      if (cachedProfile) {
-        console.log("Using cached profile due to DB error/miss");
-        setProfile(JSON.parse(cachedProfile));
-        return;
+      // 2. If DB failed or returned null, try Local Storage safely
+      try {
+        const cachedProfile = localStorage.getItem(`profile_${userId}`);
+        if (cachedProfile) {
+          console.log("Using cached profile due to DB error/miss");
+          setProfile(JSON.parse(cachedProfile));
+          return;
+        }
+      } catch (cacheError) {
+        console.error("Error reading profile cache:", cacheError);
+        localStorage.removeItem(`profile_${userId}`); // Clear bad cache
       }
 
       // 3. Absolute failsafe: Use synthetic profile
-      // If we are here, we have a session but NO profile data anywhere.
-      // We must set a profile so the app doesn't hang.
       console.log("Creating fallback profile");
       const fallback = createFallbackProfile(userId, userEmail);
       setProfile(fallback);
@@ -129,8 +131,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           if (mounted) {
             setSession(initialSession);
             setUser(initialSession.user);
-            // WAIT for profile before finishing loading
-            await fetchProfile(initialSession.user.id, initialSession.user.email);
+            
+            // Try to load profile from Cache IMMEDIATELY safely
+            let profileLoaded = false;
+            try {
+              const cachedProfile = localStorage.getItem(`profile_${initialSession.user.id}`);
+              if (cachedProfile) {
+                setProfile(JSON.parse(cachedProfile));
+                profileLoaded = true;
+              }
+            } catch (e) {
+              console.error("Cache parsing error on init:", e);
+              localStorage.removeItem(`profile_${initialSession.user.id}`);
+            }
+
+            if (!profileLoaded) {
+               // If no cache or bad cache, set a temp profile immediately
+               setProfile(createFallbackProfile(initialSession.user.id, initialSession.user.email));
+            }
+
+            // Fetch fresh data in background
+            fetchProfile(initialSession.user.id, initialSession.user.email);
           }
         }
       } catch (error) {

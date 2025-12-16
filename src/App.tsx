@@ -74,21 +74,25 @@ const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
   const location = useLocation();
 
-  // Initialize Google Auth
+  // Initialize Google Auth safely
   useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      GoogleAuth.initialize({
-        clientId: '522700969452-gof3re6i21fc0eotfbk4q496ke3gdl0k.apps.googleusercontent.com',
-        scopes: ['profile', 'email'],
-        grantOfflineAccess: true,
-      });
-    }
+    const initGoogle = async () => {
+      if (Capacitor.isNativePlatform()) {
+        try {
+          await GoogleAuth.initialize({
+            clientId: '522700969452-gof3re6i21fc0eotfbk4q496ke3gdl0k.apps.googleusercontent.com',
+            scopes: ['profile', 'email'],
+            grantOfflineAccess: true,
+          });
+        } catch (error) {
+          console.error("Google Auth init failed (non-fatal):", error);
+        }
+      }
+    };
+    initGoogle();
   }, []);
 
   // 1. Loading state (Authenticating)
-  // We strictly show the splash screen while AuthContext is doing its work.
-  // AuthContext now GUARANTEES that if session exists, profile will also exist (or be created fallback),
-  // so this won't hang indefinitely.
   if (authLoading) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-background">
