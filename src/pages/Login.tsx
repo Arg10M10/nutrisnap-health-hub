@@ -11,18 +11,31 @@ import { useTranslation, Trans } from 'react-i18next';
 const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy";
 
+// Mismo ID que en strings.xml y capacitor.config.ts
+const GOOGLE_CLIENT_ID = '522700969452-gof3re6i21fc0eotfbk4q496ke3gdl0k.apps.googleusercontent.com';
+
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
-    // Inicializar Google Auth solo en plataformas nativas si es necesario aquí,
-    // aunque generalmente se hace en App.tsx. Lo mantenemos limpio.
+    // No hacemos nada al montar para evitar crashes de inicio.
+    // La inicialización será "Lazy" (perezosa) al hacer click.
   }, []);
 
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
+      // Paso 1: Inicialización defensiva
+      // Solo inicializamos si estamos en nativo para asegurar que el plugin tenga la config
+      if (Capacitor.isNativePlatform()) {
+        await GoogleAuth.initialize({
+          clientId: GOOGLE_CLIENT_ID,
+          scopes: ['profile', 'email'],
+          grantOfflineAccess: true,
+        });
+      }
+
       console.log("Iniciando GoogleAuth.signIn()...");
       const googleUser = await GoogleAuth.signIn();
       
