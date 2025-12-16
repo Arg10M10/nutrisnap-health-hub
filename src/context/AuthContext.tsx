@@ -46,7 +46,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = async (userId: string) => {
     try {
-      // Usamos maybeSingle() para no lanzar error si no existe el perfil (usuario nuevo)
       const { data: userProfile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -57,10 +56,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error("Error fetching profile:", error);
       }
       
-      setProfile(userProfile);
+      if (userProfile) {
+        setProfile(userProfile);
+      }
     } catch (e) {
       console.error("Critical profile fetch error:", e);
-      setProfile(null);
     }
   };
 
@@ -69,30 +69,41 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeAuth = async () => {
       try {
-        // 1. Obtener la sesión inicial de Supabase (token local)
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
-
+        // 1. Get session from local storage
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) throw error;
+        
         if (!mounted) return;
+
+        const initialSession = data.session;
 
         if (initialSession?.user) {
           setSession(initialSession);
           setUser(initialSession.user);
-          // 2. IMPORTANTE: Esperar a que el perfil se descargue ANTES de quitar el loading
+          
+          // 2. Fetch profile if we have a user
           await fetchProfile(initialSession.user.id);
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
       } finally {
         if (mounted) {
-          // 3. Solo ahora permitimos que la app se muestre
           setLoading(false);
         }
       }
     };
 
+    // Safety timeout: If Supabase takes too long (e.g. storage issues), force loading to false
+    const timeoutId = setTimeout(() => {
+      if (mounted && loading) {
+        console.warn("Auth initialization timed out, forcing app load.");
+        setLoading(false);
+      }
+    }, 3000); // 3 seconds max wait time
+
     initializeAuth();
 
-    // Suscripción a cambios de auth (login, logout, etc.)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
 
@@ -100,28 +111,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(newSession?.user ?? null);
 
       if (newSession?.user) {
-        // Si hay un cambio de sesión (ej. login después de iniciar la app), actualizamos el perfil
-        // Nota: Si es la carga inicial, 'initializeAuth' ya se encargó de esto, pero no hace daño repetir para asegurar sincronización.
         await fetchProfile(newSession.user.id);
       } else if (event === 'SIGNED_OUT') {
         setProfile(null);
       }
-      
-      // NO manipulamos 'loading' aquí para evitar conflictos con la inicialización.
-      // 'initializeAuth' es la autoridad para el primer render.
     });
 
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setProfile(null);
-    setUser(null);
-    setSession(null);
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    } finally {
+      setProfile(null);
+      setUser(null);
+      setSession(null);
+    }
   };
 
   const refetchProfile = async () => {
