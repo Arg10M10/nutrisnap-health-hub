@@ -22,6 +22,7 @@ import AnimatedNumber from "@/components/AnimatedNumber";
 import AnalysisDetailDrawer from "@/components/AnalysisDetailDrawer";
 import AppTutorial from "@/components/AppTutorial";
 import ManualFoodEntry from "@/components/ManualFoodEntry";
+import { cn } from "@/lib/utils";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -189,6 +190,42 @@ const Index = () => {
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold">{t('home.todays_analysis')}</h2>
           
+          <div 
+            className={cn(
+                "rounded-xl border-2 border-dashed transition-all duration-300 overflow-hidden",
+                isManualEntryOpen ? "border-primary bg-card shadow-sm" : "border-border hover:border-primary/50"
+            )}
+          >
+            <button 
+                className="w-full flex items-center justify-between p-4 h-14 text-base font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
+                onClick={() => setIsManualEntryOpen(!isManualEntryOpen)}
+            >
+                <span className="flex items-center gap-2">
+                    <Utensils className="w-5 h-5" />
+                    {t('manual_food.title')}
+                </span>
+                {isManualEntryOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </button>
+
+            <AnimatePresence>
+                {isManualEntryOpen && (
+                    <motion.div
+                        initial={{ height: 0 }}
+                        animate={{ height: "auto" }}
+                        exit={{ height: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                        <div className="px-4 pb-6">
+                            <ManualFoodEntry 
+                                embedded={true} 
+                                onSuccess={() => setIsManualEntryOpen(false)}
+                            />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+          </div>
+
           {analyses.length > 0 ? (
             <div className="space-y-3">
               {analyses.map((item) => {
@@ -222,34 +259,6 @@ const Index = () => {
               <p className="text-sm text-muted-foreground">{t('home.start_logging')}</p>
             </Card>
           )}
-        </div>
-
-        <div className="space-y-2">
-            <Button 
-                variant="outline" 
-                className="w-full justify-between h-14 text-base font-medium rounded-xl border-dashed border-2 hover:bg-muted/50 hover:border-primary/50 transition-all text-muted-foreground hover:text-primary"
-                onClick={() => setIsManualEntryOpen(!isManualEntryOpen)}
-            >
-                <span className="flex items-center gap-2">
-                    <Utensils className="w-5 h-5" />
-                    {t('manual_food.title')}
-                </span>
-                {isManualEntryOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-            </Button>
-
-            <AnimatePresence>
-                {isManualEntryOpen && (
-                    <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                    >
-                        <ManualFoodEntry />
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </div>
       </div>
       <AnalysisDetailDrawer

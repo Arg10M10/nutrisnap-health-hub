@@ -24,7 +24,12 @@ const formSchema = z.object({
   }),
 });
 
-const ManualFoodEntry = () => {
+interface ManualFoodEntryProps {
+  embedded?: boolean;
+  onSuccess?: () => void;
+}
+
+const ManualFoodEntry = ({ embedded = false, onSuccess }: ManualFoodEntryProps) => {
   const { user } = useAuth();
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
@@ -57,7 +62,13 @@ const ManualFoodEntry = () => {
     onSuccess: ({ newEntry, formValues }) => {
       logUsage('manual_food_scan');
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
-      navigate('/');
+      
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigate('/');
+      }
+      
       form.reset();
       
       supabase.functions.invoke('analyze-text-food', {
@@ -85,6 +96,70 @@ const ManualFoodEntry = () => {
     }
   };
 
+  const FormContent = (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="foodName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('manual_food.name_label')}</FormLabel>
+              <FormControl>
+                <Input placeholder={t('manual_food.name_placeholder')} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('manual_food.desc_label')}</FormLabel>
+              <FormControl>
+                <Textarea placeholder={t('manual_food.desc_placeholder')} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="portionSize"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('manual_food.portion_label')}</FormLabel>
+              <FormControl>
+                <ToggleGroup
+                  type="single"
+                  variant="outline"
+                  className="w-full grid grid-cols-3"
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <ToggleGroupItem value="small" className="h-12">{t('manual_food.portion_small')}</ToggleGroupItem>
+                  <ToggleGroupItem value="medium" className="h-12">{t('manual_food.portion_medium')}</ToggleGroupItem>
+                  <ToggleGroupItem value="large" className="h-12">{t('manual_food.portion_large')}</ToggleGroupItem>
+                </ToggleGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="w-full" disabled={mutation.isPending}>
+          {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {t('manual_food.submit')}
+        </Button>
+      </form>
+    </Form>
+  );
+
+  if (embedded) {
+    return FormContent;
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -94,63 +169,7 @@ const ManualFoodEntry = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="foodName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('manual_food.name_label')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder={t('manual_food.name_placeholder')} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('manual_food.desc_label')}</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder={t('manual_food.desc_placeholder')} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="portionSize"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('manual_food.portion_label')}</FormLabel>
-                  <FormControl>
-                    <ToggleGroup
-                      type="single"
-                      variant="outline"
-                      className="w-full grid grid-cols-3"
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
-                      <ToggleGroupItem value="small" className="h-12">{t('manual_food.portion_small')}</ToggleGroupItem>
-                      <ToggleGroupItem value="medium" className="h-12">{t('manual_food.portion_medium')}</ToggleGroupItem>
-                      <ToggleGroupItem value="large" className="h-12">{t('manual_food.portion_large')}</ToggleGroupItem>
-                    </ToggleGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full" disabled={mutation.isPending}>
-              {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t('manual_food.submit')}
-            </Button>
-          </form>
-        </Form>
+        {FormContent}
       </CardContent>
     </Card>
   );
