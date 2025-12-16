@@ -43,9 +43,15 @@ const Onboarding = () => {
     mutationFn: async () => {
       if (!user || !formData.weight) throw new Error('User or weight not found');
       
+      // CRITICAL FIX: Use upsert instead of update.
+      // If the profile row is missing (trigger failed), update does nothing (0 rows).
+      // Upsert forces creation or update.
       const { error: profileError } = await supabase
         .from('profiles')
-        .update({
+        .upsert({
+          id: user.id, // Required for upsert
+          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User', // Fallback name
+          updated_at: new Date().toISOString(),
           gender: formData.gender,
           age: formData.age,
           previous_apps_experience: formData.experience,
@@ -57,21 +63,19 @@ const Onboarding = () => {
           goal: formData.goal,
           goal_weight: formData.goalWeight,
           onboarding_completed: true,
-        })
-        .eq('id', user.id);
+        }, { onConflict: 'id' }); // Conflict on ID -> Update
+
       if (profileError) throw profileError;
 
       const { error: historyError } = await supabase
         .from('weight_history')
         .insert({ user_id: user.id, weight: formData.weight });
+        
       if (historyError) throw historyError;
     },
     onSuccess: async () => {
       await refetchProfile();
       
-      // Reiniciamos explícitamente la bandera del tutorial para ESTE usuario específico.
-      // Esto asegura que al terminar el onboarding, el tutorial se muestre en la pantalla principal.
-      // Al ser específico por ID, no afecta a otros usuarios ni se repite si ya se marcó como visto después.
       if (user?.id) {
         window.localStorage.removeItem(`tutorial_seen_v4_${user.id}`);
       }
@@ -80,7 +84,7 @@ const Onboarding = () => {
     },
     onError: (error) => {
       toast.error(t('onboarding.toast_error'));
-      console.error(error);
+      console.error("Onboarding Save Error:", error);
     },
   });
 
