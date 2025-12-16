@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = async (userId: string) => {
     try {
+      // Usamos maybeSingle() para no lanzar error si no existe el perfil (usuario nuevo)
       const { data: userProfile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -66,49 +67,48 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let mounted = true;
 
-    // Initial session check
-    const initSession = async () => {
+    const initializeAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (mounted) {
-          if (session?.user) {
-            setSession(session);
-            setUser(session.user);
-            // AWAIT the profile fetch so loading stays true until we have data
-            await fetchProfile(session.user.id);
-          }
+        // 1. Obtener la sesión inicial de Supabase (token local)
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+
+        if (!mounted) return;
+
+        if (initialSession?.user) {
+          setSession(initialSession);
+          setUser(initialSession.user);
+          // 2. IMPORTANTE: Esperar a que el perfil se descargue ANTES de quitar el loading
+          await fetchProfile(initialSession.user.id);
         }
       } catch (error) {
-        console.error("Session init error:", error);
+        console.error("Auth initialization error:", error);
       } finally {
         if (mounted) {
+          // 3. Solo ahora permitimos que la app se muestre
           setLoading(false);
         }
       }
     };
 
-    initSession();
+    initializeAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+    // Suscripción a cambios de auth (login, logout, etc.)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
 
+      setSession(newSession);
+      setUser(newSession?.user ?? null);
+
       if (newSession?.user) {
-         setSession(newSession);
-         setUser(newSession.user);
-         
-         // If user changed, fetch profile again
-         if (newSession.user.id !== user?.id) {
-            // We can optionally set loading true here if we want a hard transition
-            // but usually strictly awaiting is enough for the initial load.
-            await fetchProfile(newSession.user.id);
-         }
-      } else {
-        setSession(null);
-        setUser(null);
+        // Si hay un cambio de sesión (ej. login después de iniciar la app), actualizamos el perfil
+        // Nota: Si es la carga inicial, 'initializeAuth' ya se encargó de esto, pero no hace daño repetir para asegurar sincronización.
+        await fetchProfile(newSession.user.id);
+      } else if (event === 'SIGNED_OUT') {
         setProfile(null);
       }
-      // Ensure loading is false after auth state settles
-      setLoading(false);
+      
+      // NO manipulamos 'loading' aquí para evitar conflictos con la inicialización.
+      // 'initializeAuth' es la autoridad para el primer render.
     });
 
     return () => {
