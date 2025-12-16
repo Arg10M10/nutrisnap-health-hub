@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Weight, Edit } from "lucide-react";
 import { useNutrition } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
-import ManualFoodEntry from "@/components/ManualFoodEntry";
 import BmiCalculator from "@/components/BmiCalculator";
 import StreakCalendar from "@/components/StreakCalendar";
 import EditWeightDrawer from "@/components/EditWeightDrawer";
@@ -49,8 +48,6 @@ const Progress = () => {
 
   const isImperial = profile?.units === 'imperial';
   
-  // CORRECCIÓN: El peso ya está guardado en la unidad preferida (ej. 184 lbs).
-  // No debemos multiplicarlo de nuevo.
   const displayWeight = profile?.weight || 0;
   const weightUnit = isImperial ? 'lbs' : 'kg';
 
@@ -108,11 +105,6 @@ const Progress = () => {
 
         {/* Calories Chart */}
         <CalorieIntakeChart />
-
-        {/* Manual Food Entry */}
-        <div className="space-y-4">
-          <ManualFoodEntry />
-        </div>
       </div>
       <EditWeightDrawer 
         isOpen={isWeightDrawerOpen} 
