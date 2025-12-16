@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Sun, Moon, Coffee, Apple, Clock, Ban } from 'lucide-react';
+import { RefreshCw, Sun, Moon, Coffee, Apple, Ban } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from '@/lib/utils';
 import { useAILimit } from '@/hooks/useAILimit';
@@ -77,42 +77,47 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
       case 'breakfast':
         return {
           label: t('diets.breakfast'),
-          message: "¡Es hora de desayunar!",
-          gradient: "from-yellow-400 to-yellow-600",
+          message: "¡Hora del desayuno!",
           icon: Coffee,
-          textColor: "text-yellow-950"
+          color: "text-yellow-500",
+          borderColor: "border-l-yellow-500",
+          bgTint: "bg-yellow-500/5"
         };
       case 'lunch':
         return {
           label: t('diets.lunch'),
-          message: "¡Es hora de la comida!",
-          gradient: "from-orange-400 to-orange-600",
+          message: "¡Hora de la comida!",
           icon: Sun,
-          textColor: "text-orange-950"
+          color: "text-orange-500",
+          borderColor: "border-l-orange-500",
+          bgTint: "bg-orange-500/5"
         };
       case 'snack':
         return {
           label: t('diets.snack'),
-          message: "¡Es hora del snack!",
-          gradient: "from-green-400 to-green-600",
+          message: "¡Hora del snack!",
           icon: Apple,
-          textColor: "text-green-950"
+          color: "text-green-500",
+          borderColor: "border-l-green-500",
+          bgTint: "bg-green-500/5"
         };
       case 'dinner':
         return {
           label: t('diets.dinner'),
-          message: "¡Es hora de cenar!",
-          gradient: "from-blue-400 to-blue-600",
+          message: "¡Hora de la cena!",
           icon: Moon,
-          textColor: "text-blue-950"
+          color: "text-blue-500",
+          borderColor: "border-l-blue-500",
+          bgTint: "bg-blue-500/5"
         };
       default:
         return {
           label: "",
-          message: "No deberías comer nada ahora",
-          gradient: "from-gray-400 to-gray-600",
+          message: "No es hora de comer",
           icon: Ban,
-          textColor: "text-gray-100"
+          color: "text-muted-foreground",
+          borderColor: "border-l-muted",
+          bgTint: "bg-muted/20"
         };
     }
   };
@@ -154,8 +159,8 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
       title: t('diets.dinner'),
       icon: Moon,
       content: meals.dinner,
-      borderColor: 'border-l-indigo-400',
-      iconColor: 'text-indigo-500'
+      borderColor: 'border-l-blue-400',
+      iconColor: 'text-blue-500'
     }
   ];
 
@@ -186,16 +191,17 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           </TabsList>
         </div>
 
-        {/* Dynamic Meal Banner */}
-        <div className={cn("mt-6 rounded-2xl p-6 shadow-lg bg-gradient-to-r flex flex-col items-center justify-center text-center transition-all duration-500", currentConfig.gradient)}>
-          <div className="flex items-center gap-2 mb-2 bg-black/10 px-3 py-1 rounded-full text-white/90">
-            <Clock className="w-4 h-4" />
-            <span className="font-mono font-medium text-sm">
-              {format(currentTime, 'h:mm a', { locale: es }).toUpperCase()}
-            </span>
+        {/* Dynamic Meal Card (Redesigned) */}
+        <div className={cn(
+          "mt-6 rounded-2xl p-6 shadow-lg border-l-8 flex flex-col items-center justify-center text-center transition-all duration-500 bg-card",
+          currentConfig.borderColor,
+          currentConfig.bgTint
+        )}>
+          <div className={cn("text-5xl font-bold mb-3 tracking-tight", currentConfig.color)}>
+            {format(currentTime, 'h:mm a', { locale: es }).toUpperCase()}
           </div>
-          <div className={cn("flex items-center justify-center gap-3", currentConfig.textColor || "text-white")}>
-            <currentConfig.icon className="w-8 h-8" />
+          <div className={cn("flex items-center justify-center gap-3", currentConfig.color)}>
+            <currentConfig.icon className="w-7 h-7" />
             <h3 className="text-2xl font-bold leading-tight">{currentConfig.message}</h3>
           </div>
         </div>
@@ -216,13 +222,13 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
             <TabsContent key={dayKey} value={dayKey} className="mt-6 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="grid gap-4">
                 {sortedCards.map((card) => (
-                  <Card key={card.id} className={cn("border-l-4 transition-all duration-300", card.borderColor, card.type === activeMeal && "shadow-md scale-[1.01]")}>
+                  <Card key={card.id} className={cn("border-l-4 transition-all duration-300", card.borderColor, card.type === activeMeal && "shadow-md scale-[1.01] border-l-[6px]")}>
                     <CardHeader className="pb-2 pt-4 px-4">
                       <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                         <card.icon className={cn("w-5 h-5", card.iconColor)} />
                         {card.title}
                         {card.type === activeMeal && (
-                          <span className="ml-auto text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                          <span className={cn("ml-auto text-xs font-bold px-2 py-0.5 rounded-full bg-background border shadow-sm", card.iconColor)}>
                             Ahora
                           </span>
                         )}
