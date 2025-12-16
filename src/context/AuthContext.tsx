@@ -56,8 +56,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error("Error fetching profile:", error);
       }
       
-      // If profile is null (row missing), we set null. 
-      // The App logic will handle this by showing Onboarding or waiting.
       setProfile(userProfile);
     } catch (e) {
       console.error("Critical profile fetch error:", e);
@@ -66,30 +64,57 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    // Check active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      }
-      setLoading(false);
-    });
+    let mounted = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        // Simple optimization: only refetch if we don't have a profile or user changed
-        fetchProfile(session.user.id);
+    // Initial session check
+    const initSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (mounted) {
+          if (session?.user) {
+            setSession(session);
+            setUser(session.user);
+            // AWAIT the profile fetch so loading stays true until we have data
+            await fetchProfile(session.user.id);
+          }
+        }
+      } catch (error) {
+        console.error("Session init error:", error);
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    initSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      if (!mounted) return;
+
+      if (newSession?.user) {
+         setSession(newSession);
+         setUser(newSession.user);
+         
+         // If user changed, fetch profile again
+         if (newSession.user.id !== user?.id) {
+            // We can optionally set loading true here if we want a hard transition
+            // but usually strictly awaiting is enough for the initial load.
+            await fetchProfile(newSession.user.id);
+         }
       } else {
+        setSession(null);
+        setUser(null);
         setProfile(null);
       }
+      // Ensure loading is false after auth state settles
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {
