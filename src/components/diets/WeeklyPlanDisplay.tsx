@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Sun, Moon, Coffee, Apple, Clock, UtensilsOff } from 'lucide-react';
+import { RefreshCw, Sun, Moon, Coffee, Apple, Clock, Ban } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from '@/lib/utils';
 import { useAILimit } from '@/hooks/useAILimit';
@@ -111,7 +111,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           label: "",
           message: "No deberías comer nada ahora",
           gradient: "from-gray-400 to-gray-600",
-          icon: UtensilsOff,
+          icon: Ban,
           textColor: "text-gray-100"
         };
     }
