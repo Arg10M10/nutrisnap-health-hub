@@ -93,7 +93,7 @@
     "sugars": "Azúcares",
     "todays_analysis": "Análisis de Hoy",
     "no_data": "No hay datos para este día.",
-    "start_logging": "¡Usa el escáner para empezar a registrar!"
+    "start_logging": "Usa el botón '+' para empezar a registrar."
   },
   "progress": {
     "title": "Tu Progreso",

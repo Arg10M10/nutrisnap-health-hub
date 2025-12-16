@@ -93,7 +93,7 @@
     "sugars": "Sugars",
     "todays_analysis": "Today's Analysis",
     "no_data": "No data for this day.",
-    "start_logging": "Use the scanner to start logging!"
+    "start_logging": "Use the '+' button to start logging."
   },
   "progress": {
     "title": "Your Progress",

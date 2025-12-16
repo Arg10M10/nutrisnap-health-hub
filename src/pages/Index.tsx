@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-import { Flame, Leaf, ScanLine, Beef, Wheat, Droplets, Sparkles } from "lucide-react";
+import { Flame, Leaf, Plus, Beef, Wheat, Droplets, Sparkles } from "lucide-react";
 import { useNutrition, FoodEntry, ExerciseEntry } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
@@ -213,7 +213,7 @@ const Index = () => {
             </div>
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2">
-              <ScanLine className="w-12 h-12 text-muted-foreground/50" />
+              <Plus className="w-12 h-12 text-muted-foreground/50" />
               <p className="text-muted-foreground">{t('home.no_data')}</p>
               <p className="text-sm text-muted-foreground">{t('home.start_logging')}</p>
             </Card>
