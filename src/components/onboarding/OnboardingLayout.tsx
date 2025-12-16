@@ -1,8 +1,9 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from 'react-i18next';
+import { LanguageDrawer } from '@/components/settings/LanguageDrawer';
 
 interface OnboardingLayoutProps {
   step: number;
@@ -31,17 +32,21 @@ export const OnboardingLayout = ({
   continueText,
   hideContinueButton = false,
 }: OnboardingLayoutProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const progressValue = (step / totalSteps) * 100;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="p-4 pt-8">
         <div className="flex items-center gap-4 mx-auto max-w-xl">
-          {step > 1 && (
-            <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full">
+          {step > 1 ? (
+            <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full shrink-0">
               <ArrowLeft className="h-5 w-5" />
             </Button>
+          ) : (
+            // Spacer to keep layout consistent if needed, though flex-1 on progress handles it well
+            <div className="w-10 shrink-0" />
           )}
           <div className="flex-1">
             <p className="text-sm font-semibold text-primary">
@@ -49,6 +54,16 @@ export const OnboardingLayout = ({
             </p>
             <Progress value={progressValue} className="mt-1 h-2" />
           </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsLanguageDrawerOpen(true)} 
+            className="rounded-full shrink-0"
+          >
+            <span className="text-xl leading-none pt-1">
+              {i18n.language.startsWith('es') ? '🇪🇸' : '🇺🇸'}
+            </span>
+          </Button>
         </div>
       </header>
       <main className="flex flex-1 flex-col items-center justify-center p-4">
@@ -70,6 +85,8 @@ export const OnboardingLayout = ({
           )}
         </div>
       </main>
+      
+      <LanguageDrawer isOpen={isLanguageDrawerOpen} onClose={() => setIsLanguageDrawerOpen(false)} />
     </div>
   );
 };
