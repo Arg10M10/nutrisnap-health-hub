@@ -58,9 +58,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (userProfile) {
         setProfile(userProfile);
+      } else {
+        setProfile(null); // Ensure profile is null if not found
       }
     } catch (e) {
       console.error("Critical profile fetch error:", e);
+      setProfile(null);
     }
   };
 
@@ -68,21 +71,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     let mounted = true;
 
     const initializeAuth = async () => {
+      setLoading(true);
       try {
-        // 1. Get session from local storage
-        const { data, error } = await supabase.auth.getSession();
-        
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         if (error) throw error;
-        
-        if (!mounted) return;
 
-        const initialSession = data.session;
-
-        if (initialSession?.user) {
+        if (mounted && initialSession?.user) {
           setSession(initialSession);
           setUser(initialSession.user);
-          
-          // 2. Fetch profile if we have a user
           await fetchProfile(initialSession.user.id);
         }
       } catch (error) {
@@ -94,14 +90,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
-    // Safety timeout: If Supabase takes too long (e.g. storage issues), force loading to false
-    const timeoutId = setTimeout(() => {
-      if (mounted && loading) {
-        console.warn("Auth initialization timed out, forcing app load.");
-        setLoading(false);
-      }
-    }, 3000); // 3 seconds max wait time
-
     initializeAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
@@ -110,8 +98,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
 
-      if (newSession?.user) {
+      if (event === 'SIGNED_IN' && newSession?.user) {
+        setLoading(true);
         await fetchProfile(newSession.user.id);
+        setLoading(false);
       } else if (event === 'SIGNED_OUT') {
         setProfile(null);
       }
@@ -119,7 +109,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => {
       mounted = false;
-      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
   }, []);
