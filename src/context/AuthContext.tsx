@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Helper to create a safe fallback profile from user metadata
+  // Helper to create a safe fallback profile
   const createFallbackProfile = (userId: string, email?: string): Profile => ({
     id: userId,
     full_name: email?.split('@')[0] || 'User',
@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = async (userId: string, userEmail?: string) => {
     try {
-      // 1. Try to get from Supabase
+      // 1. Try to get from Supabase DB
       const { data: userProfile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -81,40 +81,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (userProfile) {
         setProfile(userProfile);
+        // Cache for next time
         localStorage.setItem(`profile_${userId}`, JSON.stringify(userProfile));
         return;
       }
 
-      if (error) {
-        console.error("Error fetching profile from DB:", error);
+      if (error) console.error("Error fetching profile from DB:", error);
+
+      // 2. If DB failed, try Cache
+      const cachedProfile = localStorage.getItem(`profile_${userId}`);
+      if (cachedProfile) {
+        setProfile(JSON.parse(cachedProfile));
+        return;
       }
 
-      // 2. If DB failed or returned null, try Local Storage safely
-      try {
-        const cachedProfile = localStorage.getItem(`profile_${userId}`);
-        if (cachedProfile) {
-          console.log("Using cached profile due to DB error/miss");
-          setProfile(JSON.parse(cachedProfile));
-          return;
-        }
-      } catch (cacheError) {
-        console.error("Error reading profile cache:", cacheError);
-        localStorage.removeItem(`profile_${userId}`); // Clear bad cache
-      }
-
-      // 3. Absolute failsafe: Use synthetic profile
-      console.log("Creating fallback profile");
-      const fallback = createFallbackProfile(userId, userEmail);
-      setProfile(fallback);
-      
-      // Optionally try to insert this fallback to DB to fix the account
-      supabase.from('profiles').insert([fallback]).then(({ error }) => {
-        if (error) console.error("Auto-fix profile insertion failed", error);
-      });
+      // 3. Fallback
+      setProfile(createFallbackProfile(userId, userEmail));
 
     } catch (e) {
       console.error("Critical profile fetch error:", e);
-      // Even in a crash, set fallback
       setProfile(createFallbackProfile(userId, userEmail));
     }
   };
@@ -122,51 +107,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let mounted = true;
 
-    // Safety timeout: If auth takes more than 3 seconds, force stop loading.
-    // This prevents the "White Screen" if getSession hangs.
-    const safetyTimeout = setTimeout(() => {
-      if (mounted && loading) {
-        console.warn("Auth initialization timed out. Forcing app load.");
-        setLoading(false);
-      }
-    }, 3000);
-
     const initializeAuth = async () => {
       try {
-        // Get session from storage (very fast)
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        // Enforce a timeout specifically for the initial session load.
+        // On native devices, accessing storage can sometimes hang.
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise<{ data: { session: null } }>((resolve) => 
+          setTimeout(() => resolve({ data: { session: null } }), 2000)
+        );
+
+        // Race: If Supabase takes > 2 seconds, we proceed with null session (or previous state)
+        // to unblock the UI.
+        const { data: { session: initialSession } } = await Promise.race([
+          sessionPromise,
+          timeoutPromise
+        ]) as { data: { session: Session | null } };
         
-        if (initialSession?.user) {
-          if (mounted) {
+        if (mounted) {
+          if (initialSession?.user) {
             setSession(initialSession);
             setUser(initialSession.user);
             
-            // Try to load profile from Cache IMMEDIATELY safely
-            let profileLoaded = false;
-            try {
-              const cachedProfile = localStorage.getItem(`profile_${initialSession.user.id}`);
-              if (cachedProfile) {
+            // OPTIMIZATION: Try to load profile from cache immediately to unblock UI
+            // Don't await the DB call for the loading state flip.
+            const cachedProfile = localStorage.getItem(`profile_${initialSession.user.id}`);
+            if (cachedProfile) {
+              try {
                 setProfile(JSON.parse(cachedProfile));
-                profileLoaded = true;
-              }
-            } catch (e) {
-              console.error("Cache parsing error on init:", e);
-              localStorage.removeItem(`profile_${initialSession.user.id}`);
+              } catch (e) { /* ignore */ }
             }
-
-            if (!profileLoaded) {
-               setProfile(createFallbackProfile(initialSession.user.id, initialSession.user.email));
-            }
-
+            
             // Fetch fresh data in background
-            await fetchProfile(initialSession.user.id, initialSession.user.email);
+            fetchProfile(initialSession.user.id, initialSession.user.email);
           }
         }
       } catch (error) {
         console.error("Auth init error:", error);
       } finally {
         if (mounted) {
-          clearTimeout(safetyTimeout);
           setLoading(false);
         }
       }
@@ -180,7 +158,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (event === 'SIGNED_IN' && newSession?.user) {
          setSession(newSession);
          setUser(newSession.user);
-         await fetchProfile(newSession.user.id, newSession.user.email);
+         fetchProfile(newSession.user.id, newSession.user.email);
+         setLoading(false);
       } else if (event === 'SIGNED_OUT') {
         setSession(null);
         setUser(null);
@@ -194,7 +173,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => {
       mounted = false;
-      clearTimeout(safetyTimeout);
       subscription.unsubscribe();
     };
   }, []);
