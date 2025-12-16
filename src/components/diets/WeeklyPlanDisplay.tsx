@@ -77,7 +77,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
       case 'breakfast':
         return {
           label: t('diets.breakfast'),
-          message: "¡Hora del desayuno!",
+          message: t('diets.breakfast_time'),
           icon: Coffee,
           color: "text-yellow-500",
           borderColor: "border-l-yellow-500",
@@ -85,7 +85,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
       case 'lunch':
         return {
           label: t('diets.lunch'),
-          message: "¡Hora de la comida!",
+          message: t('diets.lunch_time'),
           icon: Sun,
           color: "text-orange-500",
           borderColor: "border-l-orange-500",
@@ -93,7 +93,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
       case 'snack':
         return {
           label: t('diets.snack'),
-          message: "¡Hora del snack!",
+          message: t('diets.snack_time'),
           icon: Apple,
           color: "text-green-500",
           borderColor: "border-l-green-500",
@@ -101,7 +101,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
       case 'dinner':
         return {
           label: t('diets.dinner'),
-          message: "¡Hora de la cena!",
+          message: t('diets.dinner_time'),
           icon: Moon,
           color: "text-blue-500",
           borderColor: "border-l-blue-500",
@@ -109,7 +109,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
       default:
         return {
           label: "",
-          message: "No es hora de comer",
+          message: t('diets.gap_time_message'),
           icon: Ban,
           color: "text-muted-foreground",
           borderColor: "border-l-muted",

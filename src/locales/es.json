@@ -156,7 +156,12 @@
       "friday": "Vie",
       "saturday": "Sáb",
       "sunday": "Dom"
-    }
+    },
+    "breakfast_time": "¡Hora del desayuno!",
+    "lunch_time": "¡Hora de la comida!",
+    "snack_time": "¡Hora del snack!",
+    "dinner_time": "¡Hora de la cena!",
+    "gap_time_message": "No es hora de comer"
   },
   "badges": {
     "title": "Mis Insignias",
@@ -301,7 +306,6 @@
     "generate_loading": "Generando con IA...",
     "continue": "Continuar",
     "back": "Atrás",
-    "continue": "Continuar",
     "summary_title": "Confirma tus Datos",
     "disclaimer": "Esto usará uno de tus créditos de IA diarios. Las nuevas metas se aplicarán a tu perfil.",
     "toast_success": "¡Plan nutricional actualizado con las sugerencias de la IA!",

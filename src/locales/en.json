@@ -156,7 +156,12 @@
       "friday": "Fri",
       "saturday": "Sat",
       "sunday": "Sun"
-    }
+    },
+    "breakfast_time": "It's breakfast time!",
+    "lunch_time": "It's lunch time!",
+    "snack_time": "It's snack time!",
+    "dinner_time": "It's dinner time!",
+    "gap_time_message": "It's not meal time"
   },
   "badges": {
     "title": "My Badges",
@@ -301,7 +306,6 @@
     "generate_loading": "Generating with AI...",
     "continue": "Continue",
     "back": "Back",
-    "continue": "Continue",
     "summary_title": "Confirm Your Details",
     "disclaimer": "This will use one of your daily AI credits. The new goals will be applied to your profile.",
     "toast_success": "Nutritional plan updated with AI suggestions!",
