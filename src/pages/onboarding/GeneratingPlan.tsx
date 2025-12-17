@@ -69,11 +69,19 @@ const GeneratingPlan = () => {
         else if (exp.includes("several")) estimatedWorkouts = 5;
       }
 
-      const goalWeight = profile.goal_weight ? (isImperial ? profile.goal_weight * 0.453592 : profile.goal_weight) : finalWeight;
+      // Si es mantener, el peso objetivo es el actual
+      let goalWeight = profile.goal_weight;
+      if (profile.goal === 'maintain_weight' || !goalWeight) {
+        goalWeight = finalWeight;
+      } else if (isImperial) {
+        goalWeight = goalWeight * 0.453592;
+      }
       
-      // USAR EL VALOR REAL DEL PERFIL
+      // Si es mantener, el ritmo semanal es 0
       let weeklyRate = profile.weekly_rate || 0.5;
-      if (isImperial) {
+      if (profile.goal === 'maintain_weight') {
+        weeklyRate = 0;
+      } else if (isImperial) {
         // Si es imperial, el valor en DB está en lbs, convertir a kg para el cálculo
         weeklyRate = weeklyRate * 0.453592;
       }
@@ -86,7 +94,7 @@ const GeneratingPlan = () => {
           age: profile.age || 30,
           goal: profile.goal || 'maintain_weight',
           goalWeight: goalWeight,
-          weeklyRate: weeklyRate,
+          weeklyRate: weeklyRate, // Aquí se envía 0 si es mantenimiento
           workoutsPerWeek: estimatedWorkouts
         },
       });

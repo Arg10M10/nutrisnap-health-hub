@@ -44,6 +44,16 @@ const Onboarding = () => {
     mutationFn: async () => {
       if (!user || !formData.weight) throw new Error('User or weight not found');
       
+      // Lógica inteligente para "Mantener peso"
+      let finalGoalWeight = formData.goalWeight;
+      let finalWeeklyRate = formData.weeklyRate;
+
+      if (formData.goal === 'maintain_weight') {
+        // Si es mantener, el peso objetivo es el actual y el ritmo es 0
+        finalGoalWeight = formData.weight;
+        finalWeeklyRate = 0;
+      }
+
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
@@ -59,8 +69,8 @@ const Onboarding = () => {
           height: formData.height,
           motivation: formData.motivation,
           goal: formData.goal,
-          goal_weight: formData.goalWeight,
-          weekly_rate: formData.weeklyRate, // Nuevo campo
+          goal_weight: finalGoalWeight, // Usamos el valor calculado
+          weekly_rate: finalWeeklyRate, // Usamos el valor calculado
           onboarding_completed: true,
         }, { onConflict: 'id' });
 
@@ -135,31 +145,33 @@ const Onboarding = () => {
       content: <GoalStep goal={formData.goal} setGoal={(v) => updateFormData('goal', v)} />,
       canContinue: !!formData.goal,
     },
-    {
-      id: 'goal_weight',
-      title: t('onboarding.goal_weight.title'),
-      description: t('onboarding.goal_weight.description'),
-      content: <GoalWeightStep 
-                  goalWeight={formData.goalWeight} 
-                  setGoalWeight={(v) => updateFormData('goalWeight', v)}
-                  units={formData.units}
-                  setUnits={(v) => updateFormData('units', v)}
-                />,
-      canContinue: formData.goalWeight !== null,
-    },
-    // Paso condicional: Solo si el objetivo es perder o ganar peso
-    ...(formData.goal === 'lose_weight' || formData.goal === 'gain_weight' ? [{
-      id: 'weekly_rate',
-      title: t('onboarding.weekly_rate.title'),
-      description: t('onboarding.weekly_rate.description'),
-      content: <WeeklyRateStep
-                  weeklyRate={formData.weeklyRate}
-                  setWeeklyRate={(v) => updateFormData('weeklyRate', v)}
-                  units={formData.units}
-                  goal={formData.goal}
-                />,
-      canContinue: formData.weeklyRate !== null,
-    }] : []),
+    // Paso condicional: Solo si el objetivo NO es mantener peso
+    ...(formData.goal !== 'maintain_weight' ? [
+      {
+        id: 'goal_weight',
+        title: t('onboarding.goal_weight.title'),
+        description: t('onboarding.goal_weight.description'),
+        content: <GoalWeightStep 
+                    goalWeight={formData.goalWeight} 
+                    setGoalWeight={(v) => updateFormData('goalWeight', v)}
+                    units={formData.units}
+                    setUnits={(v) => updateFormData('units', v)}
+                  />,
+        canContinue: formData.goalWeight !== null,
+      },
+      {
+        id: 'weekly_rate',
+        title: t('onboarding.weekly_rate.title'),
+        description: t('onboarding.weekly_rate.description'),
+        content: <WeeklyRateStep
+                    weeklyRate={formData.weeklyRate}
+                    setWeeklyRate={(v) => updateFormData('weeklyRate', v)}
+                    units={formData.units}
+                    goal={formData.goal}
+                  />,
+        canContinue: formData.weeklyRate !== null,
+      }
+    ] : []),
     {
       id: 'final',
       title: t('onboarding.final.title'),
@@ -170,20 +182,25 @@ const Onboarding = () => {
     },
   ];
 
-  // Filtramos los pasos activos (aunque ya lo hicimos condicionalmente arriba, esto es doble seguridad por si cambia el estado)
-  const steps = allSteps; 
-  const totalSteps = steps.length;
-  const currentStep = steps[currentStepIndex];
+  const totalSteps = allSteps.length;
+  const currentStep = allSteps[currentStepIndex];
 
   const onContinue = () => {
     if (currentStepIndex < totalSteps - 1) {
       setCurrentStepIndex(prev => prev + 1);
       
-      // Inicializar weeklyRate si entramos a ese paso y está null
-      const nextStep = steps[currentStepIndex + 1];
+      // Inicializar weeklyRate por defecto si el siguiente paso es ese
+      const nextStep = allSteps[currentStepIndex + 1];
       if (nextStep && nextStep.id === 'weekly_rate' && formData.weeklyRate === null) {
         updateFormData('weeklyRate', formData.units === 'metric' ? 0.5 : 1.1);
       }
+      // Inicializar goalWeight por defecto si el siguiente paso es ese y está vacío
+      if (nextStep && nextStep.id === 'goal_weight' && formData.goalWeight === null && formData.weight) {
+         // Sugerencia simple por defecto
+         const suggestion = formData.goal === 'lose_weight' ? formData.weight * 0.9 : formData.weight * 1.1;
+         updateFormData('goalWeight', Math.round(suggestion));
+      }
+
     } else {
       mutation.mutate();
     }
