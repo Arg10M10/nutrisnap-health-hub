@@ -60,7 +60,7 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
 
   return (
     <Card 
-      className={cn("p-4 flex items-center gap-4 relative transition-colors overflow-hidden", isClickable && "cursor-pointer hover:bg-muted/50")} 
+      className={cn("p-4 flex flex-row items-start gap-4 relative transition-colors overflow-hidden", isClickable && "cursor-pointer hover:bg-muted/50")} 
       onClick={isClickable ? onClick : undefined}
     >
       <div className="relative w-20 h-20 flex-shrink-0">
@@ -77,10 +77,10 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
         )}
       </div>
       
-      <div className="flex-1 min-w-0">
-        <div className="flex justify-between items-start mb-2">
-          <h4 className="font-semibold text-foreground truncate pr-2">{foodName}</h4>
-          <span className="text-xs text-muted-foreground flex-shrink-0">{time}</span>
+      <div className="flex-1 min-w-0 flex flex-col justify-center min-h-[5rem]">
+        <div className="flex justify-between items-start mb-2 gap-2">
+          <h4 className="font-semibold text-foreground leading-tight">{foodName}</h4>
+          <span className="text-xs text-muted-foreground flex-shrink-0 pt-0.5">{time}</span>
         </div>
         
         {isProcessing ? (
@@ -97,14 +97,14 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
             </div>
           </div>
         ) : hasFailed ? (
-          <p className="text-sm text-destructive font-medium">{reason || 'Análisis fallido.'}</p>
+          <p className="text-sm text-destructive font-medium leading-tight">{reason || 'Análisis fallido.'}</p>
         ) : (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Flame className="w-3.5 h-3.5 text-primary" />
               <span className="font-medium text-foreground">{calories ?? 0}</span>
             </div>
-            <div className="w-px h-3 bg-border" />
+            <div className="w-px h-3 bg-border hidden sm:block" />
             <div className="flex items-center gap-1">
               <Beef className="w-3.5 h-3.5 text-red-500" />
               <span className="font-medium text-foreground">{protein ?? 0}g</span>

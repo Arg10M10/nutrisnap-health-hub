@@ -111,13 +111,13 @@ const Index = () => {
           <Carousel className="w-full" opts={{ align: "start", duration: 20 }} setApi={setApi}>
             <CarouselContent>
               {/* Page 1: Main Macros */}
-              <CarouselItem>
+              <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
-                  <div className="p-1 h-[360px] flex flex-col gap-2">
-                    <div className="flex-[2]">
+                  <div className="flex flex-col gap-3 min-h-[360px]">
+                    <div className="w-full">
                       <CaloriesCard current={intake.calories} goal={dailyGoals.calories} />
                     </div>
-                    <div className="flex-1 grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-2 w-full">
                       <MacroCard
                         value={getSafePercentage(intake.protein, dailyGoals.protein)}
                         color="#ef4444"
@@ -148,10 +148,10 @@ const Index = () => {
               </CarouselItem>
 
               {/* Page 2: Secondary Metrics */}
-              <CarouselItem>
+              <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
-                  <div className="p-1 h-[360px] flex flex-col gap-2">
-                    <div className="flex-1 grid grid-cols-2 gap-2">
+                  <div className="flex flex-col gap-3 min-h-[360px]">
+                    <div className="grid grid-cols-2 gap-2 w-full">
                       <HealthScoreCard score={healthScore} />
                       <WaterTrackerCard
                         count={waterIntake}
@@ -161,7 +161,7 @@ const Index = () => {
                         isUpdating={isWaterUpdating}
                       />
                     </div>
-                    <div className="flex-1">
+                    <div className="w-full">
                       <MacroCard
                           value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
                           color="#a855f7"

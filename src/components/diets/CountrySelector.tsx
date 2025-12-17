@@ -53,7 +53,7 @@ export function CountrySelector({ value, onChange }: CountrySelectorProps) {
                         onClick={() => onChange(country.value)}
                         whileTap={{ scale: 0.95 }}
                         className={cn(
-                            "relative flex flex-col items-center justify-center p-4 h-32 rounded-2xl border-2 transition-all duration-200 outline-none",
+                            "relative flex flex-col items-center justify-center p-4 min-h-[8rem] h-auto rounded-2xl border-2 transition-all duration-200 outline-none",
                             isSelected 
                                 ? "border-primary bg-primary/5 shadow-md" 
                                 : "border-muted bg-card hover:border-primary/30 hover:bg-muted/30"
@@ -63,7 +63,7 @@ export function CountrySelector({ value, onChange }: CountrySelectorProps) {
                             {country.flag}
                         </span>
                         <span className={cn(
-                            "text-sm font-medium text-center leading-tight transition-colors",
+                            "text-sm font-medium text-center leading-tight transition-colors break-words w-full",
                             isSelected ? "text-primary" : "text-muted-foreground"
                         )}>
                             {country.label}
