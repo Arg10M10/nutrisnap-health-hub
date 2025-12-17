@@ -5,88 +5,92 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
-const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
-const GPT_MODEL = "gpt-5-nano";
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const { gender, age, height, weight, workoutsPerWeek, goal, goalWeight, weeklyRate } = await req.json();
+    const { gender, age, height, weight, workoutsPerWeek, goal, weeklyRate } = await req.json();
 
-    const prompt = `
-      You are an expert nutritionist AI. Based on the user's data, calculate their optimal daily nutritional goals.
+    // 1. Validación y Valores por Defecto Seguros
+    const safeWeight = Number(weight) || 70;
+    const safeHeight = Number(height) || 170;
+    const safeAge = Number(age) || 30;
+    const safeWorkouts = Number(workoutsPerWeek) || 3;
+    const isMale = gender?.toLowerCase() === 'male';
+    const targetWeeklyChange = Number(weeklyRate) || 0.5; // kg por semana
 
-      User Data:
-      - Gender: ${gender}
-      - Age: ${age} years
-      - Height: ${height} cm
-      - Current Weight: ${weight} kg
-      - Workouts per week: ${workoutsPerWeek}
-      - Primary Goal: ${goal}
-      - Goal Weight: ${goalWeight} kg
-      - Desired weekly change: ${weeklyRate} kg
+    // 2. Cálculo de BMR (Tasa Metabólica Basal) - Ecuación Mifflin-St Jeor (Estándar de Oro)
+    // Hombres: (10 × peso en kg) + (6.25 × altura en cm) - (5 × edad en años) + 5
+    // Mujeres: (10 × peso en kg) + (6.25 × altura en cm) - (5 × edad en años) - 161
+    let bmr = (10 * safeWeight) + (6.25 * safeHeight) - (5 * safeAge);
+    bmr += isMale ? 5 : -161;
 
-      Instructions:
-      1.  Calculate Basal Metabolic Rate (BMR) using the Mifflin-St Jeor equation.
-          - Men: BMR = 10 * weight (kg) + 6.25 * height (cm) - 5 * age (y) + 5
-          - Women: BMR = 10 * weight (kg) + 6.25 * height (cm) - 5 * age (y) - 161
-      2.  Calculate Total Daily Energy Expenditure (TDEE) by applying an activity multiplier to the BMR.
-          - 0-1 workouts/week: 1.2 (Sedentary)
-          - 2-3 workouts/week: 1.375 (Lightly active)
-          - 4-5 workouts/week: 1.55 (Moderately active)
-          - 6-7 workouts/week: 1.725 (Very active)
-      3.  Adjust TDEE for the user's goal. A 1 kg change per week is roughly 1100 kcal/day. Adjust proportionally for the user's desired weekly rate.
-          - For 'lose_weight', subtract calories.
-          - For 'gain_weight', add calories.
-          - For 'maintain_weight', use TDEE as is.
-      4.  Distribute the final daily calories into macronutrients (protein, carbs, fats) using balanced ratios. A good starting point is 40% carbs, 30% protein, 30% fats. Protein should be at least 1.6g per kg of body weight.
-      5.  Set a reasonable daily sugar limit, generally under 10% of total calories (e.g., 25-50g).
-      6.  Round all final values to the nearest whole number.
+    // 3. Multiplicador de Actividad (TDEE)
+    // Asumimos un factor base y sumamos según entrenamientos para ser más precisos
+    let activityMultiplier = 1.2; // Sedentario base
+    if (safeWorkouts >= 1 && safeWorkouts <= 2) activityMultiplier = 1.375; // Ligero
+    else if (safeWorkouts >= 3 && safeWorkouts <= 5) activityMultiplier = 1.55; // Moderado
+    else if (safeWorkouts >= 6) activityMultiplier = 1.725; // Intenso
 
-      Respond ONLY with a valid JSON object with the following structure, without any extra text or markdown formatting:
-      {
-        "calories": number,
-        "protein": number,
-        "carbs": number,
-        "fats": number,
-        "sugars": number
-      }
-    `;
+    const tdee = Math.round(bmr * activityMultiplier);
 
-    const body = {
-      model: GPT_MODEL,
-      messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      response_format: { type: "json_object" },
-    };
+    // 4. Ajuste por Objetivo (Déficit/Superávit)
+    // 1kg de grasa corporal ≈ 7700 kcal.
+    // Déficit diario necesario = (kg_semana * 7700) / 7
+    const dailyCalorieDelta = Math.round((targetWeeklyChange * 7700) / 7);
+    
+    let targetCalories = tdee;
 
-    const aiRes = await fetch(GPT_API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${GPT_API_KEY}` },
-      body: JSON.stringify(body),
-    });
-
-    if (!aiRes.ok) {
-      const errorBody = await aiRes.text();
-      console.error("Error from GPT API:", errorBody);
-      throw new Error(`Error from AI API: ${aiRes.statusText}`);
+    if (goal === 'lose_weight') {
+      targetCalories = tdee - dailyCalorieDelta;
+      // Límite de seguridad: nunca bajar de BMR sin supervisión médica, o mínimo 1200/1500
+      const minSafeCalories = isMale ? 1500 : 1200;
+      if (targetCalories < minSafeCalories) targetCalories = minSafeCalories;
+    } else if (goal === 'gain_weight') {
+      targetCalories = tdee + dailyCalorieDelta;
     }
 
-    const aiData = await aiRes.json();
-    const jsonText = aiData.choices?.[0]?.message?.content ?? "";
+    // 5. Distribución de Macros (Enfoque Equilibrado/Alto en Proteína)
+    // Proteína: Esencial para mantener músculo en déficit. 
+    // Objetivo: ~2g por kg de peso (o 30% de calorías si es obesidad)
+    let proteinGrams = Math.round(safeWeight * 2); 
+    const proteinCals = proteinGrams * 4;
 
-    return new Response(jsonText, {
+    // Si la proteína excede el 40% de las calorías totales (raro, pero posible en dietas muy bajas), ajustamos
+    if (proteinCals > (targetCalories * 0.4)) {
+        proteinGrams = Math.round((targetCalories * 0.35) / 4);
+    }
+
+    // Grasas: ~0.8g - 1g por kg, o el 25-30% de las calorías
+    // Usaremos el 30% como base saludable hormonalmente
+    const fatCals = Math.round(targetCalories * 0.30);
+    const fatGrams = Math.round(fatCals / 9);
+
+    // Carbohidratos: El resto
+    const usedCals = (proteinGrams * 4) + (fatGrams * 9);
+    const remainingCals = targetCalories - usedCals;
+    const carbGrams = Math.max(0, Math.round(remainingCals / 4));
+
+    // 6. Azúcares
+    // OMS recomienda < 10% de la ingesta calórica total, idealmente < 5%.
+    // Vamos a ser estrictos pero realistas: Máximo 5% para salud óptima o tope fijo.
+    const sugarCap = Math.min(Math.round((targetCalories * 0.05) / 4), 30); // Max 30g o 5%
+
+    const result = {
+      calories: Math.round(targetCalories),
+      protein: proteinGrams,
+      carbs: carbGrams,
+      fats: fatGrams,
+      sugars: sugarCap
+    };
+
+    return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
+
   } catch (error) {
     console.error("Error in calculate-macros function:", error);
     return new Response(JSON.stringify({ error: (error as Error).message }), {

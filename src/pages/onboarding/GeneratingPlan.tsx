@@ -22,40 +22,27 @@ const GeneratingPlan = () => {
     { text: "¡Plan personalizado listo!", icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
   ];
 
-  // Simulación de progreso visual - Ajustado para ~30 segundos
+  // Simulación de progreso visual - 30 segundos
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 99) {
-          // Esperar a que termine la mutación
-          return 99;
+          return 99; // Esperar a éxito
         }
         
-        // Lógica para durar aprox 30 segundos
-        // Intervalo: 100ms
+        // Curva de progreso para 30s aprox
         let increment = 0;
+        if (prev < 30) increment = 0.5; // Primeros 6s
+        else if (prev < 70) increment = 0.2; // Siguientes 20s
+        else increment = 0.1; // Final lento
         
-        if (prev < 30) {
-          increment = 1.5; // Rápido al inicio (~2s)
-        } else if (prev < 70) {
-          increment = 0.4; // Medio (~10s)
-        } else if (prev < 90) {
-          increment = 0.2; // Lento (~10s)
-        } else {
-          increment = 0.1; // Muy lento al final (~9s)
-        }
-        
-        // Añadir un poco de aleatoriedad para que se sienta natural
-        increment += (Math.random() - 0.5) * 0.1;
-        
-        return Math.min(prev + Math.max(0.05, increment), 99);
+        return Math.min(prev + increment, 99);
       });
     }, 100);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Actualizar etapas de texto basado en el progreso
   useEffect(() => {
     if (progress < 30) setStage(0);
     else if (progress < 60) setStage(1);
@@ -67,29 +54,35 @@ const GeneratingPlan = () => {
     mutationFn: async () => {
       if (!profile || !user) throw new Error("Profile not loaded");
 
-      // Datos por defecto si faltan
-      const weightInKg = profile.weight || 70;
-      const heightInCm = profile.height || 170;
       const isImperial = profile.units === 'imperial';
       
-      // Conversiones necesarias para la IA
+      // Normalizar a métrico para el backend si es necesario
+      const weightInKg = profile.weight || 70;
       const finalWeight = isImperial ? weightInKg * 0.453592 : weightInKg;
-      const finalHeight = isImperial ? heightInCm * 2.54 : heightInCm;
       
-      const workoutsPerWeek = 3; 
-      const goalWeight = profile.goal_weight ? (isImperial ? profile.goal_weight * 0.453592 : profile.goal_weight) : finalWeight;
-      const weeklyRate = 0.5;
+      const heightVal = profile.height || 170;
+      const finalHeight = isImperial ? heightVal * 2.54 : heightVal; // in -> cm
+      
+      // Asumimos actividad moderada (3 días) si no hay dato, es un buen promedio para iniciar
+      // Si el usuario dijo que su experiencia es "First time", bajamos a 1-2 días
+      let estimatedWorkouts = 3;
+      if (profile.previous_apps_experience?.includes("first time")) {
+        estimatedWorkouts = 2;
+      }
 
+      const weeklyRate = profile.weekly_rate || (isImperial ? 1.1 : 0.5); // lbs o kg
+      const finalWeeklyRate = isImperial ? weeklyRate * 0.453592 : weeklyRate;
+
+      // Llamada a la función con matemática estricta
       const { data: suggestions, error: suggestionError } = await supabase.functions.invoke('calculate-macros', {
         body: {
           weight: finalWeight,
           height: finalHeight,
-          gender: profile.gender || 'Not specified',
-          age: profile.age || 25,
+          gender: profile.gender || 'male',
+          age: profile.age || 30,
           goal: profile.goal || 'maintain_weight',
-          goalWeight: goalWeight,
-          weeklyRate: weeklyRate,
-          workoutsPerWeek: workoutsPerWeek
+          weeklyRate: finalWeeklyRate,
+          workoutsPerWeek: estimatedWorkouts
         },
       });
 
@@ -114,21 +107,24 @@ const GeneratingPlan = () => {
       setProgress(100);
       setStage(3);
       await refetchProfile();
-      // Pequeña pausa para ver el 100%
       setTimeout(() => {
         navigate('/');
       }, 1500);
     },
     onError: (error) => {
       console.error("Error generating plan", error);
+      // En caso de error, no bloqueamos al usuario, usamos valores por defecto seguros
       navigate('/');
     }
   });
 
-  // Ejecutar la mutación al montar
   useEffect(() => {
     if (user && profile) {
-      generatePlanMutation.mutate();
+      // Pequeño delay inicial para que la UI se monte suavemente antes de la petición
+      const timeout = setTimeout(() => {
+        generatePlanMutation.mutate();
+      }, 1000);
+      return () => clearTimeout(timeout);
     }
   }, [user, profile]);
 
@@ -136,7 +132,6 @@ const GeneratingPlan = () => {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
       <div className="w-full max-w-md space-y-12">
         
-        {/* Icono animado central */}
         <div className="flex justify-center h-32 items-center mb-8">
           <motion.div
             key={stage}
@@ -150,7 +145,6 @@ const GeneratingPlan = () => {
           </motion.div>
         </div>
 
-        {/* Sección de Texto y Barra con más espacio */}
         <div className="space-y-8 text-center">
           <motion.h2 
             key={stage + "text"}
@@ -167,7 +161,6 @@ const GeneratingPlan = () => {
           </div>
         </div>
 
-        {/* Detalles decorativos */}
         <div className="grid grid-cols-2 gap-4 opacity-40 pointer-events-none mt-8">
           <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse" />
           <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-75" />
