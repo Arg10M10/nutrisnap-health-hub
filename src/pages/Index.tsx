@@ -2,11 +2,9 @@ import { useState, useMemo, useEffect } from "react";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { motion, Variants, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Flame, Leaf, Plus, Beef, Wheat, Droplets, Sparkles, Utensils, ChevronDown, ChevronUp } from "lucide-react";
 import { useNutrition, FoodEntry, ExerciseEntry } from "@/context/NutritionContext";
@@ -23,6 +21,7 @@ import AnalysisDetailDrawer from "@/components/AnalysisDetailDrawer";
 import AppTutorial from "@/components/AppTutorial";
 import ManualFoodEntry from "@/components/ManualFoodEntry";
 import { cn } from "@/lib/utils";
+import StreakModal from "@/components/StreakModal";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -35,6 +34,7 @@ const Index = () => {
   const { t } = useTranslation();
   const [selectedAnalysis, setSelectedAnalysis] = useState<FoodEntry | null>(null);
   const [isManualEntryOpen, setIsManualEntryOpen] = useState(false);
+  const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
 
   useEffect(() => {
     if (!api) {
@@ -89,12 +89,15 @@ const Index = () => {
             <Leaf className="w-8 h-8 text-primary" />
             <h1 className="text-primary text-3xl">{t('home.title')}</h1>
           </div>
-          <Link to="/badges" className="flex items-center gap-2 bg-background border text-foreground px-3 py-1.5 rounded-full shadow-md transition-transform active:scale-95">
+          <button 
+            onClick={() => setIsStreakModalOpen(true)}
+            className="flex items-center gap-2 bg-background border text-foreground px-3 py-1.5 rounded-full shadow-md transition-transform active:scale-95 hover:bg-muted/50"
+          >
             <Flame className="w-5 h-5 text-orange-400 fill-current" />
             <span className="font-bold text-sm">
               <AnimatedNumber value={streak} />
             </span>
-          </Link>
+          </button>
         </header>
 
         <WeeklyCalendar 
@@ -265,6 +268,12 @@ const Index = () => {
         entry={selectedAnalysis}
         isOpen={!!selectedAnalysis}
         onClose={() => setSelectedAnalysis(null)}
+      />
+      <StreakModal 
+        isOpen={isStreakModalOpen} 
+        onClose={() => setIsStreakModalOpen(false)}
+        streak={streak}
+        streakDays={streakDays}
       />
     </PageLayout>
   );

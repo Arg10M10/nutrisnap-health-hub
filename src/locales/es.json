@@ -171,41 +171,11 @@
     "gap_title": "Descanso",
     "scan_food_button": "Escanear Comida"
   },
-  "badges": {
-    "title": "Mis Insignias",
-    "subtitle": "Tus logros y rachas desbloqueadas.",
-    "meal_streak": "Racha de Comidas",
-    "total_badges": "Insignias Totales",
-    "hydration_streak": "Días de Hidratación",
-    "weight_loss": "Pérdida de Peso",
-    "notification_title": "¡Insignia Desbloqueada!"
-  },
-  "badge_names": {
-    "streak_1": { "name": "Primer Día", "desc": "Registra tu primer día." },
-    "streak_3": { "name": "Tres en Raya", "desc": "Mantén una racha de 3 días." },
-    "streak_6": { "name": "Casi una Semana", "desc": "Mantén una racha de 6 días." },
-    "streak_10": { "name": "Doble Dígito", "desc": "Alcanza una racha de 10 días." },
-    "streak_30": { "name": "Racha Mensual", "desc": "¡Un mes completo! Sigue así." },
-    "streak_60": { "name": "Dos Meses", "desc": "¡Dos meses seguidos!" },
-    "streak_90": { "name": "Tres Meses", "desc": "Noventa días de constancia." },
-    "streak_100": { "name": "Club 100", "desc": "¡100 días seguidos!" },
-    "streak_150": { "name": "Dedicación Pura", "desc": "Has alcanzado 150 días." },
-    "streak_200": { "name": "Imparable", "desc": "Una racha épica de 200 días." },
-    "streak_250": { "name": "Medio Camino", "desc": "¡250 días! Impresionante." },
-    "streak_300": { "name": "Casi un Año", "desc": "Increíble racha de 300 días." },
-    "streak_350": { "name": "Año a la Vista", "desc": "350 días, casi lo tienes." },
-    "streak_400": { "name": "Leyenda", "desc": "Una racha imparable de 400 días." },
-    "streak_450": { "name": "Maestro", "desc": "450 días de disciplina total." },
-    "streak_500": { "name": "Más Allá", "desc": "Has superado los 500 días. ¡Wow!" },
-    "water_1": { "name": "Primer Vaso", "desc": "Registra agua por 1 día." },
-    "water_3": { "name": "Hidratación Constante", "desc": "3 días cumpliendo tu meta de agua." },
-    "water_6": { "name": "Hidratación Pro", "desc": "6 días cumpliendo tu meta de agua." },
-    "water_10": { "name": "Maestro del Agua", "desc": "10 días cumpliendo tu meta de agua." },
-    "weight_1": { "name": "Primer Kilogramo", "desc": "Pierde tu primer kilogramo." },
-    "weight_10": { "name": "Meta 10 kg", "desc": "Alcanza 10 kg perdidos." },
-    "weight_20": { "name": "Meta 20 kg", "desc": "Has perdido 20 kg." },
-    "weight_50": { "name": "Meta 50 kg", "desc": "¡Increíble! 50 kg menos." },
-    "weight_70": { "name": "Meta 70 kg", "desc": "Un logro monumental: 70 kg." }
+  "streak_modal": {
+    "title": "Racha Actual",
+    "subtitle": "¡Estás en racha! Sigue registrando tus comidas para mantener el fuego encendido.",
+    "keep_it_up": "¡Sigue así!",
+    "close": "Cerrar"
   },
   "exercise": {
     "title": "Registrar Ejercicio",
@@ -434,7 +404,7 @@
     "save": "Guardar Cambios",
     "cancel": "Cancelar",
     "toast_success": "¡Perfil actualizado con éxito!",
-    "toast_error": "Hubo un error al actualizar tu perfil."
+    "toast_error": "No se pudo actualizar el perfil."
   },
   "zod": {
     "first_name_required": "El nombre es requerido.",
@@ -565,7 +535,7 @@
       "gluten_free": "Sin gluten"
     },
     "activity": {
-      "sedentary": "Sedentary",
+      "sedentary": "Sedentario",
       "sedentary_desc": "Poco o nada de ejercicio",
       "light": "Ligero",
       "light_desc": "Ejercicio suave 1-3 días/sem",

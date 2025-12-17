@@ -171,41 +171,11 @@
     "gap_title": "Rest",
     "scan_food_button": "Scan Food"
   },
-  "badges": {
-    "title": "My Badges",
-    "subtitle": "Your unlocked achievements and streaks.",
-    "meal_streak": "Meal Streak",
-    "total_badges": "Total Badges",
-    "hydration_streak": "Hydration Days",
-    "weight_loss": "Weight Loss",
-    "notification_title": "Badge Unlocked!"
-  },
-  "badge_names": {
-    "streak_1": { "name": "First Day", "desc": "Log your first day." },
-    "streak_3": { "name": "Three in a Row", "desc": "Keep a 3-day streak." },
-    "streak_6": { "name": "Almost a Week", "desc": "Maintain a 6-day streak." },
-    "streak_10": { "name": "Double Digits", "desc": "Reach a 10-day streak." },
-    "streak_30": { "name": "One Month Streak", "desc": "A full month! Keep it up." },
-    "streak_60": { "name": "Two Months", "desc": "Two months on a roll!" },
-    "streak_90": { "name": "Three Months", "desc": "Ninety days of consistency." },
-    "streak_100": { "name": "The 100 Club", "desc": "100 days in a row!" },
-    "streak_150": { "name": "Pure Dedication", "desc": "You reached 150 days." },
-    "streak_200": { "name": "Unstoppable", "desc": "An epic 200-day streak." },
-    "streak_250": { "name": "Halfway There", "desc": "250 days! Impressive." },
-    "streak_300": { "name": "Pure Consistency", "desc": "Incredible 300-day streak." },
-    "streak_350": { "name": "Year Insight", "desc": "350 days, almost there." },
-    "streak_400": { "name": "Legend", "desc": "An unstoppable 400-day streak." },
-    "streak_450": { "name": "Master", "desc": "450 days of total discipline." },
-    "streak_500": { "name": "Beyond", "desc": "You surpassed 500 days. Wow!" },
-    "water_1": { "name": "First Glass", "desc": "Log water for 1 day." },
-    "water_3": { "name": "Consistent Hydration", "desc": "3 days meeting your water goal." },
-    "water_6": { "name": "Hydration Pro", "desc": "6 days meeting your water goal." },
-    "water_10": { "name": "Water Master", "desc": "10 days meeting your water goal." },
-    "weight_1": { "name": "First Kilogram", "desc": "Lose your first kilogram." },
-    "weight_10": { "name": "10 kg Goal", "desc": "Reach 10 kg lost." },
-    "weight_20": { "name": "20 kg Goal", "desc": "You've lost 20 kg." },
-    "weight_50": { "name": "50 kg Goal", "desc": "Incredible! 50 kg down." },
-    "weight_70": { "name": "70 kg Goal", "desc": "A monumental achievement: 70 kg." }
+  "streak_modal": {
+    "title": "Current Streak",
+    "subtitle": "You're on fire! Keep logging your meals to keep the streak alive.",
+    "keep_it_up": "Keep it up!",
+    "close": "Close"
   },
   "exercise": {
     "title": "Log Exercise",
@@ -613,7 +583,7 @@
     "buttons": {
       "start_trial": "Comenzar mi prueba gratuita de 3 días",
       "unlock_now": "Desbloquear Premium Ahora",
-      "no_payment_note": "No tienes que pagar nada ahora",
+      "no_payment_note": "No tienes que pagar nada now",
       "skip": "Quizás más tarde"
     }
   },

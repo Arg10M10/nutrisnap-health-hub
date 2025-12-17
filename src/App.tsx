@@ -30,7 +30,6 @@ import Weights from "./pages/exercise/Weights";
 import WriteExercise from "./pages/exercise/Write";
 import ManualExercise from "./pages/exercise/Manual";
 import BottomNav from "./components/BottomNav";
-import Badges from "./pages/Badges";
 import ScrollToTop from "./components/ScrollToTop";
 import AISuggestions from "./pages/settings/AISuggestions";
 import WeightGoal from "./pages/settings/WeightGoal";
@@ -54,7 +53,6 @@ const AnimatedRoutes = () => {
         <Route path="/diets" element={<Diets />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/exercise" element={<Exercise />} />
-        <Route path="/badges" element={<Badges />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
