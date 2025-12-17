@@ -280,7 +280,12 @@
     "badge_celebrations": "Badge Celebrations",
     "badge_celebrations_desc": "Show an animation when unlocking a new badge.",
     "daily_reminders": "Daily Reminders",
-    "daily_reminders_desc": "Receive a reminder to log your meals."
+    "daily_reminders_desc": "Receive a reminder to log your meals.",
+    "time_format_title": "Time Format",
+    "time_format_12h": "12-Hour (AM/PM)",
+    "time_format_24h": "24-Hour",
+    "toast_success": "Time format updated!",
+    "toast_error": "Error updating format"
   },
   "nutritional_goals": {
     "title": "Nutritional Goals",
@@ -520,115 +525,123 @@
     "toast_error": "There was an error saving your profile."
   },
   "diets_onboarding": {
-    "step1_title": "Activity Level",
-    "step2_title": "Preferences",
-    "step3_title": "Final Details",
-    "step1_desc": "How much do you move in your day-to-day?",
-    "step2_desc": "Select if you have any preferences or restrictions.",
-    "step2_tip": "If you don't have any, you can continue.",
-    "step3_desc": "Adjust the plan to your lifestyle.",
-    "cooking_time": "Cooking Time",
-    "budget": "Budget",
-    "next": "Next",
-    "generate_loading": "Generating with AI... (may take 1 min)",
-    "generate": "Generate my Plan",
-    "generate_wait": "The AI is creating a unique plan for you. Please wait...",
-    "toast_success": "Your personalized diet plan is ready!",
-    "toast_error_title": "Could not generate plan",
+    "step1_title": "Nivel de Actividad",
+    "step2_title": "Preferencias",
+    "step3_title": "Detalles Finales",
+    "step1_desc": "¿Cuánto te mueves en tu día a día?",
+    "step2_desc": "Selecciona si tienes alguna preferencia o restricción.",
+    "step2_tip": "Si no tienes ninguna, puedes continuar.",
+    "step3_desc": "Ajusta el plan a tu estilo de vida.",
+    "cooking_time": "Tiempo para cocinar",
+    "budget": "Presupuesto",
+    "next": "Siguiente",
+    "generate_loading": "Generando con IA... (puede tardar 1 min)",
+    "generate": "Generar mi Plan",
+    "generate_wait": "La IA está creando un plan único para ti. Por favor espera...",
+    "toast_success": "¡Tu plan de dieta personalizado está listo!",
+    "toast_error_title": "No se pudo generar el plan",
     "preferences": {
-      "vegetarian": "Vegetarian",
-      "lactose_free": "Lactose-free",
-      "sugar_free": "Sugar-free",
-      "gluten_free": "Gluten-free"
+      "vegetarian": "Vegetariano",
+      "lactose_free": "Sin lactosa",
+      "sugar_free": "Sin azúcar",
+      "gluten_free": "Sin gluten"
     },
     "activity": {
-      "sedentary": "Sedentary",
-      "sedentary_desc": "Little to no exercise",
-      "light": "Light",
-      "light_desc": "Light exercise 1-3 days/week",
-      "moderate": "Moderate",
-      "moderate_desc": "Moderate exercise 3-5 days/week",
-      "high": "High",
-      "high_desc": "Heavy exercise 6-7 days/week"
+      "sedentary": "Sedentario",
+      "sedentary_desc": "Poco o nada de ejercicio",
+      "light": "Ligero",
+      "light_desc": "Ejercicio suave 1-3 días/sem",
+      "moderate": "Moderado",
+      "moderate_desc": "Ejercicio moderado 3-5 días/sem",
+      "high": "Alto",
+      "high_desc": "Ejercicio fuerte 6-7 días/sem"
     },
     "levels": {
-      "low": "Low",
-      "medium": "Medium",
-      "high": "High"
+      "low": "Bajo",
+      "medium": "Medio",
+      "high": "Alto"
     }
   },
   "subscribe": {
-    "title": "Go Premium",
-    "trial_tab": "3-Day Free Trial",
-    "pay_now_tab": "Pay Now",
+    "title": "Vuélvete Premium",
+    "trial_tab": "Prueba Gratuita de 3 Días",
+    "pay_now_tab": "Pagar Ahora",
     "timeline": {
-      "today_title": "Today",
-      "today_desc": "Unlock all premium features like the AI calorie scanner and much more.",
-      "reminder_title": "In 2 days",
-      "reminder_desc": "We'll send you a reminder that your trial is about to end.",
-      "billing_title": "In 3 days - Billing begins",
-      "billing_desc": "You will be charged unless you cancel anytime before."
+      "today_title": "Hoy",
+      "today_desc": "Desbloquea todas las funciones premium como el escáner de calorías por IA y mucho más.",
+      "reminder_title": "En 2 días",
+      "reminder_desc": "Te enviaremos un recordatorio de que tu prueba está a punto de terminar.",
+      "billing_title": "En 3 días - Comienza la facturación",
+      "billing_desc": "Se te cobrará a menos que canceles en cualquier momento antes."
     },
-    "features_title": "Premium Features",
+    "features_title": "Funciones Premium",
     "features": {
-      "scanner": "AI Food Scanner",
-      "exercise": "AI Exercise Analysis",
-      "diet_plans": "Personalized Diet Plans",
-      "goals": "Smart Goal Suggestions"
+      "scanner": "Escáner de alimentos con IA",
+      "exercise": "Análisis de ejercicio por IA",
+      "diet_plans": "Planes de dieta personalizados",
+      "goals": "Sugerencias de metas inteligentes"
     },
     "plan": {
-      "title": "Monthly Access",
-      "price_suffix": "/Month",
-      "trial_note": "After 3 free days"
+      "title": "Acceso Mensual",
+      "price_suffix": "/Mes",
+      "trial_note": "Después de 3 días gratis"
     },
     "buttons": {
-      "start_trial": "Start my 3-day free trial",
-      "unlock_now": "Unlock Premium Now",
-      "no_payment_note": "You don't have to pay anything now",
-      "skip": "Maybe later"
+      "start_trial": "Comenzar mi prueba gratuita de 3 días",
+      "unlock_now": "Desbloquear Premium Ahora",
+      "no_payment_note": "No tienes que pagar nada ahora",
+      "skip": "Quizás más tarde"
     }
   },
   "scanner": {
-    "help_title": "How does the scanner work?",
-    "help_desc": "Center your meal in the viewfinder and take a photo. Our AI will analyze it to give you a nutritional estimate."
+    "help_title": "¿Cómo funciona el escáner?",
+    "help_desc": "Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional.",
+    "retake": "Repetir",
+    "retry": "Reintentar",
+    "processing": "Procesando...",
+    "starting": "Iniciando cámara...",
+    "error_camera_title": "Error de Cámara",
+    "error_camera_desc": "No se pudo acceder a la cámara. Revisa los permisos.",
+    "error_analysis": "Análisis fallido.",
+    "flash_unavailable": "Flash no disponible."
   },
   "analysis": {
-    "details_title": "Analysis Details",
-    "calories": "Calories",
-    "protein": "Protein",
+    "details_title": "Detalles del Análisis",
+    "calories": "Calorías",
+    "protein": "Proteína",
     "carbs": "Carbs",
-    "fats": "Fats",
-    "sugars": "Sugars",
-    "recommendation": "Recommendation",
-    "close": "Close",
-    "save_to_diary": "Save to Diary",
+    "fats": "Grasas",
+    "sugars": "Azúcares",
+    "recommendation": "Recomendación",
+    "close": "Cerrar",
+    "save_to_diary": "Guardar en Diario",
     "health_rating": {
-      "healthy": "Healthy",
-      "moderate": "Moderate",
-      "avoid": "Avoid"
+      "healthy": "Saludable",
+      "moderate": "Moderado",
+      "avoid": "Evitar"
     },
-    "default_reason": "No reason provided."
+    "default_reason": "No se proporcionó ninguna razón."
   },
   "share": {
-    "achievement_unlocked": "Achievement Unlocked!",
-    "badge_message": "I just unlocked the \"{{name}}\" badge on Calorel! 🏆",
-    "meal_message": "Check out what I'm eating: {{food}} 🥗 - via Calorel",
-    "generated_with": "Generated with Calorel App",
+    "achievement_unlocked": "¡Logro Desbloqueado!",
+    "badge_message": "¡He desbloqueado la insignia \"{{name}}\" en Calorel! 🏆",
+    "meal_message": "Mira lo que estoy comiendo: {{food}} 🥗 - vía Calorel",
+    "generated_with": "Generado con Calorel App",
     "prot_short": "Prot",
     "carb_short": "Carb",
-    "fat_short": "Fat"
+    "fat_short": "Grasa"
   },
   "tutorial": {
-    "welcome_title": "Welcome to Calorel!",
-    "welcome_content": "Let's take a quick tour so you can use the app like an expert.",
-    "carousel_title": "Your Daily Summary",
-    "carousel_content": "Here you'll see your calories and macros for the day. Swipe sideways to see your hydration level and health score.",
-    "scanner_title": "Let's Scan!",
-    "scanner_content": "This is the magic button. Tap it to use AI to scan your food, or to log exercise manually.",
-    "progress_title": "Your Progress",
-    "progress_content": "Here you can see charts of your weight and evolution over time.",
-    "settings_title": "Settings",
-    "settings_content": "Configure your goals, preferences, and profile here.",
-    "finish": "Let's start!"
+    "welcome_title": "¡Bienvenido a Calorel!",
+    "welcome_content": "Vamos a dar un recorrido rápido para que aprendas a usar la app como un experto.",
+    "carousel_title": "Tu Resumen Diario",
+    "carousel_content": "Aquí verás tus calorías y macros del día. Desliza hacia los lados para ver tu nivel de hidratación y puntaje de salud.",
+    "scanner_title": "¡A Escanear!",
+    "scanner_content": "Este es el botón mágico. Tócalo para usar la IA y escanear tu comida, o para registrar ejercicio manualmente.",
+    "progress_title": "Tu Progreso",
+    "progress_content": "Aquí podrás ver gráficas de tu peso y evolución a lo largo del tiempo.",
+    "settings_title": "Ajustes",
+    "settings_content": "Configura tus metas, preferencias y perfil aquí.",
+    "finish": "¡Empecemos!"
   }
 }

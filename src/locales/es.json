@@ -280,7 +280,12 @@
     "badge_celebrations": "Celebraciones de Insignias",
     "badge_celebrations_desc": "Mostrar una animación al desbloquear una nueva insignia.",
     "daily_reminders": "Recordatorios Diarios",
-    "daily_reminders_desc": "Recibir un recordatorio para registrar tus comidas."
+    "daily_reminders_desc": "Recibir un recordatorio para registrar tus comidas.",
+    "time_format_title": "Formato de Hora",
+    "time_format_12h": "12 Horas (AM/PM)",
+    "time_format_24h": "24 Horas",
+    "toast_success": "¡Formato de hora actualizado!",
+    "toast_error": "Error al actualizar el formato"
   },
   "nutritional_goals": {
     "title": "Metas Nutricionales",

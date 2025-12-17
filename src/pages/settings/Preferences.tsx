@@ -4,14 +4,44 @@ import { useTranslation } from 'react-i18next';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { ArrowLeft, Sun, Moon, Monitor } from 'lucide-react';
+import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
+import { ArrowLeft, Sun, Moon, Monitor, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
+import { useMutation } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 const Preferences = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { t } = useTranslation();
+  const { profile, user, refetchProfile } = useAuth();
+
+  const mutation = useMutation({
+    mutationFn: async (timeFormat: '12h' | '24h') => {
+      if (!user) throw new Error('User not found');
+      const { error } = await supabase
+        .from('profiles')
+        .update({ time_format: timeFormat })
+        .eq('id', user.id);
+      if (error) throw error;
+    },
+    onSuccess: async () => {
+      await refetchProfile();
+      toast.success(t('preferences.toast_success'));
+    },
+    onError: (error: Error) => {
+      toast.error(t('preferences.toast_error'), { description: error.message });
+    },
+  });
+
+  const handleTimeFormatChange = (value: '12h' | '24h') => {
+    if (value) {
+      mutation.mutate(value);
+    }
+  };
 
   const themeOptions = [
     { value: 'light', label: t('preferences.theme_light'), icon: Sun, image: '/light-theme-preview.png' },
@@ -61,6 +91,27 @@ const Preferences = () => {
                 </Tooltip>
               ))}
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              {t('preferences.time_format_title')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ToggleGroup
+              type="single"
+              value={profile?.time_format || '12h'}
+              onValueChange={handleTimeFormatChange}
+              className="grid grid-cols-2 gap-2"
+              disabled={mutation.isPending}
+            >
+              <ToggleGroupItem value="12h" className="h-12 text-base">{t('preferences.time_format_12h')}</ToggleGroupItem>
+              <ToggleGroupItem value="24h" className="h-12 text-base">{t('preferences.time_format_24h')}</ToggleGroupItem>
+            </ToggleGroup>
           </CardContent>
         </Card>
       </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Sun, Moon, Coffee, Apple, Ban, Scan, Utensils } from 'lucide-react';
+import { RefreshCw, Sun, Moon, Coffee, Apple, Ban, Scan } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAILimit } from '@/hooks/useAILimit';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useAuth } from '@/context/AuthContext';
 
 type MealPlan = {
   [day: string]: {
@@ -42,6 +43,7 @@ type MealType = 'breakfast' | 'lunch' | 'snack' | 'dinner' | 'gap';
 export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: WeeklyPlanDisplayProps) => {
   const { t, i18n } = useTranslation();
   const { checkLimit } = useAILimit();
+  const { profile } = useAuth();
   const navigate = useNavigate();
   const dateLocale = i18n.language.startsWith('es') ? es : enUS;
   
@@ -245,7 +247,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
               </div>
               <div className="text-right">
                 <p className="text-4xl font-bold text-foreground tracking-tight">
-                  {format(currentTime, 'h:mm')}
+                  {format(currentTime, profile?.time_format === '24h' ? 'HH:mm' : 'h:mm')}
                 </p>
                 <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
                   {activeMeal === 'gap' ? 'Next Meal' : 'Now'}
