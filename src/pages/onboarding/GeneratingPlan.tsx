@@ -16,10 +16,10 @@ const GeneratingPlan = () => {
   const [stage, setStage] = useState(0);
 
   const stages = [
-    { text: "Analizando tu metabolismo basal...", icon: <Brain className="w-8 h-8 text-primary" /> },
-    { text: "Calculando macronutrientes óptimos...", icon: <Calculator className="w-8 h-8 text-blue-500" /> },
-    { text: "Diseñando estructura de comidas...", icon: <Utensils className="w-8 h-8 text-orange-500" /> },
-    { text: "¡Plan personalizado listo!", icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
+    { text: "Calculando requerimientos calóricos diarios...", icon: <Brain className="w-10 h-10 text-primary" /> },
+    { text: "Distribuyendo proteínas, carbohidratos y grasas...", icon: <Calculator className="w-10 h-10 text-blue-500" /> },
+    { text: "Optimizando niveles de azúcar y fibra...", icon: <Utensils className="w-10 h-10 text-orange-500" /> },
+    { text: "¡Tu plan nutricional está listo!", icon: <CheckCircle2 className="w-10 h-10 text-green-500" /> },
   ];
 
   // Simulación de progreso visual
@@ -31,8 +31,8 @@ const GeneratingPlan = () => {
           return 100;
         }
         // Avanzar más rápido al principio, más lento al final
-        const increment = prev < 50 ? 2 : prev < 80 ? 1 : 0.5;
-        return Math.min(prev + increment, 99); // Esperar a la mutación para el 100
+        const increment = prev < 50 ? 1.5 : prev < 80 ? 0.8 : 0.3;
+        return Math.min(prev + increment, 99);
       });
     }, 50);
 
@@ -60,7 +60,6 @@ const GeneratingPlan = () => {
       const finalWeight = isImperial ? weightInKg * 0.453592 : weightInKg;
       const finalHeight = isImperial ? heightInCm * 2.54 : heightInCm;
       
-      // Estimación básica si no tenemos datos precisos del onboarding de dieta
       const workoutsPerWeek = 3; 
       const goalWeight = profile.goal_weight ? (isImperial ? profile.goal_weight * 0.453592 : profile.goal_weight) : finalWeight;
       const weeklyRate = 0.5;
@@ -99,14 +98,13 @@ const GeneratingPlan = () => {
       setProgress(100);
       setStage(3);
       await refetchProfile();
-      // Pequeña pausa para ver el 100%
+      // Pequeña pausa para ver el 100% y redirigir
       setTimeout(() => {
         navigate('/');
       }, 1500);
     },
     onError: (error) => {
       console.error("Error generating plan", error);
-      // En caso de error, navegar igual para no bloquear al usuario
       navigate('/');
     }
   });
@@ -116,7 +114,7 @@ const GeneratingPlan = () => {
     if (user && profile) {
       generatePlanMutation.mutate();
     }
-  }, [user, profile]); // Dependencias para asegurar que tenemos datos
+  }, [user, profile]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
@@ -130,34 +128,34 @@ const GeneratingPlan = () => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="bg-primary/10 p-6 rounded-full"
+            className="bg-primary/10 p-8 rounded-full shadow-lg shadow-primary/10"
           >
             {stages[stage].icon}
           </motion.div>
         </div>
 
-        <div className="space-y-4 text-center">
+        <div className="space-y-6 text-center">
           <motion.h2 
             key={stage + "text"}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-2xl font-bold text-foreground h-16 flex items-center justify-center"
+            className="text-2xl font-bold text-foreground h-16 flex items-center justify-center px-4"
           >
             {stages[stage].text}
           </motion.h2>
           
-          <div className="space-y-2">
+          <div className="space-y-2 px-4">
             <Progress value={progress} className="h-3" />
-            <p className="text-sm text-muted-foreground text-right font-mono">{Math.round(progress)}%</p>
+            <p className="text-sm text-muted-foreground text-right font-mono font-medium">{Math.round(progress)}%</p>
           </div>
         </div>
 
         {/* Detalles decorativos */}
-        <div className="grid grid-cols-2 gap-4 opacity-50 pointer-events-none">
-          <div className="h-24 bg-muted/30 rounded-xl border border-dashed border-border/50 animate-pulse" />
-          <div className="h-24 bg-muted/30 rounded-xl border border-dashed border-border/50 animate-pulse delay-75" />
-          <div className="h-24 bg-muted/30 rounded-xl border border-dashed border-border/50 animate-pulse delay-150" />
-          <div className="h-24 bg-muted/30 rounded-xl border border-dashed border-border/50 animate-pulse delay-300" />
+        <div className="grid grid-cols-2 gap-4 opacity-40 pointer-events-none">
+          <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse" />
+          <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-75" />
+          <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-150" />
+          <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-300" />
         </div>
       </div>
     </div>
