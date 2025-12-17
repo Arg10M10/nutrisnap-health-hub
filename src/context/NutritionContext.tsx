@@ -5,7 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
 import { format, isSameDay, subDays, parseISO } from 'date-fns';
-import { streakBadges, waterBadges, weightLossBadges } from '@/data/badges';
 import { useTranslation } from 'react-i18next';
 
 export interface FoodEntry {
@@ -74,7 +73,7 @@ interface NutritionState {
   removeWaterGlass: (date: Date) => void;
   isWaterUpdating: boolean;
   streak: number;
-  waterStreak: number; // Mantenemos el nombre variable por compatibilidad, pero representa días totales
+  waterStreak: number; 
   streakDays: string[];
   isLoading: boolean;
   unlockedBadge: UnlockedBadgeInfo | null;
@@ -164,17 +163,6 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       return data.map(b => b.badge_id);
     },
     enabled: !!user,
-  });
-
-  const unlockBadgeMutation = useMutation({
-    mutationFn: async (badgeId: string) => {
-      if (!user) return;
-      const { error } = await supabase.from('user_badges').insert({ user_id: user.id, badge_id: badgeId });
-      if (error && error.code !== '23505') throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user_badges', user?.id] });
-    }
   });
 
   useEffect(() => {
@@ -342,99 +330,20 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     return { streak: currentStreak, streakDays: daysInStreak };
   }, [foodEntries]);
 
-  // CORRECCIÓN: Ahora calcula DÍAS TOTALES con agua registrada, no racha.
   const waterData = useMemo(() => {
     const entryDays = new Set(waterEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
     return { waterTotalDays: entryDays.size };
   }, [waterEntries]);
 
-  const isImperial = profile?.units === 'imperial';
-
-  const weightLost = useMemo(() => {
-    if (profile?.goal === 'lose_weight' && profile.starting_weight && profile.weight) {
-      const diff = profile.starting_weight - profile.weight;
-      return isImperial ? diff * 0.453592 : diff;
-    }
-    return 0;
-  }, [profile, isImperial]);
-
   const triggerBadgeUnlock = (badgeInfo: UnlockedBadgeInfo) => {
-    setNewlyUnlockedBadge(badgeInfo);
+    // Badges disabled - do nothing
+    // setNewlyUnlockedBadge(badgeInfo);
   };
 
   const isLoading = isFoodLoading || isWaterLoading || isExerciseLoading || isBadgesLoading;
 
   const streak = streakData.streak;
-  const totalWaterDays = waterData.waterTotalDays; // Usamos el conteo total
-
-  // Check streak badges
-  useEffect(() => {
-    if (isLoading || newlyUnlockedBadge || !user) return;
-
-    for (const badge of streakBadges) {
-      if (streak >= badge.days && !unlockedBadgeIds.includes(badge.id)) {
-        const badgeInfo = {
-          name: t(`badge_names.${badge.id}.name`),
-          description: t(`badge_names.${badge.id}.desc`),
-          image: badge.image,
-        };
-        triggerBadgeUnlock(badgeInfo);
-        unlockBadgeMutation.mutate(badge.id);
-        return; 
-      }
-    }
-  }, [streak, isLoading, newlyUnlockedBadge, unlockedBadgeIds, t, user]);
-
-  // Check water badges (TOTAL DAYS, not streak)
-  useEffect(() => {
-    if (isLoading || newlyUnlockedBadge || !user) return;
-
-    for (const badge of waterBadges) {
-      // badge.days ahora se interpreta como "días totales acumulados"
-      if (totalWaterDays >= badge.days && !unlockedBadgeIds.includes(badge.id)) {
-        const badgeInfo = {
-          name: t(`badge_names.${badge.id}.name`),
-          description: t(`badge_names.${badge.id}.desc`),
-          image: badge.image,
-        };
-        triggerBadgeUnlock(badgeInfo);
-        unlockBadgeMutation.mutate(badge.id);
-        return;
-      }
-    }
-  }, [totalWaterDays, isLoading, newlyUnlockedBadge, unlockedBadgeIds, t, user]);
-
-  // Check weight loss badges
-  useEffect(() => {
-    if (isLoading || newlyUnlockedBadge || weightLost <= 0 || !user) return;
-
-    for (const badge of weightLossBadges) {
-      if (weightLost >= badge.kg && !unlockedBadgeIds.includes(badge.id)) {
-        
-        let name = t(`badge_names.${badge.id}.name`);
-        let description = t(`badge_names.${badge.id}.desc`);
-
-        if (isImperial) {
-          const convertedValue = Math.round(badge.kg * 2.20462);
-          const regexKg = new RegExp(`${badge.kg}\\s*(kg|kilogramos|kilograms)`, 'gi');
-          if (regexKg.test(name)) name = name.replace(regexKg, `${convertedValue} lbs`);
-          else name = name.replace(/kilogramo|kilogram|kg/gi, 'lbs');
-
-          if (regexKg.test(description)) description = description.replace(regexKg, `${convertedValue} lbs`);
-          else description = description.replace(/kilogramo|kilogram|kg/gi, 'lbs');
-        }
-
-        const badgeInfo = {
-          name,
-          description,
-          image: badge.image,
-        };
-        triggerBadgeUnlock(badgeInfo);
-        unlockBadgeMutation.mutate(badge.id);
-        return;
-      }
-    }
-  }, [weightLost, isLoading, newlyUnlockedBadge, unlockedBadgeIds, t, user, isImperial]);
+  const totalWaterDays = waterData.waterTotalDays; 
 
   const closeBadgeModal = () => setNewlyUnlockedBadge(null);
 
@@ -446,7 +355,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       removeWaterGlass,
       isWaterUpdating: waterMutation.isPending,
       streak: streak,
-      waterStreak: totalWaterDays, // Cambiado el valor, mantenido el nombre de prop
+      waterStreak: totalWaterDays, 
       streakDays: streakData.streakDays,
       isLoading,
       unlockedBadge: newlyUnlockedBadge,
