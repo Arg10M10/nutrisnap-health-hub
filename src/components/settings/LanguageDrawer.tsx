@@ -10,8 +10,8 @@ interface LanguageDrawerProps {
 }
 
 const languages = [
-  { code: 'es', name: 'Español', native: 'Spanish' },
-  { code: 'en', name: 'English', native: 'Inglés' },
+  { code: 'es', name: 'Español', native: 'Spanish', flag: '/es-flag.png' },
+  { code: 'en', name: 'English', native: 'Inglés', flag: '/us-flag.png' },
 ];
 
 export const LanguageDrawer = ({ isOpen, onClose }: LanguageDrawerProps) => {
@@ -38,23 +38,30 @@ export const LanguageDrawer = ({ isOpen, onClose }: LanguageDrawerProps) => {
               <button
                 key={lang.code}
                 className={cn(
-                  'w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-200',
+                  'w-full flex items-center justify-between p-3 rounded-2xl border-2 transition-all duration-200 group',
                   isActive 
-                    ? 'border-primary bg-primary/5 shadow-sm' 
-                    : 'border-muted hover:border-primary/30 bg-card'
+                    ? 'border-primary bg-primary/5' 
+                    : 'border-transparent bg-muted hover:bg-muted/80'
                 )}
                 onClick={() => changeLanguage(lang.code)}
               >
-                <div className="flex flex-col items-start">
-                  <span className={cn("font-bold text-lg", isActive ? "text-primary" : "text-foreground")}>
-                    {lang.name}
-                  </span>
-                  <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                    {lang.native}
-                  </span>
+                <div className="flex items-center gap-4">
+                  <img 
+                    src={lang.flag} 
+                    alt={lang.name} 
+                    className="w-10 h-10 rounded-full object-cover border border-black/5 shadow-sm"
+                  />
+                  <div className="flex flex-col items-start">
+                    <span className={cn("font-bold text-lg leading-tight", isActive ? "text-primary" : "text-foreground")}>
+                      {lang.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                      {lang.native}
+                    </span>
+                  </div>
                 </div>
                 {isActive && (
-                  <div className="bg-primary text-primary-foreground rounded-full p-1">
+                  <div className="bg-primary text-primary-foreground rounded-full p-1 shadow-sm mr-2">
                     <Check className="w-4 h-4" />
                   </div>
                 )}

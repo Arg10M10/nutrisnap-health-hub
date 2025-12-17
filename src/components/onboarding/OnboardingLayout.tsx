@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { ArrowLeft, Globe } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from 'react-i18next';
@@ -36,8 +36,9 @@ export const OnboardingLayout = ({
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const progressValue = (step / totalSteps) * 100;
 
-  // Obtener código de idioma actual (EN / ES)
+  // Obtener código de idioma actual y su bandera correspondiente
   const currentLangCode = i18n.language.substring(0, 2).toUpperCase();
+  const currentFlag = i18n.language.startsWith('es') ? '/es-flag.png' : '/us-flag.png';
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -57,14 +58,18 @@ export const OnboardingLayout = ({
             <Progress value={progressValue} className="mt-1 h-2" />
           </div>
           
-          {/* Botón de idioma moderno */}
+          {/* Botón de idioma moderno con bandera PNG */}
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => setIsLanguageDrawerOpen(true)} 
-            className="rounded-full shrink-0 gap-1.5 px-3 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+            className="rounded-full shrink-0 gap-2 px-3 pl-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors border border-transparent hover:border-border"
           >
-            <Globe className="w-4 h-4" />
+            <img 
+              src={currentFlag} 
+              alt={currentLangCode} 
+              className="w-5 h-5 rounded-full object-cover shadow-sm"
+            />
             <span className="text-xs font-bold tracking-wide">{currentLangCode}</span>
           </Button>
         </div>
