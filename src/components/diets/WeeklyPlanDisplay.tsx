@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Sun, Moon, Coffee, Apple, Ban, Scan } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RefreshCw, Sun, Moon, Coffee, Apple, Ban, Scan, Utensils } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAILimit } from '@/hooks/useAILimit';
 import { useTranslation } from 'react-i18next';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
+import { es, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 
 type MealPlan = {
@@ -30,41 +29,48 @@ const dayKeys = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturd
 type MealType = 'breakfast' | 'lunch' | 'snack' | 'dinner' | 'gap';
 
 export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: WeeklyPlanDisplayProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { checkLimit } = useAILimit();
   const navigate = useNavigate();
+  const dateLocale = i18n.language.startsWith('es') ? es : enUS;
+  
+  // Calcular día actual para inicializar
   const todayIndex = new Date().getDay(); 
   const defaultIndex = todayIndex === 0 ? 6 : todayIndex - 1;
-  const currentDayKey = dayKeys[defaultIndex];
+  const currentDayKeyDefault = dayKeys[defaultIndex];
   
+  const [selectedDayKey, setSelectedDayKey] = useState(currentDayKeyDefault);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeMeal, setActiveMeal] = useState<MealType>('gap');
+
+  // Generar días de la semana actual para el calendario
+  const startOfCurrentWeek = startOfWeek(new Date(), { weekStartsOn: 1 }); // Lunes
+  const weekDays = Array.from({ length: 7 }).map((_, i) => {
+    const date = addDays(startOfCurrentWeek, i);
+    return {
+      date,
+      key: dayKeys[i],
+      dayName: format(date, 'EEE', { locale: dateLocale }),
+      dayNumber: format(date, 'd'),
+      isToday: isSameDay(date, new Date())
+    };
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-    }, 60000); // Update every minute
+    }, 60000); // Actualizar cada minuto
     return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
     const hours = currentTime.getHours();
-    // 5AM-11AM desayuno
-    // 11AM-3PM comida (15:00)
-    // 5PM-6PM snack (17:00 - 18:00)
-    // 7PM-10PM cena (19:00 - 22:00)
-    
-    if (hours >= 5 && hours < 11) {
-      setActiveMeal('breakfast');
-    } else if (hours >= 11 && hours < 15) {
-      setActiveMeal('lunch');
-    } else if (hours >= 17 && hours < 18) {
-      setActiveMeal('snack');
-    } else if (hours >= 19 && hours < 22) {
-      setActiveMeal('dinner');
-    } else {
-      setActiveMeal('gap');
-    }
+    // Definición de horarios
+    if (hours >= 5 && hours < 11) setActiveMeal('breakfast');
+    else if (hours >= 11 && hours < 16) setActiveMeal('lunch');
+    else if (hours >= 16 && hours < 19) setActiveMeal('snack');
+    else if (hours >= 19 && hours < 23) setActiveMeal('dinner');
+    else setActiveMeal('gap'); // Late night or very early morning
   }, [currentTime]);
 
   const handleRegenerateClick = async () => {
@@ -78,94 +84,74 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
     switch (type) {
       case 'breakfast':
         return {
-          label: t('diets.breakfast'),
-          message: t('diets.breakfast_time'),
+          title: t('diets.breakfast'),
           icon: Coffee,
           color: "text-yellow-500",
-          borderColor: "border-l-yellow-500",
+          bgColor: "bg-yellow-500",
+          borderColor: "border-r-yellow-500",
         };
       case 'lunch':
         return {
-          label: t('diets.lunch'),
-          message: t('diets.lunch_time'),
+          title: t('diets.lunch'),
           icon: Sun,
           color: "text-orange-500",
-          borderColor: "border-l-orange-500",
+          bgColor: "bg-orange-500",
+          borderColor: "border-r-orange-500",
         };
       case 'snack':
         return {
-          label: t('diets.snack'),
-          message: t('diets.snack_time'),
+          title: t('diets.snack'),
           icon: Apple,
           color: "text-green-500",
-          borderColor: "border-l-green-500",
+          bgColor: "bg-green-500",
+          borderColor: "border-r-green-500",
         };
       case 'dinner':
         return {
-          label: t('diets.dinner'),
-          message: t('diets.dinner_time'),
+          title: t('diets.dinner'),
           icon: Moon,
           color: "text-blue-500",
-          borderColor: "border-l-blue-500",
+          bgColor: "bg-blue-500",
+          borderColor: "border-r-blue-500",
         };
       default:
         return {
-          label: "",
-          message: t('diets.gap_time_message'),
+          title: "Descanso",
           icon: Ban,
           color: "text-muted-foreground",
-          borderColor: "border-l-muted",
+          bgColor: "bg-muted",
+          borderColor: "border-r-muted",
         };
     }
   };
 
-  const currentConfig = getMealConfig(activeMeal);
+  const currentMeals = plan[selectedDayKey];
+  
+  // Si no hay plan para este día (error raro), no renderizar nada crítico
+  if (!currentMeals) return null;
 
-  // Define cards structure to allow sorting
-  const getCards = (meals: any) => [
-    {
-      id: 'breakfast',
-      type: 'breakfast' as MealType,
-      title: t('diets.breakfast'),
-      icon: Coffee,
-      content: meals.breakfast,
-      borderColor: 'border-l-yellow-400',
-      iconColor: 'text-yellow-500'
-    },
-    {
-      id: 'lunch',
-      type: 'lunch' as MealType,
-      title: t('diets.lunch'),
-      icon: Sun,
-      content: meals.lunch,
-      borderColor: 'border-l-orange-400',
-      iconColor: 'text-orange-500'
-    },
-    {
-      id: 'snack',
-      type: 'snack' as MealType,
-      title: t('diets.snack'),
-      icon: Apple,
-      content: meals.snack,
-      borderColor: 'border-l-green-400',
-      iconColor: 'text-green-500'
-    },
-    {
-      id: 'dinner',
-      type: 'dinner' as MealType,
-      title: t('diets.dinner'),
-      icon: Moon,
-      content: meals.dinner,
-      borderColor: 'border-l-blue-400',
-      iconColor: 'text-blue-500'
-    }
-  ];
+  // Preparar datos de todas las comidas
+  const allMealsData = [
+    { type: 'breakfast', ...getMealConfig('breakfast'), content: currentMeals.breakfast },
+    { type: 'lunch', ...getMealConfig('lunch'), content: currentMeals.lunch },
+    { type: 'snack', ...getMealConfig('snack'), content: currentMeals.snack },
+    { type: 'dinner', ...getMealConfig('dinner'), content: currentMeals.dinner },
+  ] as const;
+
+  // Encontrar la comida activa para mostrarla en la tarjeta grande
+  // Si estamos en 'gap', mostramos el desayuno del día (o la próxima comida lógica)
+  const highlightedMealType = activeMeal === 'gap' ? 'breakfast' : activeMeal;
+  const highlightedMeal = allMealsData.find(m => m.type === highlightedMealType)!;
+  
+  // El resto de comidas para la lista inferior
+  const otherMeals = allMealsData.filter(m => m.type !== highlightedMealType);
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center px-1">
+    <div className="space-y-6 pb-20">
+      {/* Header */}
+      <div className="flex justify-between items-start px-1">
         <div>
-          <h2 className="text-2xl font-bold text-primary">{t('diets.weekly_plan_title')}</h2>
+          <h2 className="text-2xl font-bold text-foreground">{t('diets.weekly_plan_title')}</h2>
           <p className="text-sm text-muted-foreground">{t('diets.weekly_plan_subtitle')}</p>
         </div>
         <Button variant="ghost" size="icon" onClick={handleRegenerateClick} disabled={isRegenerating} title={t('diets.regenerate_tooltip')}>
@@ -173,84 +159,100 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
         </Button>
       </div>
 
-      <Tabs defaultValue={currentDayKey} className="w-full">
-        <div className="overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
-          <TabsList className="h-12 w-full justify-start gap-2 bg-transparent p-0">
-            {dayKeys.map((dayKey) => (
-              <TabsTrigger 
-                key={dayKey} 
-                value={dayKey}
-                className="h-10 rounded-full px-4 border border-transparent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary hover:bg-muted"
-              >
-                {t(`diets.days_short.${dayKey}` as any)}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
+      {/* Calendar Strip */}
+      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+        {weekDays.map((day) => {
+          const isSelected = selectedDayKey === day.key;
+          return (
+            <button
+              key={day.key}
+              onClick={() => setSelectedDayKey(day.key)}
+              className={cn(
+                "flex flex-col items-center justify-center min-w-[3.5rem] h-16 rounded-2xl shadow-sm border transition-all shrink-0",
+                isSelected 
+                  ? "bg-primary text-primary-foreground border-primary scale-105" 
+                  : "bg-card text-foreground border-border hover:border-primary/50"
+              )}
+            >
+              <span className={cn("text-xs font-medium uppercase", isSelected ? "opacity-90" : "opacity-60")}>
+                {day.dayName}
+              </span>
+              <span className="text-xl font-bold leading-none mt-0.5">
+                {day.dayNumber}
+              </span>
+            </button>
+          );
+        })}
+      </div>
 
-        {/* Dynamic Meal Card (Unified Style) */}
-        <Card className={cn(
-          "mt-6 shadow-lg border-l-[10px] transition-all duration-500",
-          currentConfig.borderColor
-        )}>
-          <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-            <div className={cn("text-5xl font-bold mb-3 tracking-tight", currentConfig.color)}>
-              {format(currentTime, 'h:mm a', { locale: es }).toUpperCase()}
+      {/* Active Meal Card (Highlighted) */}
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <Card className="overflow-hidden border-none shadow-lg bg-card relative">
+          {/* Background decorative blob */}
+          <div className={cn("absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-10 -mr-10 -mt-10 pointer-events-none", highlightedMeal.bgColor)} />
+          
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-3">
+                <div className={cn("p-2.5 rounded-full bg-background shadow-sm border", highlightedMeal.color)}>
+                  <highlightedMeal.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground">{highlightedMeal.title}</h3>
+              </div>
+              <div className="text-right">
+                <p className="text-4xl font-bold text-foreground tracking-tight">
+                  {format(currentTime, 'h:mm')}
+                </p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                  {activeMeal === 'gap' ? 'Next Meal' : 'Now'}
+                </p>
+              </div>
             </div>
-            <div className={cn("flex items-center justify-center gap-3", currentConfig.color)}>
-              <currentConfig.icon className="w-7 h-7" />
-              <h3 className="text-2xl font-bold leading-tight">{currentConfig.message}</h3>
+            
+            <div className="mb-6">
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                {highlightedMeal.content}
+              </p>
+            </div>
+
+            <div className="flex justify-end">
+              <Button 
+                onClick={() => navigate('/scanner')} 
+                className="rounded-full px-6 shadow-md bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+              >
+                <Scan className="w-4 h-4 mr-2" />
+                {t('diets.scan_food_button')}
+              </Button>
             </div>
           </CardContent>
         </Card>
+      </div>
 
-        <Button
-          size="lg"
-          className="w-full h-14 text-lg mt-4"
-          onClick={() => navigate('/scanner')}
-        >
-          <Scan className="mr-2 w-5 h-5" />
-          {t('diets.scan_food_button')}
-        </Button>
+      {/* Divider */}
+      <div className="h-px bg-border w-full" />
 
-        {dayKeys.map((dayKey) => {
-          const meals = plan[dayKey];
-          if (!meals) return null;
-
-          // Reorder logic: Current active meal goes first
-          const allCards = getCards(meals);
-          const sortedCards = [...allCards].sort((a, b) => {
-            if (a.type === activeMeal) return -1;
-            if (b.type === activeMeal) return 1;
-            return 0;
-          });
-
-          return (
-            <TabsContent key={dayKey} value={dayKey} className="mt-6 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <div className="grid gap-4">
-                {sortedCards.map((card) => (
-                  <Card key={card.id} className={cn("border-l-4 transition-all duration-300", card.borderColor, card.type === activeMeal && "shadow-md scale-[1.01] border-l-[6px]")}>
-                    <CardHeader className="pb-2 pt-4 px-4">
-                      <CardTitle className="text-lg flex items-center gap-2 text-foreground">
-                        <card.icon className={cn("w-5 h-5", card.iconColor)} />
-                        {card.title}
-                        {card.type === activeMeal && (
-                          <span className={cn("ml-auto text-xs font-bold px-2 py-0.5 rounded-full bg-background border shadow-sm", card.iconColor)}>
-                            Ahora
-                          </span>
-                        )}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="px-4 pb-4">
-                      <p className="text-muted-foreground">{card.content}</p>
-                    </CardContent>
-                  </Card>
-                ))}
+      {/* Other Meals List */}
+      <div className="space-y-4">
+        {otherMeals.map((meal) => (
+          <Card 
+            key={meal.type} 
+            className={cn(
+              "border-l-0 border-t border-b border-l border-r-[6px] transition-all hover:shadow-md",
+              meal.borderColor
+            )}
+          >
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <h4 className="font-bold text-foreground text-lg">{meal.title}</h4>
+                <meal.icon className={cn("w-4 h-4 opacity-70", meal.color)} />
               </div>
-            </TabsContent>
-          );
-        })}
-      </Tabs>
+              <p className="text-muted-foreground text-sm">
+                {meal.content}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
