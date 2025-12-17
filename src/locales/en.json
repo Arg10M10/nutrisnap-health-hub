@@ -5,7 +5,8 @@
     "error": "Error",
     "taking_too_long": "Taking too long?",
     "sign_out": "Sign Out",
-    "retry": "Retry"
+    "retry": "Retry",
+    "cancel": "Cancel"
   },
   "settings": {
     "title": "Settings",
@@ -148,6 +149,9 @@
     "weekly_plan_title": "Your Weekly Plan",
     "weekly_plan_subtitle": "Personalized Menu",
     "regenerate_tooltip": "Regenerate plan",
+    "regenerate_dialog_title": "Regenerate Diet Plan?",
+    "regenerate_dialog_desc": "This will replace your current plan permanently. This action counts towards your weekly limit (1/week).",
+    "regenerate_confirm": "Regenerate",
     "days_short": {
       "monday": "Mon",
       "tuesday": "Tue",

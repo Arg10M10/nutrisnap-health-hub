@@ -8,6 +8,17 @@ import { useTranslation } from 'react-i18next';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type MealPlan = {
   [day: string]: {
@@ -154,9 +165,28 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
           <h2 className="text-2xl font-bold text-foreground">{t('diets.weekly_plan_title')}</h2>
           <p className="text-sm text-muted-foreground">{t('diets.weekly_plan_subtitle')}</p>
         </div>
-        <Button variant="ghost" size="icon" onClick={handleRegenerateClick} disabled={isRegenerating} title={t('diets.regenerate_tooltip')}>
-          <RefreshCw className={cn("w-5 h-5 text-muted-foreground", isRegenerating && "animate-spin")} />
-        </Button>
+        
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="icon" disabled={isRegenerating} title={t('diets.regenerate_tooltip')}>
+              <RefreshCw className={cn("w-5 h-5 text-muted-foreground", isRegenerating && "animate-spin")} />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('diets.regenerate_dialog_title')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('diets.regenerate_dialog_desc')}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+              <AlertDialogAction onClick={handleRegenerateClick}>
+                {t('diets.regenerate_confirm')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       {/* Calendar Strip */}

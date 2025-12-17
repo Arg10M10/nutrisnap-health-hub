@@ -5,7 +5,8 @@
     "error": "Error",
     "taking_too_long": "¿Tarda demasiado?",
     "sign_out": "Cerrar Sesión",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "cancel": "Cancelar"
   },
   "settings": {
     "title": "Configuración",
@@ -148,6 +149,9 @@
     "weekly_plan_title": "Tu Plan Semanal",
     "weekly_plan_subtitle": "Menú personalizado",
     "regenerate_tooltip": "Regenerar plan",
+    "regenerate_dialog_title": "¿Regenerar Plan de Dieta?",
+    "regenerate_dialog_desc": "Esto reemplazará tu plan actual permanentemente. Esta acción cuenta para tu límite semanal (1/semana).",
+    "regenerate_confirm": "Regenerar",
     "days_short": {
       "monday": "Lun",
       "tuesday": "Mar",
