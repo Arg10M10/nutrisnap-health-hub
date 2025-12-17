@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ChevronsUpDown, MapPin } from "lucide-react";
+import { Check, ChevronsUpDown, MapPin, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -92,15 +92,24 @@ export function CountrySelector({ value, onChange }: CountrySelectorProps) {
         </PopoverContent>
         </Popover>
         
-        <Button 
-            type="button" 
-            variant="ghost" 
-            className="w-full text-primary gap-2" 
-            onClick={handleAutoDetect}
-        >
-            <MapPin className="w-4 h-4" />
-            {t('diets_onboarding.auto_detect') || "Detectar mi ubicación"}
-        </Button>
+        <div className="flex flex-col gap-2">
+            <Button 
+                type="button" 
+                variant="ghost" 
+                className="w-full text-primary gap-2" 
+                onClick={handleAutoDetect}
+            >
+                <MapPin className="w-4 h-4" />
+                {t('diets_onboarding.auto_detect') || "Detectar mi ubicación"}
+            </Button>
+            
+            <div className="bg-muted/50 p-3 rounded-lg flex items-start gap-3 mt-2">
+                <Globe className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-muted-foreground">
+                    {t('diets_onboarding.country_expansion_note')}
+                </p>
+            </div>
+        </div>
     </div>
   );
 }

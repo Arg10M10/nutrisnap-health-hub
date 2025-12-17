@@ -545,6 +545,7 @@
     "select_country": "Select country...",
     "search_country": "Search country...",
     "auto_detect": "Detect my location",
+    "country_expansion_note": "We are working on adding more countries soon. Thanks for your patience!",
     "step1_desc": "How much do you move daily?",
     "step2_desc": "Select if you have any preference or restriction.",
     "step2_tip": "If none, you can continue.",

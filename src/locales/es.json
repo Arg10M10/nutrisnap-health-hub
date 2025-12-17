@@ -234,14 +234,23 @@
     "intensity_high_example": "Sprints, correr en cuestas.",
     "saved_toast_title": "¡Carrera guardada!",
     "saved_toast_desc": "Has quemado aproximadamente {{calories}} kcal.",
-    "error_toast_title": "No se pudo registrar"
+    "error_toast_title": "No se pudo registrar la carrera."
   },
   "weights": {
     "title": "Registrar Pesas",
     "save_action": "Guardar Pesas ({{calories}} kcal)",
     "saved_toast_title": "¡Entrenamiento guardado!",
     "saved_toast_desc": "Has quemado aproximadamente {{calories}} kcal.",
-    "error_toast_title": "No se pudo registrar"
+    "error_toast_title": "No se pudo registrar el entrenamiento.",
+    "intensity_low": "Baja",
+    "intensity_low_desc": "Pesos ligeros y técnica cómoda.",
+    "intensity_low_example": "Circuito ligero, bandas elásticas.",
+    "intensity_medium": "Media",
+    "intensity_medium_desc": "Esfuerzo moderado con series desafiantes.",
+    "intensity_medium_example": "Superseries, peso moderado.",
+    "intensity_high": "Alta",
+    "intensity_high_desc": "Levantamientos pesados o HIIT con pesas.",
+    "intensity_high_example": "Series al fallo, compuestos pesados."
   },
   "write_exercise": {
     "title": "Describe el ejercicio",
@@ -260,7 +269,7 @@
     "calories_burned": "Calorías quemadas",
     "add_button": "Añadir",
     "saved_toast": "Ejercicio manual añadido.",
-    "error_toast_title": "No se pudo añadir",
+    "error_toast_title": "No se pudo añadir el ejercicio.",
     "validation_error": "Por favor, introduce un número válido de calorías."
   },
   "preferences": {
@@ -278,7 +287,7 @@
     "time_format_12h": "12 Horas (AM/PM)",
     "time_format_24h": "24 Horas",
     "toast_success": "¡Formato de hora actualizado!",
-    "toast_error": "No se pudo actualizar"
+    "toast_error": "Error al actualizar el formato"
   },
   "nutritional_goals": {
     "title": "Metas Nutricionales",
@@ -291,7 +300,7 @@
     "sugars": "Azúcares",
     "save": "Guardar Metas",
     "save_success": "¡Metas guardadas con éxito!",
-    "save_error": "No se pudieron guardar las metas",
+    "save_error": "Error al guardar metas",
     "ai_suggestions": "Sugerencias de la IA"
   },
   "ai_suggestions": {
@@ -425,7 +434,7 @@
     "save": "Guardar Cambios",
     "cancel": "Cancelar",
     "toast_success": "¡Perfil actualizado con éxito!",
-    "toast_error": "No se pudo actualizar el perfil."
+    "toast_error": "Hubo un error al actualizar tu perfil."
   },
   "zod": {
     "first_name_required": "El nombre es requerido.",
@@ -536,6 +545,7 @@
     "select_country": "Seleccionar país...",
     "search_country": "Buscar país...",
     "auto_detect": "Detectar mi ubicación",
+    "country_expansion_note": "Estamos trabajando para agregar más países pronto. ¡Gracias por tu paciencia!",
     "step1_desc": "¿Cuánto te mueves en tu día a día?",
     "step2_desc": "Selecciona si tienes alguna preferencia o restricción.",
     "step2_tip": "Si no tienes ninguna, puedes continuar.",
@@ -555,7 +565,7 @@
       "gluten_free": "Sin gluten"
     },
     "activity": {
-      "sedentary": "Sedentario",
+      "sedentary": "Sedentary",
       "sedentary_desc": "Poco o nada de ejercicio",
       "light": "Ligero",
       "light_desc": "Ejercicio suave 1-3 días/sem",
