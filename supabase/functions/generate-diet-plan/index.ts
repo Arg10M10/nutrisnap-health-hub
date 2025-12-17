@@ -16,15 +16,10 @@ serve(async (req) => {
   }
 
   try {
-    // Aunque no se use, inicializar el cliente puede resolver problemas de contexto en el despliegue.
-    const supabaseAdmin = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
-
-    const { goal, activityLevel, preferences, cookingTime, budget, language } = await req.json();
+    const { goal, activityLevel, preferences, cookingTime, budget, language, country } = await req.json();
 
     const targetLanguage = language && language.startsWith('es') ? 'Spanish' : 'English';
+    const userCountry = country || 'their location';
 
     const prompt = `
       You are an expert nutritionist AI. Create a personalized weekly meal plan based on the user's data.
@@ -35,18 +30,16 @@ serve(async (req) => {
       - Dietary Preferences: ${preferences.join(', ')}
       - Cooking Time Availability: ${cookingTime}
       - Budget: ${budget}
+      - Country/Region: ${userCountry}
 
-      CRITICAL INSTRUCTION:
-      The user's preferred language is ${targetLanguage}. 
-      All meal names MUST be written in ${targetLanguage}.
-
-      Instructions:
-      1. Generate a meal plan for 7 days (Monday to Sunday).
-      2. For each day, include breakfast, lunch, dinner, and a snack.
-      3. For EACH meal, provide the meal name and an estimation of its nutritional values: calories (kcal), protein (g), carbs (g), and fats (g). All values must be numbers.
-      4. Meals must be varied, healthy, and aligned with user goals.
-      5. Provide simple and realistic meal ideas compatible with the cooking time and budget.
-      6. Respond ONLY with a valid JSON object, no extra text or markdown. Use this exact structure:
+      CRITICAL INSTRUCTIONS:
+      1. The user's preferred language is ${targetLanguage}. All meal names MUST be written in ${targetLanguage}.
+      2. **ADAPT TO THE COUNTRY**: Prioritize dishes, ingredients, and culinary styles typical of ${userCountry}. Make it feel local and culturally relevant.
+      3. For each day, include breakfast, lunch, dinner, and a snack.
+      4. For EACH meal, provide the meal name and an estimation of its nutritional values: calories (kcal), protein (g), carbs (g), and fats (g). All values must be numbers.
+      5. Meals must be varied, healthy, and aligned with user goals.
+      6. Provide simple and realistic meal ideas compatible with the cooking time and budget.
+      7. Respond ONLY with a valid JSON object, no extra text or markdown. Use this exact structure:
       {
         "monday": {
           "breakfast": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number },

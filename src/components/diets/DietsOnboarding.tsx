@@ -8,19 +8,23 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Wand2, Loader2, ArrowLeft, ArrowRight, Activity, ChefHat, Wallet, Check } from 'lucide-react';
+import { Wand2, Loader2, ArrowLeft, ArrowRight, Activity, ChefHat, Wallet, Check, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { useAILimit } from '@/hooks/useAILimit';
 import { useTranslation } from 'react-i18next';
+import { CountrySelector } from './CountrySelector';
 
 const formSchema = z.object({
+  country: z.string().min(1, "Country is required"),
   activityLevel: z.enum(['sedentary', 'light', 'moderate', 'high']),
   preferences: z.array(z.string()).optional(),
   cookingTime: z.enum(['low', 'medium', 'high']),
   budget: z.enum(['low', 'medium', 'high']),
 });
+
+const TOTAL_STEPS = 4;
 
 export const DietsOnboarding = () => {
   const { t, i18n } = useTranslation();
@@ -52,6 +56,7 @@ export const DietsOnboarding = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      country: '',
       activityLevel: 'light',
       preferences: [],
       cookingTime: 'medium',
@@ -101,9 +106,15 @@ export const DietsOnboarding = () => {
     }
   };
 
-  const nextStep = (e: React.MouseEvent) => {
+  const nextStep = async (e: React.MouseEvent) => {
     e.preventDefault(); 
-    setStep(s => Math.min(s + 1, 3));
+    let isValid = false;
+    if (step === 1) isValid = await form.trigger('country');
+    else isValid = true; // Otros pasos tienen valores por defecto o son opcionales
+
+    if (isValid) {
+      setStep(s => Math.min(s + 1, TOTAL_STEPS));
+    }
   };
 
   const prevStep = (e: React.MouseEvent) => {
@@ -163,21 +174,49 @@ export const DietsOnboarding = () => {
           ) : <div className="w-10" />}
           
           <h1 className="text-xl font-bold text-center">
-            {step === 1 && t('diets_onboarding.step1_title')}
-            {step === 2 && t('diets_onboarding.step2_title')}
-            {step === 3 && t('diets_onboarding.step3_title')}
+            {step === 1 && t('diets_onboarding.step_country_title') || "País"}
+            {step === 2 && t('diets_onboarding.step1_title')}
+            {step === 3 && t('diets_onboarding.step2_title')}
+            {step === 4 && t('diets_onboarding.step3_title')}
           </h1>
           
           <div className="w-10" />
         </div>
-        <Progress value={(step / 3) * 100} className="h-2" />
+        <Progress value={(step / TOTAL_STEPS) * 100} className="h-2" />
       </div>
 
       <Form {...form}>
         <form className="flex-1 flex flex-col">
           <div className="flex-1 overflow-y-auto px-1 pb-4">
             <AnimatePresence mode="wait">
+              {/* Paso 1: País */}
               {step === 1 && (
+                <motion.div
+                  key="step-country"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-4"
+                >
+                  <div className="text-center mb-6">
+                    <Globe className="w-12 h-12 text-primary mx-auto mb-2 opacity-80" />
+                    <p className="text-muted-foreground">
+                      {t('diets_onboarding.step_country_desc') || "Selecciona tu país para personalizar las comidas con ingredientes locales."}
+                    </p>
+                  </div>
+                  
+                  <FormField control={form.control} name="country" render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <CountrySelector value={field.value} onChange={field.onChange} />
+                      </FormControl>
+                    </FormItem>
+                  )} />
+                </motion.div>
+              )}
+
+              {/* Paso 2: Actividad (Antes paso 1) */}
+              {step === 2 && (
                 <motion.div
                   key="step1"
                   initial={{ opacity: 0, x: 20 }}
@@ -206,7 +245,8 @@ export const DietsOnboarding = () => {
                 </motion.div>
               )}
 
-              {step === 2 && (
+              {/* Paso 3: Preferencias (Antes paso 2) */}
+              {step === 3 && (
                 <motion.div
                   key="step2"
                   initial={{ opacity: 0, x: 20 }}
@@ -244,7 +284,8 @@ export const DietsOnboarding = () => {
                 </motion.div>
               )}
 
-              {step === 3 && (
+              {/* Paso 4: Detalles finales (Antes paso 3) */}
+              {step === 4 && (
                 <motion.div
                   key="step3"
                   initial={{ opacity: 0, x: 20 }}
@@ -318,7 +359,7 @@ export const DietsOnboarding = () => {
           </div>
 
           <div className="pt-4 mt-auto">
-            {step < 3 ? (
+            {step < TOTAL_STEPS ? (
               <Button type="button" size="lg" className="w-full h-14 text-lg rounded-xl" onClick={nextStep}>
                 {t('diets_onboarding.next')} <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
