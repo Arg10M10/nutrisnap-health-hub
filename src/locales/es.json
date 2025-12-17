@@ -507,7 +507,10 @@
       "description": "Ajusta la velocidad según tu estilo de vida.",
       "lose_label": "Pérdida de peso por semana",
       "gain_label": "Ganancia de peso por semana",
-      "recommended": "Recomendado"
+      "recommended": "Recomendado",
+      "slow_desc": "Un ritmo lento es más sostenible a largo plazo.",
+      "fast_desc": "Un ritmo rápido requiere mucha disciplina y cambios grandes.",
+      "balanced_desc": "Este es un ritmo equilibrado y saludable para la mayoría."
     },
     "health_connect": {
       "title": "Conecta tu Salud",

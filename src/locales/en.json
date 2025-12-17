@@ -507,7 +507,10 @@
       "description": "Adjust the speed to fit your lifestyle.",
       "lose_label": "Weight loss per week",
       "gain_label": "Weight gain per week",
-      "recommended": "Recommended"
+      "recommended": "Recommended",
+      "slow_desc": "A slow pace is more sustainable in the long run.",
+      "fast_desc": "A fast pace requires a lot of discipline and big changes.",
+      "balanced_desc": "This is a balanced and healthy pace for most people."
     },
     "health_connect": {
       "title": "Connect Your Health",

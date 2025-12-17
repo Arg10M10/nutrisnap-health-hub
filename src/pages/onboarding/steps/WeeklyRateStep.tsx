@@ -28,6 +28,20 @@ export const WeeklyRateStep = ({ weeklyRate, setWeeklyRate, units, goal }: Weekl
 
   const unitLabel = isMetric ? 'kg' : 'lbs';
 
+  const recommendedVal = isMetric ? 0.5 : 1.1;
+  const slowThreshold = isMetric ? 0.3 : 0.6;
+  const fastThreshold = isMetric ? 1.0 : 2.2;
+
+  const isSlow = safeRate <= slowThreshold;
+  const isFast = safeRate >= fastThreshold;
+  const isMedium = !isSlow && !isFast;
+
+  const getDescription = () => {
+    if (isFast) return t('onboarding.weekly_rate.fast_desc');
+    if (isSlow) return t('onboarding.weekly_rate.slow_desc');
+    return t('onboarding.weekly_rate.balanced_desc');
+  };
+
   return (
     <div className="space-y-12 py-4">
       <div className="text-center space-y-2">
@@ -40,9 +54,33 @@ export const WeeklyRateStep = ({ weeklyRate, setWeeklyRate, units, goal }: Weekl
 
       <div className="space-y-6">
         <div className="flex justify-between items-end px-2">
-          <span className="text-4xl filter grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 transform hover:scale-110 cursor-pointer" onClick={() => setWeeklyRate(min)}>🐢</span>
-          <span className="text-5xl filter grayscale-0 opacity-100 transform scale-110 cursor-pointer" onClick={() => setWeeklyRate(isMetric ? 0.5 : 1.1)}>🐇</span>
-          <span className="text-4xl filter grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 transform hover:scale-110 cursor-pointer" onClick={() => setWeeklyRate(max)}>🐆</span>
+          <span 
+            className={cn(
+              "text-4xl transition-all duration-300 transform cursor-pointer",
+              isSlow ? "filter-none opacity-100 scale-125" : "filter grayscale opacity-40 scale-100 hover:grayscale-0 hover:opacity-100 hover:scale-110"
+            )} 
+            onClick={() => setWeeklyRate(min)}
+          >
+            🐢
+          </span>
+          <span 
+            className={cn(
+              "text-5xl transition-all duration-300 transform cursor-pointer",
+              isMedium ? "filter-none opacity-100 scale-125" : "filter grayscale opacity-40 scale-100 hover:grayscale-0 hover:opacity-100 hover:scale-110"
+            )}
+            onClick={() => setWeeklyRate(recommendedVal)}
+          >
+            🐇
+          </span>
+          <span 
+            className={cn(
+              "text-4xl transition-all duration-300 transform cursor-pointer",
+              isFast ? "filter-none opacity-100 scale-125" : "filter grayscale opacity-40 scale-100 hover:grayscale-0 hover:opacity-100 hover:scale-110"
+            )}
+            onClick={() => setWeeklyRate(max)}
+          >
+            🐆
+          </span>
         </div>
 
         <Slider
@@ -58,7 +96,7 @@ export const WeeklyRateStep = ({ weeklyRate, setWeeklyRate, units, goal }: Weekl
           <span>{min} {unitLabel}</span>
           <span className={cn(
             "transition-opacity duration-300",
-            Math.abs(safeRate - (isMetric ? 0.5 : 1.1)) < 0.15 ? "opacity-100 text-primary font-bold" : "opacity-0"
+            Math.abs(safeRate - recommendedVal) < 0.15 ? "opacity-100 text-primary font-bold" : "opacity-0"
           )}>
             {t('onboarding.weekly_rate.recommended')}
           </span>
@@ -66,14 +104,9 @@ export const WeeklyRateStep = ({ weeklyRate, setWeeklyRate, units, goal }: Weekl
         </div>
       </div>
       
-      <div className="bg-primary/5 rounded-xl p-4 text-center">
+      <div className="bg-primary/5 rounded-xl p-4 text-center transition-all duration-300">
         <p className="text-sm text-muted-foreground">
-          {safeRate > (isMetric ? 1.0 : 2.2) 
-            ? "Un ritmo rápido requiere mucha disciplina y cambios grandes." 
-            : safeRate < (isMetric ? 0.3 : 0.6)
-              ? "Un ritmo lento es más sostenible a largo plazo."
-              : "Este es un ritmo equilibrado y saludable para la mayoría."
-          }
+          {getDescription()}
         </p>
       </div>
     </div>
