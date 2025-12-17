@@ -16,25 +16,41 @@ const GeneratingPlan = () => {
   const [stage, setStage] = useState(0);
 
   const stages = [
-    { text: "Calculando requerimientos calóricos diarios...", icon: <Brain className="w-10 h-10 text-primary" /> },
-    { text: "Distribuyendo proteínas, carbohidratos y grasas...", icon: <Calculator className="w-10 h-10 text-blue-500" /> },
-    { text: "Optimizando niveles de azúcar y fibra...", icon: <Utensils className="w-10 h-10 text-orange-500" /> },
-    { text: "¡Tu plan nutricional está listo!", icon: <CheckCircle2 className="w-10 h-10 text-green-500" /> },
+    { text: "Analizando tu metabolismo basal...", icon: <Brain className="w-8 h-8 text-primary" /> },
+    { text: "Calculando macronutrientes óptimos...", icon: <Calculator className="w-8 h-8 text-blue-500" /> },
+    { text: "Diseñando estructura de comidas...", icon: <Utensils className="w-8 h-8 text-orange-500" /> },
+    { text: "¡Plan personalizado listo!", icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
   ];
 
-  // Simulación de progreso visual
+  // Simulación de progreso visual - Ajustado para ~30 segundos
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
+        if (prev >= 99) {
+          // Esperar a que termine la mutación
+          return 99;
         }
-        // Avanzar más rápido al principio, más lento al final
-        const increment = prev < 50 ? 1.5 : prev < 80 ? 0.8 : 0.3;
-        return Math.min(prev + increment, 99);
+        
+        // Lógica para durar aprox 30 segundos
+        // Intervalo: 100ms
+        let increment = 0;
+        
+        if (prev < 30) {
+          increment = 1.5; // Rápido al inicio (~2s)
+        } else if (prev < 70) {
+          increment = 0.4; // Medio (~10s)
+        } else if (prev < 90) {
+          increment = 0.2; // Lento (~10s)
+        } else {
+          increment = 0.1; // Muy lento al final (~9s)
+        }
+        
+        // Añadir un poco de aleatoriedad para que se sienta natural
+        increment += (Math.random() - 0.5) * 0.1;
+        
+        return Math.min(prev + Math.max(0.05, increment), 99);
       });
-    }, 50);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
@@ -98,7 +114,7 @@ const GeneratingPlan = () => {
       setProgress(100);
       setStage(3);
       await refetchProfile();
-      // Pequeña pausa para ver el 100% y redirigir
+      // Pequeña pausa para ver el 100%
       setTimeout(() => {
         navigate('/');
       }, 1500);
@@ -121,7 +137,7 @@ const GeneratingPlan = () => {
       <div className="w-full max-w-md space-y-12">
         
         {/* Icono animado central */}
-        <div className="flex justify-center h-32 items-center">
+        <div className="flex justify-center h-32 items-center mb-8">
           <motion.div
             key={stage}
             initial={{ scale: 0.5, opacity: 0 }}
@@ -134,24 +150,25 @@ const GeneratingPlan = () => {
           </motion.div>
         </div>
 
-        <div className="space-y-6 text-center">
+        {/* Sección de Texto y Barra con más espacio */}
+        <div className="space-y-8 text-center">
           <motion.h2 
             key={stage + "text"}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-2xl font-bold text-foreground h-16 flex items-center justify-center px-4"
+            className="text-2xl font-bold text-foreground min-h-[5rem] flex items-end justify-center px-4 leading-tight"
           >
             {stages[stage].text}
           </motion.h2>
           
-          <div className="space-y-2 px-4">
-            <Progress value={progress} className="h-3" />
+          <div className="space-y-3 px-4">
+            <Progress value={progress} className="h-4 rounded-full" />
             <p className="text-sm text-muted-foreground text-right font-mono font-medium">{Math.round(progress)}%</p>
           </div>
         </div>
 
         {/* Detalles decorativos */}
-        <div className="grid grid-cols-2 gap-4 opacity-40 pointer-events-none">
+        <div className="grid grid-cols-2 gap-4 opacity-40 pointer-events-none mt-8">
           <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse" />
           <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-75" />
           <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-150" />
