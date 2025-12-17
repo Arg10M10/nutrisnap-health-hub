@@ -538,6 +538,11 @@
     "step1_title": "Nivel de Actividad",
     "step2_title": "Preferencias",
     "step3_title": "Detalles Finales",
+    "step_country_title": "País",
+    "step_country_desc": "Selecciona tu país para personalizar las comidas con ingredientes locales.",
+    "select_country": "Seleccionar país...",
+    "search_country": "Buscar país...",
+    "auto_detect": "Detectar mi ubicación",
     "step1_desc": "¿Cuánto te mueves en tu día a día?",
     "step2_desc": "Selecciona si tienes alguna preferencia o restricción.",
     "step2_tip": "Si no tienes ninguna, puedes continuar.",
@@ -570,7 +575,13 @@
       "low": "Bajo",
       "medium": "Medio",
       "high": "Alto"
-    }
+    },
+    "generating_step1": "Analizando actividad y preferencias...",
+    "generating_step2": "Explorando cocina de {{country}}...",
+    "generating_step2_generic": "Explorando recetas saludables...",
+    "generating_step3": "Calculando macros óptimos...",
+    "generating_step4": "Diseñando menú semanal...",
+    "generating_step5": "Finalizando detalles..."
   },
   "subscribe": {
     "title": "Vuélvete Premium",
