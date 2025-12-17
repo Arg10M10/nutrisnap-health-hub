@@ -14,15 +14,13 @@ import { MetricsStep } from './steps/MetricsStep';
 import { MotivationStep } from './steps/MotivationStep';
 import { GoalStep } from './steps/GoalStep';
 import { GoalWeightStep } from './steps/GoalWeightStep';
+import { WeeklyRateStep } from './steps/WeeklyRateStep';
 import { FinalStep } from './steps/FinalStep';
-
-const TOTAL_STEPS = 8;
 
 const Onboarding = () => {
   const { user, refetchProfile } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     gender: null as string | null,
     age: null as number | null,
@@ -33,7 +31,10 @@ const Onboarding = () => {
     motivation: null as string | null,
     goal: null as string | null,
     goalWeight: null as number | null,
+    weeklyRate: null as number | null,
   });
+
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   const updateFormData = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -43,14 +44,11 @@ const Onboarding = () => {
     mutationFn: async () => {
       if (!user || !formData.weight) throw new Error('User or weight not found');
       
-      // CRITICAL FIX: Use upsert instead of update.
-      // If the profile row is missing (trigger failed), update does nothing (0 rows).
-      // Upsert forces creation or update.
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
-          id: user.id, // Required for upsert
-          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User', // Fallback name
+          id: user.id,
+          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
           updated_at: new Date().toISOString(),
           gender: formData.gender,
           age: formData.age,
@@ -62,8 +60,9 @@ const Onboarding = () => {
           motivation: formData.motivation,
           goal: formData.goal,
           goal_weight: formData.goalWeight,
+          weekly_rate: formData.weeklyRate, // Nuevo campo
           onboarding_completed: true,
-        }, { onConflict: 'id' }); // Conflict on ID -> Update
+        }, { onConflict: 'id' });
 
       if (profileError) throw profileError;
 
@@ -88,40 +87,31 @@ const Onboarding = () => {
     },
   });
 
-  const onContinue = () => {
-    if (step < TOTAL_STEPS) {
-      setStep(step + 1);
-    } else {
-      mutation.mutate();
-    }
-  };
-
-  const onBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
-
-  const steps = [
+  // Definimos todos los pasos posibles
+  const allSteps = [
     {
+      id: 'gender',
       title: t('onboarding.gender.title'),
       description: t('onboarding.gender.description'),
       content: <GenderStep gender={formData.gender} setGender={(v) => updateFormData('gender', v)} />,
       canContinue: !!formData.gender,
     },
     {
+      id: 'age',
       title: t('onboarding.age.title'),
       description: t('onboarding.age.description'),
       content: <AgeStep age={formData.age} setAge={(v) => updateFormData('age', v)} />,
       canContinue: formData.age !== null && formData.age > 0,
     },
     {
+      id: 'experience',
       title: t('onboarding.experience.title'),
       description: t('onboarding.experience.description'),
       content: <ExperienceStep experience={formData.experience} setExperience={(v) => updateFormData('experience', v)} />,
       canContinue: !!formData.experience,
     },
     {
+      id: 'metrics',
       title: t('onboarding.metrics.title'),
       description: t('onboarding.metrics.description'),
       content: <MetricsStep 
@@ -132,18 +122,21 @@ const Onboarding = () => {
       canContinue: formData.weight !== null && formData.height !== null,
     },
     {
+      id: 'motivation',
       title: t('onboarding.motivation.title'),
       description: t('onboarding.motivation.description'),
       content: <MotivationStep motivation={formData.motivation} setMotivation={(v) => updateFormData('motivation', v)} />,
       canContinue: !!formData.motivation,
     },
     {
+      id: 'goal',
       title: t('onboarding.goal.title'),
       description: t('onboarding.goal.description'),
       content: <GoalStep goal={formData.goal} setGoal={(v) => updateFormData('goal', v)} />,
       canContinue: !!formData.goal,
     },
     {
+      id: 'goal_weight',
       title: t('onboarding.goal_weight.title'),
       description: t('onboarding.goal_weight.description'),
       content: <GoalWeightStep 
@@ -154,7 +147,21 @@ const Onboarding = () => {
                 />,
       canContinue: formData.goalWeight !== null,
     },
+    // Paso condicional: Solo si el objetivo es perder o ganar peso
+    ...(formData.goal === 'lose_weight' || formData.goal === 'gain_weight' ? [{
+      id: 'weekly_rate',
+      title: t('onboarding.weekly_rate.title'),
+      description: t('onboarding.weekly_rate.description'),
+      content: <WeeklyRateStep
+                  weeklyRate={formData.weeklyRate}
+                  setWeeklyRate={(v) => updateFormData('weeklyRate', v)}
+                  units={formData.units}
+                  goal={formData.goal}
+                />,
+      canContinue: formData.weeklyRate !== null,
+    }] : []),
     {
+      id: 'final',
       title: t('onboarding.final.title'),
       description: t('onboarding.final.description'),
       content: <FinalStep />,
@@ -163,12 +170,35 @@ const Onboarding = () => {
     },
   ];
 
-  const currentStep = steps[step - 1];
+  // Filtramos los pasos activos (aunque ya lo hicimos condicionalmente arriba, esto es doble seguridad por si cambia el estado)
+  const steps = allSteps; 
+  const totalSteps = steps.length;
+  const currentStep = steps[currentStepIndex];
+
+  const onContinue = () => {
+    if (currentStepIndex < totalSteps - 1) {
+      setCurrentStepIndex(prev => prev + 1);
+      
+      // Inicializar weeklyRate si entramos a ese paso y está null
+      const nextStep = steps[currentStepIndex + 1];
+      if (nextStep && nextStep.id === 'weekly_rate' && formData.weeklyRate === null) {
+        updateFormData('weeklyRate', formData.units === 'metric' ? 0.5 : 1.1);
+      }
+    } else {
+      mutation.mutate();
+    }
+  };
+
+  const onBack = () => {
+    if (currentStepIndex > 0) {
+      setCurrentStepIndex(prev => prev - 1);
+    }
+  };
 
   return (
     <OnboardingLayout
-      step={step}
-      totalSteps={TOTAL_STEPS}
+      step={currentStepIndex + 1}
+      totalSteps={totalSteps}
       title={currentStep.title}
       description={currentStep.description}
       onContinue={onContinue}

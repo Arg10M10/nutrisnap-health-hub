@@ -502,6 +502,13 @@
       "label": "Peso Objetivo",
       "disclaimer": "Este será el objetivo que verás en tu gráfica de progreso."
     },
+    "weekly_rate": {
+      "title": "¿Qué tan rápido quieres llegar a tu meta?",
+      "description": "Ajusta la velocidad según tu estilo de vida.",
+      "lose_label": "Pérdida de peso por semana",
+      "gain_label": "Ganancia de peso por semana",
+      "recommended": "Recomendado"
+    },
     "health_connect": {
       "title": "Conecta tu Salud",
       "main_description": "Sincroniza automáticamente tus datos de actividad.",

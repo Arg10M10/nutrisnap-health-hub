@@ -502,6 +502,13 @@
       "label": "Goal Weight",
       "disclaimer": "This will be the target you'll see on your progress chart."
     },
+    "weekly_rate": {
+      "title": "How fast do you want to reach your goal?",
+      "description": "Adjust the speed to fit your lifestyle.",
+      "lose_label": "Weight loss per week",
+      "gain_label": "Weight gain per week",
+      "recommended": "Recommended"
+    },
     "health_connect": {
       "title": "Connect Your Health",
       "main_description": "Automatically sync your activity data.",
