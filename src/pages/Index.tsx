@@ -190,6 +190,42 @@ const Index = () => {
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-semibold">{t('home.todays_analysis')}</h2>
           
+          <div 
+            className={cn(
+                "rounded-xl border-2 border-dashed transition-all duration-300 overflow-hidden",
+                isManualEntryOpen ? "border-primary bg-card shadow-sm" : "border-border hover:border-primary/50"
+            )}
+          >
+            <button 
+                className="w-full flex items-center justify-between p-4 h-auto min-h-[3.5rem] text-base font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
+                onClick={() => setIsManualEntryOpen(!isManualEntryOpen)}
+            >
+                <span className="flex items-center gap-2">
+                    <Utensils className="w-5 h-5" />
+                    {t('manual_food.title')}
+                </span>
+                {isManualEntryOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </button>
+
+            <AnimatePresence>
+                {isManualEntryOpen && (
+                    <motion.div
+                        initial={{ height: 0 }}
+                        animate={{ height: "auto" }}
+                        exit={{ height: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                        <div className="px-4 pb-6">
+                            <ManualFoodEntry 
+                                embedded={true} 
+                                onSuccess={() => setIsManualEntryOpen(false)}
+                            />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+          </div>
+
           {analyses.length > 0 ? (
             <div className="space-y-3">
               {analyses.map((item) => {
@@ -223,42 +259,6 @@ const Index = () => {
               <p className="text-sm text-muted-foreground">{t('home.start_logging')}</p>
             </Card>
           )}
-
-          <div 
-            className={cn(
-                "rounded-xl border-2 border-dashed transition-all duration-300 overflow-hidden",
-                isManualEntryOpen ? "border-primary bg-card shadow-sm" : "border-border hover:border-primary/50"
-            )}
-          >
-            <button 
-                className="w-full flex items-center justify-between p-4 h-14 text-base font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
-                onClick={() => setIsManualEntryOpen(!isManualEntryOpen)}
-            >
-                <span className="flex items-center gap-2">
-                    <Utensils className="w-5 h-5" />
-                    {t('manual_food.title')}
-                </span>
-                {isManualEntryOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-            </button>
-
-            <AnimatePresence>
-                {isManualEntryOpen && (
-                    <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: "auto" }}
-                        exit={{ height: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                    >
-                        <div className="px-4 pb-6">
-                            <ManualFoodEntry 
-                                embedded={true} 
-                                onSuccess={() => setIsManualEntryOpen(false)}
-                            />
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-          </div>
         </div>
       </div>
       <AnalysisDetailDrawer

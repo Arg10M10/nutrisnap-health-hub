@@ -23,7 +23,7 @@ export const GenderStep = ({ gender, setGender }: GenderStepProps) => {
           variant="outline"
           size="lg"
           className={cn(
-            'w-full h-14 text-lg justify-start p-6',
+            'w-full h-auto min-h-[3.5rem] text-lg justify-start p-6 whitespace-normal text-left',
             gender === option.id && 'border-primary ring-2 ring-primary'
           )}
           onClick={() => setGender(option.id)}

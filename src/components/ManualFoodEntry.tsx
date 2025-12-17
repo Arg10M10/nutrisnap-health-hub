@@ -106,7 +106,7 @@ const ManualFoodEntry = ({ embedded = false, onSuccess }: ManualFoodEntryProps) 
             <FormItem>
               <FormLabel>{t('manual_food.name_label')}</FormLabel>
               <FormControl>
-                <Input placeholder={t('manual_food.name_placeholder')} {...field} />
+                <Input placeholder={t('manual_food.name_placeholder')} {...field} className="h-12" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -135,20 +135,20 @@ const ManualFoodEntry = ({ embedded = false, onSuccess }: ManualFoodEntryProps) 
                 <ToggleGroup
                   type="single"
                   variant="outline"
-                  className="w-full grid grid-cols-3"
+                  className="w-full grid grid-cols-3 gap-2"
                   value={field.value}
                   onValueChange={field.onChange}
                 >
-                  <ToggleGroupItem value="small" className="h-12">{t('manual_food.portion_small')}</ToggleGroupItem>
-                  <ToggleGroupItem value="medium" className="h-12">{t('manual_food.portion_medium')}</ToggleGroupItem>
-                  <ToggleGroupItem value="large" className="h-12">{t('manual_food.portion_large')}</ToggleGroupItem>
+                  <ToggleGroupItem value="small" className="h-auto min-h-[3rem] py-2 whitespace-normal">{t('manual_food.portion_small')}</ToggleGroupItem>
+                  <ToggleGroupItem value="medium" className="h-auto min-h-[3rem] py-2 whitespace-normal">{t('manual_food.portion_medium')}</ToggleGroupItem>
+                  <ToggleGroupItem value="large" className="h-auto min-h-[3rem] py-2 whitespace-normal">{t('manual_food.portion_large')}</ToggleGroupItem>
                 </ToggleGroup>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={mutation.isPending}>
+        <Button type="submit" className="w-full h-auto min-h-[3.5rem] text-lg" disabled={mutation.isPending}>
           {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {t('manual_food.submit')}
         </Button>

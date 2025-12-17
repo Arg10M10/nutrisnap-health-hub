@@ -70,8 +70,8 @@ const Subscribe = () => {
           onValueChange={(value: 'trial' | 'paid') => value && setPlanType(value)}
           className="grid grid-cols-2 w-full mb-8"
         >
-          <ToggleGroupItem value="trial" className="h-12 text-base">{t('subscribe.trial_tab')}</ToggleGroupItem>
-          <ToggleGroupItem value="paid" className="h-12 text-base">{t('subscribe.pay_now_tab')}</ToggleGroupItem>
+          <ToggleGroupItem value="trial" className="h-auto min-h-[3rem] text-base py-2">{t('subscribe.trial_tab')}</ToggleGroupItem>
+          <ToggleGroupItem value="paid" className="h-auto min-h-[3rem] text-base py-2">{t('subscribe.pay_now_tab')}</ToggleGroupItem>
         </ToggleGroup>
 
         {planType === 'trial' ? (
@@ -130,7 +130,7 @@ const Subscribe = () => {
         </Card>
 
         <div className="mt-6 flex flex-col gap-3">
-          <Button onClick={handleSubscribe} size="lg" className="w-full h-14 text-lg rounded-xl shadow-lg shadow-primary/30">
+          <Button onClick={handleSubscribe} size="lg" className="w-full h-auto min-h-[3.5rem] text-lg rounded-xl shadow-lg shadow-primary/30 py-2 whitespace-normal">
             {planType === 'trial' ? t('subscribe.buttons.start_trial') : t('subscribe.buttons.unlock_now')}
           </Button>
           {planType === 'trial' && (

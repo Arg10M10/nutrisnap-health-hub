@@ -71,14 +71,23 @@ const EditSelectDetailDrawer = ({ isOpen, onClose, title, currentValue, options,
             onValueChange={(value) => { if (value) setSelectedValue(value) }}
           >
             {options.map(option => (
-              <ToggleGroupItem key={option.value} value={option.value} className="h-14 text-base w-full justify-start p-4">
+              <ToggleGroupItem 
+                key={option.value} 
+                value={option.value} 
+                className="h-auto min-h-[3.5rem] text-base w-full justify-start p-4 whitespace-normal text-left"
+              >
                 {option.label}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
         </div>
         <DrawerFooter>
-          <Button size="lg" onClick={handleSave} disabled={mutation.isPending || !selectedValue}>
+          <Button 
+            size="lg" 
+            onClick={handleSave} 
+            disabled={mutation.isPending || !selectedValue}
+            className="h-auto min-h-[3.5rem]"
+          >
             {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t('edit_profile.save')}
           </Button>
