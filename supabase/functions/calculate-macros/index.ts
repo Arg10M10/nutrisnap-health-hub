@@ -19,16 +19,13 @@ serve(async (req) => {
     const safeAge = Number(age) || 30;
     const safeWorkouts = Number(workoutsPerWeek) || 3;
     const isMale = gender?.toLowerCase() === 'male';
-    const targetWeeklyChange = Number(weeklyRate) || 0.5; // kg por semana
+    const targetWeeklyChange = Number(weeklyRate) || 0; // kg por semana (0 si es mantener)
 
-    // 2. Cálculo de BMR (Tasa Metabólica Basal) - Ecuación Mifflin-St Jeor (Estándar de Oro)
-    // Hombres: (10 × peso en kg) + (6.25 × altura en cm) - (5 × edad en años) + 5
-    // Mujeres: (10 × peso en kg) + (6.25 × altura en cm) - (5 × edad en años) - 161
+    // 2. Cálculo de BMR (Tasa Metabólica Basal) - Ecuación Mifflin-St Jeor
     let bmr = (10 * safeWeight) + (6.25 * safeHeight) - (5 * safeAge);
     bmr += isMale ? 5 : -161;
 
     // 3. Multiplicador de Actividad (TDEE)
-    // Asumimos un factor base y sumamos según entrenamientos para ser más precisos
     let activityMultiplier = 1.2; // Sedentario base
     if (safeWorkouts >= 1 && safeWorkouts <= 2) activityMultiplier = 1.375; // Ligero
     else if (safeWorkouts >= 3 && safeWorkouts <= 5) activityMultiplier = 1.55; // Moderado
@@ -38,33 +35,29 @@ serve(async (req) => {
 
     // 4. Ajuste por Objetivo (Déficit/Superávit)
     // 1kg de grasa corporal ≈ 7700 kcal.
-    // Déficit diario necesario = (kg_semana * 7700) / 7
     const dailyCalorieDelta = Math.round((targetWeeklyChange * 7700) / 7);
     
     let targetCalories = tdee;
 
     if (goal === 'lose_weight') {
       targetCalories = tdee - dailyCalorieDelta;
-      // Límite de seguridad: nunca bajar de BMR sin supervisión médica, o mínimo 1200/1500
       const minSafeCalories = isMale ? 1500 : 1200;
       if (targetCalories < minSafeCalories) targetCalories = minSafeCalories;
     } else if (goal === 'gain_weight') {
       targetCalories = tdee + dailyCalorieDelta;
     }
 
-    // 5. Distribución de Macros (Enfoque Equilibrado/Alto en Proteína)
-    // Proteína: Esencial para mantener músculo en déficit. 
-    // Objetivo: ~2g por kg de peso (o 30% de calorías si es obesidad)
+    // 5. Distribución de Macros
+    // Proteína: ~2g por kg de peso
     let proteinGrams = Math.round(safeWeight * 2); 
     const proteinCals = proteinGrams * 4;
 
-    // Si la proteína excede el 40% de las calorías totales (raro, pero posible en dietas muy bajas), ajustamos
+    // Seguridad: Que proteína no sea excesiva (>40% cals)
     if (proteinCals > (targetCalories * 0.4)) {
         proteinGrams = Math.round((targetCalories * 0.35) / 4);
     }
 
-    // Grasas: ~0.8g - 1g por kg, o el 25-30% de las calorías
-    // Usaremos el 30% como base saludable hormonalmente
+    // Grasas: ~30% de las calorías
     const fatCals = Math.round(targetCalories * 0.30);
     const fatGrams = Math.round(fatCals / 9);
 
@@ -73,10 +66,8 @@ serve(async (req) => {
     const remainingCals = targetCalories - usedCals;
     const carbGrams = Math.max(0, Math.round(remainingCals / 4));
 
-    // 6. Azúcares
-    // OMS recomienda < 10% de la ingesta calórica total, idealmente < 5%.
-    // Vamos a ser estrictos pero realistas: Máximo 5% para salud óptima o tope fijo.
-    const sugarCap = Math.min(Math.round((targetCalories * 0.05) / 4), 30); // Max 30g o 5%
+    // 6. Azúcares: Tope estricto del 5%
+    const sugarCap = Math.min(Math.round((targetCalories * 0.05) / 4), 30);
 
     const result = {
       calories: Math.round(targetCalories),

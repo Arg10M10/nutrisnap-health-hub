@@ -22,21 +22,20 @@ const GeneratingPlan = () => {
     { text: "¡Plan personalizado listo!", icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
   ];
 
-  // Simulación de progreso visual - 30 segundos
+  // Simulación de progreso visual - Ajustado para ~30 segundos
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 99) {
-          return 99; // Esperar a éxito
-        }
+        if (prev >= 99) return 99;
         
-        // Curva de progreso para 30s aprox
         let increment = 0;
-        if (prev < 30) increment = 0.5; // Primeros 6s
-        else if (prev < 70) increment = 0.2; // Siguientes 20s
-        else increment = 0.1; // Final lento
+        if (prev < 30) increment = 1.5;
+        else if (prev < 70) increment = 0.4;
+        else if (prev < 90) increment = 0.2;
+        else increment = 0.1;
         
-        return Math.min(prev + increment, 99);
+        increment += (Math.random() - 0.5) * 0.1;
+        return Math.min(prev + Math.max(0.05, increment), 99);
       });
     }, 100);
 
@@ -54,26 +53,31 @@ const GeneratingPlan = () => {
     mutationFn: async () => {
       if (!profile || !user) throw new Error("Profile not loaded");
 
+      const weightInKg = profile.weight || 70;
+      const heightInCm = profile.height || 170;
       const isImperial = profile.units === 'imperial';
       
-      // Normalizar a métrico para el backend si es necesario
-      const weightInKg = profile.weight || 70;
       const finalWeight = isImperial ? weightInKg * 0.453592 : weightInKg;
+      const finalHeight = isImperial ? heightInCm * 2.54 : heightInCm;
       
-      const heightVal = profile.height || 170;
-      const finalHeight = isImperial ? heightVal * 2.54 : heightVal; // in -> cm
-      
-      // Asumimos actividad moderada (3 días) si no hay dato, es un buen promedio para iniciar
-      // Si el usuario dijo que su experiencia es "First time", bajamos a 1-2 días
+      // Inferir actividad basada en experiencia previa
       let estimatedWorkouts = 3;
-      if (profile.previous_apps_experience?.includes("first time")) {
-        estimatedWorkouts = 2;
+      if (profile.previous_apps_experience) {
+        const exp = profile.previous_apps_experience.toLowerCase();
+        if (exp.includes("first time")) estimatedWorkouts = 1;
+        else if (exp.includes("one or two")) estimatedWorkouts = 3;
+        else if (exp.includes("several")) estimatedWorkouts = 5;
       }
 
-      const weeklyRate = profile.weekly_rate || (isImperial ? 1.1 : 0.5); // lbs o kg
-      const finalWeeklyRate = isImperial ? weeklyRate * 0.453592 : weeklyRate;
+      const goalWeight = profile.goal_weight ? (isImperial ? profile.goal_weight * 0.453592 : profile.goal_weight) : finalWeight;
+      
+      // USAR EL VALOR REAL DEL PERFIL
+      let weeklyRate = profile.weekly_rate || 0.5;
+      if (isImperial) {
+        // Si es imperial, el valor en DB está en lbs, convertir a kg para el cálculo
+        weeklyRate = weeklyRate * 0.453592;
+      }
 
-      // Llamada a la función con matemática estricta
       const { data: suggestions, error: suggestionError } = await supabase.functions.invoke('calculate-macros', {
         body: {
           weight: finalWeight,
@@ -81,7 +85,8 @@ const GeneratingPlan = () => {
           gender: profile.gender || 'male',
           age: profile.age || 30,
           goal: profile.goal || 'maintain_weight',
-          weeklyRate: finalWeeklyRate,
+          goalWeight: goalWeight,
+          weeklyRate: weeklyRate,
           workoutsPerWeek: estimatedWorkouts
         },
       });
@@ -113,14 +118,12 @@ const GeneratingPlan = () => {
     },
     onError: (error) => {
       console.error("Error generating plan", error);
-      // En caso de error, no bloqueamos al usuario, usamos valores por defecto seguros
       navigate('/');
     }
   });
 
   useEffect(() => {
     if (user && profile) {
-      // Pequeño delay inicial para que la UI se monte suavemente antes de la petición
       const timeout = setTimeout(() => {
         generatePlanMutation.mutate();
       }, 1000);
@@ -131,7 +134,6 @@ const GeneratingPlan = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
       <div className="w-full max-w-md space-y-12">
-        
         <div className="flex justify-center h-32 items-center mb-8">
           <motion.div
             key={stage}
