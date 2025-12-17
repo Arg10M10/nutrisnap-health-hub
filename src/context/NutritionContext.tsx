@@ -219,7 +219,10 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       if (error) throw error;
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] }); },
-    onError: (error) => { toast.error('No se pudo guardar el análisis.', { description: error.message }); },
+    onError: (error) => {
+        console.error('Error adding entry:', error);
+        toast.error('No se pudo guardar el análisis.', { description: t('common.error_friendly') }); 
+    },
   });
 
   const waterMutation = useMutation({
@@ -238,7 +241,10 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       }
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['water_entries', user?.id] }); },
-    onError: (error) => { toast.error('No se pudo actualizar el agua.', { description: error.message }); },
+    onError: (error) => {
+        console.error('Error updating water:', error);
+        toast.error('No se pudo actualizar el agua.', { description: t('common.error_friendly') }); 
+    },
   });
 
   const addAnalysis = (result: AnalysisResult, imageUrl = '/placeholder.svg') => {

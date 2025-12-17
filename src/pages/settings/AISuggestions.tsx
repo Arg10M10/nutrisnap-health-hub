@@ -137,7 +137,8 @@ const AISuggestions = () => {
       navigate(-1);
     },
     onError: (error) => {
-      toast.error(t('ai_suggestions.toast_error'), { description: error.message });
+      console.error("AI Suggestions Error:", error);
+      toast.error(t('ai_suggestions.toast_error'), { description: t('common.error_friendly') });
     },
   });
 

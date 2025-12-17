@@ -149,7 +149,7 @@ const Scanner = () => {
     },
     onError: (err: Error) => {
       console.error("Analysis start error:", err);
-      toast.error(t('scanner.error_analysis'), { description: err.message });
+      toast.error(t('scanner.error_analysis'), { description: t('common.error_friendly') });
       setState("captured");
     },
   });

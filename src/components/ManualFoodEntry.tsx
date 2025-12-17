@@ -83,8 +83,9 @@ const ManualFoodEntry = ({ embedded = false, onSuccess }: ManualFoodEntryProps) 
       });
     },
     onError: (error) => {
+      console.error("Manual food entry error:", error);
       toast.error(t('manual_food.error_analysis'), {
-        description: error.message,
+        description: t('common.error_friendly'),
       });
     },
   });

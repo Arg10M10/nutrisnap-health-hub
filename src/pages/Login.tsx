@@ -63,14 +63,8 @@ export default function Login() {
 
     } catch (error: any) {
       console.error('Error General en Login:', error);
-      
-      let message = error.message || JSON.stringify(error);
-      
-      if (message.includes("10") || message.includes("Something went wrong")) {
-        message = "Error de configuración de Google (Código 10). Verifica el SHA-1.";
-      }
-
-      toast.error(t('login.error_title'), { description: message });
+      // Mensaje amigable para el usuario, ignorando el error técnico
+      toast.error(t('login.error_title'), { description: t('login.error_description') });
     } finally {
       setLoading(false);
     }

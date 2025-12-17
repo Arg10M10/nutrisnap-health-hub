@@ -100,7 +100,8 @@ export const DietsOnboarding = () => {
     },
     onError: (error) => {
       setIsGenerating(false); // Cancelar animación si falla
-      toast.error(t('diets_onboarding.toast_error_title'), { description: error.message });
+      console.error("Diet generation error:", error);
+      toast.error(t('diets_onboarding.toast_error_title'), { description: t('common.error_friendly') });
     },
   });
 

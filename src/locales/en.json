@@ -6,7 +6,8 @@
     "taking_too_long": "Taking too long?",
     "sign_out": "Sign Out",
     "retry": "Retry",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "error_friendly": "Something went wrong. Please check your connection and try again."
   },
   "settings": {
     "title": "Settings",
@@ -63,7 +64,8 @@
     "subtitle": "Your intelligent health companion. Start your journey with one click.",
     "google_button": "Continue with Google",
     "terms_privacy": "By continuing, you agree to our <1>Terms of Service</1> and <3>Privacy Policy</3>.",
-    "error_title": "Login Error"
+    "error_title": "Login Error",
+    "error_description": "Could not sign in. Please try again."
   },
   "bottom_nav": {
     "home": "Home",

@@ -56,7 +56,8 @@ const WriteExercise = () => {
       });
     },
     onError: (error) => {
-      toast.error('Error al iniciar el análisis', { description: (error as Error).message });
+      console.error("Write exercise error:", error);
+      toast.error(t('write_exercise.error_toast_title'), { description: t('common.error_friendly') });
     },
   });
 

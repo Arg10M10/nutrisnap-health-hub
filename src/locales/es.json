@@ -6,7 +6,8 @@
     "taking_too_long": "¿Tarda demasiado?",
     "sign_out": "Cerrar Sesión",
     "retry": "Reintentar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "error_friendly": "Algo salió mal. Por favor, verifica tu conexión e inténtalo de nuevo."
   },
   "settings": {
     "title": "Configuración",
@@ -63,7 +64,8 @@
     "subtitle": "Tu compañero de salud inteligente. Comienza tu viaje con un solo clic.",
     "google_button": "Continuar con Google",
     "terms_privacy": "Al continuar, aceptas nuestros <1>Términos de Servicio</1> y <3>Política de Privacidad</3>.",
-    "error_title": "Error al iniciar sesión"
+    "error_title": "Error de conexión",
+    "error_description": "No pudimos iniciar sesión. Por favor, intenta de nuevo."
   },
   "bottom_nav": {
     "home": "Inicio",
@@ -232,23 +234,14 @@
     "intensity_high_example": "Sprints, correr en cuestas.",
     "saved_toast_title": "¡Carrera guardada!",
     "saved_toast_desc": "Has quemado aproximadamente {{calories}} kcal.",
-    "error_toast_title": "No se pudo registrar la carrera."
+    "error_toast_title": "No se pudo registrar"
   },
   "weights": {
     "title": "Registrar Pesas",
     "save_action": "Guardar Pesas ({{calories}} kcal)",
     "saved_toast_title": "¡Entrenamiento guardado!",
     "saved_toast_desc": "Has quemado aproximadamente {{calories}} kcal.",
-    "error_toast_title": "No se pudo registrar el entrenamiento.",
-    "intensity_low": "Baja",
-    "intensity_low_desc": "Pesos ligeros y técnica cómoda.",
-    "intensity_low_example": "Circuito ligero, bandas elásticas.",
-    "intensity_medium": "Media",
-    "intensity_medium_desc": "Esfuerzo moderado con series desafiantes.",
-    "intensity_medium_example": "Superseries, peso moderado.",
-    "intensity_high": "Alta",
-    "intensity_high_desc": "Levantamientos pesados o HIIT con pesas.",
-    "intensity_high_example": "Series al fallo, compuestos pesados."
+    "error_toast_title": "No se pudo registrar"
   },
   "write_exercise": {
     "title": "Describe el ejercicio",
@@ -267,7 +260,7 @@
     "calories_burned": "Calorías quemadas",
     "add_button": "Añadir",
     "saved_toast": "Ejercicio manual añadido.",
-    "error_toast_title": "No se pudo añadir el ejercicio.",
+    "error_toast_title": "No se pudo añadir",
     "validation_error": "Por favor, introduce un número válido de calorías."
   },
   "preferences": {
@@ -285,7 +278,7 @@
     "time_format_12h": "12 Horas (AM/PM)",
     "time_format_24h": "24 Horas",
     "toast_success": "¡Formato de hora actualizado!",
-    "toast_error": "Error al actualizar el formato"
+    "toast_error": "No se pudo actualizar"
   },
   "nutritional_goals": {
     "title": "Metas Nutricionales",
@@ -298,7 +291,7 @@
     "sugars": "Azúcares",
     "save": "Guardar Metas",
     "save_success": "¡Metas guardadas con éxito!",
-    "save_error": "Error al guardar metas",
+    "save_error": "No se pudieron guardar las metas",
     "ai_suggestions": "Sugerencias de la IA"
   },
   "ai_suggestions": {
@@ -432,7 +425,7 @@
     "save": "Guardar Cambios",
     "cancel": "Cancelar",
     "toast_success": "¡Perfil actualizado con éxito!",
-    "toast_error": "Hubo un error al actualizar tu perfil."
+    "toast_error": "No se pudo actualizar el perfil."
   },
   "zod": {
     "first_name_required": "El nombre es requerido.",
