@@ -40,6 +40,7 @@ import EditProfile from "./pages/settings/EditProfile";
 import PersonalDetails from "./pages/settings/PersonalDetails";
 import BadgeDetailModal from "./components/BadgeDetailModal";
 import Subscribe from "./pages/Subscribe";
+import GeneratingPlan from "./pages/onboarding/GeneratingPlan";
 
 const queryClient = new QueryClient();
 
@@ -108,6 +109,7 @@ const AppRoutes = () => {
     "/settings/edit-profile",
     "/settings/personal-details",
     "/subscribe",
+    "/generating-plan",
   ];
 
   const shellClass = "relative min-h-screen"; 
@@ -157,6 +159,7 @@ const AppRoutes = () => {
               <Route path="/settings/edit-profile" element={<EditProfile />} />
               <Route path="/settings/personal-details" element={<PersonalDetails />} />
               <Route path="/subscribe" element={<Subscribe />} />
+              <Route path="/generating-plan" element={<GeneratingPlan />} />
             </Routes>
           </AnimatePresence>
         </div>

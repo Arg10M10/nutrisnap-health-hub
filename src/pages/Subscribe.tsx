@@ -13,8 +13,8 @@ const Subscribe = () => {
   const [planType, setPlanType] = useState<'trial' | 'paid'>('trial');
 
   const handleSubscribe = () => {
-    // Placeholder for Play Store Billing. For now, just navigate to the app.
-    navigate('/');
+    // Navigate to plan generation screen instead of direct to home
+    navigate('/generating-plan');
   };
 
   const timelineItems = [

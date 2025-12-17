@@ -14,15 +14,12 @@ const AppTutorial = () => {
   const { user } = useAuth();
   const [run, setRun] = useState(false);
   
-  // Usamos una clave única por usuario. Si el usuario cambia (o es nuevo), la clave es nueva y el tutorial se reinicia (false).
-  // Una vez completado, se guarda 'true' para ese usuario específico.
   const storageKey = user?.id ? `tutorial_seen_v4_${user.id}` : 'tutorial_seen_v4_guest';
   const [hasSeenTutorial, setHasSeenTutorial] = useLocalStorage(storageKey, false);
   
   const { theme } = useTheme();
 
   useEffect(() => {
-    // Pequeño delay para asegurar que la UI esté lista antes de lanzar el tutorial
     const timer = setTimeout(() => {
       if (!hasSeenTutorial) {
         setRun(true);
@@ -61,21 +58,21 @@ const AppTutorial = () => {
       content: t('tutorial.scanner_content'),
       title: t('tutorial.scanner_title'),
       placement: 'top',
-      disableScrolling: true,
+      disableScrolling: true, // Importante para elementos fijos/bottom
     },
     {
       target: '#nav-progress',
       content: t('tutorial.progress_content'),
       title: t('tutorial.progress_title'),
       placement: 'top',
-      disableScrolling: true,
+      disableScrolling: true, // Importante para evitar scroll al top
     },
     {
       target: '#nav-settings',
       content: t('tutorial.settings_content'),
       title: t('tutorial.settings_title'),
       placement: 'top',
-      disableScrolling: true,
+      disableScrolling: true, // Importante para evitar scroll al top
     },
   ];
 
@@ -91,37 +88,39 @@ const AppTutorial = () => {
     size
   }: TooltipRenderProps) => {
     return (
-      <div {...tooltipProps} className="max-w-xs sm:max-w-sm z-50">
+      <div {...tooltipProps} className="max-w-xs sm:max-w-md w-full z-50">
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ type: "spring", damping: 20, stiffness: 300 }}
-          className="bg-card text-card-foreground p-6 rounded-[2rem] shadow-2xl border border-border/50 relative overflow-hidden"
+          className="bg-card text-card-foreground p-5 rounded-[1.5rem] shadow-2xl border border-border/50 relative overflow-hidden flex flex-col"
         >
           {/* Fondo decorativo sutil */}
           <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
 
-          {/* Botón Cerrar (Skip) */}
-          <button 
-            {...skipProps} 
-            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Skip tutorial"
-          >
-            <X className="w-5 h-5" />
-          </button>
-
-          <div className="relative z-10">
+          {/* Header con Título y Cerrar */}
+          <div className="flex justify-between items-start mb-3 relative z-10">
             {step.title && (
-              <h3 className="text-xl font-bold mb-2 text-primary pr-6 leading-tight">
+              <h3 className="text-lg sm:text-xl font-bold text-primary leading-tight max-w-[85%]">
                 {step.title}
               </h3>
             )}
-            <div className="text-muted-foreground mb-6 text-base leading-relaxed">
+            <button 
+              {...skipProps} 
+              className="text-muted-foreground hover:text-foreground transition-colors p-1 -mr-2 -mt-2"
+              aria-label="Skip tutorial"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="relative z-10 flex-1">
+            <div className="text-muted-foreground mb-6 text-sm sm:text-base leading-relaxed">
               {step.content}
             </div>
 
-            <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center justify-between mt-auto pt-2">
               {/* Indicadores de Puntos (Dots) */}
               <div className="flex gap-1.5">
                 {Array.from({ length: size }).map((_, i) => (
@@ -138,7 +137,7 @@ const AppTutorial = () => {
               {/* Botón Principal */}
               <Button
                 {...primaryProps}
-                className="rounded-full px-6 h-10 shadow-lg shadow-primary/20"
+                className="rounded-full px-5 h-9 sm:h-10 shadow-lg shadow-primary/20 text-sm font-semibold"
                 size="sm"
               >
                 {isLastStep ? (
@@ -168,16 +167,18 @@ const AppTutorial = () => {
       disableOverlayClose={true}
       spotlightClicks={false}
       callback={handleJoyrideCallback}
-      tooltipComponent={CustomTooltip} // Usamos nuestro componente personalizado
+      tooltipComponent={CustomTooltip} 
       styles={{
         options: {
           zIndex: 10000,
-          overlayColor: 'rgba(0, 0, 0, 0.75)', // Fondo oscuro más elegante
+          overlayColor: 'rgba(0, 0, 0, 0.75)',
         },
         spotlight: {
-          borderRadius: 20, // Bordes redondeados en el área resaltada
+          borderRadius: 20,
         }
       }}
+      // Asegura que no haga scroll para elementos fijos como el bottom nav
+      disableScrollParentFix={true}
     />
   );
 };
