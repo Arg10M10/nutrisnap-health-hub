@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from 'react-i18next';
@@ -36,6 +36,9 @@ export const OnboardingLayout = ({
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const progressValue = (step / totalSteps) * 100;
 
+  // Obtener código de idioma actual (EN / ES)
+  const currentLangCode = i18n.language.substring(0, 2).toUpperCase();
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="p-4 pt-8">
@@ -45,7 +48,6 @@ export const OnboardingLayout = ({
               <ArrowLeft className="h-5 w-5" />
             </Button>
           ) : (
-            // Spacer to keep layout consistent if needed, though flex-1 on progress handles it well
             <div className="w-10 shrink-0" />
           )}
           <div className="flex-1">
@@ -54,15 +56,16 @@ export const OnboardingLayout = ({
             </p>
             <Progress value={progressValue} className="mt-1 h-2" />
           </div>
+          
+          {/* Botón de idioma moderno */}
           <Button 
             variant="ghost" 
-            size="icon" 
+            size="sm" 
             onClick={() => setIsLanguageDrawerOpen(true)} 
-            className="rounded-full shrink-0"
+            className="rounded-full shrink-0 gap-1.5 px-3 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
           >
-            <span className="text-xl leading-none pt-1">
-              {i18n.language.startsWith('es') ? '🇪🇸' : '🇺🇸'}
-            </span>
+            <Globe className="w-4 h-4" />
+            <span className="text-xs font-bold tracking-wide">{currentLangCode}</span>
           </Button>
         </div>
       </header>
