@@ -31,22 +31,28 @@ serve(async (req) => {
 
       CRITICAL INSTRUCTION:
       The user's preferred language is ${targetLanguage}. 
-      All names of meals and descriptions MUST be written in ${targetLanguage}.
+      All meal names MUST be written in ${targetLanguage}.
 
       Instructions:
       1. Generate a meal plan for 7 days (Monday to Sunday).
       2. For each day, include breakfast, lunch, dinner, and a snack.
-      3. Meals must be varied, healthy, and aligned with user goals.
-      4. Provide simple and realistic meal ideas compatible with the cooking time and budget.
-      5. Respond ONLY with a valid JSON object, no extra text or markdown. Use this exact structure:
+      3. For EACH meal, provide the meal name and an estimation of its nutritional values: calories (kcal), protein (g), carbs (g), and fats (g). All values must be numbers.
+      4. Meals must be varied, healthy, and aligned with user goals.
+      5. Provide simple and realistic meal ideas compatible with the cooking time and budget.
+      6. Respond ONLY with a valid JSON object, no extra text or markdown. Use this exact structure:
       {
-        "monday": { "breakfast": "...", "lunch": "...", "dinner": "...", "snack": "..." },
-        "tuesday": { "breakfast": "...", "lunch": "...", "dinner": "...", "snack": "..." },
-        "wednesday": { "breakfast": "...", "lunch": "...", "dinner": "...", "snack": "..." },
-        "thursday": { "breakfast": "...", "lunch": "...", "dinner": "...", "snack": "..." },
-        "friday": { "breakfast": "...", "lunch": "...", "dinner": "...", "snack": "..." },
-        "saturday": { "breakfast": "...", "lunch": "...", "dinner": "...", "snack": "..." },
-        "sunday": { "breakfast": "...", "lunch": "...", "dinner": "...", "snack": "..." }
+        "monday": {
+          "breakfast": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number },
+          "lunch": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number },
+          "dinner": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number },
+          "snack": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }
+        },
+        "tuesday": { "breakfast": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "lunch": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "dinner": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "snack": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number } },
+        "wednesday": { "breakfast": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "lunch": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "dinner": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "snack": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number } },
+        "thursday": { "breakfast": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "lunch": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "dinner": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "snack": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number } },
+        "friday": { "breakfast": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "lunch": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "dinner": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "snack": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number } },
+        "saturday": { "breakfast": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "lunch": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "dinner": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "snack": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number } },
+        "sunday": { "breakfast": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "lunch": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "dinner": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number }, "snack": { "name": "...", "calories": number, "protein": number, "carbs": number, "fats": number } }
       }
     `;
 
