@@ -1,11 +1,11 @@
 export const countries = [
-  { value: "united_states", label: "Estados Unidos" },
-  { value: "mexico", label: "México" },
-  { value: "spain", label: "España" },
-  { value: "argentina", label: "Argentina" },
-  { value: "brazil", label: "Brasil" },
-  { value: "dominican_republic", label: "República Dominicana" },
-  { value: "colombia", label: "Colombia" },
-  { value: "chile", label: "Chile" },
-  { value: "peru", label: "Perú" }
+  { value: "united_states", label: "Estados Unidos", flag: "🇺🇸" },
+  { value: "mexico", label: "México", flag: "🇲🇽" },
+  { value: "spain", label: "España", flag: "🇪🇸" },
+  { value: "argentina", label: "Argentina", flag: "🇦🇷" },
+  { value: "brazil", label: "Brasil", flag: "🇧🇷" },
+  { value: "dominican_republic", label: "R. Dominicana", flag: "🇩🇴" },
+  { value: "colombia", label: "Colombia", flag: "🇨🇴" },
+  { value: "chile", label: "Chile", flag: "🇨🇱" },
+  { value: "peru", label: "Perú", flag: "🇵🇪" }
 ].sort((a, b) => a.label.localeCompare(b.label));

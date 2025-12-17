@@ -1,24 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Check, ChevronsUpDown, MapPin, Globe } from "lucide-react";
+import { Check, MapPin, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { countries } from "@/data/countries";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 
 interface CountrySelectorProps {
   value: string;
@@ -26,13 +13,10 @@ interface CountrySelectorProps {
 }
 
 export function CountrySelector({ value, onChange }: CountrySelectorProps) {
-  const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
-  // Detectar país automáticamente (simulado con zona horaria/idioma por simplicidad)
   const handleAutoDetect = () => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    // Mapeo simple de zonas horarias comunes a países de la lista
     if (timeZone.includes("Mexico")) onChange("mexico");
     else if (timeZone.includes("Argentina")) onChange("argentina");
     else if (timeZone.includes("Bogota")) onChange("colombia");
@@ -40,75 +24,66 @@ export function CountrySelector({ value, onChange }: CountrySelectorProps) {
     else if (timeZone.includes("New_York") || timeZone.includes("Los_Angeles")) onChange("united_states");
     else if (timeZone.includes("Santiago")) onChange("chile");
     else if (timeZone.includes("Lima")) onChange("peru");
+    else if (timeZone.includes("Sao_Paulo")) onChange("brazil");
+    else if (timeZone.includes("Santo_Domingo")) onChange("dominican_republic");
     else {
-        // Fallback genérico si no coincide exactamente
-        onChange(""); 
+        // No hacer nada si no se detecta con certeza
     }
   };
 
   return (
-    <div className="space-y-4">
-        <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-            <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between h-14 text-lg px-4"
-            >
-            {value
-                ? countries.find((country) => country.value === value)?.label
-                : t('diets_onboarding.select_country') || "Seleccionar país..."}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
-            <Command>
-            <CommandInput placeholder={t('diets_onboarding.search_country') || "Buscar país..."} />
-            <CommandList>
-                <CommandEmpty>No country found.</CommandEmpty>
-                <CommandGroup>
-                {countries.map((country) => (
-                    <CommandItem
-                    key={country.value}
-                    value={country.label} // Usamos label para la búsqueda
-                    onSelect={() => {
-                        onChange(country.value);
-                        setOpen(false);
-                    }}
-                    >
-                    <Check
+    <div className="space-y-6">
+        <Button 
+            type="button" 
+            variant="outline" 
+            className="w-full text-primary gap-2 h-12 rounded-xl border-primary/20 bg-primary/5 hover:bg-primary/10 hover:text-primary transition-colors" 
+            onClick={handleAutoDetect}
+        >
+            <MapPin className="w-4 h-4" />
+            {t('diets_onboarding.auto_detect') || "Detectar mi ubicación"}
+        </Button>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {countries.map((country) => {
+                const isSelected = value === country.value;
+                return (
+                    <motion.button
+                        key={country.value}
+                        type="button"
+                        onClick={() => onChange(country.value)}
+                        whileTap={{ scale: 0.95 }}
                         className={cn(
-                        "mr-2 h-4 w-4",
-                        value === country.value ? "opacity-100" : "opacity-0"
+                            "relative flex flex-col items-center justify-center p-4 h-32 rounded-2xl border-2 transition-all duration-200 outline-none",
+                            isSelected 
+                                ? "border-primary bg-primary/5 shadow-md" 
+                                : "border-muted bg-card hover:border-primary/30 hover:bg-muted/30"
                         )}
-                    />
-                    {country.label}
-                    </CommandItem>
-                ))}
-                </CommandGroup>
-            </CommandList>
-            </Command>
-        </PopoverContent>
-        </Popover>
+                    >
+                        <span className="text-4xl mb-2 filter drop-shadow-sm">
+                            {country.flag}
+                        </span>
+                        <span className={cn(
+                            "text-sm font-medium text-center leading-tight transition-colors",
+                            isSelected ? "text-primary" : "text-muted-foreground"
+                        )}>
+                            {country.label}
+                        </span>
+                        
+                        {isSelected && (
+                            <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1 shadow-sm">
+                                <Check className="w-3 h-3" />
+                            </div>
+                        )}
+                    </motion.button>
+                )
+            })}
+        </div>
         
-        <div className="flex flex-col gap-2">
-            <Button 
-                type="button" 
-                variant="ghost" 
-                className="w-full text-primary gap-2" 
-                onClick={handleAutoDetect}
-            >
-                <MapPin className="w-4 h-4" />
-                {t('diets_onboarding.auto_detect') || "Detectar mi ubicación"}
-            </Button>
-            
-            <div className="bg-muted/50 p-3 rounded-lg flex items-start gap-3 mt-2">
-                <Globe className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-muted-foreground">
-                    {t('diets_onboarding.country_expansion_note')}
-                </p>
-            </div>
+        <div className="bg-muted/30 p-4 rounded-xl flex items-start gap-3">
+            <Globe className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-muted-foreground leading-relaxed">
+                {t('diets_onboarding.country_expansion_note')}
+            </p>
         </div>
     </div>
   );
