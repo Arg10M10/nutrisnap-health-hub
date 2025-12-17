@@ -11,6 +11,7 @@ import { NutritionProvider, useNutrition } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { StatusBarSync } from "./components/StatusBarSync";
+import OrientationLock from "./components/OrientationLock";
 
 import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
@@ -179,6 +180,7 @@ const App = () => (
     <ThemeProvider attribute="class" defaultTheme="system" storageKey="vite-ui-theme">
       <TooltipProvider>
         <StatusBarSync />
+        <OrientationLock />
         <BrowserRouter>
           <ScrollToTop />
           <AuthProvider>
