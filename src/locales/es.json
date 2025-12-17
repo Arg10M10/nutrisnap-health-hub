@@ -165,7 +165,8 @@
     "lunch_time": "¡Hora de la comida!",
     "snack_time": "¡Hora del snack!",
     "dinner_time": "¡Hora de la cena!",
-    "gap_time_message": "No es hora de comer",
+    "gap_time_message": "No es hora de comer. Mantente hidratado.",
+    "gap_title": "Descanso",
     "scan_food_button": "Escanear Comida"
   },
   "badges": {

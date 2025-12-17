@@ -165,7 +165,8 @@
     "lunch_time": "It's lunch time!",
     "snack_time": "It's snack time!",
     "dinner_time": "It's dinner time!",
-    "gap_time_message": "It's not meal time",
+    "gap_time_message": "It's not meal time. Stay hydrated.",
+    "gap_title": "Rest",
     "scan_food_button": "Scan Food"
   },
   "badges": {

@@ -76,12 +76,17 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
 
   useEffect(() => {
     const hours = currentTime.getHours();
-    // Definición de horarios
-    if (hours >= 5 && hours < 11) setActiveMeal('breakfast');
-    else if (hours >= 11 && hours < 16) setActiveMeal('lunch');
-    else if (hours >= 16 && hours < 19) setActiveMeal('snack');
-    else if (hours >= 19 && hours < 23) setActiveMeal('dinner');
-    else setActiveMeal('gap'); // Late night or very early morning
+    
+    // Desayuno: 06:00 - 10:00 (no incluido el 10)
+    if (hours >= 6 && hours < 10) setActiveMeal('breakfast');
+    // Comida: 12:00 - 15:00 (no incluido el 15)
+    else if (hours >= 12 && hours < 15) setActiveMeal('lunch');
+    // Snack: 16:00 - 17:00 (no incluido el 17)
+    else if (hours >= 16 && hours < 17) setActiveMeal('snack');
+    // Cena: 19:00 - 21:00 (no incluido el 21)
+    else if (hours >= 19 && hours < 21) setActiveMeal('dinner');
+    // El resto es descanso (gap)
+    else setActiveMeal('gap');
   }, [currentTime]);
 
   const handleRegenerateClick = async () => {
@@ -127,7 +132,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
         };
       default:
         return {
-          title: "Descanso",
+          title: t('diets.gap_title'),
           icon: Ban,
           color: "text-muted-foreground",
           bgColor: "bg-muted",
@@ -138,10 +143,8 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
 
   const currentMeals = plan[selectedDayKey];
   
-  // Si no hay plan para este día (error raro), no renderizar nada crítico
   if (!currentMeals) return null;
 
-  // Preparar datos de todas las comidas
   const allMealsData = [
     { type: 'breakfast', ...getMealConfig('breakfast'), content: currentMeals.breakfast },
     { type: 'lunch', ...getMealConfig('lunch'), content: currentMeals.lunch },
@@ -149,13 +152,24 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
     { type: 'dinner', ...getMealConfig('dinner'), content: currentMeals.dinner },
   ] as const;
 
-  // Encontrar la comida activa para mostrarla en la tarjeta grande
-  // Si estamos en 'gap', mostramos el desayuno del día (o la próxima comida lógica)
-  const highlightedMealType = activeMeal === 'gap' ? 'breakfast' : activeMeal;
-  const highlightedMeal = allMealsData.find(m => m.type === highlightedMealType)!;
-  
-  // El resto de comidas para la lista inferior
-  const otherMeals = allMealsData.filter(m => m.type !== highlightedMealType);
+  // Lógica para la tarjeta destacada y la lista inferior
+  let highlightedMeal;
+  let otherMeals;
+
+  if (activeMeal === 'gap') {
+    // Si es hora de descanso, la tarjeta principal muestra el estado de "No comer"
+    highlightedMeal = {
+        type: 'gap',
+        ...getMealConfig('gap'),
+        content: t('diets.gap_time_message')
+    };
+    // Y mostramos todas las comidas abajo para referencia
+    otherMeals = allMealsData;
+  } else {
+    // Si es hora de comer, destacamos esa comida
+    highlightedMeal = allMealsData.find(m => m.type === activeMeal)!;
+    otherMeals = allMealsData.filter(m => m.type !== activeMeal);
+  }
 
   return (
     <div className="space-y-6 pb-20">
@@ -245,6 +259,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
               </p>
             </div>
 
+            {/* Solo mostrar botón de escanear si NO es gap, o si se quiere permitir siempre */}
             <div className="flex justify-end">
               <Button 
                 onClick={() => navigate('/scanner')} 
