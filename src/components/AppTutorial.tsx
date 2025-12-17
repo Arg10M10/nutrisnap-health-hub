@@ -165,21 +165,22 @@ const AppTutorial = () => {
       callback={handleJoyrideCallback}
       tooltipComponent={CustomTooltip} 
       floaterProps={{
-        hideArrow: true, // Ocultar flecha para diseño más limpio
-        disableAnimation: true, // Ayuda con el posicionamiento en móviles
+        hideArrow: true,
+        disableAnimation: true,
+        // Eliminamos disableScrollParentFix global que estaba causando desalineación en elementos fijos
       }}
       styles={{
         options: {
           zIndex: 10000,
-          overlayColor: 'rgba(0, 0, 0, 0.8)', // Un poco más oscuro para mejor contraste
+          overlayColor: 'rgba(0, 0, 0, 0.8)',
           spotlightPadding: 10,
         },
         spotlight: {
-          borderRadius: 24, // Más redondeado para coincidir con los elementos de la UI
+          borderRadius: 24,
         }
       }}
-      // CRÍTICO: Estas opciones ayudan a fijar el highlight en elementos 'fixed' como el bottom nav
-      disableScrollParentFix={true}
+      // Se eliminó disableScrollParentFix={true} ya que causaba que el spotlight flotara incorrectamente 
+      // al hacer scroll en páginas donde el elemento está fixed al fondo.
       scrollOffset={100}
     />
   );

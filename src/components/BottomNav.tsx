@@ -54,9 +54,9 @@ const BottomNav = () => {
       <nav className="fixed bottom-0 left-0 right-0 z-50 p-4">
         <div className="relative max-w-2xl mx-auto">
           <DrawerTrigger asChild>
-            <div className="absolute bottom-5 left-1/2 -translate-x-1/2">
+            {/* ID movido aquí para estabilidad en el tutorial */}
+            <div id="scan-action-button" className="absolute bottom-5 left-1/2 -translate-x-1/2">
               <motion.button
-                id="scan-action-button"
                 whileTap={{ scale: 0.9 }}
                 className="flex items-center justify-center w-14 h-14 bg-primary rounded-full shadow-lg hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 aria-label="Open actions menu"
