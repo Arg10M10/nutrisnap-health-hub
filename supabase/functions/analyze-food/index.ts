@@ -8,7 +8,8 @@ const corsHeaders = {
 
 const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
 const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
-const GPT_MODEL = "gpt-5-nano";
+// CORRECCIÓN: Usar un modelo válido
+const GPT_MODEL = "gpt-4o-mini";
 
 const safeParseJson = (text: string) => {
   try {

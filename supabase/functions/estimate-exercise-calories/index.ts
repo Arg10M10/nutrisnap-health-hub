@@ -8,7 +8,7 @@ const corsHeaders = {
 
 const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
 const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
-const GPT_MODEL = "gpt-5-nano";
+const GPT_MODEL = "gpt-4o-mini";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -73,8 +73,8 @@ serve(async (req) => {
     const { error: updateError } = await supabaseAdmin
       .from('exercise_entries')
       .update({
-        exercise_type: 'other', // Mantener 'other' para ícono genérico, o mapear si es posible
-        description: estimation.name, // Guardamos el nombre traducido en la descripción para mostrarlo
+        exercise_type: 'other', 
+        description: estimation.name,
         duration_minutes: estimation.duration,
         calories_burned: estimation.calories,
         status: 'completed',
