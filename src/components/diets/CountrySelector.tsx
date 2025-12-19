@@ -32,18 +32,18 @@ export function CountrySelector({ value, onChange }: CountrySelectorProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
         <Button 
             type="button" 
             variant="outline" 
-            className="w-full text-primary gap-2 h-12 rounded-xl border-primary/20 bg-primary/5 hover:bg-primary/10 hover:text-primary transition-colors" 
+            className="w-full text-primary gap-2 h-12 rounded-xl border-primary/20 bg-primary/5 hover:bg-primary/10 hover:text-primary transition-colors mb-2" 
             onClick={handleAutoDetect}
         >
             <MapPin className="w-4 h-4" />
             {t('diets_onboarding.auto_detect') || "Detectar mi ubicación"}
         </Button>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="flex flex-col gap-2">
             {countries.map((country) => {
                 const isSelected = value === country.value;
                 return (
@@ -51,27 +51,27 @@ export function CountrySelector({ value, onChange }: CountrySelectorProps) {
                         key={country.value}
                         type="button"
                         onClick={() => onChange(country.value)}
-                        whileTap={{ scale: 0.95 }}
+                        whileTap={{ scale: 0.98 }}
                         className={cn(
-                            "relative flex flex-col items-center justify-center p-4 min-h-[8rem] h-auto rounded-2xl border-2 transition-all duration-200 outline-none",
+                            "flex items-center gap-4 p-4 w-full rounded-xl border transition-all duration-200 outline-none text-left relative overflow-hidden",
                             isSelected 
-                                ? "border-primary bg-primary/5 shadow-md" 
-                                : "border-muted bg-card hover:border-primary/30 hover:bg-muted/30"
+                                ? "border-primary bg-primary/5 shadow-sm" 
+                                : "border-border bg-card hover:bg-muted/50"
                         )}
                     >
-                        <span className="text-4xl mb-2 filter drop-shadow-sm">
+                        <span className="text-3xl flex-shrink-0 leading-none">
                             {country.flag}
                         </span>
                         <span className={cn(
-                            "text-sm font-medium text-center leading-tight transition-colors break-words w-full",
-                            isSelected ? "text-primary" : "text-muted-foreground"
+                            "font-medium text-base flex-1",
+                            isSelected ? "text-primary" : "text-foreground"
                         )}>
                             {country.label}
                         </span>
                         
                         {isSelected && (
-                            <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1 shadow-sm">
-                                <Check className="w-3 h-3" />
+                            <div className="bg-primary text-white rounded-full p-1 shadow-sm">
+                                <Check className="w-4 h-4" />
                             </div>
                         )}
                     </motion.button>
@@ -79,7 +79,7 @@ export function CountrySelector({ value, onChange }: CountrySelectorProps) {
             })}
         </div>
         
-        <div className="bg-muted/30 p-4 rounded-xl flex items-start gap-3">
+        <div className="bg-muted/30 p-4 rounded-xl flex items-start gap-3 mt-4">
             <Globe className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
             <p className="text-xs text-muted-foreground leading-relaxed">
                 {t('diets_onboarding.country_expansion_note')}
