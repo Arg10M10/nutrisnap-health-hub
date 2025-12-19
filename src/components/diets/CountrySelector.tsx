@@ -1,8 +1,7 @@
 "use client";
 
-import { Check, MapPin, Globe } from "lucide-react";
+import { Check, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { countries } from "@/data/countries";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
@@ -15,34 +14,8 @@ interface CountrySelectorProps {
 export function CountrySelector({ value, onChange }: CountrySelectorProps) {
   const { t } = useTranslation();
 
-  const handleAutoDetect = () => {
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (timeZone.includes("Mexico")) onChange("mexico");
-    else if (timeZone.includes("Argentina")) onChange("argentina");
-    else if (timeZone.includes("Bogota")) onChange("colombia");
-    else if (timeZone.includes("Madrid") || timeZone.includes("Ceuta")) onChange("spain");
-    else if (timeZone.includes("New_York") || timeZone.includes("Los_Angeles")) onChange("united_states");
-    else if (timeZone.includes("Santiago")) onChange("chile");
-    else if (timeZone.includes("Lima")) onChange("peru");
-    else if (timeZone.includes("Sao_Paulo")) onChange("brazil");
-    else if (timeZone.includes("Santo_Domingo")) onChange("dominican_republic");
-    else {
-        // No hacer nada si no se detecta con certeza
-    }
-  };
-
   return (
     <div className="space-y-4">
-        <Button 
-            type="button" 
-            variant="outline" 
-            className="w-full text-primary gap-2 h-12 rounded-xl border-primary/20 bg-primary/5 hover:bg-primary/10 hover:text-primary transition-colors mb-2" 
-            onClick={handleAutoDetect}
-        >
-            <MapPin className="w-4 h-4" />
-            {t('diets_onboarding.auto_detect') || "Detectar mi ubicación"}
-        </Button>
-
         <div className="flex flex-col gap-2">
             {countries.map((country) => {
                 const isSelected = value === country.value;
