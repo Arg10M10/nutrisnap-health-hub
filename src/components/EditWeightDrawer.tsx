@@ -16,21 +16,27 @@ interface EditWeightDrawerProps {
 }
 
 const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerProps) => {
-  const [newWeight, setNewWeight] = useState(Math.round(currentWeight));
+  const [newWeight, setNewWeight] = useState(currentWeight);
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const isMetric = profile?.units !== 'imperial';
 
+  // Generar lista con decimales (e.g., 70.0, 70.1, 70.2...)
   const weightItems = useMemo(() => {
     const min = isMetric ? 30 : 66;
     const max = isMetric ? 200 : 440;
-    return Array.from({ length: max - min + 1 }, (_, i) => i + min);
+    const items: string[] = [];
+    for (let i = min; i <= max; i += 0.1) {
+      items.push(i.toFixed(1));
+    }
+    return items;
   }, [isMetric]);
 
   useEffect(() => {
     if (isOpen) {
-      setNewWeight(Math.round(currentWeight));
+      // Asegurar que el valor inicial tenga formato decimal string para coincidir con la lista
+      setNewWeight(currentWeight);
     }
   }, [isOpen, currentWeight]);
 
@@ -76,9 +82,9 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
           <div className="flex items-center justify-center">
             <WheelPicker
               items={weightItems}
-              value={newWeight}
-              onValueChange={setNewWeight}
-              className="w-24"
+              value={newWeight.toFixed(1)} // Convertir número a string para el picker
+              onValueChange={(val) => setNewWeight(parseFloat(val))} // Convertir string a número al guardar
+              className="w-32"
             />
             <span className="text-2xl text-muted-foreground font-semibold ml-2">{isMetric ? t('edit_weight.weight_unit') : 'lbs'}</span>
           </div>
