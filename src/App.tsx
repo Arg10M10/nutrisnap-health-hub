@@ -92,24 +92,6 @@ const AppRoutes = () => {
     );
   }
 
-  const fullScreenRoutes = [
-    "/scanner",
-    "/exercise/running",
-    "/exercise/weights",
-    "/exercise/write",
-    "/exercise/manual",
-    "/settings/preferences",
-    "/settings/nutritional-goals",
-    "/settings/ai-suggestions",
-    "/settings/weight-goal",
-    "/settings/ring-colors",
-    "/settings/request-feature",
-    "/settings/edit-profile",
-    "/settings/personal-details",
-    "/subscribe",
-    "/generating-plan",
-  ];
-
   const shellClass = "relative min-h-screen"; 
 
   // 1. Not logged in
@@ -124,7 +106,6 @@ const AppRoutes = () => {
   }
 
   // 2. Logged in but Profile not ready OR Onboarding not completed
-  // If profile is null, it might be loading or missing row. We send to Onboarding to create/fix it.
   if (!profile || !profile.onboarding_completed) {
     return (
       <div className={shellClass}>
@@ -135,7 +116,48 @@ const AppRoutes = () => {
     );
   }
 
-  // 3. Authenticated & Onboarded -> App
+  // 3. Logged in, Onboarded, but NOT Subscribed
+  // This is the strict paywall requested.
+  if (!profile.is_subscribed) {
+    return (
+      <div className={shellClass}>
+        <div className="relative z-10">
+          <Subscribe />
+        </div>
+      </div>
+    );
+  }
+
+  // 4. Authenticated, Onboarded & Subscribed -> Full App access
+  
+  // Generating Plan Screen (Special case, often used right after subscribing)
+  if (location.pathname === '/generating-plan') {
+     return (
+      <div className={shellClass}>
+        <div className="relative z-10">
+          <GeneratingPlan />
+        </div>
+      </div>
+     );
+  }
+
+  const fullScreenRoutes = [
+    "/scanner",
+    "/exercise/running",
+    "/exercise/weights",
+    "/exercise/write",
+    "/exercise/manual",
+    "/settings/preferences",
+    "/settings/nutritional-goals",
+    "/settings/ai-suggestions",
+    "/settings/weight-goal",
+    "/settings/ring-colors",
+    "/settings/request-feature",
+    "/settings/edit-profile",
+    "/settings/personal-details",
+    "/subscribe", // Kept just in case, though usually blocked above if !subscribed
+  ];
+
   if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
@@ -157,7 +179,6 @@ const AppRoutes = () => {
               <Route path="/settings/edit-profile" element={<EditProfile />} />
               <Route path="/settings/personal-details" element={<PersonalDetails />} />
               <Route path="/subscribe" element={<Subscribe />} />
-              <Route path="/generating-plan" element={<GeneratingPlan />} />
             </Routes>
           </AnimatePresence>
         </div>

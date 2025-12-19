@@ -26,6 +26,7 @@ export interface Profile {
   weekly_rate: number | null;
   avatar_color: string | null;
   time_format: '12h' | '24h' | null;
+  is_subscribed: boolean;
 }
 
 interface AuthContextType {
