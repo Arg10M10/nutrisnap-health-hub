@@ -21,8 +21,9 @@ const Subscribe = () => {
     mutationFn: async () => {
       if (!user) throw new Error("User not found");
       
-      // En un escenario real, aquí iría la integración con Stripe/RevenueCat
-      // Por ahora, simulamos el éxito actualizando la DB
+      // SIMULACIÓN DE PAGO:
+      // Al no tener Google Play configurado, este botón actúa como un "bypass".
+      // Actualiza directamente la base de datos para marcar al usuario como suscrito.
       const { error } = await supabase
         .from('profiles')
         .update({ is_subscribed: true })
@@ -31,9 +32,13 @@ const Subscribe = () => {
       if (error) throw error;
     },
     onSuccess: async () => {
+      // 1. Refrescamos el perfil para que la App sepa que ya pagamos
       await refetchProfile();
-      toast.success("¡Suscripción activada!");
-      // Navigate to plan generation screen
+      
+      toast.success("¡Suscripción activada correctamente!");
+      
+      // 2. Redirigimos al flujo de generación de plan (que lleva al inicio)
+      // Esto funciona porque al cambiar is_subscribed a true, el bloqueo en App.tsx desaparece.
       navigate('/generating-plan');
     },
     onError: (error) => {

@@ -117,7 +117,7 @@ const AppRoutes = () => {
   }
 
   // 3. Logged in, Onboarded, but NOT Subscribed
-  // This is the strict paywall requested.
+  // This is the STRICT PAYWALL. If false, users CANNOT access the app.
   if (!profile.is_subscribed) {
     return (
       <div className={shellClass}>
@@ -130,7 +130,7 @@ const AppRoutes = () => {
 
   // 4. Authenticated, Onboarded & Subscribed -> Full App access
   
-  // Generating Plan Screen (Special case, often used right after subscribing)
+  // Generating Plan Screen (Special case, used right after subscribing)
   if (location.pathname === '/generating-plan') {
      return (
       <div className={shellClass}>
@@ -155,7 +155,7 @@ const AppRoutes = () => {
     "/settings/request-feature",
     "/settings/edit-profile",
     "/settings/personal-details",
-    "/subscribe", // Kept just in case, though usually blocked above if !subscribed
+    "/subscribe",
   ];
 
   if (fullScreenRoutes.includes(location.pathname)) {
