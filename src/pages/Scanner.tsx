@@ -25,7 +25,8 @@ import { useTranslation } from "react-i18next";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 
-const MAX_DIMENSION = 1024;
+// Aumentamos un poco la dimensión máxima para que la IA tenga más detalle
+const MAX_DIMENSION = 1280;
 
 const pageVariants = {
   initial: { opacity: 0, x: 20 },
@@ -84,16 +85,28 @@ const Scanner = () => {
     setHasFlash(false);
     try {
       if (streamRef.current) stopCamera();
+      
+      // SOLICITAMOS 4K: Al pedir una resolución ideal muy alta, 
+      // el navegador/OS seleccionará automáticamente la mejor cámara trasera disponible.
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
+        video: { 
+          facingMode: "environment",
+          width: { ideal: 3840 }, 
+          height: { ideal: 2160 } 
+        },
       });
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
-        const videoTrack = stream.getVideoTracks()[0];
-        if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
-          setHasFlash(true);
-        }
+        
+        // Esperamos a que carguen los metadatos para saber si hay flash
+        videoRef.current.onloadedmetadata = () => {
+           const videoTrack = stream.getVideoTracks()[0];
+           if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
+             setHasFlash(true);
+           }
+        };
       }
     } catch (err) {
       console.error("Error accessing camera:", err);
@@ -159,10 +172,14 @@ const Scanner = () => {
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
+    
+    // Usamos el tamaño real del video (que ahora será HD/4K)
     const { videoWidth, videoHeight } = video;
     let width = videoWidth;
     let height = videoHeight;
 
+    // Redimensionamos solo si es excesivamente grande para la API, 
+    // pero mantenemos buena calidad (1280px)
     if (width > height) {
       if (width > MAX_DIMENSION) { height *= MAX_DIMENSION / width; width = MAX_DIMENSION; }
     } else {
@@ -172,8 +189,15 @@ const Scanner = () => {
     canvas.width = width;
     canvas.height = height;
     const context = canvas.getContext("2d");
-    context?.drawImage(video, 0, 0, width, height);
-    const imageData = canvas.toDataURL("image/jpeg", 0.8);
+    
+    // Image smoothing para mejor calidad al redimensionar
+    if (context) {
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = 'high';
+        context.drawImage(video, 0, 0, width, height);
+    }
+    
+    const imageData = canvas.toDataURL("image/jpeg", 0.9); // Calidad 90%
     
     setCapturedImage(imageData);
     stopCamera();
@@ -211,8 +235,12 @@ const Scanner = () => {
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext("2d");
-          ctx?.drawImage(img, 0, 0, width, height);
-          const resizedImageData = canvas.toDataURL("image/jpeg", 0.8);
+          if (ctx) {
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = 'high';
+              ctx.drawImage(img, 0, 0, width, height);
+          }
+          const resizedImageData = canvas.toDataURL("image/jpeg", 0.9);
           
           setCapturedImage(resizedImageData);
           startAnalysisMutation.mutate(resizedImageData);
@@ -273,7 +301,6 @@ const Scanner = () => {
         </div>
 
         <div className="relative z-20 flex flex-col flex-1 pointer-events-none">
-          {/* Añadido z-50 relative para asegurar que esté sobre el Viewfinder */}
           <header className="flex justify-between items-center w-full p-4 pt-12 pointer-events-auto z-50 relative">
             <motion.button
               onClick={handleClose}
@@ -301,7 +328,6 @@ const Scanner = () => {
             )}
           </div>
 
-          {/* Añadido z-50 relative para asegurar que esté sobre el Viewfinder */}
           <footer className="flex flex-col items-center gap-6 w-full p-4 pb-16 pointer-events-auto z-50 relative">
             {state === 'captured' && !startAnalysisMutation.isPending ? (
               <div className="grid grid-cols-2 gap-4 w-full max-w-md">
