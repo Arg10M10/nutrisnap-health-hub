@@ -557,85 +557,85 @@
     "generating_step5": "Finalizing details..."
   },
   "subscribe": {
-    "title": "Vuélvete Premium",
-    "trial_tab": "Prueba Gratuita de 3 Días",
-    "pay_now_tab": "Pagar Ahora",
+    "title": "Go Premium",
+    "trial_tab": "3-Day Free Trial",
+    "pay_now_tab": "Pay Now",
     "timeline": {
-      "today_title": "Hoy",
-      "today_desc": "Desbloquea todas las funciones premium como el escáner de calorías por IA y mucho más.",
-      "reminder_title": "En 2 días",
-      "reminder_desc": "Te enviaremos un recordatorio de que tu prueba está a punto de terminar.",
-      "billing_title": "En 3 días - Comienza la facturación",
-      "billing_desc": "Se te cobrará a menos que canceles en cualquier momento antes."
+      "today_title": "Today",
+      "today_desc": "Unlock all premium features like the AI calorie scanner and much more.",
+      "reminder_title": "In 2 days",
+      "reminder_desc": "We will send you a reminder that your trial is about to end.",
+      "billing_title": "In 3 days - Billing starts",
+      "billing_desc": "You will be charged unless you cancel at any time before."
     },
-    "features_title": "Funciones Premium",
+    "features_title": "Premium Features",
     "features": {
-      "scanner": "Escáner de alimentos con IA",
-      "exercise": "Análisis de ejercicio por IA",
-      "diet_plans": "Planes de dieta personalizados",
-      "goals": "Sugerencias de metas inteligentes"
+      "scanner": "AI Food Scanner",
+      "exercise": "AI Exercise Analysis",
+      "diet_plans": "Personalized Diet Plans",
+      "goals": "Smart Goal Suggestions"
     },
     "plan": {
-      "title": "Acceso Mensual",
-      "price_suffix": "/Mes",
-      "trial_note": "Después de 3 días gratis"
+      "title": "Monthly Access",
+      "price_suffix": "/Month",
+      "trial_note": "After 3 days free"
     },
     "buttons": {
-      "start_trial": "Comenzar mi prueba gratuita de 3 días",
-      "unlock_now": "Desbloquear Premium Ahora",
-      "no_payment_note": "No tienes que pagar nada now",
-      "skip": "Quizás más tarde"
+      "start_trial": "Start my 3-day free trial",
+      "unlock_now": "Unlock Premium Now",
+      "no_payment_note": "No payment due now",
+      "skip": "Maybe later"
     }
   },
   "scanner": {
-    "help_title": "¿Cómo funciona el escáner?",
-    "help_desc": "Centra tu plato en el visor y toma una foto. Nuestra IA la analizará para darte una estimación nutricional.",
-    "retake": "Repetir",
-    "retry": "Reintentar",
-    "processing": "Procesando...",
-    "starting": "Iniciando cámara...",
-    "error_camera_title": "Error de Cámara",
-    "error_camera_desc": "No se pudo acceder a la cámara. Revisa los permisos.",
-    "error_analysis": "Análisis fallido.",
-    "flash_unavailable": "Flash no disponible."
+    "help_title": "How does the scanner work?",
+    "help_desc": "Center your plate in the viewfinder and take a photo. Our AI will analyze it to give you a nutritional estimate.",
+    "retake": "Retake",
+    "retry": "Retry",
+    "processing": "Processing...",
+    "starting": "Starting camera...",
+    "error_camera_title": "Camera Error",
+    "error_camera_desc": "Could not access the camera. Please check permissions.",
+    "error_analysis": "Analysis failed.",
+    "flash_unavailable": "Flash unavailable."
   },
   "analysis": {
-    "details_title": "Detalles del Análisis",
-    "calories": "Calorías",
-    "protein": "Proteína",
+    "details_title": "Analysis Details",
+    "calories": "Calories",
+    "protein": "Protein",
     "carbs": "Carbs",
-    "fats": "Grasas",
-    "sugars": "Azúcares",
-    "recommendation": "Recomendación",
-    "close": "Cerrar",
-    "save_to_diary": "Guardar en Diario",
+    "fats": "Fats",
+    "sugars": "Sugars",
+    "recommendation": "Recommendation",
+    "close": "Close",
+    "save_to_diary": "Save to Diary",
     "health_rating": {
-      "healthy": "Saludable",
-      "moderate": "Moderado",
-      "avoid": "Evitar"
+      "healthy": "Healthy",
+      "moderate": "Moderate",
+      "avoid": "Avoid"
     },
-    "default_reason": "No se proporcionó ninguna razón."
+    "default_reason": "No reason provided."
   },
   "share": {
-    "achievement_unlocked": "¡Logro Desbloqueado!",
-    "badge_message": "¡He desbloqueado la insignia \"{{name}}\" en Calorel! 🏆",
-    "meal_message": "Mira lo que estoy comiendo: {{food}} 🥗 - vía Calorel",
-    "generated_with": "Generado con Calorel App",
+    "achievement_unlocked": "Achievement Unlocked!",
+    "badge_message": "I've unlocked the badge \"{{name}}\" in Calorel! 🏆",
+    "meal_message": "Check out what I'm eating: {{food}} 🥗 - via Calorel",
+    "generated_with": "Generated with Calorel App",
     "prot_short": "Prot",
     "carb_short": "Carb",
-    "fat_short": "Grasa"
+    "fat_short": "Fat"
   },
   "tutorial": {
-    "welcome_title": "¡Bienvenido a Calorel!",
-    "welcome_content": "Vamos a dar un recorrido rápido para que aprendas a usar la app como un experto.",
-    "carousel_title": "Tu Resumen Diario",
-    "carousel_content": "Aquí verás tus calorías y macros del día. Desliza hacia los lados para ver tu nivel de hidratación y puntaje de salud.",
-    "scanner_title": "¡A Escanear!",
-    "scanner_content": "Este es el botón mágico. Tócalo para usar la IA y escanear tu comida, o para registrar ejercicio manualmente.",
-    "progress_title": "Tu Progreso",
-    "progress_content": "Aquí podrás ver gráficas de tu peso y evolución a lo largo del tiempo.",
-    "settings_title": "Ajustes",
-    "settings_content": "Configura tus metas, preferencias y perfil aquí.",
-    "finish": "¡Empecemos!"
+    "welcome_title": "Welcome to Calorel!",
+    "welcome_content": "Let's take a quick tour so you can use the app like a pro.",
+    "carousel_title": "Your Daily Summary",
+    "carousel_content": "Here you will see your daily calories and macros. Swipe sideways to see your hydration level and health score.",
+    "scanner_title": "Let's Scan!",
+    "scanner_content": "This is the magic button. Tap it to use AI to scan your food, or to log exercise manually.",
+    "progress_title": "Your Progress",
+    "progress_content": "Here you can see charts of your weight and evolution over time.",
+    "settings_title": "Settings",
+    "settings_content": "Configure your goals, preferences, and profile here.",
+    "finish": "Let's start!"
   }
 }
