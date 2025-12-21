@@ -9,6 +9,17 @@
     "cancel": "Cancel",
     "error_friendly": "Something went wrong. Please check your connection and try again."
   },
+  "countries": {
+    "united_states": "United States",
+    "mexico": "Mexico",
+    "spain": "Spain",
+    "argentina": "Argentina",
+    "brazil": "Brazil",
+    "dominican_republic": "Dominican Rep.",
+    "colombia": "Colombia",
+    "chile": "Chile",
+    "peru": "Peru"
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "Manage your profile and app preferences.",
@@ -640,9 +651,9 @@
     "finish": "Let's start!"
   },
   "generating_plan": {
-    "step1": "Analyzing your basal metabolism...",
-    "step2": "Calculating optimal macronutrients...",
-    "step3": "Designing meal structure...",
-    "step4": "Personalized plan ready!"
+    "step1": "Analizando tu metabolismo basal...",
+    "step2": "Calculando macronutrientes óptimos...",
+    "step3": "Diseñando estructura de comidas...",
+    "step4": "¡Plan personalizado listo!"
   }
 }

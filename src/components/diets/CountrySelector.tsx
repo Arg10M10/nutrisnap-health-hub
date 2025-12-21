@@ -1,8 +1,9 @@
 "use client";
 
+import { useMemo } from "react";
 import { Check, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { countries } from "@/data/countries";
+import { countries as countryData } from "@/data/countries";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 
@@ -14,10 +15,19 @@ interface CountrySelectorProps {
 export function CountrySelector({ value, onChange }: CountrySelectorProps) {
   const { t } = useTranslation();
 
+  const sortedCountries = useMemo(() => {
+    return countryData
+      .map(country => ({
+        ...country,
+        label: t(country.labelKey as any),
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [t]);
+
   return (
     <div className="space-y-4">
         <div className="flex flex-col gap-2">
-            {countries.map((country) => {
+            {sortedCountries.map((country) => {
                 const isSelected = value === country.value;
                 return (
                     <motion.button

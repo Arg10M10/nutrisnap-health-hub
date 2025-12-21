@@ -1,11 +1,11 @@
 export const countries = [
-  { value: "united_states", label: "Estados Unidos", flag: "🇺🇸" },
-  { value: "mexico", label: "México", flag: "🇲🇽" },
-  { value: "spain", label: "España", flag: "🇪🇸" },
-  { value: "argentina", label: "Argentina", flag: "🇦🇷" },
-  { value: "brazil", label: "Brasil", flag: "🇧🇷" },
-  { value: "dominican_republic", label: "R. Dominicana", flag: "🇩🇴" },
-  { value: "colombia", label: "Colombia", flag: "🇨🇴" },
-  { value: "chile", label: "Chile", flag: "🇨🇱" },
-  { value: "peru", label: "Perú", flag: "🇵🇪" }
-].sort((a, b) => a.label.localeCompare(b.label));
+  { value: "united_states", labelKey: "countries.united_states", flag: "🇺🇸" },
+  { value: "mexico", labelKey: "countries.mexico", flag: "🇲🇽" },
+  { value: "spain", labelKey: "countries.spain", flag: "🇪🇸" },
+  { value: "argentina", labelKey: "countries.argentina", flag: "🇦🇷" },
+  { value: "brazil", labelKey: "countries.brazil", flag: "🇧🇷" },
+  { value: "dominican_republic", labelKey: "countries.dominican_republic", flag: "🇩🇴" },
+  { value: "colombia", labelKey: "countries.colombia", flag: "🇨🇴" },
+  { value: "chile", labelKey: "countries.chile", flag: "🇨🇱" },
+  { value: "peru", labelKey: "countries.peru", flag: "🇵🇪" }
+];
