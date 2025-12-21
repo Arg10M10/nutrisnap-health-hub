@@ -12,7 +12,7 @@ const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy";
 
 // Mismo ID que en strings.xml y capacitor.config.ts
-const GOOGLE_CLIENT_ID = '522700969452-gof3re6i21fc0eotfbk4q496ke3gdl0k.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '733617800360-gdfv4o8j13anns76lj1hmf64deeuo8iq.apps.googleusercontent.com';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);

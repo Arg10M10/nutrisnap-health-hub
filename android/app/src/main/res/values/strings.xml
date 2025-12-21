@@ -5,5 +5,5 @@
     <string name="package_name">com.calorel.app</string>
     <string name="custom_url_scheme">com.calorel.app</string>
     <!-- IMPORTANTE: Este debe ser el Client ID de TIPO WEB, no el de Android -->
-    <string name="server_client_id">522700969452-gof3re6i21fc0eotfbk4q496ke3gdl0k.apps.googleusercontent.com</string>
+    <string name="server_client_id">733617800360-gdfv4o8j13anns76lj1hmf64deeuo8iq.apps.googleusercontent.com</string>
 </resources>
