@@ -554,7 +554,8 @@
     "generating_step2_generic": "Exploring healthy recipes...",
     "generating_step3": "Calculating optimal macros...",
     "generating_step4": "Designing weekly menu...",
-    "generating_step5": "Finalizing details..."
+    "generating_step5": "Finalizing details...",
+    "ai_processing": "AI Processing"
   },
   "subscribe": {
     "title": "Go Premium",
@@ -637,5 +638,11 @@
     "settings_title": "Settings",
     "settings_content": "Configure your goals, preferences, and profile here.",
     "finish": "Let's start!"
+  },
+  "generating_plan": {
+    "step1": "Analyzing your basal metabolism...",
+    "step2": "Calculating optimal macronutrients...",
+    "step3": "Designing meal structure...",
+    "step4": "Personalized plan ready!"
   }
 }

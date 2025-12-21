@@ -117,7 +117,7 @@ const GeneratingDietPlan = ({ countryValue, onAnimationComplete }: GeneratingDie
           <div className="space-y-3 px-2">
             <Progress value={progress} className="h-3 rounded-full" />
             <div className="flex justify-between text-xs font-mono font-medium text-muted-foreground">
-                <span>AI Processing</span>
+                <span>{t('diets_onboarding.ai_processing')}</span>
                 <span>{Math.floor(progress)}%</span>
             </div>
           </div>

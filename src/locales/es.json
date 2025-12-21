@@ -554,7 +554,8 @@
     "generating_step2_generic": "Explorando recetas saludables...",
     "generating_step3": "Calculando macros óptimos...",
     "generating_step4": "Diseñando menú semanal...",
-    "generating_step5": "Finalizando detalles..."
+    "generating_step5": "Finalizando detalles...",
+    "ai_processing": "Procesando con IA"
   },
   "subscribe": {
     "title": "Vuélvete Premium",
@@ -637,5 +638,11 @@
     "settings_title": "Ajustes",
     "settings_content": "Configura tus metas, preferencias y perfil aquí.",
     "finish": "¡Empecemos!"
+  },
+  "generating_plan": {
+    "step1": "Analizando tu metabolismo basal...",
+    "step2": "Calculando macronutrientes óptimos...",
+    "step3": "Diseñando estructura de comidas...",
+    "step4": "¡Plan personalizado listo!"
   }
 }

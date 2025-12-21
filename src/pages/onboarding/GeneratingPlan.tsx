@@ -16,10 +16,10 @@ const GeneratingPlan = () => {
   const [stage, setStage] = useState(0);
 
   const stages = [
-    { text: "Analizando tu metabolismo basal...", icon: <Brain className="w-8 h-8 text-primary" /> },
-    { text: "Calculando macronutrientes óptimos...", icon: <Calculator className="w-8 h-8 text-blue-500" /> },
-    { text: "Diseñando estructura de comidas...", icon: <Utensils className="w-8 h-8 text-orange-500" /> },
-    { text: "¡Plan personalizado listo!", icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
+    { text: t('generating_plan.step1'), icon: <Brain className="w-8 h-8 text-primary" /> },
+    { text: t('generating_plan.step2'), icon: <Calculator className="w-8 h-8 text-blue-500" /> },
+    { text: t('generating_plan.step3'), icon: <Utensils className="w-8 h-8 text-orange-500" /> },
+    { text: t('generating_plan.step4'), icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
   ];
 
   // Simulación de progreso visual - Ajustado para ~30 segundos
