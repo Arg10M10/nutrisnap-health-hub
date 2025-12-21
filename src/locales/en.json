@@ -107,7 +107,8 @@
     "sugars": "Sugars",
     "todays_analysis": "Today's Analysis",
     "no_data": "No data for this day.",
-    "start_logging": "Use the '+' button to start logging."
+    "start_logging": "Use the '+' button to start logging.",
+    "goal_achieved_toast": "You will reach your goal on {{date}}!"
   },
   "progress": {
     "title": "Your Progress",
@@ -651,9 +652,9 @@
     "finish": "Let's start!"
   },
   "generating_plan": {
-    "step1": "Analizando tu metabolismo basal...",
-    "step2": "Calculando macronutrientes óptimos...",
-    "step3": "Diseñando estructura de comidas...",
-    "step4": "¡Plan personalizado listo!"
+    "step1": "Analyzing your basal metabolism...",
+    "step2": "Calculating optimal macronutrients...",
+    "step3": "Designing meal structure...",
+    "step4": "Personalized plan ready!"
   }
 }
