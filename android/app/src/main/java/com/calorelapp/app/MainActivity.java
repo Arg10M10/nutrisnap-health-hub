@@ -1,4 +1,4 @@
-package com.calorel.app;
+package com.calorelapp.app;
 
 import com.getcapacitor.BridgeActivity;
 

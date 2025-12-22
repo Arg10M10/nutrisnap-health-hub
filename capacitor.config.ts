@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.calorel.app',
+  appId: 'com.calorelapp.app',
   appName: 'Calorel',
   webDir: 'dist',
   plugins: {
