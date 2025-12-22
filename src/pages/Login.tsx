@@ -63,8 +63,14 @@ export default function Login() {
 
     } catch (error: any) {
       console.error('Error General en Login:', error);
-      // Mensaje amigable para el usuario, ignorando el error técnico
-      toast.error(t('login.error_title'), { description: t('login.error_description') });
+      // --- MODO DEBUG TEMPORAL ---
+      // Mostramos el error completo para diagnosticar el problema en Play Store.
+      const errorMessage = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
+      toast.error("Error de depuración (temporal)", { 
+        description: `Detalle: ${errorMessage}`,
+        duration: 15000 // Aumentamos la duración para que dé tiempo a leerlo
+      });
+      // --- FIN MODO DEBUG ---
     } finally {
       setLoading(false);
     }
