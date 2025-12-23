@@ -27,7 +27,6 @@ export default function Login() {
     setLoading(true);
     try {
       // Paso 1: Inicialización defensiva
-      // Solo inicializamos si estamos en nativo para asegurar que el plugin tenga la config
       if (Capacitor.isNativePlatform()) {
         await GoogleAuth.initialize({
           clientId: GOOGLE_CLIENT_ID,
@@ -37,7 +36,12 @@ export default function Login() {
       }
 
       console.log("Iniciando GoogleAuth.signIn()...");
-      const googleUser = await GoogleAuth.signIn();
+      
+      // **CLAVE PARA EL ERROR 12500:** 
+      // Aseguramos que el serverClientId (el ID de Cliente WEB) se use para la autenticación.
+      const googleUser = await GoogleAuth.signIn({
+        serverClientId: GOOGLE_CLIENT_ID,
+      });
       
       console.log('Respuesta completa de Google:', JSON.stringify(googleUser));
 
@@ -66,9 +70,9 @@ export default function Login() {
       // --- MODO DEBUG TEMPORAL ---
       // Mostramos el error completo para diagnosticar el problema en Play Store.
       const errorMessage = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
-      toast.error("Error de depuración (temporal)", { 
-        description: `Detalle: ${errorMessage}`,
-        duration: 15000 // Aumentamos la duración para que dé tiempo a leerlo
+      toast.error("Error de autenticación", { 
+        description: `Código 12500: Verifica tu SHA-1 en Google Cloud. Detalle: ${errorMessage}`,
+        duration: 15000
       });
       // --- FIN MODO DEBUG ---
     } finally {
