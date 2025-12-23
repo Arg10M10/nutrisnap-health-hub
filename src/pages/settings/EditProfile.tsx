@@ -56,7 +56,6 @@ const EditProfile = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success(t('edit_profile.toast_success'));
       navigate(-1);
     },
     onError: (error) => {

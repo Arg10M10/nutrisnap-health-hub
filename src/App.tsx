@@ -208,7 +208,7 @@ const App = () => (
           <AuthProvider>
             <NutritionProvider>
               <Toaster />
-              <Sonner />
+              <Sonner position="bottom-center" duration={3000} />
               <AppRoutes />
             </NutritionProvider>
           </AuthProvider>

@@ -29,7 +29,6 @@ const Preferences = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success(t('preferences.toast_success'));
     },
     onError: (error: Error) => {
       toast.error(t('preferences.toast_error'), { description: error.message });

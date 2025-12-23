@@ -53,7 +53,6 @@ const NutritionalGoals = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success(t('nutritional_goals.save_success'));
     },
     onError: (error) => {
       toast.error(t('nutritional_goals.save_error'), { description: error.message });

@@ -42,7 +42,6 @@ const EditSelectDetailDrawer = ({ isOpen, onClose, title, currentValue, options,
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success(t('edit_profile.toast_success'));
       onClose();
     },
     onError: (error) => {
