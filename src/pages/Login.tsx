@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Leaf, Loader2 } from "lucide-react";
 import { toast } from 'sonner';
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { GoogleAuth } from '@capacitor-community/google-auth';
 import { Capacitor } from '@capacitor/core';
 import { useTranslation, Trans } from 'react-i18next';
 
