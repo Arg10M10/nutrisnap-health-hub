@@ -203,7 +203,7 @@ const Scanner = () => {
     stopCamera();
     setState("loading");
 
-    const canProceed = await checkLimit('food_scan', 4, 'daily');
+    const canProceed = await checkLimit('food_scan', 4, 'daily', t('common.ai_limit_reached'));
     if (canProceed) {
       startAnalysisMutation.mutate(imageData);
     } else {
@@ -216,7 +216,7 @@ const Scanner = () => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const canProceed = await checkLimit('food_scan', 4, 'daily');
+      const canProceed = await checkLimit('food_scan', 4, 'daily', t('common.ai_limit_reached'));
       if (!canProceed) return;
 
       setState("loading");
@@ -253,7 +253,7 @@ const Scanner = () => {
 
   const handleManualAnalyze = async () => {
     if (capturedImage) {
-      const canProceed = await checkLimit('food_scan', 4, 'daily');
+      const canProceed = await checkLimit('food_scan', 4, 'daily', t('common.ai_limit_reached'));
       if (canProceed) {
         setState("loading");
         startAnalysisMutation.mutate(capturedImage);

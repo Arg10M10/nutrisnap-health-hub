@@ -42,13 +42,7 @@ const Diets = () => {
       if (error) throw error;
     },
     onSuccess: async () => {
-      // Nota: Logueamos el uso aquí porque "regenerar" implica volver al onboarding para usar la IA.
-      // O si el diseño cambiara para regenerar directamente, aquí iría la llamada a logUsage('diet_plan').
-      // Dado que esto resetea el flag y manda al usuario a `DietsOnboarding`, 
-      // el `logUsage` real ocurrirá cuando completen el formulario en `DietsOnboarding`.
-      // Sin embargo, para contar el intento de regeneración en sí mismo como una acción limitada,
-      // ya lo verificamos en WeeklyPlanDisplay antes de llamar a esta mutación.
-      
+      // Nota: La verificación del límite se hace en WeeklyPlanDisplay antes de llamar a esta mutación.
       await refetchProfile();
       queryClient.invalidateQueries({ queryKey: ['weekly_diet_plan', user?.id] });
     },

@@ -66,7 +66,7 @@ const WriteExercise = () => {
       toast.info("Por favor, describe tu ejercicio con más detalle.");
       return;
     }
-    const canProceed = await checkLimit('exercise_ai', 2, 'daily');
+    const canProceed = await checkLimit('exercise_ai', 2, 'daily', t('common.ai_limit_reached'));
     if (canProceed) {
       saveAndAnalyzeMutation.mutate(description);
     }

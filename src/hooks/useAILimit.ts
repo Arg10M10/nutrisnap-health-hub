@@ -10,7 +10,7 @@ type TimeFrame = 'daily' | 'weekly';
 export const useAILimit = () => {
   const { user } = useAuth();
 
-  const checkLimit = useCallback(async (feature: AIFeature, limit: number, timeFrame: TimeFrame = 'daily'): Promise<boolean> => {
+  const checkLimit = useCallback(async (feature: AIFeature, limit: number, timeFrame: TimeFrame = 'daily', limitReachedMessage: string = 'Límite alcanzado'): Promise<boolean> => {
     if (!user) return false;
 
     const now = new Date();
@@ -35,9 +35,8 @@ export const useAILimit = () => {
     const currentCount = count || 0;
     
     if (currentCount >= limit) {
-      const timeText = timeFrame === 'daily' ? 'diarios' : 'semanales';
-      toast.error(`Límite alcanzado`, {
-        description: `Has alcanzado el límite de ${limit} usos ${timeText} para esta función.`,
+      toast.error(limitReachedMessage, {
+        description: `Has alcanzado el límite de ${limit} usos ${timeFrame === 'daily' ? 'diarios' : 'semanales'} para esta función.`,
       });
       return false;
     }

@@ -17,7 +17,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useAuth } from '@/context/AuthContext';
 
@@ -113,7 +112,7 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
   }, [currentTime]);
 
   const handleRegenerateClick = async () => {
-    const canProceed = await checkLimit('diet_plan', 1, 'weekly');
+    const canProceed = await checkLimit('diet_plan', 1, 'weekly', t('common.ai_limit_reached'));
     if (canProceed) {
       onRegenerate();
     }
@@ -203,7 +202,9 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
               </div>
               <div className="text-right">
                 <p className="text-4xl font-bold text-foreground tracking-tight">{format(currentTime, profile?.time_format === '24h' ? 'HH:mm' : 'h:mm')}</p>
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{activeMeal === 'gap' ? 'Next Meal' : 'Now'}</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                  {activeMeal === 'gap' ? t('diets.gap_title') : t('diets.active_diet')}
+                </p>
               </div>
             </div>
             <div className="mb-6">
