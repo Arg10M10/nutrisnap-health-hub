@@ -19,65 +19,52 @@ export default function Login() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // No hacemos nada al montar para evitar crashes de inicio.
-    // La inicialización será "Lazy" (perezosa) al hacer click.
+    // Inicializamos el plugin de Google Auth al montar el componente en plataformas nativas.
+    if (Capacitor.isNativePlatform()) {
+      GoogleAuth.initialize({
+        clientId: GOOGLE_CLIENT_ID,
+        scopes: ['profile', 'email'],
+        grantOfflineAccess: true,
+      });
+    }
   }, []);
 
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      // Paso 1: Inicialización defensiva
-      // Solo inicializamos si estamos en nativo para asegurar que el plugin tenga la config
-      if (Capacitor.isNativePlatform()) {
-        await GoogleAuth.initialize({
-          clientId: GOOGLE_CLIENT_ID,
-          scopes: ['profile', 'email'],
-          grantOfflineAccess: true,
-        });
-      }
-
-      console.log("Iniciando GoogleAuth.signIn()...");
+      // La inicialización ya se hizo en el useEffect para nativo.
+      // Para web, se hace en App.tsx. Simplemente llamamos a signIn.
       const googleUser = await GoogleAuth.signIn();
       
-      console.log('Respuesta completa de Google:', JSON.stringify(googleUser));
-
       const idToken = googleUser.authentication?.idToken || googleUser.idToken;
 
       if (!idToken) {
         throw new Error('No se recibió el ID Token de Google.');
       }
 
-      console.log("ID Token recibido, enviando a Supabase...");
-
-      const { data, error } = await supabase.auth.signInWithIdToken({
+      const { error } = await supabase.auth.signInWithIdToken({
         provider: 'google',
         token: idToken,
       });
       
       if (error) {
-        console.error("Error de Supabase:", error);
         throw error;
       }
 
-      console.log("Sesión iniciada correctamente:", data);
-
     } catch (error: any) {
-      console.error('Error General en Login:', error);
-      // --- MODO DEBUG TEMPORAL ---
-      // Mostramos el error completo para diagnosticar el problema en Play Store.
-      const errorMessage = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
-      toast.error("Error de depuración (temporal)", { 
-        description: `Detalle: ${errorMessage}`,
-        duration: 15000 // Aumentamos la duración para que dé tiempo a leerlo
-      });
-      // --- FIN MODO DEBUG ---
+      console.error('Error durante el inicio de sesión con Google:', error);
+      // El código 12501 significa que el usuario canceló el inicio de sesión. No mostramos error en ese caso.
+      if (error.code !== 12501) {
+        toast.error(t('login.error_toast_title'), { 
+          description: t('login.error_toast_desc'),
+        });
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const openLink = (url: string) => {
-    // Abrir en una nueva pestaña/navegador del sistema
     window.open(url, "_blank", "noopener,noreferrer");
   };
 

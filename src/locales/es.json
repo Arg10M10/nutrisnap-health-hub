@@ -12,4 +12,12 @@
     "ai_limit_daily_desc": "Has alcanzado el límite de {limit} usos diarios para esta función. Vuelve mañana para continuar.",
     "ai_limit_weekly_desc": "Has alcanzado el límite de {limit} usos semanales para esta función. Vuelve la próxima semana para continuar."
   },
-// ... (rest of the file)
+  "login": {
+    "welcome": "Bienvenido a Calorel",
+    "subtitle": "Tu compañero de salud inteligente.",
+    "google_button": "Continuar con Google",
+    "terms_privacy": "Al continuar, aceptas nuestros <1>Términos de Servicio</1> y <3>Política de Privacidad</3>.",
+    "error_toast_title": "Error al iniciar sesión",
+    "error_toast_desc": "No se pudo conectar con Google. Por favor, inténtalo de nuevo."
+  }
+}
