@@ -19,26 +19,18 @@ export default function Login() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // No hacemos nada al montar para evitar crashes de inicio.
-    // La inicialización será "Lazy" (perezosa) al hacer click.
+    // No hacemos nada al montar.
   }, []);
 
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      // Paso 1: Inicialización defensiva
-      if (Capacitor.isNativePlatform()) {
-        await GoogleAuth.initialize({
-          clientId: GOOGLE_CLIENT_ID,
-          scopes: ['profile', 'email'],
-          grantOfflineAccess: true,
-        });
-      }
-
+      // Si es nativo, la inicialización se maneja por capacitor.config.ts.
+      // Si es web, se inicializa en App.tsx.
+      // Solo necesitamos llamar a signIn.
+      
       console.log("Iniciando GoogleAuth.signIn()...");
       
-      // **CLAVE PARA EL ERROR 12500:** 
-      // Aseguramos que el serverClientId (el ID de Cliente WEB) se use para la autenticación.
       const googleUser = await GoogleAuth.signIn({
         serverClientId: GOOGLE_CLIENT_ID,
       });
@@ -68,7 +60,7 @@ export default function Login() {
     } catch (error: any) {
       console.error('Error General en Login:', error);
       // --- MODO DEBUG TEMPORAL ---
-      // Mostramos el error completo para diagnosticar el problema en Play Store.
+      // Mantenemos el mensaje de error detallado para el diagnóstico final.
       const errorMessage = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
       toast.error("Error de autenticación", { 
         description: `Código 12500: Verifica tu SHA-1 en Google Cloud. Detalle: ${errorMessage}`,

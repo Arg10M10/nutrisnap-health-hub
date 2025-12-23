@@ -43,6 +43,15 @@ import GeneratingPlan from "./pages/onboarding/GeneratingPlan";
 
 const queryClient = new QueryClient();
 
+// Inicialización global de GoogleAuth (solo para web/PWA)
+if (!Capacitor.isNativePlatform()) {
+  GoogleAuth.initialize({
+    clientId: '733617800360-gdfv4o8j13anns76lj1hmf64deeuo8iq.apps.googleusercontent.com',
+    scopes: ['profile', 'email'],
+    grantOfflineAccess: true,
+  });
+}
+
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
@@ -74,15 +83,7 @@ const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
   const location = useLocation();
 
-  useEffect(() => {
-    if (!Capacitor.isNativePlatform()) {
-      GoogleAuth.initialize({
-        clientId: '733617800360-gdfv4o8j13anns76lj1hmf64deeuo8iq.apps.googleusercontent.com',
-        scopes: ['profile', 'email'],
-        grantOfflineAccess: true,
-      });
-    }
-  }, []);
+  // Eliminamos el useEffect de inicialización de GoogleAuth de aquí.
 
   if (authLoading) {
     return (
