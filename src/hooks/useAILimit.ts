@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
-import { toast } from 'sonner';
 import { startOfDay, subDays } from 'date-fns';
 
 type AIFeature = 'food_scan' | 'exercise_ai' | 'diet_plan' | 'ai_suggestions' | 'manual_food_scan';
@@ -10,8 +9,8 @@ type TimeFrame = 'daily' | 'weekly';
 export const useAILimit = () => {
   const { user } = useAuth();
 
-  const checkLimit = useCallback(async (feature: AIFeature, limit: number, timeFrame: TimeFrame = 'daily', limitReachedMessage: string = 'Límite alcanzado'): Promise<boolean> => {
-    if (!user) return false;
+  const checkLimit = useCallback(async (feature: AIFeature, limit: number, timeFrame: TimeFrame = 'daily'): Promise<{ canProceed: boolean, limit: number, timeFrame: TimeFrame }> => {
+    if (!user) return { canProceed: false, limit, timeFrame };
 
     const now = new Date();
     let startDate = startOfDay(now);
@@ -29,19 +28,16 @@ export const useAILimit = () => {
 
     if (error) {
       console.error('Error checking limit:', error);
-      return false;
+      return { canProceed: false, limit, timeFrame };
     }
 
     const currentCount = count || 0;
     
     if (currentCount >= limit) {
-      toast.error(limitReachedMessage, {
-        description: `Has alcanzado el límite de ${limit} usos ${timeFrame === 'daily' ? 'diarios' : 'semanales'} para esta función.`,
-      });
-      return false;
+      return { canProceed: false, limit, timeFrame };
     }
 
-    return true;
+    return { canProceed: true, limit, timeFrame };
   }, [user]);
 
   const logUsage = useCallback(async (feature: AIFeature) => {

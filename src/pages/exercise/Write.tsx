@@ -66,9 +66,13 @@ const WriteExercise = () => {
       toast.info("Por favor, describe tu ejercicio con más detalle.");
       return;
     }
-    const canProceed = await checkLimit('exercise_ai', 2, 'daily', t('common.ai_limit_reached'));
+    const { canProceed, limit } = await checkLimit('exercise_ai', 2, 'daily');
     if (canProceed) {
       saveAndAnalyzeMutation.mutate(description);
+    } else {
+      toast.error(t('common.ai_limit_reached'), {
+        description: t('common.ai_limit_daily_desc', { limit }),
+      });
     }
   };
 

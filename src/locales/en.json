@@ -8,6 +8,8 @@
     "retry": "Retry",
     "cancel": "Cancel",
     "error_friendly": "Something went wrong. Please check your connection and try again.",
-    "ai_limit_reached": "AI Limit Reached"
+    "ai_limit_reached": "AI Limit Reached",
+    "ai_limit_daily_desc": "You have reached the daily limit of {limit} uses for this feature. Please come back tomorrow to continue.",
+    "ai_limit_weekly_desc": "You have reached the weekly limit of {limit} uses for this feature. Please come back next week to continue."
   },
 // ... (rest of the file)

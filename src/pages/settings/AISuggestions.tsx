@@ -143,9 +143,13 @@ const AISuggestions = () => {
   });
 
   const handleGenerate = async (values: z.infer<typeof fullSchema>) => {
-    const canProceed = await checkLimit('ai_suggestions', 2, 'weekly', t('common.ai_limit_reached'));
+    const { canProceed, limit } = await checkLimit('ai_suggestions', 2, 'weekly');
     if (canProceed) {
       mutation.mutate(values);
+    } else {
+      toast.error(t('common.ai_limit_reached'), {
+        description: t('common.ai_limit_weekly_desc', { limit }),
+      });
     }
   };
 

@@ -91,9 +91,13 @@ const ManualFoodEntry = ({ embedded = false, onSuccess }: ManualFoodEntryProps) 
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const canProceed = await checkLimit('manual_food_scan', 4, 'daily', t('common.ai_limit_reached'));
+    const { canProceed, limit } = await checkLimit('manual_food_scan', 4, 'daily');
     if (canProceed) {
       mutation.mutate(values);
+    } else {
+      toast.error(t('common.ai_limit_reached'), {
+        description: t('common.ai_limit_daily_desc', { limit }),
+      });
     }
   };
 

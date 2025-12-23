@@ -203,10 +203,13 @@ const Scanner = () => {
     stopCamera();
     setState("loading");
 
-    const canProceed = await checkLimit('food_scan', 4, 'daily', t('common.ai_limit_reached'));
+    const { canProceed, limit } = await checkLimit('food_scan', 4, 'daily');
     if (canProceed) {
       startAnalysisMutation.mutate(imageData);
     } else {
+      toast.error(t('common.ai_limit_reached'), {
+        description: t('common.ai_limit_daily_desc', { limit }),
+      });
       setState("captured");
     }
   };
@@ -216,8 +219,13 @@ const Scanner = () => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const canProceed = await checkLimit('food_scan', 4, 'daily', t('common.ai_limit_reached'));
-      if (!canProceed) return;
+      const { canProceed, limit } = await checkLimit('food_scan', 4, 'daily');
+      if (!canProceed) {
+        toast.error(t('common.ai_limit_reached'), {
+          description: t('common.ai_limit_daily_desc', { limit }),
+        });
+        return;
+      }
 
       setState("loading");
       const reader = new FileReader();
@@ -253,10 +261,14 @@ const Scanner = () => {
 
   const handleManualAnalyze = async () => {
     if (capturedImage) {
-      const canProceed = await checkLimit('food_scan', 4, 'daily', t('common.ai_limit_reached'));
+      const { canProceed, limit } = await checkLimit('food_scan', 4, 'daily');
       if (canProceed) {
         setState("loading");
         startAnalysisMutation.mutate(capturedImage);
+      } else {
+        toast.error(t('common.ai_limit_reached'), {
+          description: t('common.ai_limit_daily_desc', { limit }),
+        });
       }
     }
   };

@@ -8,6 +8,8 @@
     "retry": "Reintentar",
     "cancel": "Cancelar",
     "error_friendly": "Algo salió mal. Por favor, verifica tu conexión e inténtalo de nuevo.",
-    "ai_limit_reached": "Límite de IA alcanzado"
+    "ai_limit_reached": "Límite de IA alcanzado",
+    "ai_limit_daily_desc": "Has alcanzado el límite de {limit} usos diarios para esta función. Vuelve mañana para continuar.",
+    "ai_limit_weekly_desc": "Has alcanzado el límite de {limit} usos semanales para esta función. Vuelve la próxima semana para continuar."
   },
 // ... (rest of the file)
