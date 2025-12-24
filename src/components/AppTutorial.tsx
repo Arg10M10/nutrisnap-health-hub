@@ -142,7 +142,7 @@ const AppTutorial = () => {
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    {t('diets_onboarding.next')} <ArrowRight className="w-4 h-4" />
+                    {t('tutorial.next')} <ArrowRight className="w-4 h-4" />
                   </span>
                 )}
               </Button>

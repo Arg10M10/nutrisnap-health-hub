@@ -599,5 +599,19 @@
     "delete_success_title": "Account Deleted",
     "delete_success_desc": "Your account and all associated data have been permanently deleted.",
     "delete_error_title": "Deletion Failed"
+  },
+  "tutorial": {
+    "welcome_title": "Welcome to Calorel!",
+    "welcome_content": "Let's take a quick tour of the main features to get you started on your health journey.",
+    "carousel_title": "Your Daily Summary",
+    "carousel_content": "Here you'll find your daily progress for calories, macros, and other key metrics. Swipe to see more details!",
+    "scanner_title": "Log Everything Easily",
+    "scanner_content": "Tap the central button to open the menu. You can scan your food with AI, log an exercise, or add entries manually.",
+    "progress_title": "Track Your Progress",
+    "progress_content": "Visit the Progress tab to see your weight evolution, BMI, and track your daily streaks.",
+    "settings_title": "Customize Your Experience",
+    "settings_content": "In Settings, you can adjust your goals, change preferences, and manage your account.",
+    "finish": "Finish",
+    "next": "Next"
   }
 }

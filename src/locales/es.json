@@ -598,5 +598,19 @@
     "delete_success_title": "Cuenta Eliminada",
     "delete_success_desc": "Tu cuenta y todos los datos asociados han sido eliminados permanentemente.",
     "delete_error_title": "Fallo al Eliminar"
+  },
+  "tutorial": {
+    "welcome_title": "¡Bienvenido a Calorel!",
+    "welcome_content": "Vamos a dar un rápido recorrido por las funciones principales para que comiences tu viaje de salud.",
+    "carousel_title": "Tu Resumen Diario",
+    "carousel_content": "Aquí encontrarás tu progreso diario de calorías, macros y otras métricas clave. ¡Desliza para ver más detalles!",
+    "scanner_title": "Registra Todo Fácilmente",
+    "scanner_content": "Toca el botón central para abrir el menú. Puedes escanear tu comida con IA, registrar un ejercicio o añadir entradas manualmente.",
+    "progress_title": "Sigue Tu Progreso",
+    "progress_content": "Visita la pestaña de Progreso para ver la evolución de tu peso, tu IMC y seguir tus rachas diarias.",
+    "settings_title": "Personaliza Tu Experiencia",
+    "settings_content": "En Ajustes, puedes modificar tus metas, cambiar preferencias y gestionar tu cuenta.",
+    "finish": "Finalizar",
+    "next": "Siguiente"
   }
 }
