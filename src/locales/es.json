@@ -10,7 +10,8 @@
     "error_friendly": "Algo salió mal. Por favor, verifica tu conexión e inténtalo de nuevo.",
     "ai_limit_reached": "Límite de IA alcanzado",
     "ai_limit_daily_desc": "Has alcanzado el límite de {{limit}} usos diarios para esta función. Vuelve mañana para continuar.",
-    "ai_limit_weekly_desc": "Has alcanzado el límite de {{limit}} usos semanales para esta función. Vuelve la próxima semana para continuar."
+    "ai_limit_weekly_desc": "Has alcanzado el límite de {{limit}} usos semanales para esta función. Vuelve la próxima semana para continuar.",
+    "add": "Añadir"
   },
   "auth": {
     "email_label": "Correo electrónico",
@@ -613,5 +614,30 @@
     "settings_content": "En Ajustes, puedes modificar tus metas, cambiar preferencias y gestionar tu cuenta.",
     "finish": "Finalizar",
     "next": "Siguiente"
+  },
+  "notifications": {
+    "food_title": "🍽️ Registro de comidas",
+    "food_body_1": "📸 Escanea tu comida y conoce sus calorías.",
+    "food_body_2": "⏱️ Solo toma 5 segundos registrar tu comida.",
+    "food_title_3": "🍽️ Hora de comer",
+    "food_body_3": "📸 ¿Qué hay en tu plato hoy? Escanéalo rápido.",
+    "dinner_title_1": "🌙 Hora de la cena",
+    "dinner_body_1": "🍽️ No olvides registrar tu última comida del día.",
+    "dinner_title_2": "📝 Cierra tu día",
+    "dinner_body_2": "✅ Tómate un momento para registrar tu cena antes de descansar.",
+    "dinner_title_3": "🥗 Registro nocturno",
+    "dinner_body_3": "📸 ¿Qué cenaste hoy? Regístralo en segundos.",
+    "water_title_1": "💧 Hidratación",
+    "water_body_1": "💧 Hora de tomar un vaso de agua.",
+    "water_title_2": "🚰 Hábito saludable",
+    "water_body_2": "🚰 Mantente hidratado para mejores resultados.",
+    "water_title_3": "💦 Tu cuerpo",
+    "water_body_3": "💦 Tu cuerpo te lo agradecerá. Bebe un poco de agua.",
+    "weight_title_1": "⚖️ Control de peso",
+    "weight_body_1": "⚖️ ¿Quieres actualizar tu peso hoy? Solo toma un momento.",
+    "weight_title_2": "📊 Tu Progreso",
+    "weight_body_2": "📊 Revisa tu progreso de esta semana.",
+    "weight_title_3": "📈 Avanzando",
+    "weight_body_3": "📈 Cada registro cuenta, sigue avanzando hacia tu meta."
   }
 }

@@ -10,7 +10,8 @@
     "error_friendly": "Something went wrong. Please check your connection and try again.",
     "ai_limit_reached": "AI Limit Reached",
     "ai_limit_daily_desc": "You have reached the daily limit of {{limit}} uses for this feature. Please come back tomorrow to continue.",
-    "ai_limit_weekly_desc": "You have reached the weekly limit of {{limit}} uses for this feature. Please come back next week to continue."
+    "ai_limit_weekly_desc": "You have reached the weekly limit of {{limit}} uses for this feature. Please come back next week to continue.",
+    "add": "Add"
   },
   "auth": {
     "email_label": "Email address",
@@ -614,5 +615,30 @@
     "settings_content": "In Settings, you can adjust your goals, change preferences, and manage your account.",
     "finish": "Finish",
     "next": "Next"
+  },
+  "notifications": {
+    "food_title": "🍽️ Meal Log",
+    "food_body_1": "📸 Scan your food and know its calories.",
+    "food_body_2": "⏱️ It only takes 5 seconds to log your meal.",
+    "food_title_3": "🍽️ Meal Time",
+    "food_body_3": "📸 What's on your plate? Scan it fast.",
+    "dinner_title_1": "🌙 Dinner Time",
+    "dinner_body_1": "🍽️ Don't forget to log your last meal of the day.",
+    "dinner_title_2": "📝 Close Your Day",
+    "dinner_body_2": "✅ Take a moment to log your dinner before resting.",
+    "dinner_title_3": "🥗 Night Log",
+    "dinner_body_3": "📸 What did you have for dinner? Log it in seconds.",
+    "water_title_1": "💧 Hydration",
+    "water_body_1": "💧 Time to drink a glass of water.",
+    "water_title_2": "🚰 Healthy Habit",
+    "water_body_2": "🚰 Stay hydrated for better results.",
+    "water_title_3": "💦 Your Body",
+    "water_body_3": "💦 Your body will thank you. Drink some water.",
+    "weight_title_1": "⚖️ Weight Control",
+    "weight_body_1": "⚖️ Want to update your weight today? It takes a moment.",
+    "weight_title_2": "📊 Your Progress",
+    "weight_body_2": "📊 Check your progress for this week.",
+    "weight_title_3": "📈 Moving Forward",
+    "weight_body_3": "📈 Every log counts, keep moving towards your goal."
   }
 }

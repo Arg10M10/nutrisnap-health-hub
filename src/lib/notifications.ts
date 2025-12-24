@@ -1,30 +1,31 @@
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Capacitor } from '@capacitor/core';
+import i18n from './i18n';
 
-// --- Banco de Mensajes ---
+// --- Banco de Mensajes Dinámico ---
 
-const FOOD_MESSAGES = [
-  { title: '🍽️ Registro de comidas', body: '📸 Escanea tu comida y conoce sus calorías.' },
-  { title: '🍽️ Tiempo récord', body: '⏱️ Solo toma 5 segundos registrar tu comida.' },
-  { title: '🍽️ Hora de comer', body: '📸 ¿Qué hay en tu plato hoy? Escanéalo rápido.' },
+const getFoodMessages = () => [
+  { title: i18n.t('notifications.food_title'), body: i18n.t('notifications.food_body_1') },
+  { title: i18n.t('notifications.food_title'), body: i18n.t('notifications.food_body_2') },
+  { title: i18n.t('notifications.food_title_3'), body: i18n.t('notifications.food_body_3') },
 ];
 
-const DINNER_MESSAGES = [
-  { title: '🌙 Hora de la cena', body: '🍽️ No olvides registrar tu última comida del día.' },
-  { title: '📝 Cierra tu día', body: '✅ Tómate un momento para registrar tu cena antes de descansar.' },
-  { title: '🥗 Registro nocturno', body: '📸 ¿Qué cenaste hoy? Regístralo en segundos.' },
+const getDinnerMessages = () => [
+  { title: i18n.t('notifications.dinner_title_1'), body: i18n.t('notifications.dinner_body_1') },
+  { title: i18n.t('notifications.dinner_title_2'), body: i18n.t('notifications.dinner_body_2') },
+  { title: i18n.t('notifications.dinner_title_3'), body: i18n.t('notifications.dinner_body_3') },
 ];
 
-const WATER_MESSAGES = [
-  { title: '💧 Hidratación', body: '💧 Hora de tomar un vaso de agua.' },
-  { title: '🚰 Hábito saludable', body: '🚰 Mantente hidratado para mejores resultados.' },
-  { title: '💦 Tu cuerpo', body: '💦 Tu cuerpo te lo agradecerá. Bebe un poco de agua.' },
+const getWaterMessages = () => [
+  { title: i18n.t('notifications.water_title_1'), body: i18n.t('notifications.water_body_1') },
+  { title: i18n.t('notifications.water_title_2'), body: i18n.t('notifications.water_body_2') },
+  { title: i18n.t('notifications.water_title_3'), body: i18n.t('notifications.water_body_3') },
 ];
 
-const WEIGHT_MESSAGES = [
-  { title: '⚖️ Control de peso', body: '⚖️ ¿Quieres actualizar tu peso hoy? Solo toma un momento.' },
-  { title: '📊 Tu Progreso', body: '📊 Revisa tu progreso de esta semana.' },
-  { title: '📈 Avanzando', body: '📈 Cada registro cuenta, sigue avanzando hacia tu meta.' },
+const getWeightMessages = () => [
+  { title: i18n.t('notifications.weight_title_1'), body: i18n.t('notifications.weight_body_1') },
+  { title: i18n.t('notifications.weight_title_2'), body: i18n.t('notifications.weight_body_2') },
+  { title: i18n.t('notifications.weight_title_3'), body: i18n.t('notifications.weight_body_3') },
 ];
 
 // --- Gestor ---
@@ -48,19 +49,22 @@ export const NotificationManager = {
     if (!(await this.requestPermissions())) return;
     await this.cancelMealReminders(); // Limpiar previos
     
+    const foodMsgs = getFoodMessages();
+    const dinnerMsgs = getDinnerMessages();
+
     // Programamos recordatorios variados para la comida y la cena
     await LocalNotifications.schedule({
       notifications: [
         {
           id: 101, // Almuerzo
-          title: FOOD_MESSAGES[0].title,
-          body: FOOD_MESSAGES[0].body,
+          title: foodMsgs[0].title,
+          body: foodMsgs[0].body,
           schedule: { on: { hour: 13, minute: 30 }, allowWhileIdle: true },
         },
         {
           id: 102, // Cena
-          title: DINNER_MESSAGES[0].title,
-          body: DINNER_MESSAGES[0].body,
+          title: dinnerMsgs[0].title,
+          body: dinnerMsgs[0].body,
           schedule: { on: { hour: 20, minute: 0 }, allowWhileIdle: true },
         }
       ]
@@ -75,12 +79,17 @@ export const NotificationManager = {
     const notifications = [];
     let idCounter = 100;
 
+    const foodMsgs = getFoodMessages();
+    const dinnerMsgs = getDinnerMessages();
+    const waterMsgs = getWaterMessages();
+    const weightMsgs = getWeightMessages();
+
     for (let day = 1; day <= 7; day++) {
       // 1. Mañana (09:00 AM) - Peso o Motivación
       const isWeightDay = day === 1 || day === 4; 
       const morningMsg = isWeightDay 
-        ? WEIGHT_MESSAGES[day % WEIGHT_MESSAGES.length]
-        : FOOD_MESSAGES[day % FOOD_MESSAGES.length];
+        ? weightMsgs[day % weightMsgs.length]
+        : foodMsgs[day % foodMsgs.length];
 
       notifications.push({
         id: idCounter++,
@@ -90,7 +99,7 @@ export const NotificationManager = {
       });
 
       // 2. Almuerzo (01:30 PM)
-      const lunchMsg = FOOD_MESSAGES[(day + 1) % FOOD_MESSAGES.length];
+      const lunchMsg = foodMsgs[(day + 1) % foodMsgs.length];
       notifications.push({
         id: idCounter++,
         title: lunchMsg.title,
@@ -99,7 +108,7 @@ export const NotificationManager = {
       });
 
       // 3. Tarde (04:30 PM) - Agua
-      const waterMsg = WATER_MESSAGES[day % WATER_MESSAGES.length];
+      const waterMsg = waterMsgs[day % waterMsgs.length];
       notifications.push({
         id: idCounter++,
         title: waterMsg.title,
@@ -108,7 +117,7 @@ export const NotificationManager = {
       });
 
       // 4. Noche (08:00 PM) - Cena (Reemplaza Rachas)
-      const dinnerMsg = DINNER_MESSAGES[day % DINNER_MESSAGES.length];
+      const dinnerMsg = dinnerMsgs[day % dinnerMsgs.length];
       notifications.push({
         id: idCounter++,
         title: dinnerMsg.title,
@@ -124,11 +133,13 @@ export const NotificationManager = {
     if (!(await this.requestPermissions())) return;
     await this.cancelWaterReminders();
 
+    const waterMsgs = getWaterMessages();
+
     await LocalNotifications.schedule({
       notifications: [{
         id: 201,
-        title: WATER_MESSAGES[0].title,
-        body: WATER_MESSAGES[0].body,
+        title: waterMsgs[0].title,
+        body: waterMsgs[0].body,
         schedule: { on: { hour: 16, minute: 30 }, allowWhileIdle: true },
       }]
     });
@@ -138,18 +149,20 @@ export const NotificationManager = {
     if (!(await this.requestPermissions())) return;
     await this.cancelWeightReminders();
 
+    const weightMsgs = getWeightMessages();
+
     await LocalNotifications.schedule({
       notifications: [
         {
           id: 301,
-          title: WEIGHT_MESSAGES[0].title,
-          body: WEIGHT_MESSAGES[0].body,
+          title: weightMsgs[0].title,
+          body: weightMsgs[0].body,
           schedule: { on: { weekday: 2, hour: 9, minute: 0 }, allowWhileIdle: true }, // Lunes
         },
         {
           id: 302,
-          title: WEIGHT_MESSAGES[2].title,
-          body: WEIGHT_MESSAGES[2].body,
+          title: weightMsgs[2].title,
+          body: weightMsgs[2].body,
           schedule: { on: { weekday: 5, hour: 9, minute: 0 }, allowWhileIdle: true }, // Jueves
         }
       ]
