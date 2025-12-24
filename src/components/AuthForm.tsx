@@ -27,11 +27,12 @@ const AuthForm = () => {
         social_provider_text: t('auth.social_provider_text'),
         link_text: t('auth.already_have_account'),
         sign_in_link: t('auth.sign_in_link'),
+        // Nuevo campo para el nombre completo
+        full_name_label: t('auth.full_name_label'),
       },
       forgotten_password: {
         email_label: t('auth.email_label'),
         button_label: t('auth.reset_password_button'),
-        // Usamos el texto de 'sign_in_link' para el enlace de regreso
         link_text: t('auth.sign_in_link'), 
       },
       update_password: {
@@ -56,11 +57,12 @@ const AuthForm = () => {
         social_provider_text: t('auth.social_provider_text'),
         link_text: t('auth.already_have_account'),
         sign_in_link: t('auth.sign_in_link'),
+        // Nuevo campo para el nombre completo
+        full_name_label: t('auth.full_name_label'),
       },
       forgotten_password: {
         email_label: t('auth.email_label'),
         button_label: t('auth.reset_password_button'),
-        // Usamos el texto de 'sign_in_link' para el enlace de regreso
         link_text: t('auth.sign_in_link'), 
       },
       update_password: {
@@ -121,14 +123,18 @@ const AuthForm = () => {
         }
       }}
       theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-      providers={[]} // Solo email/password
+      providers={[]}
       localization={{
         variables: i18nMap[i18n.language as 'en' | 'es'] || i18nMap.en,
       }}
       view="sign_in"
       showLinks={true}
       redirectTo={window.location.origin}
-      magicLink={false} // <--- Deshabilitado Magic Link
+      magicLink={false}
+      // Añadir campo de nombre completo al registrarse
+      additionalData={{
+        full_name: '',
+      }}
     />
   );
 };

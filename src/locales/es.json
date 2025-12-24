@@ -25,7 +25,8 @@
     "sign_up_link": "Regístrate",
     "already_have_account": "¿Ya tienes una cuenta?",
     "sign_in_link": "Inicia Sesión",
-    "social_provider_text": "O continúa con"
+    "social_provider_text": "O continúa con",
+    "full_name_label": "Nombre Completo"
   },
   "login": {
     "welcome": "Bienvenido a Calorel",
