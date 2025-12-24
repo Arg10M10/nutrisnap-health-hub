@@ -6,8 +6,8 @@ import { SignInForm } from '@/components/auth/SignInForm';
 import { SignUpForm } from '@/components/auth/SignUpForm';
 import { Button } from '@/components/ui/button';
 
-const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
-const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy";
+const TERMS_URL = "https://www.calorel.online/termsandconditions";
+const PRIVACY_URL = "https://www.calorel.online/privacypolicy";
 
 export default function Login() {
   const { t } = useTranslation();

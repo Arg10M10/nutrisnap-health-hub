@@ -21,8 +21,8 @@ import { SettingsItem } from "@/components/settings/SettingsItem";
 import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
 import UserAvatar from "@/components/UserAvatar";
 
-const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
-const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy?authuser=0";
+const TERMS_URL = "https://www.calorel.online/termsandconditions";
+const PRIVACY_URL = "https://www.calorel.online/privacypolicy";
 const INSTAGRAM_URL = "https://www.instagram.com/calorel.app/";
 const SUPPORT_EMAIL = "calorel.help@gmail.com";
 const TIKTOK_URL = "https://www.tiktok.com/@calorel.app?_r=1&_t=ZS-920XYSQSag5";
