@@ -58,11 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error("Error fetching profile:", error);
       }
       
-      if (userProfile) {
-        setProfile(userProfile);
-      } else {
-        setProfile(null);
-      }
+      setProfile(userProfile || null);
     } catch (e) {
       console.error("Critical profile fetch error:", e);
       setProfile(null);
@@ -70,68 +66,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    let mounted = true;
+    setLoading(true);
 
-    const initializeAuth = async () => {
-      try {
-        setLoading(true);
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      const currentUser = session?.user;
+      setSession(session);
+      setUser(currentUser ?? null);
 
-        if (mounted) {
-          if (initialSession?.user) {
-            setSession(initialSession);
-            setUser(initialSession.user);
-            await fetchProfile(initialSession.user.id);
-          }
-        }
-      } catch (error) {
-        console.error("Auth initialization error:", error);
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    initializeAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
-      if (!mounted) return;
-
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
-
-      if (event === 'SIGNED_OUT') {
+      if (currentUser) {
+        await fetchProfile(currentUser.id);
+      } else {
         setProfile(null);
+      }
+
+      // The initial session event is what determines the end of the initial loading state.
+      if (event === 'INITIAL_SESSION') {
         setLoading(false);
-      } else if (event === 'SIGNED_IN' && newSession?.user) {
-        setUser(currentUser => {
-            if (currentUser?.id !== newSession.user.id) {
-                 fetchProfile(newSession.user.id);
-            }
-            return newSession.user;
-        });
+      } else if (event === 'SIGNED_OUT') {
+        setLoading(false);
       }
     });
 
     return () => {
-      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
   const signOut = async () => {
-    try {
-      setLoading(true); 
-      await supabase.auth.signOut();
-    } catch (error) {
-      console.error("Error signing out:", error);
-    } finally {
-      setProfile(null);
-      setUser(null);
-      setSession(null);
-      setLoading(false);
-    }
+    await supabase.auth.signOut();
+    // The onAuthStateChange listener will handle state cleanup.
   };
 
   const refetchProfile = async () => {
