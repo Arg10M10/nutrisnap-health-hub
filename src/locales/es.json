@@ -150,7 +150,7 @@
     "step4": "¡Plan listo! Redirigiendo a tu panel."
   },
   "home": {
-    "title": "Panel Principal",
+    "title": "Calorel",
     "goal_achieved_toast": "¡Genial! Basado en tu ritmo, deberías alcanzar tu peso objetivo alrededor de {{date}}.",
     "kcal_remaining": "{{count}} kcal restantes",
     "kcal_over": "{{count}} kcal de exceso",

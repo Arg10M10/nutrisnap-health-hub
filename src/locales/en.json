@@ -151,7 +151,7 @@
     "step4": "Plan ready! Redirecting to your dashboard."
   },
   "home": {
-    "title": "Dashboard",
+    "title": "Calorel",
     "goal_achieved_toast": "Great! Based on your rate, you should reach your goal weight around {{date}}.",
     "kcal_remaining": "{{count}} kcal remaining",
     "kcal_over": "{{count}} kcal over",

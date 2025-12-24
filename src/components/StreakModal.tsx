@@ -55,7 +55,7 @@ const StreakModal = ({ isOpen, onClose, streak, streakDays }: StreakModalProps) 
           
           <div className="text-center space-y-6">
             <p className="text-base text-muted-foreground leading-relaxed px-2 font-medium">
-              {t('streak_modal.subtitle')}
+              {t('streak_modal.subtitle', { streak })}
             </p>
             <Button 
               onClick={onClose} 
