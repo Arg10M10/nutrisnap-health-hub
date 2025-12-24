@@ -157,7 +157,7 @@ const Subscribe = () => {
           <CardContent className="p-4 space-y-3">
             <div className="border-2 border-primary bg-primary/5 rounded-lg p-4 text-center">
               <p className="font-bold text-lg text-primary">{t('subscribe.plan.title')}</p>
-              <p className="text-2xl font-extrabold text-foreground">$2.00<span className="text-base font-medium text-muted-foreground">{t('subscribe.plan.price_suffix')}</span></p>
+              <p className="text-2xl font-extrabold text-foreground">$1.99<span className="text-base font-medium text-muted-foreground">{t('subscribe.plan.price_suffix')}</span></p>
               {planType === 'trial' && <p className="text-sm text-muted-foreground mt-1">{t('subscribe.plan.trial_note')}</p>}
             </div>
           </CardContent>

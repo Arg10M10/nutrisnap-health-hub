@@ -114,16 +114,15 @@
   },
   "subscribe": {
     "title": "Desbloquea Tu Potencial Completo",
-    "trial_tab": "Prueba Gratuita de 7 Días",
+    "trial_tab": "Prueba Gratuita de 3 Días",
     "pay_now_tab": "Desbloquear Ahora",
     "timeline": {
       "today_title": "Hoy: Inicia Prueba Gratuita",
       "today_desc": "Accede a todas las funciones premium de inmediato.",
-      "reminder_title": "Día 6: Recordatorio",
+      "reminder_title": "Día 2: Recordatorio",
       "reminder_desc": "Te enviaremos un recordatorio antes de que finalice la prueba.",
-      "billing_title": "Día 7: Comienza la Facturación",
-      "billing_desc": "Si no cancelas, la suscripción comenzará.",
-      "cancel_note": "Cancela en cualquier momento antes del Día 7 para evitar cargos."
+      "billing_title": "Día 3: Comienza la Facturación",
+      "billing_desc": "Si no cancelas, la suscripción comenzará."
     },
     "features_title": "Funciones Premium Incluidas:",
     "features": {
@@ -133,14 +132,14 @@
       "goals": "Seguimiento Avanzado de Metas y Sugerencias"
     },
     "plan": {
-      "title": "Plan Anual",
-      "price_suffix": "/año",
-      "trial_note": "Gratis por 7 días, luego $2.00/año."
+      "title": "Plan Mensual",
+      "price_suffix": "/mes",
+      "trial_note": "Gratis por 3 días, luego $1.99/mes."
     },
     "buttons": {
-      "start_trial": "Iniciar Prueba Gratuita de 7 Días",
+      "start_trial": "Iniciar Prueba Gratuita de 3 Días",
       "unlock_now": "Desbloquear Ahora",
-      "no_payment_note": "Sin cargo durante los primeros 7 días."
+      "no_payment_note": "Sin cargo durante los primeros 3 días."
     }
   },
   "generating_plan": {

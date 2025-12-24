@@ -115,16 +115,15 @@
   },
   "subscribe": {
     "title": "Unlock Your Full Potential",
-    "trial_tab": "7-Day Free Trial",
+    "trial_tab": "3-Day Free Trial",
     "pay_now_tab": "Unlock Now",
     "timeline": {
       "today_title": "Today: Start Free Trial",
       "today_desc": "Access all premium features immediately.",
-      "reminder_title": "Day 6: Reminder",
+      "reminder_title": "Day 2: Reminder",
       "reminder_desc": "We will send you a reminder before the trial ends.",
-      "billing_title": "Day 7: Billing Starts",
-      "billing_desc": "If you don't cancel, the subscription will begin.",
-      "cancel_note": "Cancel anytime before Day 7 to avoid charges."
+      "billing_title": "Day 3: Billing Starts",
+      "billing_desc": "If you don't cancel, the subscription will begin."
     },
     "features_title": "Premium Features Included:",
     "features": {
@@ -134,14 +133,14 @@
       "goals": "Advanced Goal Tracking & Suggestions"
     },
     "plan": {
-      "title": "Annual Plan",
-      "price_suffix": "/year",
-      "trial_note": "Free for 7 days, then $2.00/year."
+      "title": "Monthly Plan",
+      "price_suffix": "/month",
+      "trial_note": "Free for 3 days, then $1.99/month."
     },
     "buttons": {
-      "start_trial": "Start 7-Day Free Trial",
+      "start_trial": "Start 3-Day Free Trial",
       "unlock_now": "Unlock Now",
-      "no_payment_note": "No charge for the first 7 days."
+      "no_payment_note": "No charge for the first 3 days."
     }
   },
   "generating_plan": {
