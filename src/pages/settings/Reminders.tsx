@@ -21,7 +21,12 @@ const Reminders = () => {
     setIsNative(Capacitor.isNativePlatform());
   }, []);
 
-  const handleToggle = async (key: string, value: boolean, scheduler: () => Promise<void>, canceller: () => Promise<void>) => {
+  const handleToggle = async (
+    key: string, 
+    value: boolean, 
+    scheduler: () => Promise<void>, 
+    canceller: () => Promise<void>
+  ) => {
     if (!isNative) {
         toast.info("Las notificaciones funcionan mejor en la app móvil instalada.");
     }
@@ -62,7 +67,7 @@ const Reminders = () => {
               <Bell className="w-5 h-5" /> Configurar Alertas
             </CardTitle>
             <CardDescription>
-              Recibe notificaciones locales para mantener tus hábitos.
+              Recibe notificaciones locales para mantener tus hábitos. Máximo 4 al día.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -74,12 +79,12 @@ const Reminders = () => {
                 </div>
                 <div>
                   <p className="font-medium text-foreground">Comidas</p>
-                  <p className="text-sm text-muted-foreground">Desayuno, Almuerzo, Cena</p>
+                  <p className="text-sm text-muted-foreground">Registro rápido y Rachas</p>
                 </div>
               </div>
               <Switch 
                 checked={mealReminders} 
-                onCheckedChange={(v) => handleToggle('meals', v, () => NotificationManager.scheduleMealReminders(), () => NotificationManager.cancelReminders([101, 102, 103]))} 
+                onCheckedChange={(v) => handleToggle('meals', v, () => NotificationManager.scheduleMealReminders(), () => NotificationManager.cancelMealReminders())} 
               />
             </div>
 
@@ -90,12 +95,12 @@ const Reminders = () => {
                 </div>
                 <div>
                   <p className="font-medium text-foreground">Hidratación</p>
-                  <p className="text-sm text-muted-foreground">Cada 2 horas (10am - 8pm)</p>
+                  <p className="text-sm text-muted-foreground">Aviso suave por la tarde</p>
                 </div>
               </div>
               <Switch 
                 checked={waterReminders} 
-                onCheckedChange={(v) => handleToggle('water', v, () => NotificationManager.scheduleWaterReminders(), () => NotificationManager.cancelReminders([200, 201, 202, 203, 204, 205]))} 
+                onCheckedChange={(v) => handleToggle('water', v, () => NotificationManager.scheduleWaterReminders(), () => NotificationManager.cancelWaterReminders())} 
               />
             </div>
 
@@ -105,13 +110,13 @@ const Reminders = () => {
                   <Weight className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">Peso Diario</p>
-                  <p className="text-sm text-muted-foreground">Recordatorio matutino (8am)</p>
+                  <p className="font-medium text-foreground">Peso y Progreso</p>
+                  <p className="text-sm text-muted-foreground">Lunes y Jueves (9am)</p>
                 </div>
               </div>
               <Switch 
                 checked={weightReminders} 
-                onCheckedChange={(v) => handleToggle('weight', v, () => NotificationManager.scheduleWeightReminder(), () => NotificationManager.cancelReminders([300]))} 
+                onCheckedChange={(v) => handleToggle('weight', v, () => NotificationManager.scheduleWeightReminder(), () => NotificationManager.cancelWeightReminders())} 
               />
             </div>
 

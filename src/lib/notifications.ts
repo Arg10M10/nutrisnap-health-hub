@@ -32,7 +32,7 @@ const WEIGHT_MESSAGES = [
 export const NotificationManager = {
   async requestPermissions() {
     if (!Capacitor.isNativePlatform()) {
-      if (Notification.permission !== 'granted') {
+      if (typeof Notification !== 'undefined' && Notification.permission !== 'granted') {
         await Notification.requestPermission();
       }
       return true;
@@ -42,82 +42,23 @@ export const NotificationManager = {
     return result.display === 'granted';
   },
 
-  // Programa notificaciones variadas para toda la semana
-  async scheduleAll() {
-    if (!(await this.requestPermissions())) return;
+  // --- Programadores ---
 
-    // Cancelamos todo primero para evitar duplicados
-    await this.cancelAll();
-
-    const notifications = [];
-    let idCounter = 100;
-
-    // Programamos para los próximos 7 días
-    for (let day = 1; day <= 7; day++) {
-      // 1. Mañana (09:00 AM) - Alternamos entre Peso (Lun/Jue) y Motivación de Comida
-      const isWeightDay = day === 1 || day === 4; // Lunes y Jueves
-      const morningMsg = isWeightDay 
-        ? WEIGHT_MESSAGES[day % WEIGHT_MESSAGES.length]
-        : FOOD_MESSAGES[day % FOOD_MESSAGES.length];
-
-      notifications.push({
-        id: idCounter++,
-        title: morningMsg.title,
-        body: morningMsg.body,
-        schedule: { on: { weekday: day, hour: 9, minute: 0 }, allowWhileIdle: true },
-      });
-
-      // 2. Almuerzo (01:30 PM) - Recordatorio de Escaneo
-      const lunchMsg = FOOD_MESSAGES[(day + 1) % FOOD_MESSAGES.length];
-      notifications.push({
-        id: idCounter++,
-        title: lunchMsg.title,
-        body: lunchMsg.body,
-        schedule: { on: { weekday: day, hour: 13, minute: 30 }, allowWhileIdle: true },
-      });
-
-      // 3. Tarde (04:30 PM) - Agua
-      const waterMsg = WATER_MESSAGES[day % WATER_MESSAGES.length];
-      notifications.push({
-        id: idCounter++,
-        title: waterMsg.title,
-        body: waterMsg.body,
-        schedule: { on: { weekday: day, hour: 16, minute: 30 }, allowWhileIdle: true },
-      });
-
-      // 4. Noche (08:00 PM) - Racha / Cena
-      const streakMsg = STREAK_MESSAGES[day % STREAK_MESSAGES.length];
-      notifications.push({
-        id: idCounter++,
-        title: streakMsg.title,
-        body: streakMsg.body,
-        schedule: { on: { weekday: day, hour: 20, minute: 0 }, allowWhileIdle: true },
-      });
-    }
-
-    await LocalNotifications.schedule({ notifications });
-  },
-
-  // Funciones individuales para los toggles de la UI (ahora llaman a scheduleAll filtrado o simplificado)
-  // Nota: Para mantener la consistencia con la UI actual, si el usuario activa solo "Agua", 
-  // programamos solo las de agua.
-  
   async scheduleMealReminders() {
-    // Reutilizamos la lógica pero filtramos solo comidas/rachas
     if (!(await this.requestPermissions())) return;
-    await this.cancelRemindersByPrefix(1); // IDs 100-199 reservados para comidas/general
+    await this.cancelMealReminders(); // Limpiar previos
     
-    // Simplificación para el toggle individual: Programamos una recurrente diaria
+    // Programamos recordatorios variados para la comida y la cena
     await LocalNotifications.schedule({
       notifications: [
         {
-          id: 101,
+          id: 101, // Almuerzo
           title: FOOD_MESSAGES[0].title,
           body: FOOD_MESSAGES[0].body,
           schedule: { on: { hour: 13, minute: 30 }, allowWhileIdle: true },
         },
         {
-          id: 102,
+          id: 102, // Cena/Racha
           title: STREAK_MESSAGES[0].title,
           body: STREAK_MESSAGES[0].body,
           schedule: { on: { hour: 20, minute: 0 }, allowWhileIdle: true },
@@ -128,9 +69,9 @@ export const NotificationManager = {
 
   async scheduleWaterReminders() {
     if (!(await this.requestPermissions())) return;
-    await this.cancelRemindersByPrefix(2); // IDs 200+
+    await this.cancelWaterReminders();
 
-    // Programar mensaje de agua diario a las 16:30
+    // Mensaje de agua diario a las 16:30
     await LocalNotifications.schedule({
       notifications: [{
         id: 201,
@@ -143,7 +84,7 @@ export const NotificationManager = {
 
   async scheduleWeightReminder() {
     if (!(await this.requestPermissions())) return;
-    await this.cancelRemindersByPrefix(3); // IDs 300+
+    await this.cancelWeightReminders();
 
     // Peso lunes y jueves
     await LocalNotifications.schedule({
@@ -152,7 +93,7 @@ export const NotificationManager = {
           id: 301,
           title: WEIGHT_MESSAGES[0].title,
           body: WEIGHT_MESSAGES[0].body,
-          schedule: { on: { weekday: 2, hour: 9, minute: 0 }, allowWhileIdle: true }, // Lunes (weekday puede variar según locale, 2 suele ser lunes en JS/Capacitor a veces, check docs. Capacitor usa 1=Sunday)
+          schedule: { on: { weekday: 2, hour: 9, minute: 0 }, allowWhileIdle: true }, // Lunes
         },
         {
           id: 302,
@@ -164,6 +105,25 @@ export const NotificationManager = {
     });
   },
 
+  // --- Canceladores Específicos ---
+
+  async cancelMealReminders() {
+    // IDs 100-199 reservados para comidas
+    await this.cancelRemindersByPrefix(1);
+  },
+
+  async cancelWaterReminders() {
+    // IDs 200-299 reservados para agua
+    await this.cancelRemindersByPrefix(2);
+  },
+
+  async cancelWeightReminders() {
+    // IDs 300-399 reservados para peso
+    await this.cancelRemindersByPrefix(3);
+  },
+
+  // --- Utilidades Internas ---
+
   async cancelReminders(ids: number[]) {
     if (!Capacitor.isNativePlatform()) return;
     try {
@@ -173,11 +133,9 @@ export const NotificationManager = {
     }
   },
 
-  // Helper para cancelar rangos si es necesario
   async cancelRemindersByPrefix(prefix: number) {
       if (!Capacitor.isNativePlatform()) return;
-      // Esto es una simplificación, idealmente rastreamos IDs exactos.
-      // Aquí cancelamos una lista manual basada en nuestra lógica de generación.
+      // Generamos un rango de IDs basado en el prefijo (ej. 1 -> 100 a 149)
       const ids = [];
       for(let i=0; i<50; i++) ids.push(prefix * 100 + i); 
       await this.cancelReminders(ids);
