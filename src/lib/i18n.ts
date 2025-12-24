@@ -19,11 +19,13 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: "en",
+    fallbackLng: "en", // El idioma por defecto si no se detecta nada
     supportedLngs: ['en', 'es'],
     detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage'], // Saves the choice to storage
+      // Eliminamos 'navigator' para que no detecte el idioma del navegador por defecto.
+      // Ahora, si no hay nada en localStorage, usará el fallbackLng ('en').
+      order: ['localStorage'],
+      caches: ['localStorage'], // Guarda la elección del usuario
     },
     interpolation: {
       escapeValue: false,
