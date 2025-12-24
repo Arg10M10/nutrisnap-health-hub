@@ -22,22 +22,23 @@ const GeneratingPlan = () => {
     { text: t('generating_plan.step4'), icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
   ];
 
-  // Simulación de progreso visual - Ajustado para ~30 segundos
+  // Simulación de progreso visual - Ajustado para ~8 segundos
   useEffect(() => {
+    const totalDuration = 8000; // 8 segundos
+    const intervalTime = 100;
+    const totalSteps = totalDuration / intervalTime;
+    const increment = 100 / totalSteps;
+
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 99) return 99;
-        
-        let increment = 0;
-        if (prev < 30) increment = 1.5;
-        else if (prev < 70) increment = 0.4;
-        else if (prev < 90) increment = 0.2;
-        else increment = 0.1;
-        
-        increment += (Math.random() - 0.5) * 0.1;
-        return Math.min(prev + Math.max(0.05, increment), 99);
+        if (prev >= 99) {
+          // Pausa en 99% esperando que la API termine
+          return 99;
+        }
+        // Incremento constante para una carga más suave
+        return Math.min(prev + increment, 99);
       });
-    }, 100);
+    }, intervalTime);
 
     return () => clearInterval(interval);
   }, []);
