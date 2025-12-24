@@ -49,7 +49,7 @@ export default function Login() {
             <Button 
               variant="outline" 
               size="lg"
-              className="w-full h-14 text-lg" 
+              className="w-full h-14 text-lg hover:bg-background active:bg-background hover:text-foreground" 
               onClick={() => setView(view === 'sign_in' ? 'sign_up' : 'sign_in')}
             >
               {view === 'sign_in' ? t('auth.sign_up_link') : t('auth.sign_in_link')}
