@@ -9,8 +9,8 @@
     "cancel": "Cancel",
     "error_friendly": "Something went wrong. Please check your connection and try again.",
     "ai_limit_reached": "AI Limit Reached",
-    "ai_limit_daily_desc": "You have reached the daily limit of {limit} uses for this feature. Please come back tomorrow to continue.",
-    "ai_limit_weekly_desc": "You have reached the weekly limit of {limit} uses for this feature. Please come back next week to continue."
+    "ai_limit_daily_desc": "You have reached the daily limit of {{limit}} uses for this feature. Please come back tomorrow to continue.",
+    "ai_limit_weekly_desc": "You have reached the weekly limit of {{limit}} uses for this feature. Please come back next week to continue."
   },
   "auth": {
     "email_label": "Email address",
@@ -39,7 +39,7 @@
     "terms_privacy": "By continuing, you agree to our <1>Terms of Service</1> and <3>Privacy Policy</3>."
   },
   "onboarding": {
-    "step": "Step {step} of {totalSteps}",
+    "step": "Step {{step}} of {{totalSteps}}",
     "continue": "Continue",
     "toast_error": "Error saving profile. Please try again.",
     "gender": {
@@ -152,9 +152,9 @@
   },
   "home": {
     "title": "Dashboard",
-    "goal_achieved_toast": "Great! Based on your rate, you should reach your goal weight around {date}.",
-    "kcal_remaining": "{count} kcal remaining",
-    "kcal_over": "{count} kcal over",
+    "goal_achieved_toast": "Great! Based on your rate, you should reach your goal weight around {{date}}.",
+    "kcal_remaining": "{{count}} kcal remaining",
+    "kcal_over": "{{count}} kcal over",
     "protein": "Protein",
     "carbs": "Carbs",
     "fats": "Fats",
@@ -164,7 +164,7 @@
     "health_score_good": "Good",
     "health_score_fair": "Fair",
     "health_score_improvable": "Improvable",
-    "water_tracker_glasses": "{goal} glasses goal",
+    "water_tracker_glasses": "{{goal}} glasses goal",
     "todays_analysis": "Today's Log",
     "no_data": "No entries yet.",
     "start_logging": "Tap the '+' button to log your first meal or exercise."
@@ -242,7 +242,7 @@
     "intensity_high": "High Intensity",
     "intensity_high_desc": "High effort, difficult to speak more than a few words.",
     "intensity_high_example": "Sprinting, HIIT.",
-    "save_run": "Save {calories} kcal",
+    "save_run": "Save {{calories}} kcal",
     "error_toast_title": "Error saving exercise"
   },
   "weights": {
@@ -256,7 +256,7 @@
     "intensity_high": "Intense Weights",
     "intensity_high_desc": "Heavy lifting, high effort, long rest periods.",
     "intensity_high_example": "Powerlifting, intense bodybuilding.",
-    "save_action": "Save {calories} kcal",
+    "save_action": "Save {{calories}} kcal",
     "error_toast_title": "Error saving exercise"
   },
   "write_exercise": {
@@ -316,7 +316,7 @@
   },
   "streak_modal": {
     "title": "Daily Streak!",
-    "subtitle": "You've logged food or exercise for {streak} consecutive days. Keep up the great work!",
+    "subtitle": "You've logged food or exercise for {{streak}} consecutive days. Keep up the great work!",
     "keep_it_up": "Keep it up!"
   },
   "badges": {
@@ -355,8 +355,8 @@
     "weight_70": { "name": "70 kg Lost", "desc": "Achieve 70 kg of weight loss." }
   },
   "share": {
-    "meal_message": "I just analyzed my {food} with Calorel! Check out my nutrition.",
-    "badge_message": "I just unlocked the '{name}' achievement on Calorel! Time to celebrate.",
+    "meal_message": "I just analyzed my {{food}} with Calorel! Check out my nutrition.",
+    "badge_message": "I just unlocked the '{{name}}' achievement on Calorel! Time to celebrate.",
     "achievement_unlocked": "Achievement Unlocked!",
     "generated_with": "Generated with Calorel",
     "prot_short": "Prot.",
@@ -424,7 +424,7 @@
     "generate": "Generate Plan",
     "toast_error_title": "Plan Generation Failed",
     "generating_step1": "Analyzing your goals and preferences...",
-    "generating_step2": "Adapting the plan to local cuisine in {country}...",
+    "generating_step2": "Adapting the plan to local cuisine in {{country}}...",
     "generating_step2_generic": "Adapting the plan to general Western cuisine...",
     "generating_step3": "Calculating nutritional balance...",
     "generating_step4": "Finalizing weekly meal structure...",

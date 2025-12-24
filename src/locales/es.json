@@ -9,8 +9,8 @@
     "cancel": "Cancelar",
     "error_friendly": "Algo salió mal. Por favor, verifica tu conexión e inténtalo de nuevo.",
     "ai_limit_reached": "Límite de IA alcanzado",
-    "ai_limit_daily_desc": "Has alcanzado el límite de {limit} usos diarios para esta función. Vuelve mañana para continuar.",
-    "ai_limit_weekly_desc": "Has alcanzado el límite de {limit} usos semanales para esta función. Vuelve la próxima semana para continuar."
+    "ai_limit_daily_desc": "Has alcanzado el límite de {{limit}} usos diarios para esta función. Vuelve mañana para continuar.",
+    "ai_limit_weekly_desc": "Has alcanzado el límite de {{limit}} usos semanales para esta función. Vuelve la próxima semana para continuar."
   },
   "auth": {
     "email_label": "Correo electrónico",
@@ -39,7 +39,7 @@
     "terms_privacy": "Al continuar, aceptas nuestros <1>Términos de Servicio</1> y <3>Política de Privacidad</3>."
   },
   "onboarding": {
-    "step": "Etapa {step} de {totalSteps}",
+    "step": "Etapa {{step}} de {{totalSteps}}",
     "continue": "Continuar",
     "toast_error": "Error al guardar el perfil. Inténtalo de nuevo.",
     "gender": {
@@ -151,9 +151,9 @@
   },
   "home": {
     "title": "Panel Principal",
-    "goal_achieved_toast": "¡Genial! Basado en tu ritmo, deberías alcanzar tu peso objetivo alrededor de {date}.",
-    "kcal_remaining": "{count} kcal restantes",
-    "kcal_over": "{count} kcal de exceso",
+    "goal_achieved_toast": "¡Genial! Basado en tu ritmo, deberías alcanzar tu peso objetivo alrededor de {{date}}.",
+    "kcal_remaining": "{{count}} kcal restantes",
+    "kcal_over": "{{count}} kcal de exceso",
     "protein": "Proteína",
     "carbs": "Carbohidratos",
     "fats": "Grasas",
@@ -163,7 +163,7 @@
     "health_score_good": "Buena",
     "health_score_fair": "Regular",
     "health_score_improvable": "Mejorable",
-    "water_tracker_glasses": "{goal} vasos objetivo",
+    "water_tracker_glasses": "{{goal}} vasos objetivo",
     "todays_analysis": "Registro de Hoy",
     "no_data": "Aún no hay entradas.",
     "start_logging": "Toca el botón '+' para registrar tu primera comida o ejercicio."
@@ -241,7 +241,7 @@
     "intensity_high": "Intensidad Alta",
     "intensity_high_desc": "Esfuerzo alto, difícil hablar más de unas pocas palabras.",
     "intensity_high_example": "Sprints, HIIT.",
-    "save_run": "Guardar {calories} kcal",
+    "save_run": "Guardar {{calories}} kcal",
     "error_toast_title": "Error al guardar ejercicio"
   },
   "weights": {
@@ -255,7 +255,7 @@
     "intensity_high": "Pesas Intensas",
     "intensity_high_desc": "Levantamiento pesado, alto esfuerzo, largos períodos de descanso.",
     "intensity_high_example": "Powerlifting, culturismo intenso.",
-    "save_action": "Guardar {calories} kcal",
+    "save_action": "Guardar {{calories}} kcal",
     "error_toast_title": "Error al guardar ejercicio"
   },
   "write_exercise": {
@@ -315,7 +315,7 @@
   },
   "streak_modal": {
     "title": "¡Racha Diaria!",
-    "subtitle": "Has registrado comida o ejercicio durante {streak} días consecutivos. ¡Sigue así!",
+    "subtitle": "Has registrado comida o ejercicio durante {{streak}} días consecutivos. ¡Sigue así!",
     "keep_it_up": "¡Sigue así!"
   },
   "badges": {
@@ -354,8 +354,8 @@
     "weight_70": { "name": "70 kg Perdidos", "desc": "Logra 70 kg de pérdida de peso." }
   },
   "share": {
-    "meal_message": "¡Acabo de analizar mi {food} con Calorel! Mira mi nutrición.",
-    "badge_message": "¡Acabo de desbloquear el logro '{name}' en Calorel! A celebrar.",
+    "meal_message": "¡Acabo de analizar mi {{food}} con Calorel! Mira mi nutrición.",
+    "badge_message": "¡Acabo de desbloquear el logro '{{name}}' en Calorel! A celebrar.",
     "achievement_unlocked": "¡Logro Desbloqueado!",
     "generated_with": "Generado con Calorel",
     "prot_short": "Prot.",
@@ -423,7 +423,7 @@
     "generate": "Generar Plan",
     "toast_error_title": "Fallo al Generar Plan",
     "generating_step1": "Analizando tus objetivos y preferencias...",
-    "generating_step2": "Adaptando el plan a la cocina local en {country}...",
+    "generating_step2": "Adaptando el plan a la cocina local en {{country}}...",
     "generating_step2_generic": "Adaptando el plan a la cocina occidental general...",
     "generating_step3": "Calculando el equilibrio nutricional...",
     "generating_step4": "Finalizando la estructura de comidas semanal...",
