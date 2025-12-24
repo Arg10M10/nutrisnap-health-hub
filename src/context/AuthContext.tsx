@@ -66,35 +66,52 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    let mounted = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      const currentUser = session?.user;
+    const initializeSession = async () => {
+      setLoading(true);
+      const { data: { session: initialSession } } = await supabase.auth.getSession();
+
+      if (mounted) {
+        setSession(initialSession);
+        const currentUser = initialSession?.user;
+        setUser(currentUser ?? null);
+
+        if (currentUser) {
+          await fetchProfile(currentUser.id);
+        }
+        setLoading(false);
+      }
+    };
+
+    initializeSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!mounted) return;
+
       setSession(session);
+      const currentUser = session?.user;
       setUser(currentUser ?? null);
 
       if (currentUser) {
-        await fetchProfile(currentUser.id);
+        // Only refetch profile if user changes
+        if (!profile || profile.id !== currentUser.id) {
+          await fetchProfile(currentUser.id);
+        }
       } else {
         setProfile(null);
-      }
-
-      // The initial session event is what determines the end of the initial loading state.
-      if (event === 'INITIAL_SESSION') {
-        setLoading(false);
-      } else if (event === 'SIGNED_OUT') {
-        setLoading(false);
       }
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    // The onAuthStateChange listener will handle state cleanup.
+    // The onAuthStateChange listener will handle state cleanup
   };
 
   const refetchProfile = async () => {
