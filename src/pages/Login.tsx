@@ -11,7 +11,7 @@ const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy";
 
 export default function Login() {
   const { t } = useTranslation();
-  const [view, setView] = useState<'sign_in' | 'sign_up'>('sign_in');
+  const [view, setView] = useState<'sign_in' | 'sign_up'>('sign_up');
 
   const openLink = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
