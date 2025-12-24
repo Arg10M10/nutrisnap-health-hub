@@ -26,12 +26,16 @@
     "already_have_account": "¿Ya tienes una cuenta?",
     "sign_in_link": "Inicia Sesión",
     "social_provider_text": "O continúa con",
-    "full_name_label": "Nombre y Apellido",
-    "full_name_placeholder": "Ej: Juan Pérez"
+    "first_name_label": "Nombre",
+    "first_name_placeholder": "Juan",
+    "last_name_label": "Apellido",
+    "last_name_placeholder": "Pérez"
   },
   "login": {
     "welcome": "Bienvenido a Calorel",
-    "subtitle": "Inicia sesión o crea una cuenta para comenzar tu viaje de salud.",
+    "subtitle": "Inicia sesión para continuar tu viaje de salud.",
+    "create_account": "Crea tu Cuenta",
+    "create_account_subtitle": "Comienza tu viaje de salud con nosotros hoy.",
     "terms_privacy": "Al continuar, aceptas nuestros <1>Términos de Servicio</1> y <3>Política de Privacidad</3>."
   },
   "onboarding": {
