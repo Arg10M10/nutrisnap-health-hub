@@ -71,47 +71,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
+    setLoading(true);
 
-    const initializeAuth = async () => {
-      try {
-        setLoading(true);
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
-
-        if (mounted) {
-          if (initialSession?.user) {
-            setSession(initialSession);
-            setUser(initialSession.user);
-            await fetchProfile(initialSession.user.id);
-          }
-        }
-      } catch (error) {
-        console.error("Auth initialization error:", error);
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    initializeAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!mounted) return;
 
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
+      const currentUser = session?.user ?? null;
+      setSession(session);
+      setUser(currentUser);
 
-      if (event === 'SIGNED_OUT') {
+      if (currentUser) {
+        await fetchProfile(currentUser.id);
+      } else {
         setProfile(null);
-        setLoading(false);
-      } else if (event === 'SIGNED_IN' && newSession?.user) {
-        setUser(currentUser => {
-            if (currentUser?.id !== newSession.user.id) {
-                 fetchProfile(newSession.user.id);
-            }
-            return newSession.user;
-        });
       }
+      
+      setLoading(false);
     });
 
     return () => {
@@ -127,10 +102,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Error signing out:", error);
     } finally {
-      setProfile(null);
-      setUser(null);
-      setSession(null);
-      setLoading(false);
+      // onAuthStateChange will handle setting state to null and loading to false
     }
   };
 
