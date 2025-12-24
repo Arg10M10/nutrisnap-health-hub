@@ -30,7 +30,6 @@
   "login": {
     "welcome": "Welcome to Calorel",
     "subtitle": "Log in or create an account to start your health journey.",
-    "google_button": "Continue with Google",
     "terms_privacy": "By continuing, you agree to our <1>Terms of Service</1> and <3>Privacy Policy</3>."
   },
   "onboarding": {

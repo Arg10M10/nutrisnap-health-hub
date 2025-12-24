@@ -30,7 +30,6 @@
   "login": {
     "welcome": "Bienvenido a Calorel",
     "subtitle": "Inicia sesión o crea una cuenta para comenzar tu viaje de salud.",
-    "google_button": "Continuar con Google",
     "terms_privacy": "Al continuar, aceptas nuestros <1>Términos de Servicio</1> y <3>Política de Privacidad</3>."
   },
   "onboarding": {

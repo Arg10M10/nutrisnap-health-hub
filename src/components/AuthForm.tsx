@@ -31,7 +31,8 @@ const AuthForm = () => {
       forgotten_password: {
         email_label: t('auth.email_label'),
         button_label: t('auth.reset_password_button'),
-        link_text: t('auth.back_to_login'),
+        // Usamos el texto de 'sign_in_link' para el enlace de regreso
+        link_text: t('auth.sign_in_link'), 
       },
       update_password: {
         password_label: t('auth.new_password_label'),
@@ -59,7 +60,8 @@ const AuthForm = () => {
       forgotten_password: {
         email_label: t('auth.email_label'),
         button_label: t('auth.reset_password_button'),
-        link_text: t('auth.back_to_login'),
+        // Usamos el texto de 'sign_in_link' para el enlace de regreso
+        link_text: t('auth.sign_in_link'), 
       },
       update_password: {
         password_label: t('auth.new_password_label'),
@@ -126,7 +128,7 @@ const AuthForm = () => {
       view="sign_in"
       showLinks={true}
       redirectTo={window.location.origin}
-      magicLink={true}
+      magicLink={false} // <--- Deshabilitado Magic Link
     />
   );
 };
