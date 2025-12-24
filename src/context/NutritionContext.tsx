@@ -69,7 +69,7 @@ export interface UnlockedBadgeInfo {
 interface NutritionState {
   addAnalysis: (result: AnalysisResult, imageUrl?: string) => void;
   getDataForDate: (date: Date) => DailyData;
-  addWaterGlass: (date: Date) => void;
+  addWaterGlass: (date: Date, amount?: number) => void;
   removeWaterGlass: (date: Date) => void;
   isWaterUpdating: boolean;
   streak: number;
@@ -214,15 +214,16 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const waterMutation = useMutation({
-    mutationFn: async ({ action, date }: { action: 'add' | 'remove', date: Date }) => {
+    mutationFn: async ({ action, date, amount = 1 }: { action: 'add' | 'remove', date: Date, amount?: number }) => {
       if (!user) throw new Error('User not found');
       if (action === 'add') {
-        const { error } = await supabase.from('water_entries').insert({ user_id: user.id, glasses: 1, created_at: date.toISOString() });
+        const { error } = await supabase.from('water_entries').insert({ user_id: user.id, glasses: amount, created_at: date.toISOString() });
         if (error) throw error;
       } else {
         const entriesForDay = waterEntries.filter(e => isSameDay(parseISO(e.created_at), date));
         if (entriesForDay.length > 0) {
-          const lastEntry = entriesForDay[0];
+          // Ordenar para borrar el último añadido (o el más pequeño si quisiéramos ser específicos, pero FIFO/LIFO es simple)
+          const lastEntry = entriesForDay.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
           const { error } = await supabase.from('water_entries').delete().eq('id', lastEntry.id);
           if (error) throw error;
         }
@@ -256,7 +257,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     addEntryMutation.mutate(newEntry);
   };
 
-  const addWaterGlass = (date: Date) => waterMutation.mutate({ action: 'add', date });
+  const addWaterGlass = (date: Date, amount = 1) => waterMutation.mutate({ action: 'add', date, amount });
   const removeWaterGlass = (date: Date) => waterMutation.mutate({ action: 'remove', date });
 
   const getDataForDate = (date: Date): DailyData => {

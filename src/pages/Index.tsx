@@ -177,7 +177,7 @@ const Index = () => {
                       <WaterTrackerCard
                         count={waterIntake}
                         goal={dailyGoals.water}
-                        onAdd={() => addWaterGlass(selectedDate)}
+                        onAdd={(amount) => addWaterGlass(selectedDate, amount)}
                         onRemove={() => removeWaterGlass(selectedDate)}
                         isUpdating={isWaterUpdating}
                       />
