@@ -1,79 +1,15 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Leaf, Loader2 } from "lucide-react";
-import { toast } from 'sonner';
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
-import { Capacitor } from '@capacitor/core';
 import { useTranslation, Trans } from 'react-i18next';
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Leaf } from "lucide-react";
+import AuthForm from '@/components/AuthForm';
 
 const TERMS_URL = "https://sites.google.com/view/calorel/termsandconditions";
 const PRIVACY_URL = "https://sites.google.com/view/calorel/privacypolicy";
 
-// Mismo ID que en strings.xml y capacitor.config.ts
-const GOOGLE_CLIENT_ID = '733617800360-gdfv4o8j13anns76lj1hmf64deeuo8iq.apps.googleusercontent.com';
-
 export default function Login() {
-  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    // No hacemos nada al montar.
-  }, []);
-
-  const signInWithGoogle = async () => {
-    setLoading(true);
-    try {
-      // Si es nativo, la inicialización se maneja por capacitor.config.ts.
-      // Si es web, se inicializa en App.tsx.
-      // Solo necesitamos llamar a signIn.
-      
-      console.log("Iniciando GoogleAuth.signIn()...");
-      
-      const googleUser = await GoogleAuth.signIn({
-        serverClientId: GOOGLE_CLIENT_ID,
-      });
-      
-      console.log('Respuesta completa de Google:', JSON.stringify(googleUser));
-
-      const idToken = googleUser.authentication?.idToken || googleUser.idToken;
-
-      if (!idToken) {
-        throw new Error('No se recibió el ID Token de Google.');
-      }
-
-      console.log("ID Token recibido, enviando a Supabase...");
-
-      const { data, error } = await supabase.auth.signInWithIdToken({
-        provider: 'google',
-        token: idToken,
-      });
-      
-      if (error) {
-        console.error("Error de Supabase:", error);
-        throw error;
-      }
-
-      console.log("Sesión iniciada correctamente:", data);
-
-    } catch (error: any) {
-      console.error('Error General en Login:', error);
-      // --- MODO DEBUG TEMPORAL ---
-      // Mantenemos el mensaje de error detallado para el diagnóstico final.
-      const errorMessage = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
-      toast.error("Error de autenticación", { 
-        description: `Código 12500: Verifica tu SHA-1 en Google Cloud. Detalle: ${errorMessage}`,
-        duration: 15000
-      });
-      // --- FIN MODO DEBUG ---
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const openLink = (url: string) => {
-    // Abrir en una nueva pestaña/navegador del sistema
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -93,21 +29,7 @@ export default function Login() {
             </div>
           </CardHeader>
           <CardContent className="px-8 space-y-4">
-            <Button 
-              variant="outline"
-              className="w-full h-16 text-lg rounded-full" 
-              onClick={signInWithGoogle} 
-              disabled={loading}
-            >
-              {loading ? (
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              ) : (
-                <>
-                  <img src="/google-logo.png" alt="Google logo" className="mr-3 h-6 w-6" />
-                  {t('login.google_button')}
-                </>
-              )}
-            </Button>
+            <AuthForm />
           </CardContent>
           <CardFooter className="flex justify-center !py-6 mt-4">
             <p className="text-center text-xs text-muted-foreground px-4 leading-relaxed">

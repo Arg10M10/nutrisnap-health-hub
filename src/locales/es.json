@@ -12,4 +12,587 @@
     "ai_limit_daily_desc": "Has alcanzado el límite de {limit} usos diarios para esta función. Vuelve mañana para continuar.",
     "ai_limit_weekly_desc": "Has alcanzado el límite de {limit} usos semanales para esta función. Vuelve la próxima semana para continuar."
   },
-// ... (rest of the file)
+  "auth": {
+    "email_label": "Correo electrónico",
+    "password_label": "Contraseña",
+    "new_password_label": "Nueva Contraseña",
+    "sign_in_button": "Iniciar Sesión",
+    "sign_up_button": "Crear Cuenta",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "reset_password_button": "Enviar instrucciones de restablecimiento",
+    "update_password_button": "Actualizar Contraseña",
+    "no_account": "¿No tienes una cuenta?",
+    "sign_up_link": "Regístrate",
+    "already_have_account": "¿Ya tienes una cuenta?",
+    "sign_in_link": "Inicia Sesión",
+    "social_provider_text": "O continúa con"
+  },
+  "login": {
+    "welcome": "Bienvenido a Calorel",
+    "subtitle": "Inicia sesión o crea una cuenta para comenzar tu viaje de salud.",
+    "google_button": "Continuar con Google",
+    "terms_privacy": "Al continuar, aceptas nuestros <1>Términos de Servicio</1> y <3>Política de Privacidad</3>."
+  },
+  "onboarding": {
+    "step": "Paso {step} de {totalSteps}",
+    "continue": "Continuar",
+    "toast_error": "Error al guardar el perfil. Inténtalo de nuevo.",
+    "gender": {
+      "title": "¿Cuál es tu género?",
+      "description": "Esto nos ayuda a calcular tus necesidades nutricionales con mayor precisión.",
+      "female": "Femenino",
+      "male": "Masculino",
+      "not_say": "Prefiero no decirlo",
+      "unit": "años"
+    },
+    "age": {
+      "title": "¿Cuántos años tienes?",
+      "description": "La edad es un factor clave para determinar tu tasa metabólica basal (TMB).",
+      "unit": "años"
+    },
+    "experience": {
+      "title": "¿Has usado aplicaciones de nutrición antes?",
+      "description": "Esto nos ayuda a adaptar la complejidad de la aplicación.",
+      "several": "Sí, he usado varias",
+      "one_or_two": "Sí, una o dos",
+      "first_time": "No, esta es mi primera vez"
+    },
+    "metrics": {
+      "title": "Tus medidas actuales",
+      "description": "Necesitamos tu peso y altura actuales para calcular tu IMC y objetivos.",
+      "metric": "Métrico (kg, cm)",
+      "imperial": "Imperial (lbs, in)",
+      "height": "Altura",
+      "weight": "Peso",
+      "cm": "cm",
+      "kg": "kg",
+      "lbs": "lbs"
+    },
+    "motivation": {
+      "title": "¿Qué te motiva más?",
+      "description": "Conocer tu motivación nos ayuda a mantenerte enfocado.",
+      "healthier": "Estar más saludable y prevenir enfermedades",
+      "energy": "Tener más energía durante el día",
+      "motivated": "Mantener la motivación y la constancia",
+      "feel_better": "Sentirme mejor conmigo mismo y con mi cuerpo"
+    },
+    "goal": {
+      "title": "¿Cuál es tu objetivo principal?",
+      "description": "Calcularemos tus necesidades diarias de calorías y macros en base a esto.",
+      "lose_weight": "Perder Peso",
+      "maintain_weight": "Mantener Peso",
+      "gain_weight": "Ganar Peso"
+    },
+    "goal_weight": {
+      "title": "¿Cuál es tu peso objetivo?",
+      "description": "Haremos un seguimiento de tu progreso hacia esta meta.",
+      "disclaimer": "Puedes cambiar este objetivo en cualquier momento en la configuración.",
+      "weight_unit": "kg"
+    },
+    "weekly_rate": {
+      "title": "¿Qué tan rápido quieres lograrlo?",
+      "description": "Se recomienda una tasa segura y sostenible para el éxito a largo plazo.",
+      "lose_label": "Tasa de pérdida de peso por semana",
+      "gain_label": "Tasa de aumento de peso por semana",
+      "recommended": "Recomendado",
+      "fast_desc": "Tasa rápida. Requiere alta disciplina y puede ser más difícil de mantener.",
+      "slow_desc": "Tasa lenta y constante. Altamente sostenible y minimiza la pérdida muscular.",
+      "balanced_desc": "Tasa equilibrada. Efectiva y manejable para la mayoría de las personas.",
+      "week": "semana"
+    },
+    "final": {
+      "title": "¿Listo para empezar?",
+      "description": "Calorel utiliza IA para ayudarte a alcanzar tus objetivos de forma más rápida y sostenible.",
+      "chart_title": "Tasa de Éxito",
+      "other_apps": "Otras Apps",
+      "button": "Comenzar Mi Viaje"
+    }
+  },
+  "subscribe": {
+    "title": "Desbloquea Tu Potencial Completo",
+    "trial_tab": "Prueba Gratuita de 7 Días",
+    "pay_now_tab": "Desbloquear Ahora",
+    "timeline": {
+      "today_title": "Hoy: Inicia Prueba Gratuita",
+      "today_desc": "Accede a todas las funciones premium de inmediato.",
+      "reminder_title": "Día 6: Recordatorio",
+      "reminder_desc": "Te enviaremos un recordatorio antes de que finalice la prueba.",
+      "billing_title": "Día 7: Comienza la Facturación",
+      "billing_desc": "Si no cancelas, la suscripción comenzará.",
+      "cancel_note": "Cancela en cualquier momento antes del Día 7 para evitar cargos."
+    },
+    "features_title": "Funciones Premium Incluidas:",
+    "features": {
+      "scanner": "Escáner de Comida con IA (Ilimitado)",
+      "exercise": "Análisis de Ejercicio con IA (Ilimitado)",
+      "diet_plans": "Planes de Dieta Semanales Personalizados",
+      "goals": "Seguimiento Avanzado de Metas y Sugerencias"
+    },
+    "plan": {
+      "title": "Plan Anual",
+      "price_suffix": "/año",
+      "trial_note": "Gratis por 7 días, luego $2.00/año."
+    },
+    "buttons": {
+      "start_trial": "Iniciar Prueba Gratuita de 7 Días",
+      "unlock_now": "Desbloquear Ahora",
+      "no_payment_note": "Sin cargo durante los primeros 7 días."
+    }
+  },
+  "generating_plan": {
+    "step1": "Analizando tu perfil y objetivos...",
+    "step2": "Calculando tus objetivos de macros personalizados...",
+    "step3": "Generando tu plan de comidas para la primera semana...",
+    "step4": "¡Plan listo! Redirigiendo a tu panel."
+  },
+  "home": {
+    "title": "Panel Principal",
+    "goal_achieved_toast": "¡Genial! Basado en tu ritmo, deberías alcanzar tu peso objetivo alrededor de {date}.",
+    "kcal_remaining": "{count} kcal restantes",
+    "kcal_over": "{count} kcal de exceso",
+    "protein": "Proteína",
+    "carbs": "Carbohidratos",
+    "fats": "Grasas",
+    "sugars": "Azúcares",
+    "health_score": "Puntuación de Salud",
+    "health_score_excellent": "Excelente",
+    "health_score_good": "Buena",
+    "health_score_fair": "Regular",
+    "health_score_improvable": "Mejorable",
+    "water_tracker_glasses": "{goal} vasos objetivo",
+    "todays_analysis": "Registro de Hoy",
+    "no_data": "Aún no hay entradas.",
+    "start_logging": "Toca el botón '+' para registrar tu primera comida o ejercicio."
+  },
+  "bottom_nav": {
+    "home": "Inicio",
+    "settings": "Ajustes",
+    "progress": "Progreso",
+    "diets": "Dietas",
+    "log_title": "Registrar Actividad",
+    "scan_food": "Escanear Comida",
+    "log_exercise": "Registrar Ejercicio"
+  },
+  "scanner": {
+    "starting": "Iniciando cámara...",
+    "processing": "Analizando comida...",
+    "retake": "Volver a tomar",
+    "retry": "Reintentar",
+    "error_camera_title": "Acceso a Cámara Denegado",
+    "error_camera_desc": "Por favor, otorga permisos de cámara en la configuración de tu dispositivo.",
+    "error_analysis": "Análisis Fallido",
+    "help_title": "Cómo Escanear",
+    "help_desc": "Apunta la cámara a tu comida. Asegura buena iluminación y una vista clara de todo el plato para el mejor análisis nutricional.",
+    "flash_unavailable": "El flash/linterna no está disponible en este dispositivo o cámara."
+  },
+  "analysis": {
+    "calories": "Calorías",
+    "protein": "Proteína",
+    "carbs": "Carbohidratos",
+    "fats": "Grasas",
+    "sugars": "Azúcares",
+    "recommendation": "Recomendación IA",
+    "default_reason": "Análisis basado en estimación visual y tamaños de porción comunes.",
+    "health_rating": {
+      "healthy": "Saludable",
+      "moderate": "Moderado",
+      "avoid": "Evitar"
+    },
+    "save_to_diary": "Guardar en Diario",
+    "details_title": "Detalles de Comida",
+    "close": "Cerrar"
+  },
+  "manual_food": {
+    "title": "Entrada Manual de Comida",
+    "name_label": "Nombre de la Comida",
+    "name_placeholder": "Ej: Ensalada de Pollo",
+    "desc_label": "Descripción (Opcional)",
+    "desc_placeholder": "Ej: Porción grande con aderezo de vinagreta",
+    "portion_label": "Tamaño de la Porción",
+    "portion_small": "Pequeña",
+    "portion_medium": "Mediana",
+    "portion_large": "Grande",
+    "submit": "Analizar y Guardar",
+    "error_analysis": "Fallo al analizar la comida. Por favor, revisa la descripción."
+  },
+  "exercise": {
+    "title": "Registrar Ejercicio",
+    "subtitle": "Elige cómo quieres registrar tu actividad.",
+    "running": "Correr / Cardio",
+    "weights": "Entrenamiento de Fuerza",
+    "write": "Análisis IA",
+    "manual": "Calorías Manuales"
+  },
+  "running": {
+    "title": "Correr / Cardio",
+    "choose_intensity": "1. Elige la Intensidad",
+    "adjust_duration": "2. Ajusta la Duración",
+    "minutes_unit": "minutos",
+    "intensity_low": "Intensidad Baja",
+    "intensity_low_desc": "Esfuerzo ligero, fácil mantener una conversación.",
+    "intensity_low_example": "Caminata rápida, ciclismo ligero.",
+    "intensity_medium": "Intensidad Media",
+    "intensity_medium_desc": "Esfuerzo moderado, la conversación es difícil.",
+    "intensity_medium_example": "Trotar, elíptica.",
+    "intensity_high": "Intensidad Alta",
+    "intensity_high_desc": "Esfuerzo alto, difícil hablar más de unas pocas palabras.",
+    "intensity_high_example": "Sprints, HIIT.",
+    "save_run": "Guardar {calories} kcal",
+    "error_toast_title": "Error al guardar ejercicio"
+  },
+  "weights": {
+    "title": "Entrenamiento de Fuerza",
+    "intensity_low": "Pesas Ligeras",
+    "intensity_low_desc": "Enfoque en altas repeticiones, bajo peso o estiramiento ligero.",
+    "intensity_low_example": "Yoga, bandas de resistencia ligeras.",
+    "intensity_medium": "Pesas Moderadas",
+    "intensity_medium_desc": "Levantamiento de pesas estándar, intensidad moderada.",
+    "intensity_medium_example": "Entrenamiento en circuito, ejercicios con peso corporal.",
+    "intensity_high": "Pesas Intensas",
+    "intensity_high_desc": "Levantamiento pesado, alto esfuerzo, largos períodos de descanso.",
+    "intensity_high_example": "Powerlifting, culturismo intenso.",
+    "save_action": "Guardar {calories} kcal",
+    "error_toast_title": "Error al guardar ejercicio"
+  },
+  "write_exercise": {
+    "title": "Análisis de Ejercicio con IA",
+    "placeholder": "Describe tu entrenamiento. Ej: 'Corrí durante 45 minutos a un ritmo moderado' o 'Hice 1 hora de levantamiento de pesas pesadas.'",
+    "example": "La IA estimará las calorías quemadas basándose en tu descripción y perfil.",
+    "ai_button": "Impulsado por IA",
+    "add_button": "Analizar y Guardar",
+    "error_toast_title": "Análisis Fallido"
+  },
+  "manual_exercise": {
+    "title": "Calorías Manuales",
+    "calories_burned": "Calorías Quemadas",
+    "add_button": "Añadir al Diario",
+    "validation_error": "Por favor, introduce una cantidad de calorías válida.",
+    "error_toast_title": "Error al guardar entrada manual"
+  },
+  "progress": {
+    "title": "Progreso",
+    "subtitle": "Sigue tu viaje y celebra tus logros.",
+    "day_streak": "Día de Racha",
+    "day_streaks": "Días de Racha",
+    "update_weight": "Actualizar Peso",
+    "weight_updated_today": "Peso actualizado hoy (Máx 2/día)",
+    "weight_progress_title": "Progreso de Peso",
+    "weight_progress_no_data": "No hay suficientes datos para mostrar el gráfico.",
+    "weight_progress_start_logging": "Registra tu peso regularmente para ver tu progreso.",
+    "chart_all": "TODO",
+    "1y": "1A",
+    "calorie_intake": "Ingesta Calórica",
+    "last_7_days": "Últimos 7 días",
+    "weight_goal": "Meta de Peso",
+    "current_weight": "Peso Actual",
+    "height": "Altura",
+    "gender": "Género",
+    "updated_today": "Actualizado hoy"
+  },
+  "bmi_calculator": {
+    "title": "Calculadora de IMC",
+    "your_weight_is": "Tu peso es:",
+    "underweight": "Bajo Peso",
+    "healthy": "Saludable",
+    "overweight": "Sobrepeso",
+    "obesity": "Obesidad",
+    "incomplete_data": "Completa tu altura y peso en ajustes para calcular tu IMC.",
+    "tooltip": "El Índice de Masa Corporal (IMC) es una medida utilizada para detectar categorías de peso que pueden conducir a problemas de salud. Se calcula dividiendo el peso por el cuadrado de la altura. Es una estimación y no debe usarse como único indicador de salud."
+  },
+  "edit_weight": {
+    "title": "Actualizar Peso Actual",
+    "weight_unit": "kg",
+    "save": "Guardar Peso"
+  },
+  "edit_goal_weight": {
+    "title": "Actualizar Meta de Peso",
+    "weight_unit": "kg",
+    "save": "Guardar Meta"
+  },
+  "streak_modal": {
+    "title": "¡Racha Diaria!",
+    "subtitle": "Has registrado comida o ejercicio durante {streak} días consecutivos. ¡Sigue así!",
+    "keep_it_up": "¡Sigue así!"
+  },
+  "badges": {
+    "title": "Logros",
+    "subtitle": "Desbloquea insignias al alcanzar hitos en tu viaje de salud.",
+    "meal_streak": "Racha de Comidas",
+    "hydration_streak": "Racha de Hidratación",
+    "weight_loss": "Pérdida de Peso",
+    "total_badges": "Total Desbloqueadas"
+  },
+  "badge_names": {
+    "streak_1": { "name": "Primer Registro", "desc": "Registra tu primera comida o ejercicio." },
+    "streak_3": { "name": "Racha de 3 Días", "desc": "Registra durante 3 días consecutivos." },
+    "streak_6": { "name": "Racha de 6 Días", "desc": "Registra durante 6 días consecutivos." },
+    "streak_10": { "name": "Racha de 10 Días", "desc": "Registra durante 10 días consecutivos." },
+    "streak_30": { "name": "Mes de Constancia", "desc": "Registra durante 30 días consecutivos." },
+    "streak_60": { "name": "Dos Meses Fuertes", "desc": "Registra durante 60 días consecutivos." },
+    "streak_90": { "name": "Trimestre", "desc": "Registra durante 90 días consecutivos." },
+    "streak_100": { "name": "Club del Centenario", "desc": "Registra durante 100 días consecutivos." },
+    "streak_150": { "name": "Mitad de Año", "desc": "Registra durante 150 días consecutivos." },
+    "streak_200": { "name": "Doble Centenario", "desc": "Registra durante 200 días consecutivos." },
+    "streak_250": { "name": "Casi Allí", "desc": "Registra durante 250 días consecutivos." },
+    "streak_300": { "name": "Triple Centenario", "desc": "Registra durante 300 días consecutivos." },
+    "streak_350": { "name": "La Cuenta Final", "desc": "Registra durante 350 días consecutivos." },
+    "streak_400": { "name": "Más de un Año", "desc": "Registra durante 400 días consecutivos." },
+    "streak_450": { "name": "Registrador Maestro", "desc": "Registra durante 450 días consecutivos." },
+    "streak_500": { "name": "Registrador Legendario", "desc": "Registra durante 500 días consecutivos." },
+    "water_1": { "name": "Primer Sorbo", "desc": "Alcanza tu meta de agua una vez." },
+    "water_3": { "name": "Trío Hidratado", "desc": "Alcanza tu meta de agua 3 veces." },
+    "water_6": { "name": "Media Docena de Gotas", "desc": "Alcanza tu meta de agua 6 veces." },
+    "water_10": { "name": "Maestro de la Hidratación", "desc": "Alcanza tu meta de agua 10 veces." },
+    "weight_1": { "name": "1 kg Perdido", "desc": "Logra 1 kg de pérdida de peso." },
+    "weight_10": { "name": "10 kg Perdidos", "desc": "Logra 10 kg de pérdida de peso." },
+    "weight_20": { "name": "20 kg Perdidos", "desc": "Logra 20 kg de pérdida de peso." },
+    "weight_50": { "name": "50 kg Perdidos", "desc": "Logra 50 kg de pérdida de peso." },
+    "weight_70": { "name": "70 kg Perdidos", "desc": "Logra 70 kg de pérdida de peso." }
+  },
+  "share": {
+    "meal_message": "¡Acabo de analizar mi {food} con Calorel! Mira mi nutrición.",
+    "badge_message": "¡Acabo de desbloquear el logro '{name}' en Calorel! A celebrar.",
+    "achievement_unlocked": "¡Logro Desbloqueado!",
+    "generated_with": "Generado con Calorel",
+    "prot_short": "Prot.",
+    "carb_short": "Carbs",
+    "fat_short": "Grasas"
+  },
+  "diets": {
+    "title": "Planes de Dieta",
+    "subtitle": "Explora planes de dieta personalizados generados por IA.",
+    "weekly_plan_title": "Tu Plan Semanal",
+    "weekly_plan_subtitle": "Plan personalizado generado por IA.",
+    "regenerate_tooltip": "Regenerar Plan (Límite Semanal)",
+    "regenerate_dialog_title": "¿Regenerar Plan de Dieta?",
+    "regenerate_dialog_desc": "Generar un nuevo plan consumirá uno de tus usos semanales de IA. ¿Estás seguro de que quieres continuar?",
+    "regenerate_confirm": "Regenerar",
+    "active_diet": "Comida Activa",
+    "gap_title": "Tiempo de Descanso",
+    "gap_time_message": "Es hora de descansar. ¡Recuerda mantenerte hidratado y prepararte para tu próxima comida!",
+    "breakfast": "Desayuno",
+    "lunch": "Almuerzo",
+    "snack": "Merienda",
+    "dinner": "Cena",
+    "drawer_eat": "Alimentos a Consumir",
+    "drawer_avoid": "Alimentos a Evitar",
+    "drawer_close": "Cerrar Detalles",
+    "scan_food_button": "Escanear Comida"
+  },
+  "diets_onboarding": {
+    "title": "Plan de Dieta Personalizado",
+    "subtitle": "Responde algunas preguntas para generar tu plan de comidas semanal a medida.",
+    "step_country_title": "¿Dónde te encuentras?",
+    "step_country_desc": "Esto ayuda a la IA a sugerir ingredientes locales y accesibles.",
+    "country_expansion_note": "Actualmente, ofrecemos sugerencias de cocina local para estos países. Si el tuyo no está en la lista, selecciona 'Estados Unidos' para una dieta occidental general.",
+    "step1_title": "Nivel de Actividad",
+    "step1_desc": "¿Qué tan activo eres en una semana típica?",
+    "activity": {
+      "sedentary": "Sedentario",
+      "sedentary_desc": "Poco o ningún ejercicio.",
+      "light": "Actividad Ligera",
+      "light_desc": "Ejercicio ligero 1-3 días/semana.",
+      "moderate": "Actividad Moderada",
+      "moderate_desc": "Ejercicio moderado 3-5 días/semana.",
+      "high": "Muy Activo",
+      "high_desc": "Ejercicio intenso 6-7 días/semana."
+    },
+    "step2_title": "Preferencias Dietéticas",
+    "step2_desc": "Selecciona cualquier restricción o preferencia dietética.",
+    "preferences": {
+      "vegetarian": "Vegetariana",
+      "lactose_free": "Sin Lactosa",
+      "sugar_free": "Sin Azúcar",
+      "gluten_free": "Sin Gluten"
+    },
+    "step2_tip": "Puedes seleccionar varias opciones.",
+    "step3_title": "Factores de Estilo de Vida",
+    "step3_desc": "Cuéntanos sobre tus hábitos de cocina y presupuesto.",
+    "cooking_time": "Tiempo de Cocina Disponible",
+    "budget": "Presupuesto para Compras",
+    "levels": {
+      "low": "Bajo",
+      "medium": "Medio",
+      "high": "Alto"
+    },
+    "next": "Siguiente",
+    "generate": "Generar Plan",
+    "toast_error_title": "Fallo al Generar Plan",
+    "generating_step1": "Analizando tus objetivos y preferencias...",
+    "generating_step2": "Adaptando el plan a la cocina local en {country}...",
+    "generating_step2_generic": "Adaptando el plan a la cocina occidental general...",
+    "generating_step3": "Calculando el equilibrio nutricional...",
+    "generating_step4": "Finalizando la estructura de comidas semanal...",
+    "generating_step5": "¡Plan listo! Guardando en tu perfil.",
+    "ai_processing": "Procesando IA",
+    "toast_success": "¡Plan semanal generado con éxito!"
+  },
+  "countries": {
+    "united_states": "Estados Unidos",
+    "mexico": "México",
+    "spain": "España",
+    "argentina": "Argentina",
+    "brazil": "Brasil",
+    "dominican_republic": "República Dominicana",
+    "colombia": "Colombia",
+    "chile": "Chile",
+    "peru": "Perú"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "subtitle": "Gestiona tu perfil, objetivos y preferencias.",
+    "profileCard": {
+      "namePlaceholder": "Completar Perfil",
+      "viewAndEdit": "Ver y Editar Perfil"
+    },
+    "account": {
+      "title": "Cuenta",
+      "personalDetails": "Detalles Personales",
+      "preferences": "Preferencias"
+    },
+    "language": "Idioma",
+    "goals": {
+      "title": "Objetivos y Seguimiento",
+      "editNutrition": "Metas Nutricionales",
+      "editWeight": "Meta de Peso",
+      "ringColors": "Colores de Anillos"
+    },
+    "support": {
+      "title": "Soporte y Legal",
+      "requestFeature": "Solicitar una Función",
+      "supportEmail": "Contactar Soporte",
+      "terms": "Términos de Servicio",
+      "privacy": "Política de Privacidad"
+    },
+    "social": {
+      "title": "Redes Sociales",
+      "instagram": "Instagram",
+      "tiktok": "TikTok"
+    },
+    "actions": {
+      "title": "Acciones",
+      "signOut": "Cerrar Sesión",
+      "deleteAccount": "Eliminar Cuenta"
+    },
+    "deleteDialog": {
+      "title": "¿Estás absolutamente seguro?",
+      "description": "Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y todos tus datos, incluidos registros y progreso.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar Cuenta"
+    }
+  },
+  "edit_profile": {
+    "title": "Editar Perfil",
+    "full_name": "Nombre Completo",
+    "save": "Guardar Cambios",
+    "toast_error": "Fallo al guardar el perfil.",
+    "age": "Edad",
+    "height": "Altura",
+    "weight": "Peso",
+    "years_unit": "años",
+    "gender": "Género",
+    "goal": "Objetivo",
+    "experience": "Experiencia",
+    "gender_female": "Femenino",
+    "gender_male": "Masculino",
+    "gender_not_say": "Prefiero no decirlo",
+    "goal_lose": "Perder Peso",
+    "goal_maintain": "Mantener Peso",
+    "goal_gain": "Ganar Peso",
+    "experience_several": "Usé varias apps",
+    "experience_one_or_two": "Usé una o dos apps",
+    "experience_first_time": "Primera vez usando una app"
+  },
+  "preferences": {
+    "title": "Preferencias",
+    "theme_title": "Tema de la Aplicación",
+    "theme_light": "Claro",
+    "theme_dark": "Oscuro",
+    "theme_system": "Sistema",
+    "time_format_title": "Formato de Hora",
+    "time_format_12h": "12 Horas (AM/PM)",
+    "time_format_24h": "24 Horas",
+    "toast_error": "Fallo al guardar la preferencia."
+  },
+  "nutritional_goals": {
+    "title": "Metas Nutricionales",
+    "daily_goals": "Metas Diarias de Macros",
+    "subtitle": "Ajusta tus objetivos diarios. Los cambios se guardan automáticamente.",
+    "calories": "Calorías",
+    "protein": "Proteína",
+    "carbs": "Carbohidratos",
+    "fats": "Grasas",
+    "sugars": "Azúcares",
+    "save_error": "Fallo al guardar las metas.",
+    "ai_suggestions": "Sugerencias de IA"
+  },
+  "ai_suggestions": {
+    "workouts_label": "Entrenamientos Semanales",
+    "workouts_per_week": "por semana",
+    "workouts_light": "Ligero (1-2)",
+    "workouts_moderate": "Moderado (3-4)",
+    "workouts_active": "Activo (5-6)",
+    "workouts_very_active": "Muy Activo (7+)",
+    "goal_weight_label": "Meta de Peso",
+    "rate_label": "Ritmo Semanal",
+    "week": "semana",
+    "summary_title": "Resumen y Generación",
+    "disclaimer": "La IA utilizará esta información para calcular tus objetivos óptimos de calorías y macros.",
+    "continue": "Continuar",
+    "generate": "Generar Metas",
+    "generate_loading": "Generando...",
+    "toast_success": "¡Nuevas metas generadas y guardadas!",
+    "toast_error": "Fallo al generar metas."
+  },
+  "weight_goal": {
+    "title": "Meta de Peso",
+    "change_button": "Cambiar Meta",
+    "current_weight": "Peso Actual",
+    "height": "Altura",
+    "gender": "Género",
+    "updated_today": "Actualizado hoy"
+  },
+  "ring_colors": {
+    "title": "Colores de Anillos",
+    "subtitle": "Entiende lo que significa cada color en tus anillos de progreso diario.",
+    "green_title": "Verde (Principal)",
+    "green_desc": "Estás dentro del 10% de tu objetivo (o lo has superado de forma segura).",
+    "yellow_title": "Amarillo (Ámbar)",
+    "yellow_desc": "Estás entre un 10% y un 20% por encima de tu objetivo (ej. demasiadas calorías).",
+    "red_title": "Rojo (Destructivo)",
+    "red_desc": "Estás más del 20% por encima de tu objetivo, indicando un exceso significativo.",
+    "dotted_title": "Línea Punteada",
+    "dotted_desc": "No hay datos registrados para este día aún."
+  },
+  "request_feature": {
+    "title": "Solicitar una Función",
+    "subtitle": "¡Ayúdanos a mejorar Calorel!",
+    "description": "Vota por funciones existentes o sugiere una nueva. Las más votadas son priorizadas.",
+    "search_placeholder": "Buscar solicitudes existentes...",
+    "create_button": "Nueva Solicitud",
+    "delete_toast_success": "Solicitud eliminada con éxito.",
+    "delete_toast_error": "Fallo al eliminar solicitud."
+  },
+  "new_request_drawer": {
+    "title": "Sugerir una Nueva Función",
+    "description": "Describe la función que te gustaría ver en Calorel.",
+    "title_label": "Título",
+    "title_placeholder": "Ej: Añadir integración con Apple Health",
+    "desc_label": "Descripción Detallada",
+    "desc_placeholder": "Explica por qué es importante esta función y cómo debería funcionar.",
+    "submit_button": "Enviar Solicitud",
+    "cancel_button": "Cancelar",
+    "toast_success": "¡Solicitud de función enviada con éxito!",
+    "toast_error": "Fallo al enviar solicitud."
+  },
+  "language_drawer": {
+    "title": "Seleccionar Idioma"
+  },
+  "toasts": {
+    "coming_soon_title": "Próximamente",
+    "coming_soon_desc": "Esta función está en desarrollo.",
+    "delete_success_title": "Cuenta Eliminada",
+    "delete_success_desc": "Tu cuenta y todos los datos asociados han sido eliminados permanentemente.",
+    "delete_error_title": "Fallo al Eliminar"
+  }
+}

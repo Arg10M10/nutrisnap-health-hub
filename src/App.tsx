@@ -5,7 +5,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { Capacitor } from '@capacitor/core';
 import { NutritionProvider, useNutrition } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -43,14 +42,7 @@ import GeneratingPlan from "./pages/onboarding/GeneratingPlan";
 
 const queryClient = new QueryClient();
 
-// Inicialización global de GoogleAuth (solo para web/PWA)
-if (!Capacitor.isNativePlatform()) {
-  GoogleAuth.initialize({
-    clientId: '733617800360-gdfv4o8j13anns76lj1hmf64deeuo8iq.apps.googleusercontent.com',
-    scopes: ['profile', 'email'],
-    grantOfflineAccess: true,
-  });
-}
+// Eliminamos la inicialización de GoogleAuth
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -82,8 +74,6 @@ const GlobalBadgeModal = () => {
 const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
   const location = useLocation();
-
-  // Eliminamos el useEffect de inicialización de GoogleAuth de aquí.
 
   if (authLoading) {
     return (
