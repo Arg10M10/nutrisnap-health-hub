@@ -71,9 +71,55 @@ const AuthForm = () => {
   return (
     <Auth
       supabaseClient={supabase}
-      appearance={{ theme: ThemeSupa }}
+      appearance={{
+        theme: ThemeSupa,
+        variables: {
+          default: {
+            colors: {
+              brand: 'hsl(var(--primary))',
+              brandAccent: 'hsl(var(--primary))',
+              // Fondo de los inputs
+              inputBackground: 'hsl(var(--muted))',
+              inputBorder: 'hsl(var(--border))',
+              // Color del texto en modo oscuro
+              inputText: resolvedTheme === 'dark' ? 'hsl(var(--foreground))' : 'hsl(var(--foreground))',
+            },
+            radii: {
+              borderRadiusButton: '1.5rem', // Botones redondeados (lg)
+              inputBorderRadius: '0.75rem', // Inputs redondeados (xl)
+            },
+            space: {
+              buttonPadding: '12px 20px', // Aumentar padding de botones
+            }
+          },
+        },
+        style: {
+          button: {
+            height: '56px', // Botones más altos
+            fontSize: '18px',
+            fontWeight: '600',
+            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+          },
+          input: {
+            height: '52px', // Inputs más altos
+            fontSize: '16px',
+          },
+          anchor: {
+            color: 'hsl(var(--primary))',
+            fontWeight: '600',
+            fontSize: '16px',
+            textDecoration: 'none',
+            transition: 'color 0.2s',
+          },
+          label: {
+            fontWeight: '600',
+            fontSize: '16px',
+            marginBottom: '8px',
+          }
+        }
+      }}
       theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-      providers={[]} // Deshabilitamos proveedores sociales
+      providers={[]} // Solo email/password
       localization={{
         variables: i18nMap[i18n.language as 'en' | 'es'] || i18nMap.en,
       }}
