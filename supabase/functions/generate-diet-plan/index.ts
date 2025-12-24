@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,6 +8,17 @@ const corsHeaders = {
 const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
 const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
 const GPT_MODEL = "gpt-5-nano";
+
+const safeParseJson = (text: string) => {
+  try {
+    const cleanedText = text.replace(/```json\n?/g, "").replace(/\n?```/g, "").trim();
+    return JSON.parse(cleanedText);
+  } catch (e) {
+    console.error("Failed to parse JSON from AI:", e);
+    console.error("Original text from AI:", text);
+    return null;
+  }
+};
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -75,8 +85,13 @@ serve(async (req) => {
 
     const aiData = await aiRes.json();
     const jsonText = aiData.choices?.[0]?.message?.content ?? "{}";
+    const mealPlan = safeParseJson(jsonText);
 
-    return new Response(jsonText, {
+    if (!mealPlan || typeof mealPlan.monday?.breakfast?.name !== 'string') {
+      throw new Error("AI returned an invalid or incomplete meal plan structure.");
+    }
+
+    return new Response(JSON.stringify(mealPlan), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });

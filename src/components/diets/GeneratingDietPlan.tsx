@@ -15,7 +15,8 @@ const GeneratingDietPlan = ({ countryValue, onAnimationComplete }: GeneratingDie
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState(0);
 
-  const countryLabel = countries.find(c => c.value === countryValue)?.label;
+  const countryObject = countries.find(c => c.value === countryValue);
+  const countryLabel = countryObject ? t(countryObject.labelKey as any) : null;
 
   const stages = [
     { 
