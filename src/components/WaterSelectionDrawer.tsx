@@ -22,7 +22,7 @@ export const WaterSelectionDrawer = ({ isOpen, onClose, onAdd }: WaterSelectionD
       id: 'glass_8oz', 
       label: '8 oz', 
       subLabel: 'Vaso', 
-      amount: 1, 
+      amount: 8, 
       icon: GlassWater, 
       color: 'text-blue-400', 
       bgColor: 'bg-blue-400/10',
@@ -32,7 +32,7 @@ export const WaterSelectionDrawer = ({ isOpen, onClose, onAdd }: WaterSelectionD
       id: 'glass_12oz', 
       label: '12 oz', 
       subLabel: 'Grande', 
-      amount: 1.5, 
+      amount: 12, 
       icon: Milk, 
       color: 'text-cyan-500', 
       bgColor: 'bg-cyan-500/10',
@@ -42,7 +42,7 @@ export const WaterSelectionDrawer = ({ isOpen, onClose, onAdd }: WaterSelectionD
       id: 'bottle_24oz', 
       label: '24 oz', 
       subLabel: 'Botella', 
-      amount: 3, 
+      amount: 24, 
       icon: Droplets, 
       color: 'text-indigo-500', 
       bgColor: 'bg-indigo-500/10',
@@ -58,9 +58,8 @@ export const WaterSelectionDrawer = ({ isOpen, onClose, onAdd }: WaterSelectionD
   const handleCustomAdd = () => {
     const val = parseFloat(customAmount);
     if (!isNaN(val) && val > 0) {
-      // Convertir oz a "vasos" (1 vaso = 8oz)
-      const glasses = val / 8;
-      onAdd(parseFloat(glasses.toFixed(2)));
+      // Registramos el valor directo en onzas
+      onAdd(val);
       onClose();
       setCustomAmount('');
     }

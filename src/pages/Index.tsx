@@ -73,7 +73,7 @@ const Index = () => {
     protein: profile?.goal_protein || 90,
     carbs: profile?.goal_carbs || 220,
     fats: profile?.goal_fats || 65,
-    water: 8,
+    water: 64, // Meta actualizada a 64 onzas
     sugars: profile?.goal_sugars || 25,
   };
 

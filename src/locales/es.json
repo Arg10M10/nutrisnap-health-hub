@@ -163,9 +163,11 @@
     "health_score_fair": "Regular",
     "health_score_improvable": "Mejorable",
     "water_tracker_glasses": "{{goal}} vasos objetivo",
+    "water_tracker_title": "oz",
     "todays_analysis": "Registro de Hoy",
     "no_data": "Aún no hay entradas.",
-    "start_logging": "Toca el botón '+' para registrar tu primera comida o ejercicio."
+    "start_logging": "Toca el botón '+' para registrar tu primera comida o ejercicio.",
+    "log_water_title": "Registrar Agua"
   },
   "bottom_nav": {
     "home": "Inicio",
