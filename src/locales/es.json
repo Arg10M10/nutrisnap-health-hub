@@ -47,8 +47,7 @@
       "description": "Esto nos ayuda a calcular tus necesidades nutricionales con mayor precisión.",
       "female": "Femenino",
       "male": "Masculino",
-      "not_say": "Prefiero no decirlo",
-      "unit": "años"
+      "not_say": "Prefiero no decirlo"
     },
     "age": {
       "title": "¿Cuántos años tienes?",
@@ -488,7 +487,7 @@
   },
   "edit_profile": {
     "title": "Editar Perfil",
-    "full_name": "Nombre Completo",
+    "full_name": "Nombre y Apellido",
     "save": "Guardar Cambios",
     "toast_error": "Fallo al guardar el perfil.",
     "age": "Edad",
