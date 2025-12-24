@@ -26,7 +26,8 @@
     "already_have_account": "¿Ya tienes una cuenta?",
     "sign_in_link": "Inicia Sesión",
     "social_provider_text": "O continúa con",
-    "full_name_label": "Nombre Completo"
+    "full_name_label": "Nombre y Apellido",
+    "full_name_placeholder": "Ej: Juan Pérez"
   },
   "login": {
     "welcome": "Bienvenido a Calorel",

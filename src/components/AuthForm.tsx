@@ -131,10 +131,16 @@ const AuthForm = () => {
       showLinks={true}
       redirectTo={window.location.origin}
       magicLink={false}
-      // Añadir campo de nombre completo al registrarse
-      additionalData={{
-        full_name: '',
-      }}
+      // Configuración para mostrar el campo de nombre completo en el registro
+      fields={[
+        {
+          name: 'full_name',
+          label: t('auth.full_name_label'),
+          placeholder: t('auth.full_name_placeholder'),
+          type: 'text',
+          required: true,
+        },
+      ]}
     />
   );
 };
