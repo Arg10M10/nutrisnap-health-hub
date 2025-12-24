@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -8,18 +7,12 @@ import { ArrowLeft, Bell, Utensils, Droplets, Weight } from 'lucide-react';
 import { NotificationManager } from '@/lib/notifications';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { toast } from 'sonner';
-import { Capacitor } from '@capacitor/core';
 
 const Reminders = () => {
   const navigate = useNavigate();
   const [mealReminders, setMealReminders] = useLocalStorage('settings_reminders_meals', false);
   const [waterReminders, setWaterReminders] = useLocalStorage('settings_reminders_water', false);
   const [weightReminders, setWeightReminders] = useLocalStorage('settings_reminders_weight', false);
-  const [isNative, setIsNative] = useState(true);
-
-  useEffect(() => {
-    setIsNative(Capacitor.isNativePlatform());
-  }, []);
 
   const handleToggle = async (
     key: string, 
@@ -27,10 +20,6 @@ const Reminders = () => {
     scheduler: () => Promise<void>, 
     canceller: () => Promise<void>
   ) => {
-    if (!isNative) {
-        toast.info("Las notificaciones funcionan mejor en la app móvil instalada.");
-    }
-
     if (value) {
       const granted = await NotificationManager.requestPermissions();
       if (granted) {
@@ -122,14 +111,6 @@ const Reminders = () => {
 
           </CardContent>
         </Card>
-
-        {!isNative && (
-            <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
-                <p className="text-xs text-yellow-800 text-center">
-                    Nota: Los recordatorios funcionan mejor cuando la aplicación está instalada en un dispositivo móvil (Android/iOS). En web pueden no aparecer si el navegador está cerrado.
-                </p>
-            </div>
-        )}
       </div>
     </PageLayout>
   );
