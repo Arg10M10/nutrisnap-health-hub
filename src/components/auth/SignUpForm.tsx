@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -20,6 +20,7 @@ const formSchema = z.object({
 export const SignUpForm = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,9 +101,24 @@ export const SignUpForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t('auth.password_label')}</FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} className="h-12 text-base" />
-              </FormControl>
+              <div className="relative">
+                <FormControl>
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    {...field}
+                    className="h-12 text-base pr-10"
+                  />
+                </FormControl>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
               <FormMessage />
             </FormItem>
           )}
