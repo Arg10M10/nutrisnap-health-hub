@@ -455,7 +455,8 @@
     "account": {
       "title": "Account",
       "personalDetails": "Personal Details",
-      "preferences": "Preferences"
+      "preferences": "Preferences",
+      "reminders": "Reminders"
     },
     "language": "Language",
     "goals": {
@@ -487,6 +488,20 @@
       "cancel": "Cancel",
       "confirm": "Delete Account"
     }
+  },
+  "reminders": {
+    "title": "Reminders",
+    "subtitle": "Configure Alerts",
+    "description": "Receive local notifications to keep your habits. Max 4 per day.",
+    "meals_title": "Meals",
+    "meals_desc": "Breakfast, Lunch, and Dinner",
+    "water_title": "Hydration",
+    "water_desc": "Gentle afternoon nudge",
+    "weight_title": "Weight & Progress",
+    "weight_desc": "Monday and Thursday (9am)",
+    "toast_enabled": "Reminders enabled",
+    "toast_disabled": "Reminders disabled",
+    "toast_denied": "Notification permissions denied"
   },
   "edit_profile": {
     "title": "Edit Profile",

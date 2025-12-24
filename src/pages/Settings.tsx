@@ -123,7 +123,7 @@ const Settings = () => {
         <SettingsCategory title={t('settings.account.title')}>
           <SettingsItem icon={<HeartPulse size={20} />} label={t('settings.account.personalDetails')} onClick={() => navigate('/settings/personal-details')} />
           <SettingsItem icon={<SlidersHorizontal size={20} />} label={t('settings.account.preferences')} onClick={() => navigate('/settings/preferences')} />
-          <SettingsItem icon={<Bell size={20} />} label="Recordatorios" onClick={() => navigate('/settings/reminders')} />
+          <SettingsItem icon={<Bell size={20} />} label={t('settings.account.reminders')} onClick={() => navigate('/settings/reminders')} />
           <SettingsItem icon={<Languages size={20} />} label={t('settings.language')} onClick={() => setIsLanguageDrawerOpen(true)} />
         </SettingsCategory>
 

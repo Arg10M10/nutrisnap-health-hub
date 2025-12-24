@@ -454,7 +454,8 @@
     "account": {
       "title": "Cuenta",
       "personalDetails": "Detalles Personales",
-      "preferences": "Preferencias"
+      "preferences": "Preferencias",
+      "reminders": "Recordatorios"
     },
     "language": "Idioma",
     "goals": {
@@ -486,6 +487,20 @@
       "cancel": "Cancelar",
       "confirm": "Eliminar Cuenta"
     }
+  },
+  "reminders": {
+    "title": "Recordatorios",
+    "subtitle": "Configurar Alertas",
+    "description": "Recibe notificaciones locales para mantener tus hábitos. Máximo 4 al día.",
+    "meals_title": "Comidas",
+    "meals_desc": "Desayuno, Almuerzo y Cena",
+    "water_title": "Hidratación",
+    "water_desc": "Aviso suave por la tarde",
+    "weight_title": "Peso y Progreso",
+    "weight_desc": "Lunes y Jueves (9am)",
+    "toast_enabled": "Recordatorios activados",
+    "toast_disabled": "Recordatorios desactivados",
+    "toast_denied": "Permisos de notificación denegados"
   },
   "edit_profile": {
     "title": "Editar Perfil",

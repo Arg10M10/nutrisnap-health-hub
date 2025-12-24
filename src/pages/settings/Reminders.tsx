@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -10,6 +11,7 @@ import { toast } from 'sonner';
 
 const Reminders = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [mealReminders, setMealReminders] = useLocalStorage('settings_reminders_meals', false);
   const [waterReminders, setWaterReminders] = useLocalStorage('settings_reminders_water', false);
   const [weightReminders, setWeightReminders] = useLocalStorage('settings_reminders_weight', false);
@@ -24,14 +26,14 @@ const Reminders = () => {
       const granted = await NotificationManager.requestPermissions();
       if (granted) {
         await scheduler();
-        toast.success("Recordatorios activados");
+        toast.success(t('reminders.toast_enabled'));
       } else {
-        toast.error("Permisos de notificación denegados");
+        toast.error(t('reminders.toast_denied'));
         return; // No actualizar estado si no hay permisos
       }
     } else {
       await canceller();
-      toast.info("Recordatorios desactivados");
+      toast.info(t('reminders.toast_disabled'));
     }
 
     // Actualizar estado local
@@ -47,16 +49,16 @@ const Reminders = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
             <ArrowLeft className="w-6 h-6" />
           </Button>
-          <h1 className="text-2xl font-bold text-primary">Recordatorios</h1>
+          <h1 className="text-2xl font-bold text-primary">{t('reminders.title')}</h1>
         </header>
 
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Bell className="w-5 h-5" /> Configurar Alertas
+              <Bell className="w-5 h-5" /> {t('reminders.subtitle')}
             </CardTitle>
             <CardDescription>
-              Recibe notificaciones locales para mantener tus hábitos. Máximo 4 al día.
+              {t('reminders.description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -67,8 +69,8 @@ const Reminders = () => {
                   <Utensils className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">Comidas</p>
-                  <p className="text-sm text-muted-foreground">Desayuno, Almuerzo y Cena</p>
+                  <p className="font-medium text-foreground">{t('reminders.meals_title')}</p>
+                  <p className="text-sm text-muted-foreground">{t('reminders.meals_desc')}</p>
                 </div>
               </div>
               <Switch 
@@ -83,8 +85,8 @@ const Reminders = () => {
                   <Droplets className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">Hidratación</p>
-                  <p className="text-sm text-muted-foreground">Aviso suave por la tarde</p>
+                  <p className="font-medium text-foreground">{t('reminders.water_title')}</p>
+                  <p className="text-sm text-muted-foreground">{t('reminders.water_desc')}</p>
                 </div>
               </div>
               <Switch 
@@ -99,8 +101,8 @@ const Reminders = () => {
                   <Weight className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">Peso y Progreso</p>
-                  <p className="text-sm text-muted-foreground">Lunes y Jueves (9am)</p>
+                  <p className="font-medium text-foreground">{t('reminders.weight_title')}</p>
+                  <p className="text-sm text-muted-foreground">{t('reminders.weight_desc')}</p>
                 </div>
               </div>
               <Switch 
