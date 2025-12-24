@@ -79,7 +79,7 @@ const Reminders = () => {
                 </div>
                 <div>
                   <p className="font-medium text-foreground">Comidas</p>
-                  <p className="text-sm text-muted-foreground">Registro rápido y Rachas</p>
+                  <p className="text-sm text-muted-foreground">Desayuno, Almuerzo y Cena</p>
                 </div>
               </div>
               <Switch 

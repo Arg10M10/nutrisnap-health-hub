@@ -9,10 +9,10 @@ const FOOD_MESSAGES = [
   { title: '🍽️ Hora de comer', body: '📸 ¿Qué hay en tu plato hoy? Escanéalo rápido.' },
 ];
 
-const STREAK_MESSAGES = [
-  { title: '🔥 ¡Salva tu racha!', body: '⚠️ No rompas tu racha, aún estás a tiempo hoy.' },
-  { title: '🏆 Constancia', body: '🏆 Tu constancia está dando resultados. ¡Sigue así!' },
-  { title: '💪 Casi lo logras', body: '💪 Un día más y subes de nivel. ¡Registra tu cena!' },
+const DINNER_MESSAGES = [
+  { title: '🌙 Hora de la cena', body: '🍽️ No olvides registrar tu última comida del día.' },
+  { title: '📝 Cierra tu día', body: '✅ Tómate un momento para registrar tu cena antes de descansar.' },
+  { title: '🥗 Registro nocturno', body: '📸 ¿Qué cenaste hoy? Regístralo en segundos.' },
 ];
 
 const WATER_MESSAGES = [
@@ -58,20 +58,72 @@ export const NotificationManager = {
           schedule: { on: { hour: 13, minute: 30 }, allowWhileIdle: true },
         },
         {
-          id: 102, // Cena/Racha
-          title: STREAK_MESSAGES[0].title,
-          body: STREAK_MESSAGES[0].body,
+          id: 102, // Cena
+          title: DINNER_MESSAGES[0].title,
+          body: DINNER_MESSAGES[0].body,
           schedule: { on: { hour: 20, minute: 0 }, allowWhileIdle: true },
         }
       ]
     });
   },
 
+  // Programa notificaciones variadas para toda la semana (llamado tras login/setup)
+  async scheduleAll() {
+    if (!(await this.requestPermissions())) return;
+    await this.cancelAll();
+
+    const notifications = [];
+    let idCounter = 100;
+
+    for (let day = 1; day <= 7; day++) {
+      // 1. Mañana (09:00 AM) - Peso o Motivación
+      const isWeightDay = day === 1 || day === 4; 
+      const morningMsg = isWeightDay 
+        ? WEIGHT_MESSAGES[day % WEIGHT_MESSAGES.length]
+        : FOOD_MESSAGES[day % FOOD_MESSAGES.length];
+
+      notifications.push({
+        id: idCounter++,
+        title: morningMsg.title,
+        body: morningMsg.body,
+        schedule: { on: { weekday: day, hour: 9, minute: 0 }, allowWhileIdle: true },
+      });
+
+      // 2. Almuerzo (01:30 PM)
+      const lunchMsg = FOOD_MESSAGES[(day + 1) % FOOD_MESSAGES.length];
+      notifications.push({
+        id: idCounter++,
+        title: lunchMsg.title,
+        body: lunchMsg.body,
+        schedule: { on: { weekday: day, hour: 13, minute: 30 }, allowWhileIdle: true },
+      });
+
+      // 3. Tarde (04:30 PM) - Agua
+      const waterMsg = WATER_MESSAGES[day % WATER_MESSAGES.length];
+      notifications.push({
+        id: idCounter++,
+        title: waterMsg.title,
+        body: waterMsg.body,
+        schedule: { on: { weekday: day, hour: 16, minute: 30 }, allowWhileIdle: true },
+      });
+
+      // 4. Noche (08:00 PM) - Cena (Reemplaza Rachas)
+      const dinnerMsg = DINNER_MESSAGES[day % DINNER_MESSAGES.length];
+      notifications.push({
+        id: idCounter++,
+        title: dinnerMsg.title,
+        body: dinnerMsg.body,
+        schedule: { on: { weekday: day, hour: 20, minute: 0 }, allowWhileIdle: true },
+      });
+    }
+
+    await LocalNotifications.schedule({ notifications });
+  },
+
   async scheduleWaterReminders() {
     if (!(await this.requestPermissions())) return;
     await this.cancelWaterReminders();
 
-    // Mensaje de agua diario a las 16:30
     await LocalNotifications.schedule({
       notifications: [{
         id: 201,
@@ -86,7 +138,6 @@ export const NotificationManager = {
     if (!(await this.requestPermissions())) return;
     await this.cancelWeightReminders();
 
-    // Peso lunes y jueves
     await LocalNotifications.schedule({
       notifications: [
         {
@@ -105,24 +156,19 @@ export const NotificationManager = {
     });
   },
 
-  // --- Canceladores Específicos ---
+  // --- Canceladores ---
 
   async cancelMealReminders() {
-    // IDs 100-199 reservados para comidas
     await this.cancelRemindersByPrefix(1);
   },
 
   async cancelWaterReminders() {
-    // IDs 200-299 reservados para agua
     await this.cancelRemindersByPrefix(2);
   },
 
   async cancelWeightReminders() {
-    // IDs 300-399 reservados para peso
     await this.cancelRemindersByPrefix(3);
   },
-
-  // --- Utilidades Internas ---
 
   async cancelReminders(ids: number[]) {
     if (!Capacitor.isNativePlatform()) return;
@@ -135,7 +181,6 @@ export const NotificationManager = {
 
   async cancelRemindersByPrefix(prefix: number) {
       if (!Capacitor.isNativePlatform()) return;
-      // Generamos un rango de IDs basado en el prefijo (ej. 1 -> 100 a 149)
       const ids = [];
       for(let i=0; i<50; i++) ids.push(prefix * 100 + i); 
       await this.cancelReminders(ids);
