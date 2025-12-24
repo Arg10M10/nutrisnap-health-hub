@@ -75,17 +75,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initializeAuth = async () => {
       try {
         setLoading(true);
-        // 1. Get the session first
         const { data: { session: initialSession } } = await supabase.auth.getSession();
 
         if (mounted) {
           if (initialSession?.user) {
-            // 2. Set basic auth state
             setSession(initialSession);
             setUser(initialSession.user);
-            
-            // 3. Wait for profile to load BEFORE turning off loading
-            // This prevents the "white screen" where we have a user but no profile data yet
             await fetchProfile(initialSession.user.id);
           }
         }
@@ -110,8 +105,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setProfile(null);
         setLoading(false);
       } else if (event === 'SIGNED_IN' && newSession?.user) {
-        // Only fetch if we don't have a profile matching this user
-        // This avoids double-fetching on app launch since initializeAuth handles the first one
         setUser(currentUser => {
             if (currentUser?.id !== newSession.user.id) {
                  fetchProfile(newSession.user.id);
@@ -129,7 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
-      setLoading(true); // Show loading while signing out
+      setLoading(true); 
       await supabase.auth.signOut();
     } catch (error) {
       console.error("Error signing out:", error);

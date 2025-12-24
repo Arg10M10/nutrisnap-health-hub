@@ -39,7 +39,7 @@
     "terms_privacy": "Al continuar, aceptas nuestros <1>Términos de Servicio</1> y <3>Política de Privacidad</3>."
   },
   "onboarding": {
-    "step": "Paso {step} de {totalSteps}",
+    "step": "Etapa {step} de {totalSteps}",
     "continue": "Continuar",
     "toast_error": "Error al guardar el perfil. Inténtalo de nuevo.",
     "gender": {
