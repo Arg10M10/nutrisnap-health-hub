@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
   User, Edit, HeartPulse, SlidersHorizontal, Languages, Target, Goal, Palette,
-  Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, ChevronRight
+  Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, ChevronRight, Bell
 } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -123,6 +123,7 @@ const Settings = () => {
         <SettingsCategory title={t('settings.account.title')}>
           <SettingsItem icon={<HeartPulse size={20} />} label={t('settings.account.personalDetails')} onClick={() => navigate('/settings/personal-details')} />
           <SettingsItem icon={<SlidersHorizontal size={20} />} label={t('settings.account.preferences')} onClick={() => navigate('/settings/preferences')} />
+          <SettingsItem icon={<Bell size={20} />} label="Recordatorios" onClick={() => navigate('/settings/reminders')} />
           <SettingsItem icon={<Languages size={20} />} label={t('settings.language')} onClick={() => setIsLanguageDrawerOpen(true)} />
         </SettingsCategory>
 

@@ -36,6 +36,7 @@ import RingColors from "./pages/settings/RingColors";
 import RequestFeature from "./pages/settings/RequestFeature";
 import EditProfile from "./pages/settings/EditProfile";
 import PersonalDetails from "./pages/settings/PersonalDetails";
+import Reminders from "./pages/settings/Reminders";
 import BadgeDetailModal from "./components/BadgeDetailModal";
 import Subscribe from "./pages/Subscribe";
 import GeneratingPlan from "./pages/onboarding/GeneratingPlan";
@@ -146,6 +147,7 @@ const AppRoutes = () => {
     "/settings/request-feature",
     "/settings/edit-profile",
     "/settings/personal-details",
+    "/settings/reminders",
     "/subscribe",
   ];
 
@@ -169,6 +171,7 @@ const AppRoutes = () => {
               <Route path="/settings/request-feature" element={<RequestFeature />} />
               <Route path="/settings/edit-profile" element={<EditProfile />} />
               <Route path="/settings/personal-details" element={<PersonalDetails />} />
+              <Route path="/settings/reminders" element={<Reminders />} />
               <Route path="/subscribe" element={<Subscribe />} />
             </Routes>
           </AnimatePresence>
