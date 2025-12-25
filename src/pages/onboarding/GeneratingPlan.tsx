@@ -22,9 +22,9 @@ const GeneratingPlan = () => {
     { text: t('generating_plan.step4'), icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
   ];
 
-  // Simulación de progreso visual - Ajustado para ~8 segundos
+  // Simulación de progreso visual - Ajustado para ~25 segundos
   useEffect(() => {
-    const totalDuration = 8000; // 8 segundos
+    const totalDuration = 25000; // 25 segundos (Aumentado de 8000)
     const intervalTime = 100;
     const totalSteps = totalDuration / intervalTime;
     const increment = 100 / totalSteps;
@@ -32,10 +32,9 @@ const GeneratingPlan = () => {
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 99) {
-          // Pausa en 99% esperando que la API termine
+          // Pausa en 99% esperando que la API termine si tarda más de 25s
           return 99;
         }
-        // Incremento constante para una carga más suave
         return Math.min(prev + increment, 99);
       });
     }, intervalTime);
@@ -44,9 +43,10 @@ const GeneratingPlan = () => {
   }, []);
 
   useEffect(() => {
-    if (progress < 30) setStage(0);
-    else if (progress < 60) setStage(1);
-    else if (progress < 90) setStage(2);
+    // Ajustamos los umbrales para que las etapas duren tiempos razonables
+    if (progress < 25) setStage(0);
+    else if (progress < 50) setStage(1);
+    else if (progress < 85) setStage(2);
     else setStage(3);
   }, [progress]);
 
@@ -95,7 +95,7 @@ const GeneratingPlan = () => {
           age: profile.age || 30,
           goal: profile.goal || 'maintain_weight',
           goalWeight: goalWeight,
-          weeklyRate: weeklyRate, // Aquí se envía 0 si es mantenimiento
+          weeklyRate: weeklyRate, 
           workoutsPerWeek: estimatedWorkouts
         },
       });
@@ -118,25 +118,22 @@ const GeneratingPlan = () => {
       return suggestions;
     },
     onSuccess: async () => {
+      // Si la API termina antes, forzamos el 100%
       setProgress(100);
       setStage(3);
       await refetchProfile();
       setTimeout(() => {
-        // Navegar al inicio pasando un estado para indicar que venimos de la generación
-        // Esto podría usarse en Index.tsx para mostrar un toast de éxito si se desea
         navigate('/', { state: { fromGeneratingPlan: true } });
       }, 1500);
     },
     onError: (error) => {
       console.error("Error generating plan", error);
-      // En caso de error, ir al home de todas formas para no bloquear al usuario
       navigate('/');
     }
   });
 
   useEffect(() => {
     if (user && profile) {
-      // Pequeño delay para que la UI cargue antes de lanzar la petición
       const timeout = setTimeout(() => {
         generatePlanMutation.mutate();
       }, 1000);
@@ -171,8 +168,8 @@ const GeneratingPlan = () => {
           </motion.h2>
           
           <div className="space-y-3 px-4">
-            <Progress value={progress} className="h-4 rounded-full" />
-            <p className="text-sm text-muted-foreground text-right font-mono font-medium">{Math.round(progress)}%</p>
+            <Progress value={progress} className="h-4 rounded-full transition-all duration-300 ease-linear" />
+            <p className="text-sm text-muted-foreground text-right font-mono font-medium">{Math.floor(progress)}%</p>
           </div>
         </div>
 
