@@ -153,6 +153,12 @@ const CalorieIntakeChart = () => {
               outline: 'none'
             }}
           >
+            <style>{`
+              .recharts-wrapper path, .recharts-wrapper .recharts-layer {
+                outline: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+              }
+            `}</style>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 0, bottom: 0, left: -20 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 4" />
@@ -172,7 +178,7 @@ const CalorieIntakeChart = () => {
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'transparent' }}
+                  cursor={{ fill: 'transparent', opacity: 0 }}
                   isAnimationActive={false}
                 />
                 <Bar

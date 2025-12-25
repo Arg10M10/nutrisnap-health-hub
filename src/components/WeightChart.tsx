@@ -134,6 +134,12 @@ const WeightChart = () => {
               outline: 'none'
             }}
           >
+            <style>{`
+              .recharts-wrapper path, .recharts-wrapper .recharts-layer {
+                outline: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+              }
+            `}</style>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart 
                 data={chartData} 
@@ -167,7 +173,6 @@ const WeightChart = () => {
                   content={<CustomTooltip />} 
                   cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
                   isAnimationActive={false}
-                  trigger="hover"
                 />
                 {displayGoalWeight && (
                   <ReferenceLine
