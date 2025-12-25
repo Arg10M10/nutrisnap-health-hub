@@ -122,17 +122,21 @@ const GeneratingPlan = () => {
       setStage(3);
       await refetchProfile();
       setTimeout(() => {
-        navigate('/');
+        // Navegar al inicio pasando un estado para indicar que venimos de la generación
+        // Esto podría usarse en Index.tsx para mostrar un toast de éxito si se desea
+        navigate('/', { state: { fromGeneratingPlan: true } });
       }, 1500);
     },
     onError: (error) => {
       console.error("Error generating plan", error);
+      // En caso de error, ir al home de todas formas para no bloquear al usuario
       navigate('/');
     }
   });
 
   useEffect(() => {
     if (user && profile) {
+      // Pequeño delay para que la UI cargue antes de lanzar la petición
       const timeout = setTimeout(() => {
         generatePlanMutation.mutate();
       }, 1000);
@@ -172,6 +176,7 @@ const GeneratingPlan = () => {
           </div>
         </div>
 
+        {/* Elementos decorativos de fondo */}
         <div className="grid grid-cols-2 gap-4 opacity-40 pointer-events-none mt-8">
           <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse" />
           <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-75" />

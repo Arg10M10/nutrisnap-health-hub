@@ -5,77 +5,81 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
+const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
+const GPT_MODEL = "gpt-5-nano";
+
+const safeParseJson = (text: string) => {
+  try {
+    const cleanedText = text.replace(/```json\n?/g, "").replace(/\n?```/g, "").trim();
+    return JSON.parse(cleanedText);
+  } catch (e) {
+    console.error("Failed to parse JSON from AI:", e);
+    return null;
+  }
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const { gender, age, height, weight, workoutsPerWeek, goal, weeklyRate } = await req.json();
+    const { weight, height, gender, age, goal, goalWeight, weeklyRate, workoutsPerWeek } = await req.json();
 
-    // 1. Validación y Valores por Defecto Seguros
-    const safeWeight = Number(weight) || 70;
-    const safeHeight = Number(height) || 170;
-    const safeAge = Number(age) || 30;
-    const safeWorkouts = Number(workoutsPerWeek) || 3;
-    const isMale = gender?.toLowerCase() === 'male';
-    const targetWeeklyChange = Number(weeklyRate) || 0; // kg por semana (0 si es mantener)
+    const prompt = `
+      You are an elite nutritionist AI. Your task is to calculate the PERFECT daily nutritional targets for a user.
+      
+      User Profile:
+      - Current Weight: ${weight} kg
+      - Height: ${height} cm
+      - Age: ${age} years
+      - Gender: ${gender}
+      - Activity Level (workouts/week): ${workoutsPerWeek}
+      - Main Goal: ${goal} (lose_weight, maintain_weight, gain_weight)
+      - Target Weight: ${goalWeight} kg
+      - Desired Weekly Pace: ${weeklyRate} kg/week
 
-    // 2. Cálculo de BMR (Tasa Metabólica Basal) - Ecuación Mifflin-St Jeor
-    let bmr = (10 * safeWeight) + (6.25 * safeHeight) - (5 * safeAge);
-    bmr += isMale ? 5 : -161;
+      INSTRUCTIONS:
+      1. Calculate BMR and TDEE scientifically.
+      2. Adjust calories for the specific goal and weekly pace (ensure it's safe/realistic).
+      3. Distribute macros (Protein, Carbs, Fats) optimally for muscle retention/growth based on the goal.
+      4. Set a sugar limit (recommended < 10% calories or fixed low amount).
+      5. **Return ONLY valid JSON** with these integer values:
+      
+      {
+        "calories": number,
+        "protein": number,
+        "carbs": number,
+        "fats": number,
+        "sugars": number
+      }
+    `;
 
-    // 3. Multiplicador de Actividad (TDEE)
-    let activityMultiplier = 1.2; // Sedentario base
-    if (safeWorkouts >= 1 && safeWorkouts <= 2) activityMultiplier = 1.375; // Ligero
-    else if (safeWorkouts >= 3 && safeWorkouts <= 5) activityMultiplier = 1.55; // Moderado
-    else if (safeWorkouts >= 6) activityMultiplier = 1.725; // Intenso
-
-    const tdee = Math.round(bmr * activityMultiplier);
-
-    // 4. Ajuste por Objetivo (Déficit/Superávit)
-    // 1kg de grasa corporal ≈ 7700 kcal.
-    const dailyCalorieDelta = Math.round((targetWeeklyChange * 7700) / 7);
-    
-    let targetCalories = tdee;
-
-    if (goal === 'lose_weight') {
-      targetCalories = tdee - dailyCalorieDelta;
-      const minSafeCalories = isMale ? 1500 : 1200;
-      if (targetCalories < minSafeCalories) targetCalories = minSafeCalories;
-    } else if (goal === 'gain_weight') {
-      targetCalories = tdee + dailyCalorieDelta;
-    }
-
-    // 5. Distribución de Macros
-    // Proteína: ~2g por kg de peso
-    let proteinGrams = Math.round(safeWeight * 2); 
-    const proteinCals = proteinGrams * 4;
-
-    // Seguridad: Que proteína no sea excesiva (>40% cals)
-    if (proteinCals > (targetCalories * 0.4)) {
-        proteinGrams = Math.round((targetCalories * 0.35) / 4);
-    }
-
-    // Grasas: ~30% de las calorías
-    const fatCals = Math.round(targetCalories * 0.30);
-    const fatGrams = Math.round(fatCals / 9);
-
-    // Carbohidratos: El resto
-    const usedCals = (proteinGrams * 4) + (fatGrams * 9);
-    const remainingCals = targetCalories - usedCals;
-    const carbGrams = Math.max(0, Math.round(remainingCals / 4));
-
-    // 6. Azúcares: Tope estricto del 5%
-    const sugarCap = Math.min(Math.round((targetCalories * 0.05) / 4), 30);
-
-    const result = {
-      calories: Math.round(targetCalories),
-      protein: proteinGrams,
-      carbs: carbGrams,
-      fats: fatGrams,
-      sugars: sugarCap
+    const body = {
+      model: GPT_MODEL,
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" },
     };
+
+    const aiRes = await fetch(GPT_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${GPT_API_KEY}` },
+      body: JSON.stringify(body),
+    });
+
+    if (!aiRes.ok) {
+      const errorBody = await aiRes.text();
+      throw new Error(`AI API Error: ${errorBody}`);
+    }
+
+    const aiData = await aiRes.json();
+    const jsonText = aiData.choices?.[0]?.message?.content ?? "{}";
+    const result = safeParseJson(jsonText);
+
+    if (!result || !result.calories || !result.protein) {
+      throw new Error("Invalid AI response structure");
+    }
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
