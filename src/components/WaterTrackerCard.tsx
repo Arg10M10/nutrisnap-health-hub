@@ -24,16 +24,16 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
 
   return (
     <>
-      <Card className="relative overflow-hidden h-full flex flex-col justify-between group">
+      <Card className="relative overflow-hidden h-full flex flex-col justify-between group bg-card">
         {/* Fondo con efecto de llenado de agua */}
         <div 
-          className="absolute bottom-0 left-0 right-0 bg-blue-50/50 transition-all duration-700 ease-in-out z-0"
+          className="absolute bottom-0 left-0 right-0 bg-blue-50/80 dark:bg-blue-500/15 transition-all duration-700 ease-in-out z-0"
           style={{ height: `${percentage}%` }}
         />
         
         <div className="p-4 flex flex-col justify-between h-full z-10 relative">
           <div className="text-center space-y-1">
-            <div className="bg-blue-100/80 w-12 h-12 rounded-full flex items-center justify-center mx-auto text-blue-600 mb-2 shadow-sm group-hover:scale-110 transition-transform">
+            <div className="bg-blue-100/80 dark:bg-blue-900/30 w-12 h-12 rounded-full flex items-center justify-center mx-auto text-blue-600 dark:text-blue-400 mb-2 shadow-sm group-hover:scale-110 transition-transform">
               <GlassWater className="w-6 h-6" />
             </div>
             
@@ -54,7 +54,7 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
               size="icon" 
               onClick={onRemove} 
               disabled={count === 0 || isUpdating}
-              className="h-9 w-9 rounded-full border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 bg-white/80 backdrop-blur-sm"
+              className="h-9 w-9 rounded-full border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-background/80 backdrop-blur-sm"
             >
               <Minus className="w-4 h-4" />
             </Button>
@@ -63,7 +63,7 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
               size="sm" 
               onClick={() => setIsDrawerOpen(true)} 
               disabled={isUpdating}
-              className="flex-1 h-9 rounded-full bg-blue-500 hover:bg-blue-600 text-white shadow-blue-200 shadow-md transition-all active:scale-95"
+              className="flex-1 h-9 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-blue-200 dark:shadow-none shadow-md transition-all active:scale-95"
             >
               <Plus className="w-4 h-4 mr-1" /> {t('common.add', 'Añadir')}
             </Button>
