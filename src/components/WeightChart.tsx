@@ -67,10 +67,31 @@ const WeightChart = () => {
 
   const percentageToGoal = useMemo(() => {
     if (profile?.starting_weight && profile.goal_weight && profile.weight) {
-      const totalToChange = Math.abs(profile.starting_weight - profile.goal_weight);
-      if (totalToChange === 0) return 100;
-      const changedSoFar = Math.abs(profile.starting_weight - profile.weight);
-      return Math.min(100, (changedSoFar / totalToChange) * 100);
+      const start = Number(profile.starting_weight);
+      const current = Number(profile.weight);
+      const goal = Number(profile.goal_weight);
+
+      if (start === goal) return 100;
+
+      const totalDistance = Math.abs(goal - start);
+      let distanceCovered = 0;
+
+      // Determinar dirección del objetivo para calcular progreso real
+      if (goal < start) {
+        // Meta: Perder peso (Progreso = cuánto ha bajado)
+        distanceCovered = start - current;
+      } else {
+        // Meta: Ganar peso (Progreso = cuánto ha subido)
+        distanceCovered = current - start;
+      }
+
+      // Si la distancia cubierta es negativa (se alejó) o cero, devolvemos 0%
+      if (distanceCovered <= 0) return 0;
+
+      const percentage = (distanceCovered / totalDistance) * 100;
+      
+      // Limitamos al 100% visualmente
+      return Math.min(100, percentage);
     }
     return 0;
   }, [profile]);
@@ -79,7 +100,7 @@ const WeightChart = () => {
   const maxWeight = chartData.length > 0 ? Math.max(...chartData.map(d => d.weight)) : 100;
   
   // Ajuste dinámico del eje Y para que la gráfica se vea bien
-  const padding = (maxWeight - minWeight) * 0.2; // Aumentado padding para mejor visualización
+  const padding = (maxWeight - minWeight) * 0.2; 
   const domainMin = Math.floor(Math.max(0, minWeight - padding));
   const domainMax = Math.ceil(maxWeight + padding);
 
@@ -110,8 +131,18 @@ const WeightChart = () => {
           </div>
         ) : chartData.length > 1 ? (
           <div 
-            className="h-64 w-full pointer-events-none select-none pl-2" // Added pl-2 for axis space
+            className="h-64 w-full pointer-events-none select-none pl-2" 
+            style={{ 
+              WebkitTapHighlightColor: 'transparent',
+              outline: 'none'
+            }}
           >
+            <style>{`
+              .recharts-wrapper path, .recharts-wrapper .recharts-layer {
+                outline: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+              }
+            `}</style>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart 
                 data={chartData} 
@@ -136,10 +167,10 @@ const WeightChart = () => {
                   domain={[domainMin, domainMax]}
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={8} // Reduced tickMargin slightly
+                  tickMargin={8} 
                   tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))', fontWeight: 500 }}
-                  width={40} // Increased width for labels
-                  unit={isImperial ? '' : ''} // Removed unit from axis to save space, it's clear from context
+                  width={40} 
+                  unit={isImperial ? '' : ''} 
                 />
                 {displayGoalWeight && (
                   <ReferenceLine
@@ -162,7 +193,7 @@ const WeightChart = () => {
                     stroke: "hsl(var(--background))", 
                     fill: "hsl(var(--primary))" 
                   }}
-                  isAnimationActive={true}
+                  isAnimationActive={false}
                 />
               </AreaChart>
             </ResponsiveContainer>
