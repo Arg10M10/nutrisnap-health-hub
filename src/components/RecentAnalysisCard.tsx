@@ -43,15 +43,19 @@ const RecentAnalysisCard = ({
 
   useEffect(() => {
     if (isProcessing) {
-      setProgress(0);
+      setProgress(10); // Empezar con algo de progreso visual inmediato
+      
+      // Actualizar mucho más rápido (cada 150ms en lugar de 500ms)
       timerRef.current = window.setInterval(() => {
         setProgress((p) => {
-          const increment = Math.random() * 2 + 0.5; 
+          // Incrementos más grandes al principio
+          const increment = Math.random() * 5 + 1; 
           const next = p + increment;
+          // Pausar visualmente al 90% esperando la respuesta real
           if (next > 90) return 90 + Math.random(); 
           return next;
         });
-      }, 500);
+      }, 150);
     } else if (status === 'completed') {
       setProgress(100);
       if (timerRef.current) {
@@ -102,7 +106,7 @@ const RecentAnalysisCard = ({
         {isProcessing ? (
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-primary font-medium animate-pulse">Analizando...</span>
+              <span className="text-primary font-medium animate-pulse">Analizando con IA...</span>
               <span className="font-bold text-foreground">{Math.floor(progress)}%</span>
             </div>
             <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">

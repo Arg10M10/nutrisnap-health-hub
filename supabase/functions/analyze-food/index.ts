@@ -8,7 +8,8 @@ const corsHeaders = {
 
 const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
 const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
-const GPT_MODEL = "gpt-5-nano";
+// Usamos gpt-4o-mini porque es mucho más rápido y soporta visión
+const GPT_MODEL = "gpt-4o-mini";
 
 const safeParseJson = (text: string) => {
   try {
@@ -88,6 +89,7 @@ serve(async (req) => {
         },
       ],
       response_format: { type: "json_object" },
+      max_tokens: 500, // Limitamos tokens para mayor velocidad
     };
 
     const aiRes = await fetch(GPT_API_URL, {
@@ -125,7 +127,7 @@ serve(async (req) => {
         carbs_value: parseNutrientValue(analysisResult.carbs),
         fats_value: parseNutrientValue(analysisResult.fats),
         sugars_value: parseNutrientValue(analysisResult.sugars),
-        analysis_data: analysisResult, // Guardamos el objeto completo (incluyendo ingredients)
+        analysis_data: analysisResult, 
         status: 'completed',
       })
       .eq('id', entry_id);
