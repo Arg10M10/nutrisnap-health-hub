@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { ForgotPasswordDialog } from './ForgotPasswordDialog';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Por favor, introduce un email válido.' }),
@@ -61,7 +62,10 @@ export const SignInForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('auth.password_label')}</FormLabel>
+              <div className="flex items-center justify-between">
+                <FormLabel>{t('auth.password_label')}</FormLabel>
+                <ForgotPasswordDialog />
+              </div>
               <div className="relative">
                 <FormControl>
                   <Input
