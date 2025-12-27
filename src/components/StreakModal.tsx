@@ -1,9 +1,9 @@
 import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Flame } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -21,9 +21,9 @@ const StreakModal = ({ isOpen, onClose, streak, streakDays }: StreakModalProps) 
   const { t } = useTranslation();
 
   return (
-    <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="bg-card border-none shadow-2xl rounded-t-[32px] max-h-[90vh]">
-        <div className="mx-auto w-full max-w-sm">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="bg-card border-none shadow-2xl rounded-[32px] max-w-sm p-0 overflow-hidden outline-none">
+        <div className="w-full">
           <div className="bg-gradient-to-b from-orange-500/10 via-orange-500/5 to-transparent p-8 pb-4 flex flex-col items-center">
             <div className="relative mb-4">
               <div className="absolute inset-0 bg-orange-500 blur-3xl opacity-30 rounded-full scale-150 animate-pulse" />
@@ -31,11 +31,11 @@ const StreakModal = ({ isOpen, onClose, streak, streakDays }: StreakModalProps) 
                 <Flame className="w-20 h-20 text-orange-500 fill-current relative z-10 drop-shadow-lg" />
               </div>
             </div>
-            <DrawerHeader className="mb-1 p-0">
-              <DrawerTitle className="text-center text-3xl font-black text-foreground tracking-tight">
+            <DialogHeader className="mb-1 p-0 space-y-0">
+              <DialogTitle className="text-center text-3xl font-black text-foreground tracking-tight">
                 {t('streak_modal.title')}
-              </DrawerTitle>
-            </DrawerHeader>
+              </DialogTitle>
+            </DialogHeader>
             <div className="text-center mb-2">
               <div className="flex items-center justify-center gap-1">
                 <span className="text-7xl font-black text-foreground tracking-tighter tabular-nums drop-shadow-sm">
@@ -67,8 +67,8 @@ const StreakModal = ({ isOpen, onClose, streak, streakDays }: StreakModalProps) 
             </div>
           </div>
         </div>
-      </DrawerContent>
-    </Drawer>
+      </DialogContent>
+    </Dialog>
   );
 };
 
