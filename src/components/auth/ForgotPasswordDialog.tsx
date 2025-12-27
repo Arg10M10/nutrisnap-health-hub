@@ -13,8 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader2, Mail } from 'lucide-react';
+import { Loader2, Mail, KeyRound } from 'lucide-react';
 
 export function ForgotPasswordDialog() {
   const { t } = useTranslation();
@@ -29,7 +28,7 @@ export function ForgotPasswordDialog() {
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/settings/update-password', // Intento de redirección, aunque depende de la config de Supabase
+        redirectTo: window.location.origin + '/settings/update-password',
       });
 
       if (error) throw error;
@@ -54,37 +53,51 @@ export function ForgotPasswordDialog() {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="text-sm font-medium text-primary hover:underline hover:text-primary/80 transition-colors"
+          className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
         >
           {t('auth.forgot_password')}
         </button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t('auth.reset_password_title')}</DialogTitle>
-          <DialogDescription>
-            {t('auth.reset_password_desc')}
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="reset-email">{t('auth.email_label')}</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      {/* Estilo moderno: Borde muy redondeado, sin borde visible, sombra suave */}
+      <DialogContent className="sm:max-w-md !rounded-3xl border-none shadow-2xl bg-card p-0 overflow-hidden">
+        <div className="p-6 pb-0 flex flex-col items-center">
+          {/* Icono decorativo */}
+          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+            <KeyRound className="w-8 h-8 text-primary" />
+          </div>
+          
+          <DialogHeader className="mb-2 w-full">
+            <DialogTitle className="text-center text-xl font-bold">{t('auth.reset_password_title')}</DialogTitle>
+            <DialogDescription className="text-center text-base text-muted-foreground mt-2">
+              {t('auth.reset_password_desc')}
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 pt-2 space-y-6">
+          <div className="space-y-4">
+            <div className="relative group">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary">
+                <Mail className="h-5 w-5" />
+              </div>
               <Input
                 id="reset-email"
                 type="email"
                 placeholder="tu@ejemplo.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-9"
+                className="pl-12 h-14 rounded-2xl bg-muted/30 border-2 border-transparent focus:border-primary/20 focus:bg-background transition-all text-base"
                 required
               />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button 
+              type="submit" 
+              className="w-full h-14 rounded-2xl text-lg font-semibold shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]" 
+              disabled={isLoading}
+            >
+              {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
               {t('auth.send_reset_link')}
             </Button>
           </DialogFooter>
