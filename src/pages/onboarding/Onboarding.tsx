@@ -15,6 +15,7 @@ import { MotivationStep } from './steps/MotivationStep';
 import { GoalStep } from './steps/GoalStep';
 import { GoalWeightStep } from './steps/GoalWeightStep';
 import { WeeklyRateStep } from './steps/WeeklyRateStep';
+import { NotificationsStep } from './steps/NotificationsStep';
 import { FinalStep } from './steps/FinalStep';
 
 const Onboarding = () => {
@@ -97,6 +98,32 @@ const Onboarding = () => {
     },
   });
 
+  const nextStep = () => {
+    if (currentStepIndex < allSteps.length - 1) {
+      setCurrentStepIndex(prev => prev + 1);
+      
+      // Inicializar weeklyRate por defecto si el siguiente paso es ese
+      const nextStep = allSteps[currentStepIndex + 1];
+      if (nextStep && nextStep.id === 'weekly_rate' && formData.weeklyRate === null) {
+        updateFormData('weeklyRate', formData.units === 'metric' ? 0.5 : 1.1);
+      }
+      // Inicializar goalWeight por defecto si el siguiente paso es ese y está vacío
+      if (nextStep && nextStep.id === 'goal_weight' && formData.goalWeight === null && formData.weight) {
+         // Sugerencia simple por defecto
+         const suggestion = formData.goal === 'lose_weight' ? formData.weight * 0.9 : formData.weight * 1.1;
+         updateFormData('goalWeight', Math.round(suggestion));
+      }
+    } else {
+      mutation.mutate();
+    }
+  };
+
+  const onBack = () => {
+    if (currentStepIndex > 0) {
+      setCurrentStepIndex(prev => prev - 1);
+    }
+  };
+
   // Definimos todos los pasos posibles
   const allSteps = [
     {
@@ -173,6 +200,14 @@ const Onboarding = () => {
       }
     ] : []),
     {
+      id: 'notifications',
+      title: t('onboarding.notifications.title'),
+      description: t('onboarding.notifications.description'),
+      content: <NotificationsStep onNext={nextStep} />,
+      canContinue: true,
+      hideContinueButton: true, // Ocultar el botón estándar porque el paso tiene sus propios botones
+    },
+    {
       id: 'final',
       title: t('onboarding.final.title'),
       description: t('onboarding.final.description'),
@@ -185,40 +220,13 @@ const Onboarding = () => {
   const totalSteps = allSteps.length;
   const currentStep = allSteps[currentStepIndex];
 
-  const onContinue = () => {
-    if (currentStepIndex < totalSteps - 1) {
-      setCurrentStepIndex(prev => prev + 1);
-      
-      // Inicializar weeklyRate por defecto si el siguiente paso es ese
-      const nextStep = allSteps[currentStepIndex + 1];
-      if (nextStep && nextStep.id === 'weekly_rate' && formData.weeklyRate === null) {
-        updateFormData('weeklyRate', formData.units === 'metric' ? 0.5 : 1.1);
-      }
-      // Inicializar goalWeight por defecto si el siguiente paso es ese y está vacío
-      if (nextStep && nextStep.id === 'goal_weight' && formData.goalWeight === null && formData.weight) {
-         // Sugerencia simple por defecto
-         const suggestion = formData.goal === 'lose_weight' ? formData.weight * 0.9 : formData.weight * 1.1;
-         updateFormData('goalWeight', Math.round(suggestion));
-      }
-
-    } else {
-      mutation.mutate();
-    }
-  };
-
-  const onBack = () => {
-    if (currentStepIndex > 0) {
-      setCurrentStepIndex(prev => prev - 1);
-    }
-  };
-
   return (
     <OnboardingLayout
       step={currentStepIndex + 1}
       totalSteps={totalSteps}
       title={currentStep.title}
       description={currentStep.description}
-      onContinue={onContinue}
+      onContinue={nextStep}
       onBack={onBack}
       canContinue={currentStep.canContinue}
       isPending={mutation.isPending}

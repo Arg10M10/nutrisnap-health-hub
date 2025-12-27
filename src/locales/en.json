@@ -106,6 +106,12 @@
       "balanced_desc": "Balanced rate. Effective and manageable for most people.",
       "week": "week"
     },
+    "notifications": {
+      "title": "Stay Consistent",
+      "description": "Turn on notifications to get reminders for meals, hydration, and weight checks. It helps you stay on track!",
+      "enable_button": "Enable Notifications",
+      "skip_button": "Maybe Later"
+    },
     "final": {
       "title": "Ready to start?",
       "description": "Calorel uses AI to help you achieve your goals faster and more sustainably.",
