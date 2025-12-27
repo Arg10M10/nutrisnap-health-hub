@@ -207,6 +207,11 @@
     "disclaimer_text": "The results from this scanner are AI-based estimations. They may not be 100% accurate and should not be considered medical advice.",
     "disclaimer_accept": "I Understand"
   },
+  "menu_analysis": {
+    "title": "Menu Analysis",
+    "recommended": "Best Options",
+    "avoid": "Limit or Avoid"
+  },
   "analysis": {
     "calories": "Calories",
     "protein": "Protein",

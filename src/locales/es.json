@@ -206,6 +206,11 @@
     "disclaimer_text": "Los resultados de este escáner son estimaciones basadas en Inteligencia Artificial. Pueden no ser 100% precisos y no deben considerarse consejo médico.",
     "disclaimer_accept": "Entendido"
   },
+  "menu_analysis": {
+    "title": "Análisis del Menú",
+    "recommended": "Mejores Opciones",
+    "avoid": "Limitar o Evitar"
+  },
   "analysis": {
     "calories": "Calorías",
     "protein": "Proteína",
