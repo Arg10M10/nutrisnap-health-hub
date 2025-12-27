@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { getDeviceId } from '@/lib/device';
 
 const formSchema = z.object({
   firstName: z.string().min(2, { message: 'El nombre es requerido.' }),
@@ -34,21 +35,47 @@ export const SignUpForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email: values.email,
-      password: values.password,
-      options: {
-        data: {
-          full_name: `${values.firstName} ${values.lastName}`,
+    try {
+      const deviceId = getDeviceId();
+
+      // 1. Verificar límite de cuentas por dispositivo
+      const { data: checkData, error: checkError } = await supabase.functions.invoke('check-device-limit', {
+        body: { deviceId }
+      });
+
+      if (checkError) throw new Error("Error verificando dispositivo. Intenta de nuevo.");
+      
+      if (!checkData.allowed) {
+        toast.error("Límite de Cuentas Alcanzado", {
+          description: checkData.message || "No puedes crear más cuentas en este dispositivo."
+        });
+        setLoading(false);
+        return;
+      }
+
+      // 2. Proceder con el registro enviando el deviceId en metadata
+      const { error } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+        options: {
+          data: {
+            full_name: `${values.firstName} ${values.lastName}`,
+            device_id: deviceId, // Esto activará el trigger en la BD
+          },
         },
-      },
-    });
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('¡Revisa tu correo para el enlace de confirmación!');
+      });
+
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success('¡Revisa tu correo para el enlace de confirmación!');
+      }
+    } catch (error: any) {
+      console.error("Sign up error:", error);
+      toast.error(error.message || "Error al crear la cuenta.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
