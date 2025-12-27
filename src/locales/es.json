@@ -211,7 +211,8 @@
     "title": "Análisis del Menú",
     "recommended": "Mejores Opciones",
     "avoid": "Limitar o Evitar",
-    "view_result": "Ver Resultados"
+    "view_result": "Ver Resultados",
+    "partial_list_note": "Nota: Este análisis no incluye todo el menú. La IA ha filtrado el contenido para mostrarte únicamente las mejores opciones para tu objetivo y aquellas que deberías evitar."
   },
   "analysis": {
     "calories": "Calorías",
