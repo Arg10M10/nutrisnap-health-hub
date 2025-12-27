@@ -4,13 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
   User, Edit, HeartPulse, SlidersHorizontal, Languages, Target, Goal, Palette,
-  Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, ChevronRight, Bell
+  Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, ChevronRight, Bell, AlertTriangle
 } from "lucide-react";
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
@@ -20,6 +15,15 @@ import { SettingsCategory } from "@/components/settings/SettingsCategory";
 import { SettingsItem } from "@/components/settings/SettingsItem";
 import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
 import UserAvatar from "@/components/UserAvatar";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerClose
+} from "@/components/ui/drawer";
 
 const TERMS_URL = "https://www.calorel.online/termsandconditions";
 const PRIVACY_URL = "https://www.calorel.online/privacypolicy";
@@ -30,6 +34,7 @@ const TIKTOK_URL = "https://www.tiktok.com/@calorel.app?_r=1&_t=ZS-920XYSQSag5";
 const Settings = () => {
   const { profile, signOut } = useAuth();
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
+  const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -159,32 +164,49 @@ const Settings = () => {
         {/* Account Actions Category */}
         <SettingsCategory title={t('settings.actions.title')}>
           <SettingsItem icon={<LogOut size={20} />} label={t('settings.actions.signOut')} onClick={handleSignOut} />
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button className="w-full">
-                <SettingsItem icon={<Trash2 size={20} />} label={t('settings.actions.deleteAccount')} onClick={() => {}} destructive />
-              </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>{t('settings.deleteDialog.title')}</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t('settings.deleteDialog.description')}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>{t('settings.deleteDialog.cancel')}</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeleteAccount} disabled={deleteAccountMutation.isPending} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                  {deleteAccountMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {t('settings.deleteDialog.confirm')}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <SettingsItem 
+            icon={<Trash2 size={20} />} 
+            label={t('settings.actions.deleteAccount')} 
+            onClick={() => setIsDeleteDrawerOpen(true)} 
+            destructive 
+          />
         </SettingsCategory>
 
       </div>
       <LanguageDrawer isOpen={isLanguageDrawerOpen} onClose={() => setIsLanguageDrawerOpen(false)} />
+      
+      <Drawer open={isDeleteDrawerOpen} onOpenChange={setIsDeleteDrawerOpen}>
+        <DrawerContent>
+          <div className="mx-auto w-full max-w-sm">
+            <DrawerHeader className="text-center pt-6">
+              <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+                <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-500" />
+              </div>
+              <DrawerTitle className="text-2xl font-bold text-foreground">{t('settings.deleteDialog.title')}</DrawerTitle>
+              <DrawerDescription className="text-base mt-2 text-muted-foreground">
+                {t('settings.deleteDialog.description')}
+              </DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter className="gap-3 pb-8 px-6">
+              <Button 
+                onClick={handleDeleteAccount} 
+                disabled={deleteAccountMutation.isPending} 
+                variant="destructive" 
+                size="lg" 
+                className="w-full h-14 text-lg font-semibold rounded-2xl shadow-lg shadow-red-500/20"
+              >
+                {deleteAccountMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Trash2 className="mr-2 h-5 w-5" />}
+                {t('settings.deleteDialog.confirm')}
+              </Button>
+              <DrawerClose asChild>
+                <Button variant="outline" size="lg" className="w-full h-14 text-lg font-semibold rounded-2xl">
+                  {t('settings.deleteDialog.cancel')}
+                </Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </PageLayout>
   );
 };
