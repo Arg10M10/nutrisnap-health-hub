@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, ReferenceLine } from "recharts";
+import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer, CartesianGrid, ReferenceLine } from "recharts";
 import { TrendingDown, Loader2, Flag } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +37,6 @@ const WeightChart = () => {
   });
 
   const isImperial = profile?.units === 'imperial';
-  const unitLabel = isImperial ? 'lbs' : 'kg';
 
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
@@ -62,7 +61,6 @@ const WeightChart = () => {
     return filteredData.map((entry) => ({
       rawDate: new Date(entry.created_at),
       date: format(new Date(entry.created_at), 'd MMM', { locale: dateLocale }),
-      fullDate: format(new Date(entry.created_at), 'PPP', { locale: dateLocale }),
       weight: entry.weight,
     }));
   }, [data, timeRange, dateLocale]);
@@ -86,22 +84,6 @@ const WeightChart = () => {
   const domainMax = Math.ceil(maxWeight + padding);
 
   const displayGoalWeight = profile?.goal_weight || null;
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      // payload[0].payload contiene el objeto de datos original (con fullDate)
-      const dateLabel = payload[0].payload.fullDate || label;
-      return (
-        <div className="bg-zinc-900 text-white px-4 py-3 rounded-xl shadow-2xl border-none outline-none">
-          <p className="text-xl font-bold text-center leading-none mb-1">
-            {payload[0].value} <span className="text-sm font-medium text-zinc-400">{unitLabel}</span>
-          </p>
-          <p className="text-xs text-zinc-400 text-center capitalize">{dateLabel}</p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   const toggleItemClasses = "flex-1 rounded-full text-xs font-medium transition-all data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm text-muted-foreground hover:text-foreground";
 
@@ -128,18 +110,8 @@ const WeightChart = () => {
           </div>
         ) : chartData.length > 1 ? (
           <div 
-            className="h-64 w-full select-none touch-none pl-2" // Added pl-2 for axis space
-            style={{ 
-              WebkitTapHighlightColor: 'transparent',
-              outline: 'none'
-            }}
+            className="h-64 w-full pointer-events-none select-none pl-2" // Added pl-2 for axis space
           >
-            <style>{`
-              .recharts-wrapper path, .recharts-wrapper .recharts-layer {
-                outline: none !important;
-                -webkit-tap-highlight-color: transparent !important;
-              }
-            `}</style>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart 
                 data={chartData} 
@@ -169,11 +141,6 @@ const WeightChart = () => {
                   width={40} // Increased width for labels
                   unit={isImperial ? '' : ''} // Removed unit from axis to save space, it's clear from context
                 />
-                <Tooltip 
-                  content={<CustomTooltip />} 
-                  cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
-                  isAnimationActive={false}
-                />
                 {displayGoalWeight && (
                   <ReferenceLine
                     y={displayGoalWeight}
@@ -195,7 +162,7 @@ const WeightChart = () => {
                     stroke: "hsl(var(--background))", 
                     fill: "hsl(var(--primary))" 
                   }}
-                  isAnimationActive={false}
+                  isAnimationActive={true}
                 />
               </AreaChart>
             </ResponsiveContainer>

@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
+import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Flame, Loader2 } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { FoodEntry, ExerciseEntry } from "@/context/NutritionContext";
@@ -99,31 +99,12 @@ const CalorieIntakeChart = () => {
       const dayKey = format(day, 'yyyy-MM-dd');
       return {
         day: format(day, timeRange === '1Y' ? "MMM" : "d MMM", { locale: dateLocale }),
-        fullDate: format(day, "PPP", { locale: dateLocale }), // For tooltip
         calories: dailyCalories[dayKey] || 0,
       };
     });
   }, [foodEntries, exerciseEntries, timeRange, dateLocale]);
 
   const isLoading = isFoodLoading || isExerciseLoading;
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const dateLabel = payload[0].payload.fullDate || label;
-      return (
-        <div className="bg-popover border border-border px-3 py-2 rounded-lg shadow-lg">
-          <p className="text-xs text-muted-foreground mb-1">{dateLabel}</p>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary" />
-            <p className="font-bold text-popover-foreground text-sm">
-              {Math.round(payload[0].value)} kcal
-            </p>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   const toggleItemClasses = "flex-1 rounded-full text-xs font-medium transition-all data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm text-muted-foreground hover:text-foreground";
 
@@ -146,19 +127,7 @@ const CalorieIntakeChart = () => {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div 
-            className="h-52 w-full select-none touch-none"
-            style={{ 
-              WebkitTapHighlightColor: 'transparent',
-              outline: 'none'
-            }}
-          >
-            <style>{`
-              .recharts-wrapper path, .recharts-wrapper .recharts-layer {
-                outline: none !important;
-                -webkit-tap-highlight-color: transparent !important;
-              }
-            `}</style>
+          <div className="h-52 w-full pointer-events-none select-none">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 0, bottom: 0, left: -20 }}>
                 <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="4 4" />
@@ -176,17 +145,12 @@ const CalorieIntakeChart = () => {
                   tickMargin={10}
                   tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
                 />
-                <Tooltip
-                  content={<CustomTooltip />}
-                  cursor={{ fill: 'transparent', opacity: 0 }}
-                  isAnimationActive={false}
-                />
                 <Bar
                   dataKey="calories"
                   fill="hsl(var(--primary))"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={50}
-                  isAnimationActive={false}
+                  isAnimationActive={true}
                 />
               </BarChart>
             </ResponsiveContainer>
