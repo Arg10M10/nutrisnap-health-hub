@@ -200,7 +200,10 @@
     "error_analysis": "Análisis Fallido",
     "help_title": "Cómo Escanear",
     "help_desc": "Apunta la cámara a tu comida. Asegura buena iluminación y una vista clara de todo el plato para el mejor análisis nutricional.",
-    "flash_unavailable": "El flash/linterna no está disponible en este dispositivo o cámara."
+    "flash_unavailable": "El flash/linterna no está disponible en este dispositivo o cámara.",
+    "disclaimer_title": "Aviso Importante",
+    "disclaimer_text": "Los resultados de este escáner son estimaciones basadas en Inteligencia Artificial. Pueden no ser 100% precisos y no deben considerarse consejo médico.",
+    "disclaimer_accept": "Entendido"
   },
   "analysis": {
     "calories": "Calorías",

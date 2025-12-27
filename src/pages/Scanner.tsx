@@ -22,6 +22,16 @@ import { motion, Transition } from "framer-motion";
 import { useAILimit } from "@/hooks/useAILimit";
 import InfoDrawer from "@/components/InfoDrawer";
 import { useTranslation } from "react-i18next";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 
@@ -56,15 +66,43 @@ const Scanner = () => {
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  
+  // Disclaimer state
+  const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useLocalStorage('scanner_disclaimer_v1', false);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    startCamera();
+    // Si no ha aceptado el disclaimer, mostrarlo y NO iniciar cámara
+    if (!hasAcceptedDisclaimer) {
+      setShowDisclaimer(true);
+    } else {
+      initScanner();
+    }
+
     return () => {
       document.body.style.overflow = 'auto';
+      document.body.style.position = '';
+      document.body.style.width = '';
       stopCamera();
     };
   }, []);
+
+  const initScanner = () => {
+    window.scrollTo(0, 0);
+    // Retraso para transiciones suaves y corrección de bugs visuales
+    setTimeout(() => {
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        startCamera();
+    }, 400);
+  };
+
+  const handleAcceptDisclaimer = () => {
+    setHasAcceptedDisclaimer(true);
+    setShowDisclaimer(false);
+    initScanner();
+  };
 
   const stopCamera = () => {
     if (streamRef.current) {
@@ -290,7 +328,7 @@ const Scanner = () => {
         exit="out"
         variants={pageVariants}
         transition={pageTransition}
-        className="fixed inset-0 bg-black text-white z-50 flex flex-col"
+        className="fixed inset-0 w-[100dvw] h-[100dvh] bg-black text-white z-50 flex flex-col"
       >
         <div className="absolute inset-0 z-10">
           <video
@@ -413,6 +451,22 @@ const Scanner = () => {
           {t('scanner.help_desc')}
         </p>
       </InfoDrawer>
+
+      <AlertDialog open={showDisclaimer}>
+        <AlertDialogContent className="!rounded-[32px] border-none shadow-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-center text-xl">{t('scanner.disclaimer_title')}</AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-base">
+              {t('scanner.disclaimer_text')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={handleAcceptDisclaimer} className="w-full rounded-xl h-12 text-lg">
+              {t('scanner.disclaimer_accept')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

@@ -201,7 +201,10 @@
     "error_analysis": "Analysis Failed",
     "help_title": "How to Scan",
     "help_desc": "Point the camera at your food. Ensure good lighting and a clear view of the entire dish for the best nutritional analysis.",
-    "flash_unavailable": "Flash/Torch is unavailable on this device or camera."
+    "flash_unavailable": "Flash/Torch is unavailable on this device or camera.",
+    "disclaimer_title": "Disclaimer",
+    "disclaimer_text": "The results from this scanner are AI-based estimations. They may not be 100% accurate and should not be considered medical advice.",
+    "disclaimer_accept": "I Understand"
   },
   "analysis": {
     "calories": "Calories",
@@ -454,7 +457,7 @@
     "dominican_republic": "Dominican Republic",
     "colombia": "Colombia",
     "chile": "Chile",
-    "peru": "Peru"
+    "peru": "Perú"
   },
   "settings": {
     "title": "Settings",
