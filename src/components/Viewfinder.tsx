@@ -47,12 +47,6 @@ const Viewfinder = ({ className, mode = 'food' }: ViewfinderProps) => {
             <div className="h-0.5 w-full bg-white/80 rounded-full shadow-sm" />
           </div>
         )}
-        
-        {/* Esquinas decorativas comunes */}
-        <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-white rounded-tl-2xl -mt-[2px] -ml-[2px]" />
-        <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-white rounded-tr-2xl -mt-[2px] -mr-[2px]" />
-        <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-white rounded-bl-2xl -mb-[2px] -ml-[2px]" />
-        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-white rounded-br-2xl -mb-[2px] -mr-[2px]" />
       </div>
     </div>
   );
