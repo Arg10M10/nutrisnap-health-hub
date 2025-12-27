@@ -1,7 +1,7 @@
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle2, XCircle, AlertCircle, Sparkles } from "lucide-react";
+import { CheckCircle2, XCircle, AlertCircle, Sparkles, Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export interface MenuAnalysisData {
@@ -77,6 +77,14 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
                 ))}
               </div>
             )}
+
+            {/* Disclaimer Text */}
+            <div className="mt-4 flex gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-900/50">
+              <Info className="w-5 h-5 text-blue-500 flex-shrink-0" />
+              <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                {t('menu_analysis.partial_list_note', 'Nota: Este análisis no incluye todo el menú. La IA ha filtrado el contenido para mostrarte únicamente las mejores opciones para tu objetivo y aquellas que deberías evitar.')}
+              </p>
+            </div>
           </div>
         </ScrollArea>
 
