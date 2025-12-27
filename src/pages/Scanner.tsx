@@ -71,7 +71,16 @@ const Scanner = () => {
   const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useLocalStorage('scanner_disclaimer_v1', false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
 
+  // Almacenar el estilo original para restaurarlo
+  const originalStyleRef = useRef<{ overflow: string, overscrollBehavior: string } | null>(null);
+
   useEffect(() => {
+    // Guardar estado original
+    originalStyleRef.current = {
+      overflow: document.body.style.overflow,
+      overscrollBehavior: document.body.style.overscrollBehavior
+    };
+
     // Si no ha aceptado el disclaimer, mostrarlo y NO iniciar cámara
     if (!hasAcceptedDisclaimer) {
       setShowDisclaimer(true);
@@ -80,41 +89,28 @@ const Scanner = () => {
     }
 
     return () => {
-      // Cleanup robusto: Restaurar todos los estilos del body/html
-      if (typeof window !== 'undefined') {
-        document.documentElement.style.overflow = '';
+      // Restaurar estado original al salir
+      if (originalStyleRef.current) {
+        document.body.style.overflow = originalStyleRef.current.overflow;
+        document.body.style.overscrollBehavior = originalStyleRef.current.overscrollBehavior;
+      } else {
         document.body.style.overflow = '';
         document.body.style.overscrollBehavior = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.height = '';
-        document.body.style.top = '';
-        document.body.style.left = '';
       }
       stopCamera();
     };
   }, []);
 
   const initScanner = () => {
-    // 1. Bloqueo inmediato del scroll e inercia en ambos elementos
-    if (typeof window !== 'undefined') {
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        document.body.style.overscrollBehavior = 'none'; // Prevenir efecto rebote
-        window.scrollTo(0, 0); // Forzar top
-    }
-
-    // 2. Retraso para permitir que la animación de entrada termine suavemente antes de bloquear posición absoluta
+    // Solo bloqueamos el scroll del body para evitar que la página de fondo se mueva
+    // NO forzamos scrollTo(0,0) ni position: fixed en el body, lo que causa el salto
+    document.body.style.overflow = 'hidden';
+    document.body.style.overscrollBehavior = 'none';
+    
+    // Pequeño delay para permitir que la animación de entrada de la página fluya
     setTimeout(() => {
-        if (typeof window !== 'undefined') {
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-            document.body.style.height = '100%';
-            document.body.style.top = '0';
-            document.body.style.left = '0';
-        }
         startCamera();
-    }, 450);
+    }, 300);
   };
 
   const handleAcceptDisclaimer = () => {
@@ -133,9 +129,13 @@ const Scanner = () => {
   const stopCamera = () => {
     if (streamRef.current) {
       if (isFlashOn) {
-        const videoTrack = streamRef.current.getVideoTracks()[0];
-        if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
-          videoTrack.applyConstraints({ advanced: [{ torch: false } as any] });
+        try {
+          const videoTrack = streamRef.current.getVideoTracks()[0];
+          if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
+            videoTrack.applyConstraints({ advanced: [{ torch: false } as any] });
+          }
+        } catch (e) {
+          console.error("Error stopping flash", e);
         }
       }
       streamRef.current.getTracks().forEach((track) => track.stop());
@@ -163,9 +163,14 @@ const Scanner = () => {
         streamRef.current = stream;
         
         videoRef.current.onloadedmetadata = () => {
+           // Verificar flash solo después de cargar metadatos
            const videoTrack = stream.getVideoTracks()[0];
-           if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
-             setHasFlash(true);
+           try {
+             if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
+               setHasFlash(true);
+             }
+           } catch (e) {
+             console.log("Torch capability check failed", e);
            }
         };
       }
@@ -347,7 +352,7 @@ const Scanner = () => {
         exit="out"
         variants={pageVariants}
         transition={pageTransition}
-        className="fixed inset-0 w-[100dvw] h-[100dvh] bg-black text-white z-50 flex flex-col"
+        className="fixed inset-0 w-[100dvw] h-[100dvh] bg-black text-white z-50 flex flex-col overflow-hidden touch-none"
       >
         <div className="absolute inset-0 z-10">
           <video
