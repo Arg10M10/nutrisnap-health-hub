@@ -32,6 +32,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import MenuAnalysisDrawer, { MenuAnalysisData } from "@/components/MenuAnalysisDrawer";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 
@@ -54,7 +55,6 @@ const Scanner = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Obtenemos el modo desde el estado de navegación (por defecto 'food')
   const scanMode = (location.state as { mode?: 'food' | 'menu' })?.mode || 'food';
 
   const [state, setState] = useState<ScannerState>("initializing");
@@ -66,13 +66,17 @@ const Scanner = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [hasFlash, setHasFlash] = useState(false);
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const queryClient = useQueryClient();
   const { checkLimit, logUsage } = useAILimit();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   
   const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useLocalStorage('scanner_disclaimer_v1', false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+
+  // Estados para el análisis de menú
+  const [menuData, setMenuData] = useState<MenuAnalysisData | null>(null);
+  const [isMenuDrawerOpen, setIsMenuDrawerOpen] = useState(false);
 
   const originalStyleRef = useRef<{ overflow: string, overscrollBehavior: string } | null>(null);
 
@@ -196,16 +200,14 @@ const Scanner = () => {
     }
   };
 
-  const startAnalysisMutation = useMutation({
+  // Mutación para análisis de comida individual (guarda en DB)
+  const startFoodAnalysisMutation = useMutation({
     mutationFn: async (imageData: string) => {
       if (!user) throw new Error('User not found');
       
-      // Ajustamos el nombre temporal dependiendo del modo
-      const tempName = scanMode === 'menu' ? 'Analizando Menú...' : 'Analizando...';
-      
       const { data, error } = await supabase
         .from('food_entries')
-        .insert({ user_id: user.id, food_name: tempName, image_url: imageData, status: 'processing' })
+        .insert({ user_id: user.id, food_name: 'Analizando...', image_url: imageData, status: 'processing' })
         .select().single();
       if (error) throw error;
       return { newEntry: data, imageData };
@@ -215,10 +217,8 @@ const Scanner = () => {
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       navigate('/');
       
-      // Nota: Aquí se podría llamar a una función distinta si es 'menu', pero 
-      // por ahora usamos la misma lógica de "analyze-food" como base.
       supabase.functions.invoke("analyze-food", {
-        body: { entry_id: newEntry.id, imageData: imageData, language: i18n.language, mode: scanMode },
+        body: { entry_id: newEntry.id, imageData: imageData, language: i18n.language },
       }).then(({ error }) => {
         if (error) {
           console.error("Function invocation failed:", error);
@@ -230,6 +230,33 @@ const Scanner = () => {
     },
     onError: (err: Error) => {
       console.error("Analysis start error:", err);
+      toast.error(t('scanner.error_analysis'), { description: t('common.error_friendly') });
+      setState("captured");
+    },
+  });
+
+  // Mutación para análisis de MENÚ (NO guarda en DB inmediatamente, solo muestra resultados)
+  const startMenuAnalysisMutation = useMutation({
+    mutationFn: async (imageData: string) => {
+      const { data, error } = await supabase.functions.invoke('analyze-menu', {
+        body: { 
+          imageData, 
+          goal: profile?.goal || 'maintain_weight',
+          weeklyRate: profile?.weekly_rate || 0.5,
+          language: i18n.language 
+        }
+      });
+      if (error) throw new Error(error.message);
+      return data;
+    },
+    onSuccess: (data: MenuAnalysisData) => {
+      logUsage('food_scan'); // Usamos el mismo límite que food scan por ahora
+      setMenuData(data);
+      setIsMenuDrawerOpen(true);
+      setState("captured"); // Mantener estado capturado para fondo
+    },
+    onError: (err: Error) => {
+      console.error("Menu analysis error:", err);
       toast.error(t('scanner.error_analysis'), { description: t('common.error_friendly') });
       setState("captured");
     },
@@ -269,7 +296,11 @@ const Scanner = () => {
 
     const { canProceed, limit } = await checkLimit('food_scan', 4, 'daily');
     if (canProceed) {
-      startAnalysisMutation.mutate(imageData);
+      if (scanMode === 'menu') {
+        startMenuAnalysisMutation.mutate(imageData);
+      } else {
+        startFoodAnalysisMutation.mutate(imageData);
+      }
     } else {
       toast.error(t('common.ai_limit_reached'), {
         description: t('common.ai_limit_daily_desc', { limit }),
@@ -315,7 +346,11 @@ const Scanner = () => {
           const resizedImageData = canvas.toDataURL("image/jpeg", 0.9);
           
           setCapturedImage(resizedImageData);
-          startAnalysisMutation.mutate(resizedImageData);
+          if (scanMode === 'menu') {
+            startMenuAnalysisMutation.mutate(resizedImageData);
+          } else {
+            startFoodAnalysisMutation.mutate(resizedImageData);
+          }
         };
         img.src = e.target?.result as string;
       };
@@ -328,7 +363,11 @@ const Scanner = () => {
       const { canProceed, limit } = await checkLimit('food_scan', 4, 'daily');
       if (canProceed) {
         setState("loading");
-        startAnalysisMutation.mutate(capturedImage);
+        if (scanMode === 'menu') {
+          startMenuAnalysisMutation.mutate(capturedImage);
+        } else {
+          startFoodAnalysisMutation.mutate(capturedImage);
+        }
       } else {
         toast.error(t('common.ai_limit_reached'), {
           description: t('common.ai_limit_daily_desc', { limit }),
@@ -340,11 +379,20 @@ const Scanner = () => {
   const handleReset = () => {
     setCapturedImage(null);
     setError(null);
+    setMenuData(null); // Reset menu data
     if (fileInputRef.current) fileInputRef.current.value = "";
     startCamera();
   };
 
   const handleClose = () => navigate(-1);
+
+  // Determinar si hay alguna mutación pendiente
+  const isPending = startFoodAnalysisMutation.isPending || startMenuAnalysisMutation.isPending;
+
+  const handleMenuDrawerClose = () => {
+    setIsMenuDrawerOpen(false);
+    handleReset(); // Volver a cámara automáticamente al cerrar resultados
+  };
 
   return (
     <>
@@ -367,7 +415,7 @@ const Scanner = () => {
               state === "captured" || state === "loading" || state === 'error' ? "hidden" : "block"
             )}
           />
-          {capturedImage && (state === 'captured' || state === 'loading' || startAnalysisMutation.isPending) && (
+          {capturedImage && (state === 'captured' || state === 'loading' || isPending) && (
             <img
               src={capturedImage}
               alt="Captura de cámara"
@@ -389,7 +437,7 @@ const Scanner = () => {
             {/* Título visual para saber en qué modo estamos */}
             {scanMode === 'menu' && (
                 <div className="absolute left-1/2 -translate-x-1/2 bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10">
-                    <span className="text-white font-semibold text-sm">Menú</span>
+                    <span className="text-white font-semibold text-sm">{t('bottom_nav.scan_menu', 'Escanear Menú')}</span>
                 </div>
             )}
 
@@ -404,7 +452,7 @@ const Scanner = () => {
 
           <div className="flex-1 relative flex items-center justify-center">
             {state === 'camera' && <Viewfinder mode={scanMode} />}
-            {(state === 'loading' || startAnalysisMutation.isPending) && (
+            {(state === 'loading' || isPending) && (
                <div className="flex flex-col items-center gap-4 bg-black/30 backdrop-blur-sm p-8 rounded-2xl z-50 relative">
                   <Loader2 className="w-16 h-16 text-primary animate-spin" />
                   <p className="text-xl font-bold animate-pulse">{t('scanner.processing')}</p>
@@ -413,7 +461,7 @@ const Scanner = () => {
           </div>
 
           <footer className="flex flex-col items-center gap-6 w-full p-4 pb-16 pointer-events-auto z-50 relative">
-            {state === 'captured' && !startAnalysisMutation.isPending ? (
+            {state === 'captured' && !isPending ? (
               <div className="grid grid-cols-2 gap-4 w-full max-w-md">
                 <Button onClick={handleReset} variant="outline" size="lg" className="h-16 text-lg rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20">
                   <RefreshCw className="mr-2 w-6 h-6" /> {t('scanner.retake')}
@@ -508,6 +556,12 @@ const Scanner = () => {
           </div>
         </DrawerContent>
       </Drawer>
+
+      <MenuAnalysisDrawer
+        isOpen={isMenuDrawerOpen}
+        onClose={handleMenuDrawerClose}
+        data={menuData}
+      />
     </>
   );
 };
