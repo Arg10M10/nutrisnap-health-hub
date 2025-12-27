@@ -58,9 +58,9 @@ serve(async (req) => {
     const prompt = `
       Analiza la imagen de este plato de comida y proporciona una estimación nutricional.
       Responde ÚNICA y EXCLUSIVAMENTE con un objeto JSON.
-      IMPORTANTE: Todos los textos (foodName, healthRating, reason) deben estar en ${userLang}.
+      IMPORTANTE: Todos los textos (foodName, healthRating, reason, ingredients) deben estar en ${userLang}.
 
-      Estructura JSON:
+      Estructura JSON requerida:
       {
         "foodName": "Nombre del plato (en ${userLang})",
         "calories": "Estimación de calorías (ej. '350-450 kcal')",
@@ -69,8 +69,11 @@ serve(async (req) => {
         "fats": "Estimación de grasas (ej. '15-20g')",
         "sugars": "Estimación de azúcares (ej. '5-10g')",
         "healthRating": "Clasificación ('Saludable', 'Moderado', 'Evitar' - Traducido al ${userLang})",
-        "reason": "Breve explicación (máx 20 palabras, en ${userLang})."
+        "reason": "Breve explicación (máx 20 palabras, en ${userLang}).",
+        "ingredients": ["Ingrediente 1", "Ingrediente 2", "Ingrediente 3"]
       }
+      
+      Nota sobre 'ingredients': Lista los alimentos o componentes visibles detectados en el plato (ej. 'Arroz', 'Pollo', 'Brócoli').
     `;
 
     const body = {
@@ -122,6 +125,7 @@ serve(async (req) => {
         carbs_value: parseNutrientValue(analysisResult.carbs),
         fats_value: parseNutrientValue(analysisResult.fats),
         sugars_value: parseNutrientValue(analysisResult.sugars),
+        analysis_data: analysisResult, // Guardamos el objeto completo (incluyendo ingredients)
         status: 'completed',
       })
       .eq('id', entry_id);

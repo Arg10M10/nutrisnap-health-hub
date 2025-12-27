@@ -26,6 +26,11 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
 
   if (!entry) return null;
 
+  // Extraer ingredientes de analysis_data si existe
+  // En MenuAnalysisData el campo es diferente, pero aquí nos enfocamos en comida normal.
+  // La edge function guarda el JSON completo en analysis_data.
+  const ingredients = (entry.analysis_data as any)?.ingredients || [];
+
   const result: AnalysisResult = {
     foodName: entry.food_name,
     calories: entry.calories || '0 kcal',
@@ -35,15 +40,14 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
     sugars: entry.sugars || '0g',
     healthRating: entry.health_rating || 'Moderado',
     reason: entry.reason || t('analysis.default_reason'),
+    ingredients: ingredients,
   };
 
   const handleShare = async () => {
     if (!shareRef.current) return;
     setIsSharing(true);
     try {
-      // Pequeño delay para asegurar que la imagen (si se acaba de montar) tenga oportunidad de cargar
       await new Promise(resolve => setTimeout(resolve, 500));
-      
       await shareElement(
         shareRef.current,
         `meal-${entry.food_name.replace(/\s+/g, '-').toLowerCase()}`,
@@ -61,7 +65,7 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
     <>
       <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
         <DrawerContent className="max-h-[90vh] flex flex-col">
-          <DrawerHeader className="relative">
+          <DrawerHeader className="relative pb-2">
               <DrawerTitle className="text-center">{t('analysis.details_title')}</DrawerTitle>
               <Button 
                 variant="ghost" 
@@ -73,24 +77,22 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                 {isSharing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Share2 className="w-5 h-5" />}
               </Button>
           </DrawerHeader>
-          <div data-vaul-scrollable className="overflow-y-auto flex-1 p-4 space-y-4">
-              {entry.image_url && <img src={entry.image_url} alt={entry.food_name} className="w-full h-48 object-cover rounded-lg" />}
+          <div data-vaul-scrollable className="overflow-y-auto flex-1 p-4 space-y-4 pt-0">
+              {entry.image_url && <img src={entry.image_url} alt={entry.food_name} className="w-full h-56 object-cover rounded-2xl shadow-sm" />}
               <FoodAnalysisCard result={result} />
           </div>
           <DrawerFooter className="pt-4 border-t flex-shrink-0">
-            <Button onClick={onClose} size="lg">{t('analysis.close')}</Button>
+            <Button onClick={onClose} size="lg" className="rounded-xl h-14 text-lg">{t('analysis.close')}</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
 
-      {/* Plantilla oculta para compartir - MOVIDA FUERA DEL DRAWER */}
-      {/* Usamos 'left: -9999px' en lugar de transform para mejor compatibilidad con html2canvas */}
+      {/* Plantilla oculta para compartir */}
       <div 
         ref={shareRef}
         className="fixed top-0 w-[400px] bg-white p-0 z-[-1] overflow-hidden"
         style={{ left: '-9999px' }}
       >
-        {/* Cabecera con Logo */}
         <div className="bg-green-50 p-6 flex items-center justify-center gap-3 border-b border-green-100">
           <div className="bg-green-600 p-2 rounded-full">
             <Leaf className="w-6 h-6 text-white" />
@@ -98,14 +100,13 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
           <h1 className="text-2xl font-bold text-green-700">Calorel</h1>
         </div>
 
-        {/* Imagen de la comida */}
         <div className="w-full h-[300px] relative bg-white">
           {entry.image_url ? (
             <img 
               src={entry.image_url} 
               alt={entry.food_name} 
               className="w-full h-full object-cover"
-              crossOrigin="anonymous" // CRÍTICO: Permite que html2canvas capture la imagen sin problemas de CORS
+              crossOrigin="anonymous" 
             />
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
@@ -117,7 +118,6 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
           </div>
         </div>
 
-        {/* Datos Nutricionales */}
         <div className="p-6 bg-white">
           <div className="grid grid-cols-4 gap-4 text-center">
             <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl">

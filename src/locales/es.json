@@ -229,7 +229,8 @@
     },
     "save_to_diary": "Guardar en Diario",
     "details_title": "Detalles de Comida",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "detected_ingredients": "Ingredientes Detectados"
   },
   "manual_food": {
     "title": "Entrada Manual de Comida",
@@ -284,7 +285,7 @@
     "intensity_medium_example": "Entrenamiento en circuito, ejercicios con peso corporal.",
     "intensity_high": "Pesas Intensas",
     "intensity_high_desc": "Levantamiento pesado, alto esfuerzo, largos períodos de descanso.",
-    "intensity_high_example": "Powerlifting, culturismo intenso.",
+    "intensity_high_example": "Powerlifting, intense bodybuilding.",
     "save_action": "Guardar {{calories}} kcal",
     "error_toast_title": "Error al guardar ejercicio"
   },

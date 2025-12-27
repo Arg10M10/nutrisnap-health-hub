@@ -230,7 +230,8 @@
     },
     "save_to_diary": "Save to Diary",
     "details_title": "Meal Details",
-    "close": "Close"
+    "close": "Close",
+    "detected_ingredients": "Detected Ingredients"
   },
   "manual_food": {
     "title": "Manual Food Entry",

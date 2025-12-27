@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Droplets, HeartPulse, Beef, Wheat, Sparkles } from "lucide-react";
+import { Flame, Droplets, HeartPulse, Beef, Wheat, Sparkles, ChefHat } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export type AnalysisResult = {
@@ -10,8 +10,9 @@ export type AnalysisResult = {
   carbs: string;
   fats: string;
   sugars: string;
-  healthRating: string; // Changed from strict literal to string to handle various inputs
+  healthRating: string;
   reason: string;
+  ingredients?: string[]; // Nuevo campo opcional
 };
 
 interface FoodAnalysisCardProps {
@@ -31,7 +32,6 @@ const getRatingStyle = (rating: string) => {
     return 'bg-red-100 text-red-800 border-red-200';
   }
   
-  // Default to moderate if unknown
   return 'bg-yellow-100 text-yellow-800 border-yellow-200';
 };
 
@@ -49,49 +49,71 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-2xl text-primary">{result.foodName}</CardTitle>
-          <Badge className={`text-sm ${getRatingStyle(result.healthRating)}`}>
+        <div className="flex justify-between items-start gap-2">
+          <CardTitle className="text-2xl text-primary leading-tight">{result.foodName}</CardTitle>
+          <Badge className={`text-sm whitespace-nowrap ${getRatingStyle(result.healthRating)}`}>
             {getTranslatedRating(result.healthRating, t)}
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         <div className="grid grid-cols-1 gap-4 text-center">
-          <div className="p-4 bg-muted rounded-lg">
+          <div className="p-4 bg-muted rounded-lg border border-border/50">
             <Flame className="w-6 h-6 mx-auto text-primary mb-1" />
-            <p className="text-lg font-bold text-foreground">{result.calories}</p>
-            <p className="text-sm text-muted-foreground">{t('analysis.calories')}</p>
+            <p className="text-2xl font-bold text-foreground">{result.calories}</p>
+            <p className="text-sm text-muted-foreground font-medium">{t('analysis.calories')}</p>
           </div>
         </div>
-         <div className="grid grid-cols-2 gap-2 text-center">
-          <div className="p-3 bg-muted rounded-lg">
+        
+        <div className="grid grid-cols-2 gap-3 text-center">
+          <div className="p-3 bg-muted/50 rounded-lg border border-border/30">
             <Beef className="w-5 h-5 mx-auto text-red-500 mb-1" />
-            <p className="font-bold text-foreground">{result.protein}</p>
-            <p className="text-xs text-muted-foreground">{t('analysis.protein')}</p>
+            <p className="font-bold text-foreground text-lg">{result.protein}</p>
+            <p className="text-xs text-muted-foreground font-medium">{t('analysis.protein')}</p>
           </div>
-          <div className="p-3 bg-muted rounded-lg">
+          <div className="p-3 bg-muted/50 rounded-lg border border-border/30">
             <Wheat className="w-5 h-5 mx-auto text-orange-500 mb-1" />
-            <p className="font-bold text-foreground">{result.carbs}</p>
-            <p className="text-xs text-muted-foreground">{t('analysis.carbs')}</p>
+            <p className="font-bold text-foreground text-lg">{result.carbs}</p>
+            <p className="text-xs text-muted-foreground font-medium">{t('analysis.carbs')}</p>
           </div>
-          <div className="p-3 bg-muted rounded-lg">
-            <Droplets className="w-5 h-5 mx-auto text-yellow-500 mb-1" />
-            <p className="font-bold text-foreground">{result.fats}</p>
-            <p className="text-xs text-muted-foreground">{t('analysis.fats')}</p>
+          <div className="p-3 bg-muted/50 rounded-lg border border-border/30">
+            <Droplets className="w-5 h-5 mx-auto text-blue-500 mb-1" />
+            <p className="font-bold text-foreground text-lg">{result.fats}</p>
+            <p className="text-xs text-muted-foreground font-medium">{t('analysis.fats')}</p>
           </div>
-          <div className="p-3 bg-muted rounded-lg">
+          <div className="p-3 bg-muted/50 rounded-lg border border-border/30">
             <Sparkles className="w-5 h-5 mx-auto text-purple-500 mb-1" />
-            <p className="font-bold text-foreground">{result.sugars}</p>
-            <p className="text-xs text-muted-foreground">{t('analysis.sugars')}</p>
+            <p className="font-bold text-foreground text-lg">{result.sugars}</p>
+            <p className="text-xs text-muted-foreground font-medium">{t('analysis.sugars')}</p>
           </div>
         </div>
+
+        {/* Sección de Ingredientes Detectados */}
+        {result.ingredients && result.ingredients.length > 0 && (
+          <div className="space-y-3">
+            <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm uppercase tracking-wide opacity-80">
+              <ChefHat className="w-4 h-4" /> 
+              {t('analysis.detected_ingredients')}
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {result.ingredients.map((item, index) => (
+                <span 
+                  key={index} 
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-background border shadow-sm text-foreground/80"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div>
-          <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
-            <HeartPulse className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
+          <div className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-900/50">
+            <HeartPulse className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
             <div>
-              <h4 className="font-semibold text-foreground mb-1">{t('analysis.recommendation')}</h4>
-              <p className="text-muted-foreground text-sm">{result.reason}</p>
+              <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-1 text-sm">{t('analysis.recommendation')}</h4>
+              <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed">{result.reason}</p>
             </div>
           </div>
         </div>
