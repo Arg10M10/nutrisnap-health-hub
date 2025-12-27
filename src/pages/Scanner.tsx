@@ -80,22 +80,41 @@ const Scanner = () => {
     }
 
     return () => {
-      document.body.style.overflow = 'auto';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      // Cleanup robusto: Restaurar todos los estilos del body/html
+      if (typeof window !== 'undefined') {
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        document.body.style.overscrollBehavior = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.height = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+      }
       stopCamera();
     };
   }, []);
 
   const initScanner = () => {
-    window.scrollTo(0, 0);
-    // Retraso para transiciones suaves y corrección de bugs visuales
-    setTimeout(() => {
+    // 1. Bloqueo inmediato del scroll e inercia en ambos elementos
+    if (typeof window !== 'undefined') {
+        document.documentElement.style.overflow = 'hidden';
         document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
+        document.body.style.overscrollBehavior = 'none'; // Prevenir efecto rebote
+        window.scrollTo(0, 0); // Forzar top
+    }
+
+    // 2. Retraso para permitir que la animación de entrada termine suavemente antes de bloquear posición absoluta
+    setTimeout(() => {
+        if (typeof window !== 'undefined') {
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.body.style.height = '100%';
+            document.body.style.top = '0';
+            document.body.style.left = '0';
+        }
         startCamera();
-    }, 400);
+    }, 450);
   };
 
   const handleAcceptDisclaimer = () => {
@@ -105,9 +124,6 @@ const Scanner = () => {
   };
 
   const handleDrawerOpenChange = (open: boolean) => {
-    // Si el usuario intenta cerrar el drawer (arrastrando hacia abajo) sin aceptar,
-    // actualizamos el estado visual, pero NO iniciamos la cámara.
-    // Opcionalmente podríamos navegar hacia atrás si cierran sin aceptar.
     if (!open && !hasAcceptedDisclaimer) {
       navigate(-1); // Regresar si no aceptan
     }
@@ -134,8 +150,6 @@ const Scanner = () => {
     try {
       if (streamRef.current) stopCamera();
       
-      // SOLICITAMOS 4K: Al pedir una resolución ideal muy alta, 
-      // el navegador/OS seleccionará automáticamente la mejor cámara trasera disponible.
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { 
           facingMode: "environment",
@@ -148,7 +162,6 @@ const Scanner = () => {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
         
-        // Esperamos a que carguen los metadatos para saber si hay flash
         videoRef.current.onloadedmetadata = () => {
            const videoTrack = stream.getVideoTracks()[0];
            if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
@@ -221,13 +234,10 @@ const Scanner = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     
-    // Usamos el tamaño real del video (que ahora será HD/4K)
     const { videoWidth, videoHeight } = video;
     let width = videoWidth;
     let height = videoHeight;
 
-    // Redimensionamos solo si es excesivamente grande para la API, 
-    // pero mantenemos buena calidad (1280px)
     if (width > height) {
       if (width > MAX_DIMENSION) { height *= MAX_DIMENSION / width; width = MAX_DIMENSION; }
     } else {
@@ -238,14 +248,13 @@ const Scanner = () => {
     canvas.height = height;
     const context = canvas.getContext("2d");
     
-    // Image smoothing para mejor calidad al redimensionar
     if (context) {
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = 'high';
         context.drawImage(video, 0, 0, width, height);
     }
     
-    const imageData = canvas.toDataURL("image/jpeg", 0.9); // Calidad 90%
+    const imageData = canvas.toDataURL("image/jpeg", 0.9);
     
     setCapturedImage(imageData);
     stopCamera();
