@@ -233,7 +233,8 @@
     "portion_medium": "Mediana",
     "portion_large": "Grande",
     "submit": "Analizar y Guardar",
-    "error_analysis": "Fallo al analizar la comida. Por favor, revisa la descripción."
+    "error_analysis": "Fallo al analizar la comida. Por favor, revisa la descripción.",
+    "ai_disclaimer": "Nota: Los valores nutricionales son estimaciones generadas por IA."
   },
   "exercise": {
     "title": "Registrar Ejercicio",
@@ -316,7 +317,7 @@
     "healthy": "Saludable",
     "overweight": "Sobrepeso",
     "obesity": "Obesity",
-    "incomplete_data": "Completa tu altura y peso en ajustes para calcular tu IMC.",
+    "incomplete_data": "Complete tu altura y peso en ajustes para calcular tu IMC.",
     "tooltip": "El Índice de Masa Corporal (IMC) es una medida utilizada para detectar categorías de peso que pueden conducir a problemas de salud. Se calcula dividiendo el peso por el cuadrado de la altura. Es una estimación y no debe usarse como único indicador de salud."
   },
   "edit_weight": {

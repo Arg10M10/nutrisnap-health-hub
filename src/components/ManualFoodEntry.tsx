@@ -157,6 +157,9 @@ const ManualFoodEntry = ({ embedded = false, onSuccess }: ManualFoodEntryProps) 
           {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {t('manual_food.submit')}
         </Button>
+        <p className="text-xs text-center text-muted-foreground mt-2">
+          {t('manual_food.ai_disclaimer')}
+        </p>
       </form>
     </Form>
   );

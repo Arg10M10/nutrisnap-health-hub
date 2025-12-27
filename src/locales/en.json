@@ -234,7 +234,8 @@
     "portion_medium": "Medium",
     "portion_large": "Large",
     "submit": "Analyze & Save",
-    "error_analysis": "Failed to analyze food. Please check the description."
+    "error_analysis": "Failed to analyze food. Please check the description.",
+    "ai_disclaimer": "Note: Nutritional values are AI-generated estimates."
   },
   "exercise": {
     "title": "Log Exercise",
