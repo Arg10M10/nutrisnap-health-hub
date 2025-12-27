@@ -25,7 +25,6 @@ const BottomNav = () => {
 
   const handleMenuAction = (action: () => void) => {
     setIsMenuOpen(false);
-    // Pequeño delay para permitir que la animación de cierre comience
     setTimeout(() => {
       action();
     }, 50);
@@ -37,7 +36,7 @@ const BottomNav = () => {
       to={item.path}
       className="flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg transition-colors flex-shrink-0 w-1/5"
       activeClassName="bg-primary/10 text-primary"
-      onClick={() => setIsMenuOpen(false)} // Cerrar menú si se navega
+      onClick={() => setIsMenuOpen(false)}
     >
       {({ isActive }) => (
         <>
@@ -52,7 +51,6 @@ const BottomNav = () => {
 
   return (
     <>
-      {/* Backdrop para cerrar al hacer click fuera */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -68,15 +66,14 @@ const BottomNav = () => {
       <nav className="fixed bottom-0 left-0 right-0 z-50 p-4">
         <div className="relative max-w-2xl mx-auto">
           
-          {/* Menú Flotante */}
           <AnimatePresence>
             {isMenuOpen && (
               <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                initial={{ scale: 0.9, opacity: 0, y: 10, x: "-50%" }}
+                animate={{ scale: 1, opacity: 1, y: 0, x: "-50%" }}
+                exit={{ scale: 0.9, opacity: 0, y: 10, x: "-50%" }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="absolute bottom-20 left-1/2 -translate-x-1/2 w-64 bg-card border border-border/50 rounded-3xl shadow-2xl p-4 grid grid-cols-2 gap-4 z-50 origin-bottom"
+                className="absolute bottom-24 left-1/2 w-64 bg-card border border-border/50 rounded-3xl shadow-2xl p-4 grid grid-cols-2 gap-4 z-50 origin-bottom"
               >
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-card rotate-45 border-b border-r border-border/50"></div>
                 {menuItems.map((mi) => (
@@ -95,7 +92,6 @@ const BottomNav = () => {
             )}
           </AnimatePresence>
 
-          {/* Botón Central Flotante */}
           <div id="scan-action-button" className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50">
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -110,13 +106,12 @@ const BottomNav = () => {
             </motion.button>
           </div>
 
-          {/* Barra de Navegación */}
           <div className="bg-card/95 backdrop-blur-md border border-border/50 h-[65px] rounded-full shadow-lg supports-[backdrop-filter]:bg-card/80">
             <div className="flex justify-around items-center h-full px-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
               {navItems.slice(0, 2).map((item) => (
                 <NavItem key={item.path} item={item} />
               ))}
-              <div className="w-16 flex-shrink-0" /> {/* Espaciador para el botón central */}
+              <div className="w-16 flex-shrink-0" />
               {navItems.slice(2, 4).map((item) => (
                 <NavItem key={item.path} item={item} />
               ))}
