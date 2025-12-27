@@ -251,7 +251,11 @@
     "running": "Correr / Cardio",
     "weights": "Entrenamiento de Fuerza",
     "write": "Análisis IA",
-    "manual": "Calorías Manuales"
+    "manual": "Calorías Manuales",
+    "btn_cardio": "Cardio",
+    "btn_strength": "Pesas",
+    "btn_ai": "Texto IA",
+    "btn_manual": "Manual"
   },
   "running": {
     "title": "Correr / Cardio",

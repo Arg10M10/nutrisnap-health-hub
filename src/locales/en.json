@@ -252,7 +252,11 @@
     "running": "Running / Cardio",
     "weights": "Strength Training",
     "write": "AI Analysis",
-    "manual": "Manual Calories"
+    "manual": "Manual Calories",
+    "btn_cardio": "Cardio",
+    "btn_strength": "Weights",
+    "btn_ai": "AI Text",
+    "btn_manual": "Manual"
   },
   "running": {
     "title": "Running / Cardio",
@@ -428,115 +432,115 @@
       "high": "Very Active",
       "high_desc": "Intense exercise 6-7 days/week."
     },
-    "step2_title": "Dietary Preferences",
-    "step2_desc": "Select any dietary restrictions or preferences.",
+    "step2_title": "Preferencias Dietéticas",
+    "step2_desc": "Selecciona cualquier restricción o preferencia dietética.",
     "preferences": {
-      "vegetarian": "Vegetarian",
-      "lactose_free": "Lactose-Free",
-      "sugar_free": "Sugar-Free",
-      "gluten_free": "Gluten-Free"
+      "vegetarian": "Vegetariana",
+      "lactose_free": "Sin Lactosa",
+      "sugar_free": "Sin Azúcar",
+      "gluten_free": "Sin Gluten"
     },
-    "step2_tip": "You can select multiple options.",
-    "step3_title": "Lifestyle Factors",
-    "step3_desc": "Tell us about your cooking habits and budget.",
-    "cooking_time": "Cooking Time Available",
-    "budget": "Budget for Groceries",
+    "step2_tip": "Puedes seleccionar varias opciones.",
+    "step3_title": "Factores de Estilo de Vida",
+    "step3_desc": "Cuéntanos sobre tus hábitos de cocina y presupuesto.",
+    "cooking_time": "Tiempo de Cocina Disponible",
+    "budget": "Presupuesto para Compras",
     "levels": {
-      "low": "Low",
-      "medium": "Medium",
-      "high": "High"
+      "low": "Bajo",
+      "medium": "Medio",
+      "high": "Alto"
     },
-    "next": "Next",
-    "generate": "Generate Plan",
-    "toast_error_title": "Plan Generation Failed",
-    "generating_step1": "Analyzing your goals and preferences...",
-    "generating_step2": "Adapting the plan to local cuisine in {{country}}...",
-    "generating_step2_generic": "Adapting the plan to general Western cuisine...",
-    "generating_step3": "Calculating nutritional balance...",
-    "generating_step4": "Finalizing weekly meal structure...",
-    "generating_step5": "Plan ready! Saving to your profile.",
-    "ai_processing": "AI Processing",
-    "toast_success": "Weekly plan generated successfully!"
+    "next": "Siguiente",
+    "generate": "Generar Plan",
+    "toast_error_title": "Fallo al Generar Plan",
+    "generating_step1": "Analizando tus objetivos y preferencias...",
+    "generating_step2": "Adaptando el plan a la cocina local en {{country}}...",
+    "generating_step2_generic": "Adaptando el plan a la cocina occidental general...",
+    "generating_step3": "Calculando el equilibrio nutricional...",
+    "generating_step4": "Finalizando la estructura de comidas semanal...",
+    "generating_step5": "¡Plan listo! Guardando en tu perfil.",
+    "ai_processing": "Procesando IA",
+    "toast_success": "¡Plan semanal generado con éxito!"
   },
   "countries": {
-    "united_states": "United States",
-    "mexico": "Mexico",
+    "united_states": "Estados Unidos",
+    "mexico": "México",
     "spain": "Spain",
     "argentina": "Argentina",
-    "brazil": "Brazil",
-    "dominican_republic": "Dominican Republic",
+    "brazil": "Brasil",
+    "dominican_republic": "República Dominicana",
     "colombia": "Colombia",
     "chile": "Chile",
     "peru": "Perú"
   },
   "settings": {
-    "title": "Settings",
-    "subtitle": "Manage your profile, goals, and preferences.",
+    "title": "Ajustes",
+    "subtitle": "Gestiona tu perfil, objetivos y preferencias.",
     "profileCard": {
-      "namePlaceholder": "Complete Profile",
-      "viewAndEdit": "View & Edit Profile"
+      "namePlaceholder": "Completar Perfil",
+      "viewAndEdit": "Ver y Editar Perfil"
     },
     "account": {
-      "title": "Account",
-      "personalDetails": "Personal Details",
-      "preferences": "Preferences",
-      "reminders": "Reminders"
+      "title": "Cuenta",
+      "personalDetails": "Detalles Personales",
+      "preferences": "Preferencias",
+      "reminders": "Recordatorios"
     },
-    "language": "Language",
+    "language": "Idioma",
     "goals": {
-      "title": "Goals & Tracking",
-      "editNutrition": "Nutritional Goals",
-      "editWeight": "Weight Goal",
-      "ringColors": "Ring Colors"
+      "title": "Objetivos y Seguimiento",
+      "editNutrition": "Metas Nutricionales",
+      "editWeight": "Meta de Peso",
+      "ringColors": "Colores de Anillos"
     },
     "support": {
-      "title": "Support & Legal",
-      "requestFeature": "Request a Feature",
-      "supportEmail": "Contact Support",
-      "terms": "Terms of Service",
-      "privacy": "Privacy Policy"
+      "title": "Soporte y Legal",
+      "requestFeature": "Solicitar una Función",
+      "supportEmail": "Contactar Soporte",
+      "terms": "Términos de Servicio",
+      "privacy": "Política de Privacidad"
     },
     "social": {
-      "title": "Social Media",
+      "title": "Redes Sociales",
       "instagram": "Instagram",
       "tiktok": "TikTok"
     },
     "actions": {
-      "title": "Actions",
-      "signOut": "Sign Out",
-      "deleteAccount": "Delete Account"
+      "title": "Acciones",
+      "signOut": "Cerrar Sesión",
+      "deleteAccount": "Eliminar Cuenta"
     },
     "deleteDialog": {
-      "title": "Are you absolutely sure?",
-      "description": "This action cannot be undone. This will permanently delete your account and all your data, including logs and progress.",
-      "cancel": "Cancel",
-      "confirm": "Delete Account"
+      "title": "¿Estás absolutamente seguro?",
+      "description": "Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y todos tus datos, incluidos registros y progreso.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar Cuenta"
     }
   },
   "reminders": {
-    "title": "Reminders",
-    "subtitle": "Configure Alerts",
-    "description": "Receive local notifications to keep your habits. Max 4 per day.",
-    "meals_title": "Meals",
-    "meals_desc": "Breakfast, Lunch, and Dinner",
-    "water_title": "Hydration",
-    "water_desc": "Gentle afternoon nudge",
-    "weight_title": "Weight & Progress",
-    "weight_desc": "Monday and Thursday (9am)",
-    "toast_enabled": "Reminders enabled",
-    "toast_disabled": "Reminders disabled",
-    "toast_denied": "Notification permissions denied"
+    "title": "Recordatorios",
+    "subtitle": "Configurar Alertas",
+    "description": "Recibe notificaciones locales para mantener tus hábitos. Máximo 4 al día.",
+    "meals_title": "Comidas",
+    "meals_desc": "Desayuno, Almuerzo y Cena",
+    "water_title": "Hidratación",
+    "water_desc": "Aviso suave por la tarde",
+    "weight_title": "Peso y Progreso",
+    "weight_desc": "Lunes y Jueves (9am)",
+    "toast_enabled": "Recordatorios activados",
+    "toast_disabled": "Recordatorios desactivados",
+    "toast_denied": "Permisos de notificación denegados"
   },
   "edit_profile": {
-    "title": "Edit Profile",
-    "full_name": "Full Name",
-    "save": "Save Changes",
-    "toast_error": "Failed to save profile.",
-    "age": "Age",
-    "height": "Height",
-    "weight": "Weight",
-    "years_unit": "years",
-    "gender": "Gender",
+    "title": "Editar Perfil",
+    "full_name": "Nombre y Apellido",
+    "save": "Guardar Cambios",
+    "toast_error": "Fallo al guardar el perfil.",
+    "age": "Edad",
+    "height": "Altura",
+    "weight": "Peso",
+    "years_unit": "años",
+    "gender": "Género",
     "goal": "Objetivo",
     "experience": "Experiencia",
     "gender_female": "Femenino",
