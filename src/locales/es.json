@@ -11,7 +11,8 @@
     "ai_limit_reached": "Límite de IA alcanzado",
     "ai_limit_daily_desc": "Has alcanzado el límite de {{limit}} usos diarios para esta función. Vuelve mañana para continuar.",
     "ai_limit_weekly_desc": "Has alcanzado el límite de {{limit}} usos semanales para esta función. Vuelve la próxima semana para continuar.",
-    "add": "Añadir"
+    "add": "Añadir",
+    "deleted_success": "Eliminado correctamente"
   },
   "auth": {
     "email_label": "Correo electrónico",

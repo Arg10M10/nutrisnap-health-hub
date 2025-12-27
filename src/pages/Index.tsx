@@ -24,10 +24,11 @@ import AppTutorial from "@/components/AppTutorial";
 import ManualFoodEntry from "@/components/ManualFoodEntry";
 import { cn } from "@/lib/utils";
 import StreakModal from "@/components/StreakModal";
+import SwipeToDelete from "@/components/SwipeToDelete";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { getDataForDate, streak, streakDays, addWaterGlass, removeWaterGlass, isWaterUpdating } = useNutrition();
+  const { getDataForDate, streak, streakDays, addWaterGlass, removeWaterGlass, isWaterUpdating, deleteEntry } = useNutrition();
   const { profile } = useAuth();
   const { intake, analyses, healthScore, waterIntake } = getDataForDate(selectedDate);
   const [api, setApi] = useState<CarouselApi>();
@@ -52,7 +53,6 @@ const Index = () => {
 
         toast.success(t('home.goal_achieved_toast', { date: formattedDate }));
       }
-      // Limpiar el estado para que no se muestre de nuevo
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.state, profile, navigate, t, i18n.language]);
@@ -131,7 +131,6 @@ const Index = () => {
         <div id="daily-summary-carousel">
           <Carousel className="w-full" opts={{ align: "start", duration: 20 }} setApi={setApi}>
             <CarouselContent>
-              {/* Page 1: Main Macros */}
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
                   <div className="flex flex-col gap-3 min-h-[360px]">
@@ -168,7 +167,6 @@ const Index = () => {
                 </motion.div>
               </CarouselItem>
 
-              {/* Page 2: Secondary Metrics */}
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
                   <div className="flex flex-col gap-3 min-h-[360px]">
@@ -255,23 +253,36 @@ const Index = () => {
               {analyses.map((item) => {
                 if ('food_name' in item) {
                   return (
-                    <RecentAnalysisCard 
+                    <SwipeToDelete 
                       key={item.id} 
-                      imageUrl={item.image_url}
-                      foodName={item.food_name}
-                      time={format(new Date(item.created_at), 'p', { locale: es })}
-                      calories={item.calories_value}
-                      protein={item.protein_value}
-                      carbs={item.carbs_value}
-                      fats={item.fats_value}
-                      sugars={item.sugars_value}
-                      status={item.status}
-                      reason={item.reason}
-                      onClick={() => setSelectedAnalysis(item)}
-                    />
+                      onDelete={() => deleteEntry(item.id, 'food')}
+                      className="rounded-xl"
+                    >
+                      <RecentAnalysisCard 
+                        imageUrl={item.image_url}
+                        foodName={item.food_name}
+                        time={format(new Date(item.created_at), 'p', { locale: es })}
+                        calories={item.calories_value}
+                        protein={item.protein_value}
+                        carbs={item.carbs_value}
+                        fats={item.fats_value}
+                        sugars={item.sugars_value}
+                        status={item.status}
+                        reason={item.reason}
+                        onClick={() => setSelectedAnalysis(item)}
+                      />
+                    </SwipeToDelete>
                   );
                 } else if ('exercise_type' in item) {
-                  return <RecentExerciseCard key={item.id} entry={item as ExerciseEntry} />;
+                  return (
+                    <SwipeToDelete 
+                      key={item.id} 
+                      onDelete={() => deleteEntry(item.id, 'exercise')}
+                      className="rounded-xl"
+                    >
+                      <RecentExerciseCard entry={item as ExerciseEntry} />
+                    </SwipeToDelete>
+                  );
                 }
                 return null;
               })}

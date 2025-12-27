@@ -68,6 +68,7 @@ export interface UnlockedBadgeInfo {
 
 interface NutritionState {
   addAnalysis: (result: AnalysisResult, imageUrl?: string) => void;
+  deleteEntry: (id: string, type: 'food' | 'exercise') => void;
   getDataForDate: (date: Date) => DailyData;
   addWaterGlass: (date: Date, amount?: number) => void;
   removeWaterGlass: (date: Date) => void;
@@ -213,6 +214,24 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
+  const deleteEntryMutation = useMutation({
+    mutationFn: async ({ id, type }: { id: string, type: 'food' | 'exercise' }) => {
+      if (!user) throw new Error('User not found');
+      const table = type === 'food' ? 'food_entries' : 'exercise_entries';
+      const { error } = await supabase.from(table).delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => { 
+        queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+        queryClient.invalidateQueries({ queryKey: ['exercise_entries', user?.id] });
+        toast.success(t('common.deleted_success', 'Eliminado correctamente'));
+    },
+    onError: (error) => {
+        console.error('Error deleting entry:', error);
+        toast.error(t('common.error_friendly')); 
+    },
+  });
+
   const waterMutation = useMutation({
     mutationFn: async ({ action, date, amount = 1 }: { action: 'add' | 'remove', date: Date, amount?: number }) => {
       if (!user) throw new Error('User not found');
@@ -222,7 +241,6 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       } else {
         const entriesForDay = waterEntries.filter(e => isSameDay(parseISO(e.created_at), date));
         if (entriesForDay.length > 0) {
-          // Ordenar para borrar el último añadido (o el más pequeño si quisiéramos ser específicos, pero FIFO/LIFO es simple)
           const lastEntry = entriesForDay.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
           const { error } = await supabase.from('water_entries').delete().eq('id', lastEntry.id);
           if (error) throw error;
@@ -255,6 +273,10 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       status: 'completed' as const,
     };
     addEntryMutation.mutate(newEntry);
+  };
+
+  const deleteEntry = (id: string, type: 'food' | 'exercise') => {
+    deleteEntryMutation.mutate({ id, type });
   };
 
   const addWaterGlass = (date: Date, amount = 1) => waterMutation.mutate({ action: 'add', date, amount });
@@ -351,6 +373,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   return (
     <NutritionContext.Provider value={{
       addAnalysis,
+      deleteEntry,
       getDataForDate,
       addWaterGlass,
       removeWaterGlass,
