@@ -11,6 +11,7 @@ import {
   HelpCircle,
   Zap,
   ZapOff,
+  Info
 } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -23,14 +24,13 @@ import { useAILimit } from "@/hooks/useAILimit";
 import InfoDrawer from "@/components/InfoDrawer";
 import { useTranslation } from "react-i18next";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import useLocalStorage from "@/hooks/useLocalStorage";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
@@ -102,6 +102,16 @@ const Scanner = () => {
     setHasAcceptedDisclaimer(true);
     setShowDisclaimer(false);
     initScanner();
+  };
+
+  const handleDrawerOpenChange = (open: boolean) => {
+    // Si el usuario intenta cerrar el drawer (arrastrando hacia abajo) sin aceptar,
+    // actualizamos el estado visual, pero NO iniciamos la cámara.
+    // Opcionalmente podríamos navegar hacia atrás si cierran sin aceptar.
+    if (!open && !hasAcceptedDisclaimer) {
+      navigate(-1); // Regresar si no aceptan
+    }
+    setShowDisclaimer(open);
   };
 
   const stopCamera = () => {
@@ -452,21 +462,28 @@ const Scanner = () => {
         </p>
       </InfoDrawer>
 
-      <AlertDialog open={showDisclaimer}>
-        <AlertDialogContent className="!rounded-[32px] border-none shadow-2xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-center text-xl">{t('scanner.disclaimer_title')}</AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-base">
-              {t('scanner.disclaimer_text')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={handleAcceptDisclaimer} className="w-full rounded-xl h-12 text-lg">
-              {t('scanner.disclaimer_accept')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <Drawer open={showDisclaimer} onOpenChange={handleDrawerOpenChange}>
+        <DrawerContent className="max-h-[90vh]">
+          <div className="mx-auto w-full max-w-sm">
+            <div className="p-6 pb-0 flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4 text-blue-600 dark:text-blue-400">
+                <Info className="w-8 h-8" />
+              </div>
+              <DrawerHeader className="px-0 pb-2">
+                <DrawerTitle className="text-2xl font-bold">{t('scanner.disclaimer_title')}</DrawerTitle>
+                <DrawerDescription className="text-base text-muted-foreground mt-2 leading-relaxed">
+                  {t('scanner.disclaimer_text')}
+                </DrawerDescription>
+              </DrawerHeader>
+            </div>
+            <DrawerFooter className="p-6 pt-4">
+              <Button onClick={handleAcceptDisclaimer} className="w-full rounded-2xl h-14 text-lg font-bold shadow-lg shadow-primary/20">
+                {t('scanner.disclaimer_accept')}
+              </Button>
+            </DrawerFooter>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 };
