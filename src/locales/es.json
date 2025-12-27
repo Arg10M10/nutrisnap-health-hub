@@ -210,7 +210,8 @@
   "menu_analysis": {
     "title": "Análisis del Menú",
     "recommended": "Mejores Opciones",
-    "avoid": "Limitar o Evitar"
+    "avoid": "Limitar o Evitar",
+    "view_result": "Ver Resultados"
   },
   "analysis": {
     "calories": "Calorías",
@@ -458,7 +459,7 @@
   "countries": {
     "united_states": "Estados Unidos",
     "mexico": "México",
-    "spain": "España",
+    "spain": "Spain",
     "argentina": "Argentina",
     "brazil": "Brasil",
     "dominican_republic": "República Dominicana",

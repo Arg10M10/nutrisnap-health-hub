@@ -286,6 +286,7 @@ const Index = () => {
                         status={item.status}
                         reason={item.reason}
                         onClick={() => handleEntryClick(item)}
+                        isMenu={!!item.analysis_data}
                       />
                     </SwipeToDelete>
                   );

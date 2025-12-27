@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Flame, Beef, Wheat, Droplets, Sparkles, Loader2, AlertTriangle, Wand2 } from "lucide-react";
+import { Flame, Beef, Wheat, Droplets, Sparkles, Loader2, AlertTriangle, Wand2, FileText, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface RecentAnalysisCardProps {
   imageUrl: string | null;
@@ -15,9 +16,24 @@ interface RecentAnalysisCardProps {
   status: 'processing' | 'completed' | 'failed';
   reason: string | null;
   onClick: () => void;
+  isMenu?: boolean;
 }
 
-const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs, fats, sugars, status, reason, onClick }: RecentAnalysisCardProps) => {
+const RecentAnalysisCard = ({ 
+  imageUrl, 
+  foodName, 
+  time, 
+  calories, 
+  protein, 
+  carbs, 
+  fats, 
+  sugars, 
+  status, 
+  reason, 
+  onClick,
+  isMenu = false 
+}: RecentAnalysisCardProps) => {
+  const { t } = useTranslation();
   const isProcessing = status === 'processing';
   const hasFailed = status === 'failed';
   const isClickable = status === 'completed';
@@ -98,6 +114,14 @@ const RecentAnalysisCard = ({ imageUrl, foodName, time, calories, protein, carbs
           </div>
         ) : hasFailed ? (
           <p className="text-sm text-destructive font-medium leading-tight">{reason || 'Análisis fallido.'}</p>
+        ) : isMenu ? (
+          <div className="mt-1 flex items-center">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold transition-colors group-hover:bg-primary/20">
+              <FileText className="w-3.5 h-3.5" />
+              {t('menu_analysis.view_result', 'Ver Resultados')}
+              <ChevronRight className="w-3 h-3 ml-0.5 opacity-60" />
+            </span>
+          </div>
         ) : (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">

@@ -211,7 +211,8 @@
   "menu_analysis": {
     "title": "Menu Analysis",
     "recommended": "Best Options",
-    "avoid": "Limit or Avoid"
+    "avoid": "Limit or Avoid",
+    "view_result": "View Analysis"
   },
   "analysis": {
     "calories": "Calories",
