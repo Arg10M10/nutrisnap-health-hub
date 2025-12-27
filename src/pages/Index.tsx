@@ -25,6 +25,7 @@ import ManualFoodEntry from "@/components/ManualFoodEntry";
 import { cn } from "@/lib/utils";
 import StreakModal from "@/components/StreakModal";
 import SwipeToDelete from "@/components/SwipeToDelete";
+import MenuAnalysisDrawer, { MenuAnalysisData } from "@/components/MenuAnalysisDrawer";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -35,7 +36,13 @@ const Index = () => {
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
   const { t, i18n } = useTranslation();
+  
+  // Estado para detalles de comida normal
   const [selectedAnalysis, setSelectedAnalysis] = useState<FoodEntry | null>(null);
+  // Estado para detalles de menú
+  const [selectedMenuData, setSelectedMenuData] = useState<MenuAnalysisData | null>(null);
+  const [isMenuDrawerOpen, setIsMenuDrawerOpen] = useState(false);
+
   const [isManualEntryOpen, setIsManualEntryOpen] = useState(false);
   const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
   const location = useLocation();
@@ -99,6 +106,15 @@ const Index = () => {
   const cardVariants: Variants = {
     active: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
     inactive: { opacity: 0.6, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } },
+  };
+
+  const handleEntryClick = (item: FoodEntry) => {
+    if (item.analysis_data) {
+      setSelectedMenuData(item.analysis_data);
+      setIsMenuDrawerOpen(true);
+    } else {
+      setSelectedAnalysis(item);
+    }
   };
 
   return (
@@ -269,7 +285,7 @@ const Index = () => {
                         sugars={item.sugars_value}
                         status={item.status}
                         reason={item.reason}
-                        onClick={() => setSelectedAnalysis(item)}
+                        onClick={() => handleEntryClick(item)}
                       />
                     </SwipeToDelete>
                   );
@@ -296,11 +312,21 @@ const Index = () => {
           )}
         </div>
       </div>
+      
+      {/* Drawer para comida normal */}
       <AnalysisDetailDrawer
         entry={selectedAnalysis}
         isOpen={!!selectedAnalysis}
         onClose={() => setSelectedAnalysis(null)}
       />
+
+      {/* Drawer para menús */}
+      <MenuAnalysisDrawer
+        isOpen={isMenuDrawerOpen}
+        onClose={() => setIsMenuDrawerOpen(false)}
+        data={selectedMenuData}
+      />
+
       <StreakModal 
         isOpen={isStreakModalOpen} 
         onClose={() => setIsStreakModalOpen(false)}

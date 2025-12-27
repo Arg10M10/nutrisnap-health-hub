@@ -6,6 +6,7 @@ import { useAuth } from './AuthContext';
 import { AnalysisResult } from '@/components/FoodAnalysisCard';
 import { format, isSameDay, subDays, parseISO } from 'date-fns';
 import { useTranslation } from 'react-i18next';
+import { MenuAnalysisData } from '@/components/MenuAnalysisDrawer';
 
 export interface FoodEntry {
   id: string;
@@ -25,6 +26,7 @@ export interface FoodEntry {
   fats_value: number | null;
   sugars_value: number | null;
   status: 'processing' | 'completed' | 'failed';
+  analysis_data?: MenuAnalysisData | null; // Nuevo campo para menús
 }
 
 export interface ExerciseEntry {

@@ -235,10 +235,12 @@ const Scanner = () => {
     },
   });
 
-  // Mutación para análisis de MENÚ (NO guarda en DB inmediatamente, solo muestra resultados)
+  // Mutación para análisis de MENÚ
   const startMenuAnalysisMutation = useMutation({
     mutationFn: async (imageData: string) => {
-      const { data, error } = await supabase.functions.invoke('analyze-menu', {
+      if (!user) throw new Error('User not found');
+
+      const { data: analysisResult, error: aiError } = await supabase.functions.invoke('analyze-menu', {
         body: { 
           imageData, 
           goal: profile?.goal || 'maintain_weight',
@@ -246,14 +248,32 @@ const Scanner = () => {
           language: i18n.language 
         }
       });
-      if (error) throw new Error(error.message);
-      return data;
+      if (aiError) throw new Error(aiError.message);
+
+      // Guardar el resultado en la base de datos
+      const { error: dbError } = await supabase.from('food_entries').insert({
+        user_id: user.id,
+        food_name: t('menu_analysis.title', 'Análisis de Menú'),
+        image_url: imageData, // Nota: Si es muy grande, esto podría ser un problema sin Supabase Storage, pero por ahora funciona con Base64 en URL si no es gigante, o el backend lo maneja. Aquí imageData es base64 data URI.
+        // ADVERTENCIA: Insertar Base64 gigante en columna TEXT es mala práctica, pero seguimos el patrón existente de Food Analysis. 
+        // Idealmente subir a Storage, pero mantendré consistencia con `startFoodAnalysisMutation`.
+        status: 'completed',
+        calories: '0', // No aplica calorias totales
+        health_rating: 'Moderado', // Valor por defecto
+        reason: analysisResult.summary, // Guardar resumen como razón
+        analysis_data: analysisResult // Guardar JSON completo
+      });
+
+      if (dbError) throw dbError;
+
+      return analysisResult as MenuAnalysisData;
     },
     onSuccess: (data: MenuAnalysisData) => {
-      logUsage('food_scan'); // Usamos el mismo límite que food scan por ahora
+      logUsage('food_scan');
+      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       setMenuData(data);
       setIsMenuDrawerOpen(true);
-      setState("captured"); // Mantener estado capturado para fondo
+      setState("captured");
     },
     onError: (err: Error) => {
       console.error("Menu analysis error:", err);
@@ -391,7 +411,7 @@ const Scanner = () => {
 
   const handleMenuDrawerClose = () => {
     setIsMenuDrawerOpen(false);
-    handleReset(); // Volver a cámara automáticamente al cerrar resultados
+    navigate('/'); // Ir al inicio después de ver el resultado del menú
   };
 
   return (
