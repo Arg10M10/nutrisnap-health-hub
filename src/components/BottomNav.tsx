@@ -58,7 +58,7 @@ const BottomNav = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 z-40 backdrop-blur-[1px]"
+            className="fixed inset-0 bg-black/60 z-40 backdrop-blur-[2px]"
             onClick={() => setIsMenuOpen(false)}
           />
         )}
@@ -74,19 +74,24 @@ const BottomNav = () => {
                 animate={{ scale: 1, opacity: 1, y: 0, x: "-50%" }}
                 exit={{ scale: 0.9, opacity: 0, y: 10, x: "-50%" }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="absolute bottom-24 left-1/2 w-[90%] max-w-[320px] bg-card border border-border/50 rounded-3xl shadow-2xl p-4 grid grid-cols-3 gap-3 z-50 origin-bottom"
+                // Aumentado: max-w a 360px, padding a p-6, posición bottom a bottom-28
+                className="absolute bottom-28 left-1/2 w-[95%] max-w-[360px] bg-card border border-border/50 rounded-[2rem] shadow-2xl p-6 grid grid-cols-3 gap-4 z-50 origin-bottom"
               >
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-card rotate-45 border-b border-r border-border/50"></div>
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-card rotate-45 border-b border-r border-border/50"></div>
                 {menuItems.map((mi) => (
                   <button
                     key={mi.label}
                     onClick={() => handleMenuAction(mi.action)}
-                    className="flex flex-col items-center justify-center gap-2 p-2 rounded-2xl bg-muted/50 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square"
+                    // Aumentado: gap-3
+                    className="flex flex-col items-center justify-center gap-3 p-2 rounded-2xl bg-muted/40 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square border border-transparent hover:border-border/50"
                   >
-                    <div className="bg-background p-2 rounded-full shadow-sm text-primary">
-                      <mi.icon className="w-5 h-5" />
+                    {/* Aumentado: padding p-3.5 */}
+                    <div className="bg-background p-3.5 rounded-full shadow-sm text-primary ring-1 ring-border/10">
+                      {/* Aumentado: Icono w-7 h-7 */}
+                      <mi.icon className="w-7 h-7" />
                     </div>
-                    <span className="text-[10px] sm:text-xs font-semibold text-center text-foreground leading-tight px-1">{mi.label}</span>
+                    {/* Aumentado: Texto text-xs */}
+                    <span className="text-xs font-semibold text-center text-foreground leading-tight px-1">{mi.label}</span>
                   </button>
                 ))}
               </motion.div>
