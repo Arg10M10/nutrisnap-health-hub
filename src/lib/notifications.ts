@@ -2,35 +2,64 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { Capacitor } from '@capacitor/core';
 import i18n from './i18n';
 
+// --- Helpers para Calcular Fechas Futuras ---
+
+// Calcula la próxima fecha para una hora específica (hoy si no ha pasado, o mañana)
+const getNextTime = (hour: number, minute: number) => {
+  const now = new Date();
+  const next = new Date();
+  next.setHours(hour, minute, 0, 0);
+  // Si la hora ya pasó hoy, programar para mañana
+  if (next <= now) {
+    next.setDate(next.getDate() + 1);
+  }
+  return next;
+};
+
+// Calcula la próxima fecha para un día de la semana específico (0=Domingo, 1=Lunes...)
+const getNextDayOfWeek = (dayIndex: number, hour: number, minute: number) => {
+  const now = new Date();
+  const next = new Date();
+  next.setHours(hour, minute, 0, 0);
+  
+  const currentDay = now.getDay();
+  let diff = dayIndex - currentDay;
+  
+  // Si el día ya pasó esta semana, o es hoy pero la hora ya pasó, sumar 7 días
+  if (diff < 0 || (diff === 0 && next <= now)) {
+    diff += 7;
+  }
+  
+  next.setDate(now.getDate() + diff);
+  return next;
+};
+
 // --- Banco de Mensajes Dinámico ---
 
 const getBreakfastMessages = () => [
   { title: "🌅 " + i18n.t('notifications.breakfast_title', 'Buenos Días'), body: i18n.t('notifications.breakfast_body', 'Empieza tu día registrando tu desayuno.') },
-  { title: "🍳 " + i18n.t('notifications.breakfast_title', 'Hora del Desayuno'), body: i18n.t('notifications.breakfast_body_2', '¿Qué hay de rico hoy? Regístralo.') },
-];
-
-const getSnackMessages = () => [
-  { title: "🍎 " + i18n.t('notifications.snack_title', 'Pequeña Pausa'), body: i18n.t('notifications.snack_body', '¿Comiste algún snack? No olvides contarlo.') },
-  { title: "🥛 " + i18n.t('notifications.snack_title', 'Hidratación'), body: i18n.t('notifications.water_body_1', 'Es buen momento para un vaso de agua.') },
 ];
 
 const getLunchMessages = () => [
-  { title: "🍽️ " + i18n.t('notifications.food_title'), body: i18n.t('notifications.food_body_1') },
-  { title: "🥗 " + i18n.t('notifications.food_title_3'), body: i18n.t('notifications.food_body_3') },
+  { title: "🍽️ " + i18n.t('notifications.food_title', 'Hora de Comer'), body: i18n.t('notifications.food_body_1', '¿Qué hay de rico hoy? Regístralo.') },
 ];
 
 const getDinnerMessages = () => [
-  { title: "🌙 " + i18n.t('notifications.dinner_title_1'), body: i18n.t('notifications.dinner_body_1') },
-  { title: "📝 " + i18n.t('notifications.dinner_title_2'), body: i18n.t('notifications.dinner_body_2') },
+  { title: "🌙 " + i18n.t('notifications.dinner_title_1', 'Hora de Cenar'), body: i18n.t('notifications.dinner_body_1', 'No olvides registrar tu última comida.') },
+];
+
+const getSnackMessages = () => [
+  { title: "🍎 " + i18n.t('notifications.snack_title', 'Snack Time'), body: i18n.t('notifications.snack_body', 'Pequeña pausa, registra tu snack.') },
+  { title: "💧 " + i18n.t('notifications.water_title_1', 'Hidratación'), body: i18n.t('notifications.water_body_1', 'Es buen momento para un vaso de agua.') },
 ];
 
 const getWaterMessages = () => [
-  { title: "💧 " + i18n.t('notifications.water_title_1'), body: i18n.t('notifications.water_body_1') },
-  { title: "🚰 " + i18n.t('notifications.water_title_2'), body: i18n.t('notifications.water_body_2') },
+  { title: "💧 " + i18n.t('notifications.water_title_1', 'Hidratación'), body: i18n.t('notifications.water_body_1', 'Tu cuerpo necesita agua. ¡Bebe un vaso!') },
+  { title: "🚰 " + i18n.t('notifications.water_title_2', 'Hábito Saludable'), body: i18n.t('notifications.water_body_2', 'Mantente hidratado para mejores resultados.') },
 ];
 
 const getWeightMessages = () => [
-  { title: "⚖️ " + i18n.t('notifications.weight_title_1'), body: i18n.t('notifications.weight_body_1') },
+  { title: "⚖️ " + i18n.t('notifications.weight_title_1', 'Control de Peso'), body: i18n.t('notifications.weight_body_1', 'Actualiza tu peso hoy para ver tu progreso.') },
 ];
 
 // --- Gestor ---
@@ -65,9 +94,8 @@ export const NotificationManager = {
     }
   },
 
-  // --- Programadores ---
+  // --- Programadores (Ahora usan 'at' + 'every' para evitar disparos inmediatos) ---
 
-  // Se expande a 3 veces al día: 08:00, 13:30, 20:00
   async scheduleMealReminders() {
     if (!(await this.requestPermissions())) return;
     await this.cancelMealReminders(); // Limpiar previos
@@ -76,35 +104,34 @@ export const NotificationManager = {
     const lunchMsgs = getLunchMessages();
     const dinnerMsgs = getDinnerMessages();
 
-    // Programamos recordatorios diarios
+    // Usamos getNextTime para asegurar que sea en el futuro inmediato
     await LocalNotifications.schedule({
       notifications: [
         {
-          id: 101, // Desayuno
+          id: 101, // Desayuno (08:00)
           title: breakfastMsgs[0].title,
           body: breakfastMsgs[0].body,
-          schedule: { on: { hour: 8, minute: 0 }, allowWhileIdle: true },
+          schedule: { at: getNextTime(8, 0), repeats: true, every: 'day', allowWhileIdle: true },
           channelId: 'calorel_reminders'
         },
         {
-          id: 102, // Almuerzo
+          id: 102, // Almuerzo (13:30)
           title: lunchMsgs[0].title,
           body: lunchMsgs[0].body,
-          schedule: { on: { hour: 13, minute: 30 }, allowWhileIdle: true },
+          schedule: { at: getNextTime(13, 30), repeats: true, every: 'day', allowWhileIdle: true },
           channelId: 'calorel_reminders'
         },
         {
-          id: 103, // Cena
+          id: 103, // Cena (20:00)
           title: dinnerMsgs[0].title,
           body: dinnerMsgs[0].body,
-          schedule: { on: { hour: 20, minute: 0 }, allowWhileIdle: true },
+          schedule: { at: getNextTime(20, 0), repeats: true, every: 'day', allowWhileIdle: true },
           channelId: 'calorel_reminders'
         }
       ]
     });
   },
 
-  // Se expande a 3 veces al día intercaladas: 10:30, 16:00, 18:30
   async scheduleWaterReminders() {
     if (!(await this.requestPermissions())) return;
     await this.cancelWaterReminders();
@@ -115,51 +142,53 @@ export const NotificationManager = {
     await LocalNotifications.schedule({
       notifications: [
         {
-          id: 201, // Media mañana
+          id: 201, // Media mañana (10:30)
           title: snackMsgs[1].title,
           body: snackMsgs[1].body,
-          schedule: { on: { hour: 10, minute: 30 }, allowWhileIdle: true },
+          schedule: { at: getNextTime(10, 30), repeats: true, every: 'day', allowWhileIdle: true },
           channelId: 'calorel_reminders'
         },
         {
-          id: 202, // Tarde temprano
+          id: 202, // Tarde temprano (16:00)
           title: waterMsgs[0].title,
           body: waterMsgs[0].body,
-          schedule: { on: { hour: 16, minute: 0 }, allowWhileIdle: true },
+          schedule: { at: getNextTime(16, 0), repeats: true, every: 'day', allowWhileIdle: true },
           channelId: 'calorel_reminders'
         },
         {
-          id: 203, // Tarde noche
+          id: 203, // Tarde noche (18:30)
           title: waterMsgs[1].title,
           body: waterMsgs[1].body,
-          schedule: { on: { hour: 18, minute: 30 }, allowWhileIdle: true },
+          schedule: { at: getNextTime(18, 30), repeats: true, every: 'day', allowWhileIdle: true },
           channelId: 'calorel_reminders'
         }
       ]
     });
   },
 
-  // Mantenemos peso 2 veces por semana pero aseguramos el canal
   async scheduleWeightReminder() {
     if (!(await this.requestPermissions())) return;
     await this.cancelWeightReminders();
 
     const weightMsgs = getWeightMessages();
 
+    // Programar Lunes (1) y Jueves (4)
+    // Usamos getNextDayOfWeek para calcular la fecha exacta del próximo lunes/jueves
+    // y every: 'week' para que se repita semanalmente desde esa fecha.
     await LocalNotifications.schedule({
       notifications: [
         {
           id: 301,
           title: weightMsgs[0].title,
           body: weightMsgs[0].body,
-          schedule: { on: { weekday: 2, hour: 9, minute: 0 }, allowWhileIdle: true }, // Lunes
+          schedule: { at: getNextDayOfWeek(1, 9, 0), repeats: true, every: 'week', allowWhileIdle: true }, // Lunes 9:00
           channelId: 'calorel_reminders'
         },
         {
           id: 302,
           title: weightMsgs[0].title,
           body: weightMsgs[0].body,
-          schedule: { on: { weekday: 5, hour: 9, minute: 0 }, allowWhileIdle: true }, // Jueves
+          schedule: { at: getNextDayOfWeek(4, 9, 0), repeats: true, every: 'week', allowWhileIdle: true }, // Jueves 9:00
           channelId: 'calorel_reminders'
         }
       ]
@@ -192,7 +221,7 @@ export const NotificationManager = {
   async cancelRemindersByPrefix(prefix: number) {
       if (!Capacitor.isNativePlatform()) return;
       const ids = [];
-      for(let i=0; i<50; i++) ids.push(prefix * 100 + i); 
+      for(let i=0; i<10; i++) ids.push(prefix * 100 + i); 
       await this.cancelReminders(ids);
   },
   
