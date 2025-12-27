@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, Settings, LineChart, Book, Plus, Scan, Dumbbell } from "lucide-react";
+import { Home, Settings, LineChart, Book, Plus, Scan, Dumbbell, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
@@ -19,7 +19,8 @@ const BottomNav = () => {
   ];
 
   const menuItems = [
-    { icon: Scan, label: t('bottom_nav.scan_food'), action: () => navigate("/scanner") },
+    { icon: Scan, label: t('bottom_nav.scan_food'), action: () => navigate("/scanner", { state: { mode: 'food' } }) },
+    { icon: FileText, label: t('bottom_nav.scan_menu'), action: () => navigate("/scanner", { state: { mode: 'menu' } }) },
     { icon: Dumbbell, label: t('bottom_nav.log_exercise'), action: () => navigate("/exercise") },
   ];
 
@@ -73,19 +74,19 @@ const BottomNav = () => {
                 animate={{ scale: 1, opacity: 1, y: 0, x: "-50%" }}
                 exit={{ scale: 0.9, opacity: 0, y: 10, x: "-50%" }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="absolute bottom-24 left-1/2 w-64 bg-card border border-border/50 rounded-3xl shadow-2xl p-4 grid grid-cols-2 gap-4 z-50 origin-bottom"
+                className="absolute bottom-24 left-1/2 w-[90%] max-w-[320px] bg-card border border-border/50 rounded-3xl shadow-2xl p-4 grid grid-cols-3 gap-3 z-50 origin-bottom"
               >
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-card rotate-45 border-b border-r border-border/50"></div>
                 {menuItems.map((mi) => (
                   <button
                     key={mi.label}
                     onClick={() => handleMenuAction(mi.action)}
-                    className="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-muted/50 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square"
+                    className="flex flex-col items-center justify-center gap-2 p-2 rounded-2xl bg-muted/50 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square"
                   >
                     <div className="bg-background p-2 rounded-full shadow-sm text-primary">
-                      <mi.icon className="w-6 h-6" />
+                      <mi.icon className="w-5 h-5" />
                     </div>
-                    <span className="text-xs font-semibold text-center text-foreground leading-tight">{mi.label}</span>
+                    <span className="text-[10px] sm:text-xs font-semibold text-center text-foreground leading-tight px-1">{mi.label}</span>
                   </button>
                 ))}
               </motion.div>

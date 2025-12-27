@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Scan,
@@ -35,7 +35,6 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 
 type ScannerState = "initializing" | "camera" | "captured" | "loading" | "error";
 
-// Aumentamos un poco la dimensión máxima para que la IA tenga más detalle
 const MAX_DIMENSION = 1280;
 
 const pageVariants = {
@@ -52,6 +51,12 @@ const pageTransition: Transition = {
 
 const Scanner = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Obtenemos el modo desde el estado de navegación (por defecto 'food')
+  const scanMode = (location.state as { mode?: 'food' | 'menu' })?.mode || 'food';
+
   const [state, setState] = useState<ScannerState>("initializing");
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -59,7 +64,6 @@ const Scanner = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const navigate = useNavigate();
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [hasFlash, setHasFlash] = useState(false);
   const { user } = useAuth();
@@ -67,21 +71,17 @@ const Scanner = () => {
   const { checkLimit, logUsage } = useAILimit();
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   
-  // Disclaimer state
   const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useLocalStorage('scanner_disclaimer_v1', false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
 
-  // Almacenar el estilo original para restaurarlo
   const originalStyleRef = useRef<{ overflow: string, overscrollBehavior: string } | null>(null);
 
   useEffect(() => {
-    // Guardar estado original
     originalStyleRef.current = {
       overflow: document.body.style.overflow,
       overscrollBehavior: document.body.style.overscrollBehavior
     };
 
-    // Si no ha aceptado el disclaimer, mostrarlo y NO iniciar cámara
     if (!hasAcceptedDisclaimer) {
       setShowDisclaimer(true);
     } else {
@@ -89,7 +89,6 @@ const Scanner = () => {
     }
 
     return () => {
-      // Restaurar estado original al salir
       if (originalStyleRef.current) {
         document.body.style.overflow = originalStyleRef.current.overflow;
         document.body.style.overscrollBehavior = originalStyleRef.current.overscrollBehavior;
@@ -102,12 +101,9 @@ const Scanner = () => {
   }, []);
 
   const initScanner = () => {
-    // Solo bloqueamos el scroll del body para evitar que la página de fondo se mueva
-    // NO forzamos scrollTo(0,0) ni position: fixed en el body, lo que causa el salto
     document.body.style.overflow = 'hidden';
     document.body.style.overscrollBehavior = 'none';
     
-    // Pequeño delay para permitir que la animación de entrada de la página fluya
     setTimeout(() => {
         startCamera();
     }, 300);
@@ -121,7 +117,7 @@ const Scanner = () => {
 
   const handleDrawerOpenChange = (open: boolean) => {
     if (!open && !hasAcceptedDisclaimer) {
-      navigate(-1); // Regresar si no aceptan
+      navigate(-1);
     }
     setShowDisclaimer(open);
   };
@@ -163,7 +159,6 @@ const Scanner = () => {
         streamRef.current = stream;
         
         videoRef.current.onloadedmetadata = () => {
-           // Verificar flash solo después de cargar metadatos
            const videoTrack = stream.getVideoTracks()[0];
            try {
              if (videoTrack && (videoTrack.getCapabilities() as any).torch) {
@@ -204,9 +199,13 @@ const Scanner = () => {
   const startAnalysisMutation = useMutation({
     mutationFn: async (imageData: string) => {
       if (!user) throw new Error('User not found');
+      
+      // Ajustamos el nombre temporal dependiendo del modo
+      const tempName = scanMode === 'menu' ? 'Analizando Menú...' : 'Analizando...';
+      
       const { data, error } = await supabase
         .from('food_entries')
-        .insert({ user_id: user.id, food_name: 'Analizando...', image_url: imageData, status: 'processing' })
+        .insert({ user_id: user.id, food_name: tempName, image_url: imageData, status: 'processing' })
         .select().single();
       if (error) throw error;
       return { newEntry: data, imageData };
@@ -215,8 +214,11 @@ const Scanner = () => {
       logUsage('food_scan');
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       navigate('/');
+      
+      // Nota: Aquí se podría llamar a una función distinta si es 'menu', pero 
+      // por ahora usamos la misma lógica de "analyze-food" como base.
       supabase.functions.invoke("analyze-food", {
-        body: { entry_id: newEntry.id, imageData: imageData, language: i18n.language },
+        body: { entry_id: newEntry.id, imageData: imageData, language: i18n.language, mode: scanMode },
       }).then(({ error }) => {
         if (error) {
           console.error("Function invocation failed:", error);
@@ -383,6 +385,14 @@ const Scanner = () => {
             >
               <X className="w-8 h-8 text-white" />
             </motion.button>
+            
+            {/* Título visual para saber en qué modo estamos */}
+            {scanMode === 'menu' && (
+                <div className="absolute left-1/2 -translate-x-1/2 bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10">
+                    <span className="text-white font-semibold text-sm">Menú</span>
+                </div>
+            )}
+
             <motion.button
               onClick={() => setIsInfoOpen(true)}
               className="w-14 h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md shadow-lg border border-white/10"
@@ -393,7 +403,7 @@ const Scanner = () => {
           </header>
 
           <div className="flex-1 relative flex items-center justify-center">
-            {state === 'camera' && <Viewfinder mode="food" />}
+            {state === 'camera' && <Viewfinder mode={scanMode} />}
             {(state === 'loading' || startAnalysisMutation.isPending) && (
                <div className="flex flex-col items-center gap-4 bg-black/30 backdrop-blur-sm p-8 rounded-2xl z-50 relative">
                   <Loader2 className="w-16 h-16 text-primary animate-spin" />
