@@ -9,6 +9,23 @@ const GPT_API_KEY = Deno.env.get("OPENAI_API_KEY");
 const GPT_API_URL = "https://api.openai.com/v1/chat/completions";
 const GPT_MODEL = "gpt-5-nano";
 
+const safeParseJson = (text: string) => {
+  try {
+    // Intentar parseo directo primero
+    return JSON.parse(text);
+  } catch {
+    // Si falla, limpiar bloques de código markdown ```json ... ```
+    try {
+      const cleanedText = text.replace(/```json\n?/g, "").replace(/\n?```/g, "").trim();
+      return JSON.parse(cleanedText);
+    } catch (e) {
+      console.error("Failed to parse JSON from AI:", e);
+      console.error("Original text:", text);
+      return null;
+    }
+  }
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -90,7 +107,11 @@ serve(async (req) => {
     
     if (!content) throw new Error("No content returned from AI");
 
-    const parsedData = JSON.parse(content);
+    const parsedData = safeParseJson(content);
+
+    if (!parsedData) {
+      throw new Error("Failed to parse AI response as JSON");
+    }
 
     return new Response(JSON.stringify(parsedData), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

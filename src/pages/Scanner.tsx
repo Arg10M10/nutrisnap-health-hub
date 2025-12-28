@@ -1,3 +1,4 @@
+0.6) para evitar timeouts y asegurar consistencia con la cámara.">
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -214,7 +215,6 @@ const Scanner = () => {
     onSuccess: ({ newEntry, imageData }) => {
       logUsage('food_scan');
       
-      // Actualización Optimista: Añadir manualmente a la caché para que aparezca INSTANTÁNEAMENTE en Inicio
       queryClient.setQueryData(['food_entries', user?.id], (old: FoodEntry[] | undefined) => {
         return [newEntry as FoodEntry, ...(old || [])];
       });
@@ -262,7 +262,6 @@ const Scanner = () => {
     onSuccess: ({ newEntry, imageData }) => {
       logUsage('food_scan');
       
-      // Actualización Optimista para Menú también
       queryClient.setQueryData(['food_entries', user?.id], (old: FoodEntry[] | undefined) => {
         return [newEntry as FoodEntry, ...(old || [])];
       });
@@ -324,7 +323,6 @@ const Scanner = () => {
         context.drawImage(video, 0, 0, width, height);
     }
     
-    // Calidad reducida a 0.6 para transmisión más rápida
     const imageData = canvas.toDataURL("image/jpeg", 0.6);
     
     setCapturedImage(imageData);
@@ -381,7 +379,8 @@ const Scanner = () => {
               ctx.imageSmoothingQuality = 'high';
               ctx.drawImage(img, 0, 0, width, height);
           }
-          // Calidad reducida a 0.6 para transmisión más rápida
+          
+          // Calidad reducida a 0.6 para transmisión más rápida y evitar límites
           const resizedImageData = canvas.toDataURL("image/jpeg", 0.6);
           
           setCapturedImage(resizedImageData);
