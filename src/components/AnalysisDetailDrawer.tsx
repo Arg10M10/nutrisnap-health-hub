@@ -10,8 +10,9 @@ import { Button } from "@/components/ui/button";
 import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { FoodEntry } from "@/context/NutritionContext";
 import { useTranslation } from "react-i18next";
-import { Share2, Leaf, Loader2, Flame, Beef, Wheat, Droplets } from "lucide-react";
+import { Leaf, Loader2, Flame, Beef, Wheat, Droplets } from "lucide-react";
 import { shareElement } from '@/lib/share';
+import { DownloadIcon } from './icons/DownloadIcon';
 
 interface AnalysisDetailDrawerProps {
   entry: FoodEntry | null;
@@ -70,11 +71,15 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="absolute right-4 top-2 text-primary"
+                className="absolute right-4 top-2 text-primary hover:bg-primary/10"
                 onClick={handleShare}
                 disabled={isSharing}
               >
-                {isSharing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Share2 className="w-5 h-5" />}
+                {isSharing ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <DownloadIcon width={22} height={22} />
+                )}
               </Button>
           </DrawerHeader>
           <div data-vaul-scrollable className="overflow-y-auto flex-1 p-4 space-y-4 pt-0">
