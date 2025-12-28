@@ -88,21 +88,24 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
           </div>
         </div>
 
-        {/* Sección de Ingredientes Detectados */}
+        {/* Sección de Ingredientes Detectados - Lista Vertical */}
         {result.ingredients && result.ingredients.length > 0 && (
           <div className="space-y-3">
-            <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm uppercase tracking-wide opacity-80">
+            <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm uppercase tracking-wide opacity-80 pl-1">
               <ChefHat className="w-4 h-4" /> 
               {t('analysis.detected_ingredients')}
             </h4>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col gap-2">
               {result.ingredients.map((item, index) => (
-                <span 
+                <div 
                   key={index} 
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-background border shadow-sm text-foreground/80"
+                  className="flex items-center px-4 py-3 rounded-xl bg-muted/30 border border-border/50"
                 >
-                  {item}
-                </span>
+                  <div className="h-2 w-2 rounded-full bg-primary/60 mr-3 shadow-sm flex-shrink-0" />
+                  <span className="text-sm font-medium text-foreground capitalize">
+                    {item}
+                  </span>
+                </div>
               ))}
             </div>
           </div>
