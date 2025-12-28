@@ -82,8 +82,8 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                 )}
               </Button>
           </DrawerHeader>
-          <div data-vaul-scrollable className="overflow-y-auto flex-1 p-4 space-y-4 pt-0">
-              {entry.image_url && <img src={entry.image_url} alt={entry.food_name} className="w-full h-56 object-cover rounded-2xl shadow-sm" />}
+          <div data-vaul-scrollable className="overflow-y-auto flex-1 p-4 space-y-6 pt-4">
+              {entry.image_url && <img src={entry.image_url} alt={entry.food_name} className="w-full h-64 object-cover rounded-2xl shadow-sm" />}
               <FoodAnalysisCard result={result} />
           </div>
           <DrawerFooter className="pt-4 border-t flex-shrink-0">
