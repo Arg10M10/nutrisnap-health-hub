@@ -36,7 +36,14 @@
     "first_name_label": "First Name",
     "first_name_placeholder": "John",
     "last_name_label": "Last Name",
-    "last_name_placeholder": "Doe"
+    "last_name_placeholder": "Doe",
+    "signup_success": {
+      "title": "Almost there!",
+      "subtitle": "Confirm your email",
+      "desc": "We have sent a confirmation link to",
+      "spam_hint": "If you don't see it, check your Spam or Junk folder.",
+      "button": "Understood, I'll check"
+    }
   },
   "login": {
     "welcome": "Welcome to Calorel",

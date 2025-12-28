@@ -36,7 +36,14 @@
     "first_name_label": "Nombre",
     "first_name_placeholder": "Juan",
     "last_name_label": "Apellido",
-    "last_name_placeholder": "Pérez"
+    "last_name_placeholder": "Pérez",
+    "signup_success": {
+      "title": "¡Casi listo!",
+      "subtitle": "Confirma tu correo",
+      "desc": "Hemos enviado un enlace de confirmación a",
+      "spam_hint": "Si no lo ves, revisa tu carpeta de Spam o Correo no deseado.",
+      "button": "Entendido, iré a revisar"
+    }
   },
   "login": {
     "welcome": "Bienvenido a Calorel",
@@ -663,6 +670,20 @@
     "title": "Mantén la Constancia",
     "description": "Activa las notificaciones para recibir recordatorios de comidas, hidratación y control de peso. ¡Te ayudará a no perder el ritmo!",
     "enable_button": "Activar Notificaciones",
-    "skip_button": "Quizás más tarde"
+    "skip_button": "Quizás más tarde",
+    "breakfast_title": "Buenos Días",
+    "breakfast_body": "Empieza tu día registrando tu desayuno.",
+    "food_title": "Hora de Comer",
+    "food_body_1": "¿Qué hay de rico hoy? Regístralo.",
+    "dinner_title_1": "Hora de Cenar",
+    "dinner_body_1": "No olvides registrar tu última comida.",
+    "snack_title": "Snack Time",
+    "snack_body": "Pequeña pausa, registra tu snack.",
+    "water_title_1": "Hidratación",
+    "water_body_1": "Tu cuerpo necesita agua. ¡Bebe un vaso!",
+    "water_title_2": "Hábito Saludable",
+    "water_body_2": "Mantente hidratado para mejores resultados.",
+    "weight_title_1": "Control de Peso",
+    "weight_body_1": "Actualiza tu peso hoy para ver tu progreso."
   }
 }
