@@ -74,7 +74,7 @@ const Scanner = () => {
   const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useLocalStorage('scanner_disclaimer_v1', false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
 
-  // Estados para el análisis de menú
+  // Estados para el análisis de menú (ya no se usan para apertura automática, pero se mantienen por compatibilidad)
   const [menuData, setMenuData] = useState<MenuAnalysisData | null>(null);
   const [isMenuDrawerOpen, setIsMenuDrawerOpen] = useState(false);
 
@@ -235,48 +235,61 @@ const Scanner = () => {
     },
   });
 
-  // Mutación para análisis de MENÚ
+  // Mutación para análisis de MENÚ (Ahora con redirección automática)
   const startMenuAnalysisMutation = useMutation({
     mutationFn: async (imageData: string) => {
       if (!user) throw new Error('User not found');
 
-      const { data: analysisResult, error: aiError } = await supabase.functions.invoke('analyze-menu', {
+      // 1. Crear placeholder en DB
+      const { data: newEntry, error: dbError } = await supabase
+        .from('food_entries')
+        .insert({
+          user_id: user.id,
+          food_name: 'Analizando Menú...',
+          image_url: imageData,
+          status: 'processing',
+          calories: '0', 
+          health_rating: 'Moderado',
+        })
+        .select()
+        .single();
+
+      if (dbError) throw dbError;
+      return { newEntry, imageData };
+    },
+    onSuccess: ({ newEntry, imageData }) => {
+      logUsage('food_scan');
+      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
+      
+      // 2. Redirigir al inicio INMEDIATAMENTE
+      navigate('/');
+
+      // 3. Invocar IA en segundo plano
+      supabase.functions.invoke('analyze-menu', {
         body: { 
           imageData, 
           goal: profile?.goal || 'maintain_weight',
           weeklyRate: profile?.weekly_rate || 0.5,
           language: i18n.language 
         }
+      }).then(async ({ data: analysisResult, error: aiError }) => {
+        if (aiError) {
+          console.error("Menu Analysis Error:", aiError);
+          await supabase.from('food_entries').update({ status: 'failed', reason: 'Falló el análisis del menú.' }).eq('id', newEntry.id);
+        } else {
+          // 4. Actualizar la entrada existente con los resultados
+          await supabase.from('food_entries').update({
+            food_name: t('menu_analysis.title', 'Análisis de Menú'),
+            status: 'completed',
+            reason: analysisResult.summary,
+            analysis_data: analysisResult
+          }).eq('id', newEntry.id);
+        }
+        queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       });
-      if (aiError) throw new Error(aiError.message);
-
-      // Guardar el resultado en la base de datos
-      const { error: dbError } = await supabase.from('food_entries').insert({
-        user_id: user.id,
-        food_name: t('menu_analysis.title', 'Análisis de Menú'),
-        image_url: imageData, // Nota: Si es muy grande, esto podría ser un problema sin Supabase Storage, pero por ahora funciona con Base64 en URL si no es gigante, o el backend lo maneja. Aquí imageData es base64 data URI.
-        // ADVERTENCIA: Insertar Base64 gigante en columna TEXT es mala práctica, pero seguimos el patrón existente de Food Analysis. 
-        // Idealmente subir a Storage, pero mantendré consistencia con `startFoodAnalysisMutation`.
-        status: 'completed',
-        calories: '0', // No aplica calorias totales
-        health_rating: 'Moderado', // Valor por defecto
-        reason: analysisResult.summary, // Guardar resumen como razón
-        analysis_data: analysisResult // Guardar JSON completo
-      });
-
-      if (dbError) throw dbError;
-
-      return analysisResult as MenuAnalysisData;
-    },
-    onSuccess: (data: MenuAnalysisData) => {
-      logUsage('food_scan');
-      queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
-      setMenuData(data);
-      setIsMenuDrawerOpen(true);
-      setState("captured");
     },
     onError: (err: Error) => {
-      console.error("Menu analysis error:", err);
+      console.error("Menu analysis start error:", err);
       toast.error(t('scanner.error_analysis'), { description: t('common.error_friendly') });
       setState("captured");
     },
@@ -342,7 +355,8 @@ const Scanner = () => {
         return;
       }
 
-      setState("loading");
+      setState("loading"); // Feedback visual inmediato
+      
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
@@ -366,6 +380,8 @@ const Scanner = () => {
           const resizedImageData = canvas.toDataURL("image/jpeg", 0.9);
           
           setCapturedImage(resizedImageData);
+          
+          // Ejecutar automáticamente según el modo
           if (scanMode === 'menu') {
             startMenuAnalysisMutation.mutate(resizedImageData);
           } else {
@@ -379,6 +395,7 @@ const Scanner = () => {
   };
 
   const handleManualAnalyze = async () => {
+    // Este método solo se usa si falla algo y el usuario quiere reintentar desde la vista previa
     if (capturedImage) {
       const { canProceed, limit } = await checkLimit('food_scan', 4, 'daily');
       if (canProceed) {
@@ -399,7 +416,7 @@ const Scanner = () => {
   const handleReset = () => {
     setCapturedImage(null);
     setError(null);
-    setMenuData(null); // Reset menu data
+    setMenuData(null); 
     if (fileInputRef.current) fileInputRef.current.value = "";
     startCamera();
   };
@@ -411,7 +428,7 @@ const Scanner = () => {
 
   const handleMenuDrawerClose = () => {
     setIsMenuDrawerOpen(false);
-    navigate('/'); // Ir al inicio después de ver el resultado del menú
+    navigate('/'); 
   };
 
   return (
