@@ -108,8 +108,13 @@ const Index = () => {
     inactive: { opacity: 0.6, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } },
   };
 
+  // Función helper para determinar si es un análisis de menú
+  const isMenuAnalysis = (data: any): boolean => {
+    return data && typeof data === 'object' && Array.isArray(data.recommended);
+  };
+
   const handleEntryClick = (item: FoodEntry) => {
-    if (item.analysis_data) {
+    if (item.analysis_data && isMenuAnalysis(item.analysis_data)) {
       setSelectedMenuData(item.analysis_data);
       setIsMenuDrawerOpen(true);
     } else {
@@ -268,6 +273,9 @@ const Index = () => {
             <div className="space-y-3">
               {analyses.map((item) => {
                 if ('food_name' in item) {
+                  // Determinar si es un menú basándonos en la estructura de los datos
+                  const isMenu = item.analysis_data && isMenuAnalysis(item.analysis_data);
+                  
                   return (
                     <SwipeToDelete 
                       key={item.id} 
@@ -286,7 +294,7 @@ const Index = () => {
                         status={item.status}
                         reason={item.reason}
                         onClick={() => handleEntryClick(item)}
-                        isMenu={!!item.analysis_data}
+                        isMenu={!!isMenu}
                       />
                     </SwipeToDelete>
                   );
