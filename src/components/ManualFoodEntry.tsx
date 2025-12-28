@@ -34,7 +34,8 @@ const ManualFoodEntry = ({ embedded = false, onSuccess }: ManualFoodEntryProps) 
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { checkLimit, logUsage } = useAILimit();
+  // checkLimit removed but keeping logUsage just in case we want to track it later silently
+  const { logUsage } = useAILimit();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,7 +61,9 @@ const ManualFoodEntry = ({ embedded = false, onSuccess }: ManualFoodEntryProps) 
       return { newEntry: data, formValues: values };
     },
     onSuccess: ({ newEntry, formValues }) => {
-      logUsage('manual_food_scan');
+      // Manual entry is now unlimited, but we still log usage for analytics if needed
+      // logUsage('manual_food_scan'); // Optional
+      
       queryClient.invalidateQueries({ queryKey: ['food_entries', user?.id] });
       
       if (onSuccess) {
@@ -91,14 +94,8 @@ const ManualFoodEntry = ({ embedded = false, onSuccess }: ManualFoodEntryProps) 
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { canProceed, limit } = await checkLimit('manual_food_scan', 4, 'daily');
-    if (canProceed) {
-      mutation.mutate(values);
-    } else {
-      toast.error(t('common.ai_limit_reached'), {
-        description: t('common.ai_limit_daily_desc', { limit }),
-      });
-    }
+    // Unlimited feature - direct mutation
+    mutation.mutate(values);
   };
 
   const FormContent = (

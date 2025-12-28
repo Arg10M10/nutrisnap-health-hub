@@ -119,14 +119,10 @@ export const DietsOnboarding = () => {
   }, [apiFinished, animationFinished, logUsage, refetchProfile, queryClient, t, user?.id]);
 
   const handleGenerate = async (values: z.infer<typeof formSchema>) => {
-    const { canProceed, limit } = await checkLimit('diet_plan', 1, 'weekly');
+    const canProceed = await checkLimit('diet_plan', 1, 'weekly');
     if (canProceed) {
       setIsGenerating(true);
       mutation.mutate(values);
-    } else {
-      toast.error(t('common.ai_limit_reached'), {
-        description: t('common.ai_limit_weekly_desc', { limit }),
-      });
     }
   };
 

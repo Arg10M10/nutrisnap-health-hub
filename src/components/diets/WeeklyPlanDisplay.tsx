@@ -113,13 +113,9 @@ export const WeeklyPlanDisplay = ({ plan, onRegenerate, isRegenerating }: Weekly
   }, [currentTime]);
 
   const handleRegenerateClick = async () => {
-    const { canProceed, limit } = await checkLimit('diet_plan', 1, 'weekly');
+    const canProceed = await checkLimit('diet_plan', 1, 'weekly');
     if (canProceed) {
       onRegenerate();
-    } else {
-      toast.error(t('common.ai_limit_reached'), {
-        description: t('common.ai_limit_weekly_desc', { limit }),
-      });
     }
   };
 

@@ -322,24 +322,23 @@ const Scanner = () => {
         context.drawImage(video, 0, 0, width, height);
     }
     
-    // Calidad reducida a 0.6 para transmisión más rápida
     const imageData = canvas.toDataURL("image/jpeg", 0.6);
     
     setCapturedImage(imageData);
     stopCamera();
-    setState("loading");
-
-    const { canProceed, limit } = await checkLimit('food_scan', 4, 'daily');
+    
+    // Check limit first
+    const canProceed = await checkLimit('food_scan', 4, 'daily');
+    
     if (canProceed) {
+      setState("loading");
       if (scanMode === 'menu') {
         startMenuAnalysisMutation.mutate(imageData);
       } else {
         startFoodAnalysisMutation.mutate(imageData);
       }
     } else {
-      toast.error(t('common.ai_limit_reached'), {
-        description: t('common.ai_limit_daily_desc', { limit }),
-      });
+      // Logic handled by context
       setState("captured");
     }
   };
@@ -349,11 +348,9 @@ const Scanner = () => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const { canProceed, limit } = await checkLimit('food_scan', 4, 'daily');
+      const canProceed = await checkLimit('food_scan', 4, 'daily');
       if (!canProceed) {
-        toast.error(t('common.ai_limit_reached'), {
-          description: t('common.ai_limit_daily_desc', { limit }),
-        });
+        // Logic handled by context
         return;
       }
 
@@ -380,7 +377,6 @@ const Scanner = () => {
               ctx.drawImage(img, 0, 0, width, height);
           }
           
-          // Calidad reducida a 0.6 para transmisión más rápida y evitar límites
           const resizedImageData = canvas.toDataURL("image/jpeg", 0.6);
           
           setCapturedImage(resizedImageData);
@@ -399,7 +395,7 @@ const Scanner = () => {
 
   const handleManualAnalyze = async () => {
     if (capturedImage) {
-      const { canProceed, limit } = await checkLimit('food_scan', 4, 'daily');
+      const canProceed = await checkLimit('food_scan', 4, 'daily');
       if (canProceed) {
         setState("loading");
         if (scanMode === 'menu') {
@@ -407,10 +403,6 @@ const Scanner = () => {
         } else {
           startFoodAnalysisMutation.mutate(capturedImage);
         }
-      } else {
-        toast.error(t('common.ai_limit_reached'), {
-          description: t('common.ai_limit_daily_desc', { limit }),
-        });
       }
     }
   };

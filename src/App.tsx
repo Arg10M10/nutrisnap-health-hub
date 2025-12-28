@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { Capacitor } from '@capacitor/core';
 import { NutritionProvider, useNutrition } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { AILimitProvider } from "./context/AILimitContext";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { StatusBarSync } from "./components/StatusBarSync";
 import OrientationLock from "./components/OrientationLock";
@@ -42,8 +43,6 @@ import Subscribe from "./pages/Subscribe";
 import GeneratingPlan from "./pages/onboarding/GeneratingPlan";
 
 const queryClient = new QueryClient();
-
-// Eliminamos la inicialización de GoogleAuth
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -109,7 +108,6 @@ const AppRoutes = () => {
   }
 
   // 3. Logged in, Onboarded, but NOT Subscribed
-  // This is the STRICT PAYWALL. If false, users CANNOT access the app.
   if (!profile.is_subscribed) {
     return (
       <div className={shellClass}>
@@ -122,7 +120,6 @@ const AppRoutes = () => {
 
   // 4. Authenticated, Onboarded & Subscribed -> Full App access
   
-  // Generating Plan Screen (Special case, used right after subscribing)
   if (location.pathname === '/generating-plan') {
      return (
       <div className={shellClass}>
@@ -200,11 +197,13 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <AuthProvider>
-            <NutritionProvider>
-              <Toaster />
-              <Sonner position="top-center" duration={3000} />
-              <AppRoutes />
-            </NutritionProvider>
+            <AILimitProvider>
+              <NutritionProvider>
+                <Toaster />
+                <Sonner position="top-center" duration={3000} />
+                <AppRoutes />
+              </NutritionProvider>
+            </AILimitProvider>
           </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
