@@ -139,7 +139,7 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
                       percentage={Math.min(percentage, 100)} 
                       color={ringColor}
                       trackColor={trackColor}
-                      size={48} 
+                      size={40} 
                       strokeWidth={3}
                    />
                 </div>
