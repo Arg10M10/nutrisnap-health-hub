@@ -2,18 +2,26 @@ import { useRef, useState } from 'react';
 import {
   Drawer,
   DrawerContent,
-  DrawerHeader,
   DrawerTitle,
-  DrawerDescription,
-  DrawerFooter,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { FoodEntry, useNutrition } from "@/context/NutritionContext";
 import { useTranslation } from "react-i18next";
-import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2, AlertTriangle } from "lucide-react";
+import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2, AlertTriangle, X, ChevronDown } from "lucide-react";
 import { shareElement } from '@/lib/share';
 import { DownloadIcon } from './icons/DownloadIcon';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface AnalysisDetailDrawerProps {
   entry: FoodEntry | null;
@@ -71,78 +79,98 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
 
   return (
     <>
-      {/* Drawer Principal de Detalles */}
+      {/* Drawer Principal de Detalles - Pantalla Completa */}
       <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <DrawerContent className="max-h-[90vh] flex flex-col">
-          <DrawerHeader className="relative pb-2">
-              <DrawerTitle className="text-center">{t('analysis.details_title')}</DrawerTitle>
-              
-              <div className="absolute right-4 top-2 flex items-center gap-1">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors w-10 h-10"
-                  onClick={() => setIsDeleteOpen(true)}
-                >
-                  <Trash2 className="w-6 h-6" />
-                </Button>
-
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="text-primary hover:bg-primary/10 w-10 h-10"
-                  onClick={handleShare}
-                  disabled={isSharing}
-                >
-                  {isSharing ? (
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                  ) : (
-                    <DownloadIcon width={28} height={28} />
-                  )}
-                </Button>
-              </div>
-          </DrawerHeader>
-          <div data-vaul-scrollable className="overflow-y-auto flex-1 p-4 space-y-6 pt-4">
-              {entry.image_url && <img src={entry.image_url} alt={entry.food_name} className="w-full h-64 object-cover rounded-2xl shadow-sm" />}
-              <FoodAnalysisCard result={result} />
+        <DrawerContent className="h-[100dvh] mt-0 rounded-none border-none bg-background flex flex-col p-0">
+          {/* Título oculto para accesibilidad */}
+          <div className="sr-only">
+            <DrawerTitle>{t('analysis.details_title')}</DrawerTitle>
           </div>
-          <DrawerFooter className="pt-4 border-t flex-shrink-0">
-            <Button onClick={onClose} size="lg" className="rounded-xl h-14 text-lg">{t('analysis.close')}</Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
 
-      {/* Drawer de Confirmación de Eliminación (Anidado) */}
-      <Drawer open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DrawerContent>
-          <div className="mx-auto w-full max-w-sm">
-            <DrawerHeader className="text-center pt-6">
-              <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
-                <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-500" />
+          <div className="relative flex-1 overflow-y-auto no-scrollbar">
+            {/* Sección de Imagen (Header) */}
+            <div className="relative w-full h-[45vh] min-h-[300px]">
+              {entry.image_url ? (
+                <img 
+                  src={entry.image_url} 
+                  alt={entry.food_name} 
+                  className="w-full h-full object-cover" 
+                />
+              ) : (
+                <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground">
+                  No Image
+                </div>
+              )}
+              
+              {/* Degradado para visibilidad de botones */}
+              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/70 to-transparent pointer-events-none" />
+
+              {/* Botones de Acción Superpuestos */}
+              <div className="absolute top-0 left-0 right-0 p-4 pt-12 flex justify-between items-start z-10">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="bg-black/20 text-white hover:bg-black/40 hover:text-white backdrop-blur-md rounded-full w-11 h-11 border border-white/10 shadow-sm" 
+                  onClick={onClose}
+                >
+                  <ChevronDown className="w-7 h-7" />
+                </Button>
+
+                <div className="flex gap-3">
+                  <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+                    <AlertDialogTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="bg-black/20 text-white hover:bg-red-500/80 hover:text-white backdrop-blur-md rounded-full w-11 h-11 border border-white/10 shadow-sm transition-colors"
+                      >
+                        <Trash2 className="w-6 h-6" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>¿Eliminar comida?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Esta acción no se puede deshacer. Se eliminará este registro de tu diario.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                          Eliminar
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="bg-black/20 text-white hover:bg-black/40 hover:text-white backdrop-blur-md rounded-full w-11 h-11 border border-white/10 shadow-sm"
+                    onClick={handleShare}
+                    disabled={isSharing}
+                  >
+                    {isSharing ? (
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                    ) : (
+                      <DownloadIcon width={24} height={24} strokeWidth={2} />
+                    )}
+                  </Button>
+                </div>
               </div>
-              <DrawerTitle className="text-2xl font-bold text-foreground">¿Eliminar comida?</DrawerTitle>
-              <DrawerDescription className="text-base mt-2 text-muted-foreground">
-                Esta acción no se puede deshacer. Se eliminará este registro de tu diario.
-              </DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter className="gap-3 pb-8 px-6">
-              <Button 
-                onClick={handleDelete} 
-                variant="destructive" 
-                size="lg" 
-                className="w-full h-14 text-lg font-semibold rounded-2xl shadow-lg shadow-red-500/20"
-              >
-                Eliminar
-              </Button>
-              <Button 
-                onClick={() => setIsDeleteOpen(false)} 
-                variant="outline" 
-                size="lg" 
-                className="w-full h-14 text-lg font-semibold rounded-2xl"
-              >
-                Cancelar
-              </Button>
-            </DrawerFooter>
+            </div>
+
+            {/* Contenido (Tarjeta deslizable visualmente) */}
+            <div className="relative -mt-8 bg-background rounded-t-[32px] px-6 pb-8 min-h-[60vh] shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+              {/* Indicador de arrastre */}
+              <div className="w-full flex justify-center pt-4 pb-6">
+                <div className="w-12 h-1.5 bg-muted rounded-full opacity-50" />
+              </div>
+              
+              <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+                <FoodAnalysisCard result={result} />
+              </div>
+            </div>
           </div>
         </DrawerContent>
       </Drawer>
