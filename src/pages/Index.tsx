@@ -154,11 +154,11 @@ const Index = () => {
             <CarouselContent>
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-3 h-[340px]"> {/* Altura reducida a 340px */}
+                  <div className="flex flex-col gap-3 h-[300px]">
                     <div className="flex-1 w-full">
                       <CaloriesCard current={intake.calories} goal={dailyGoals.calories} className="h-full" />
                     </div>
-                    <div className="h-32 w-full"> {/* Altura ajustada a h-32 */}
+                    <div className="h-28 w-full">
                       <div className="grid grid-cols-3 gap-2 w-full h-full">
                         <MacroCard
                           value={getSafePercentage(intake.protein, dailyGoals.protein)}
@@ -192,7 +192,7 @@ const Index = () => {
 
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-3 h-[340px]"> {/* Altura reducida a 340px */}
+                  <div className="flex flex-col gap-3 h-[300px]">
                     <div className="flex-1 w-full">
                       <div className="grid grid-cols-2 gap-2 w-full h-full">
                         <HealthScoreCard score={healthScore} />
@@ -205,7 +205,7 @@ const Index = () => {
                         />
                       </div>
                     </div>
-                    <div className="h-32 w-full"> {/* Altura ajustada a h-32 */}
+                    <div className="h-28 w-full">
                       <MacroCard
                           value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
                           color="#a855f7"
