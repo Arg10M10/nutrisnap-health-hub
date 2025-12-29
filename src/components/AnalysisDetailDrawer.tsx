@@ -4,24 +4,23 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerClose,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { FoodEntry, useNutrition } from "@/context/NutritionContext";
 import { useTranslation } from "react-i18next";
-import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2, AlertTriangle, X } from "lucide-react";
+import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2, X } from "lucide-react";
 import { shareElement } from '@/lib/share';
 import { DownloadIcon } from './icons/DownloadIcon';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 interface AnalysisDetailDrawerProps {
   entry: FoodEntry | null;
@@ -38,7 +37,6 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
 
   if (!entry) return null;
 
-  // Extraer ingredientes de analysis_data si existe
   const ingredients = (entry.analysis_data as any)?.ingredients || [];
 
   const result: AnalysisResult = {
@@ -79,18 +77,17 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
 
   return (
     <>
-      {/* Vista de Detalle en Pantalla Completa usando Dialog */}
+      {/* Vista de Detalle (Pantalla Completa sin animación de deslizamiento) */}
       <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
         <DialogContent 
           className="w-screen h-screen max-w-none m-0 p-0 rounded-none border-none bg-background flex flex-col focus:outline-none z-50 [&>button]:hidden"
         >
-          {/* Título oculto para accesibilidad */}
           <div className="sr-only">
             <DialogTitle>{t('analysis.details_title')}</DialogTitle>
           </div>
 
           <div className="relative flex-1 overflow-y-auto no-scrollbar">
-            {/* Sección de Imagen (Header) Inmersiva */}
+            {/* Header con Imagen */}
             <div className="relative w-full h-[45vh] min-h-[350px]">
               {entry.image_url ? (
                 <img 
@@ -104,13 +101,10 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                 </div>
               )}
               
-              {/* Degradado superior para legibilidad de botones */}
-              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/70 to-transparent pointer-events-none" />
-              
-              {/* Degradado inferior para transición suave al contenido */}
+              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
               <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
-              {/* Botones de Acción Superpuestos - Barra Superior */}
+              {/* Barra de acciones superior */}
               <div className="absolute top-0 left-0 right-0 p-4 pt-12 flex justify-between items-start z-10">
                 <Button 
                   variant="secondary" 
@@ -122,8 +116,9 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                 </Button>
 
                 <div className="flex gap-3">
-                  <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-                    <AlertDialogTrigger asChild>
+                  {/* Drawer de Confirmación de Eliminación (Sale desde abajo) */}
+                  <Drawer open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+                    <DrawerTrigger asChild>
                       <Button 
                         variant="secondary" 
                         size="icon" 
@@ -131,22 +126,33 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                       >
                         <Trash2 className="w-6 h-6" />
                       </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>¿Eliminar comida?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Esta acción no se puede deshacer. Se eliminará este registro de tu diario.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                          Eliminar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                    </DrawerTrigger>
+                    <DrawerContent className="z-[60]">
+                      <div className="mx-auto w-full max-w-sm">
+                        <DrawerHeader>
+                          <DrawerTitle className="text-center text-xl font-bold">¿Eliminar comida?</DrawerTitle>
+                          <DrawerDescription className="text-center text-base mt-2">
+                            Esta acción no se puede deshacer. Se eliminará este registro de tu diario.
+                          </DrawerDescription>
+                        </DrawerHeader>
+                        <DrawerFooter className="gap-3 pb-8">
+                          <Button 
+                            onClick={handleDelete} 
+                            size="lg"
+                            variant="destructive" 
+                            className="w-full h-14 text-lg rounded-2xl shadow-lg shadow-red-500/20"
+                          >
+                            Eliminar
+                          </Button>
+                          <DrawerClose asChild>
+                            <Button variant="outline" size="lg" className="w-full h-14 text-lg rounded-2xl">
+                              Cancelar
+                            </Button>
+                          </DrawerClose>
+                        </DrawerFooter>
+                      </div>
+                    </DrawerContent>
+                  </Drawer>
 
                   <Button 
                     variant="secondary" 
@@ -165,11 +171,9 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
               </div>
             </div>
 
-            {/* Contenido Nutricional (Deslizable hacia arriba sobre la imagen) */}
+            {/* Contenido Nutricional */}
             <div className="relative -mt-10 bg-background rounded-t-[32px] px-6 pb-12 min-h-[60vh] shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
-              {/* Espaciador superior */}
               <div className="pt-8" />
-              
               <div className="space-y-6 animate-in slide-in-from-bottom-8 duration-700 fade-in-0">
                 <FoodAnalysisCard result={result} />
               </div>
