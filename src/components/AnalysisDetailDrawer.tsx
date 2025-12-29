@@ -1,14 +1,14 @@
 import { useRef, useState } from 'react';
 import {
-  Drawer,
-  DrawerContent,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { FoodEntry, useNutrition } from "@/context/NutritionContext";
 import { useTranslation } from "react-i18next";
-import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2, AlertTriangle, ChevronDown } from "lucide-react";
+import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2, AlertTriangle, X } from "lucide-react";
 import { shareElement } from '@/lib/share';
 import { DownloadIcon } from './icons/DownloadIcon';
 import {
@@ -79,16 +79,14 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
 
   return (
     <>
-      {/* Drawer Principal de Detalles - Configurado como Pantalla Completa "Real" */}
-      <Drawer 
-        open={isOpen} 
-        onOpenChange={(open) => !open && onClose()}
-        shouldScaleBackground={false} // IMPORTANTE: Evita el efecto "tarjeta" de fondo
-      >
-        <DrawerContent className="h-[100dvh] mt-0 rounded-none border-none bg-background flex flex-col p-0 z-50">
+      {/* Vista de Detalle en Pantalla Completa usando Dialog */}
+      <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+        <DialogContent 
+          className="w-screen h-screen max-w-none m-0 p-0 rounded-none border-none bg-background flex flex-col focus:outline-none z-50 [&>button]:hidden"
+        >
           {/* Título oculto para accesibilidad */}
           <div className="sr-only">
-            <DrawerTitle>{t('analysis.details_title')}</DrawerTitle>
+            <DialogTitle>{t('analysis.details_title')}</DialogTitle>
           </div>
 
           <div className="relative flex-1 overflow-y-auto no-scrollbar">
@@ -107,7 +105,7 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
               )}
               
               {/* Degradado superior para legibilidad de botones */}
-              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
+              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/70 to-transparent pointer-events-none" />
               
               {/* Degradado inferior para transición suave al contenido */}
               <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
@@ -120,7 +118,7 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                   className="bg-black/30 text-white hover:bg-black/50 backdrop-blur-md rounded-full w-12 h-12 border border-white/10 shadow-lg" 
                   onClick={onClose}
                 >
-                  <ChevronDown className="w-8 h-8" />
+                  <X className="w-6 h-6" />
                 </Button>
 
                 <div className="flex gap-3">
@@ -169,18 +167,16 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
 
             {/* Contenido Nutricional (Deslizable hacia arriba sobre la imagen) */}
             <div className="relative -mt-10 bg-background rounded-t-[32px] px-6 pb-12 min-h-[60vh] shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
-              {/* Indicador visual de arrastre */}
-              <div className="w-full flex justify-center pt-4 pb-6">
-                <div className="w-14 h-1.5 bg-muted-foreground/20 rounded-full" />
-              </div>
+              {/* Espaciador superior */}
+              <div className="pt-8" />
               
               <div className="space-y-6 animate-in slide-in-from-bottom-8 duration-700 fade-in-0">
                 <FoodAnalysisCard result={result} />
               </div>
             </div>
           </div>
-        </DrawerContent>
-      </Drawer>
+        </DialogContent>
+      </Dialog>
 
       {/* Plantilla oculta para compartir */}
       <div 
