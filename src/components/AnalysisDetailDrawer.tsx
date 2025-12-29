@@ -8,11 +8,22 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
-import { FoodEntry } from "@/context/NutritionContext";
+import { FoodEntry, useNutrition } from "@/context/NutritionContext";
 import { useTranslation } from "react-i18next";
-import { Leaf, Loader2, Flame, Beef, Wheat, Droplets } from "lucide-react";
+import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2 } from "lucide-react";
 import { shareElement } from '@/lib/share';
 import { DownloadIcon } from './icons/DownloadIcon';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface AnalysisDetailDrawerProps {
   entry: FoodEntry | null;
@@ -24,12 +35,11 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
   const { t } = useTranslation();
   const shareRef = useRef<HTMLDivElement>(null);
   const [isSharing, setIsSharing] = useState(false);
+  const { deleteEntry } = useNutrition();
 
   if (!entry) return null;
 
   // Extraer ingredientes de analysis_data si existe
-  // En MenuAnalysisData el campo es diferente, pero aquí nos enfocamos en comida normal.
-  // La edge function guarda el JSON completo en analysis_data.
   const ingredients = (entry.analysis_data as any)?.ingredients || [];
 
   const result: AnalysisResult = {
@@ -62,25 +72,59 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
     }
   };
 
+  const handleDelete = () => {
+    deleteEntry(entry.id, 'food');
+    onClose();
+  };
+
   return (
     <>
       <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
         <DrawerContent className="max-h-[90vh] flex flex-col">
           <DrawerHeader className="relative pb-2">
               <DrawerTitle className="text-center">{t('analysis.details_title')}</DrawerTitle>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="absolute right-4 top-2 text-primary hover:bg-primary/10"
-                onClick={handleShare}
-                disabled={isSharing}
-              >
-                {isSharing ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <DownloadIcon width={22} height={22} />
-                )}
-              </Button>
+              
+              <div className="absolute right-4 top-2 flex items-center gap-1">
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors w-10 h-10"
+                    >
+                      <Trash2 className="w-6 h-6" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>¿Eliminar comida?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acción no se puede deshacer. Se eliminará este registro de tu diario.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                        Eliminar
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-primary hover:bg-primary/10 w-10 h-10"
+                  onClick={handleShare}
+                  disabled={isSharing}
+                >
+                  {isSharing ? (
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  ) : (
+                    <DownloadIcon width={28} height={28} />
+                  )}
+                </Button>
+              </div>
           </DrawerHeader>
           <div data-vaul-scrollable className="overflow-y-auto flex-1 p-4 space-y-6 pt-4">
               {entry.image_url && <img src={entry.image_url} alt={entry.food_name} className="w-full h-64 object-cover rounded-2xl shadow-sm" />}
