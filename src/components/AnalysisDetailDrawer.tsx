@@ -4,26 +4,16 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
+  DrawerDescription,
   DrawerFooter,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { FoodEntry, useNutrition } from "@/context/NutritionContext";
 import { useTranslation } from "react-i18next";
-import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2 } from "lucide-react";
+import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2, AlertTriangle } from "lucide-react";
 import { shareElement } from '@/lib/share';
 import { DownloadIcon } from './icons/DownloadIcon';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 interface AnalysisDetailDrawerProps {
   entry: FoodEntry | null;
@@ -35,6 +25,7 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
   const { t } = useTranslation();
   const shareRef = useRef<HTMLDivElement>(null);
   const [isSharing, setIsSharing] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const { deleteEntry } = useNutrition();
 
   if (!entry) return null;
@@ -74,42 +65,27 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
 
   const handleDelete = () => {
     deleteEntry(entry.id, 'food');
+    setIsDeleteOpen(false);
     onClose();
   };
 
   return (
     <>
+      {/* Drawer Principal de Detalles */}
       <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
         <DrawerContent className="max-h-[90vh] flex flex-col">
           <DrawerHeader className="relative pb-2">
               <DrawerTitle className="text-center">{t('analysis.details_title')}</DrawerTitle>
               
               <div className="absolute right-4 top-2 flex items-center gap-1">
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors w-10 h-10"
-                    >
-                      <Trash2 className="w-6 h-6" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>¿Eliminar comida?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Esta acción no se puede deshacer. Se eliminará este registro de tu diario.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                        Eliminar
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors w-10 h-10"
+                  onClick={() => setIsDeleteOpen(true)}
+                >
+                  <Trash2 className="w-6 h-6" />
+                </Button>
 
                 <Button 
                   variant="ghost" 
@@ -133,6 +109,41 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
           <DrawerFooter className="pt-4 border-t flex-shrink-0">
             <Button onClick={onClose} size="lg" className="rounded-xl h-14 text-lg">{t('analysis.close')}</Button>
           </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Drawer de Confirmación de Eliminación (Anidado) */}
+      <Drawer open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+        <DrawerContent>
+          <div className="mx-auto w-full max-w-sm">
+            <DrawerHeader className="text-center pt-6">
+              <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+                <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-500" />
+              </div>
+              <DrawerTitle className="text-2xl font-bold text-foreground">¿Eliminar comida?</DrawerTitle>
+              <DrawerDescription className="text-base mt-2 text-muted-foreground">
+                Esta acción no se puede deshacer. Se eliminará este registro de tu diario.
+              </DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter className="gap-3 pb-8 px-6">
+              <Button 
+                onClick={handleDelete} 
+                variant="destructive" 
+                size="lg" 
+                className="w-full h-14 text-lg font-semibold rounded-2xl shadow-lg shadow-red-500/20"
+              >
+                Eliminar
+              </Button>
+              <Button 
+                onClick={() => setIsDeleteOpen(false)} 
+                variant="outline" 
+                size="lg" 
+                className="w-full h-14 text-lg font-semibold rounded-2xl"
+              >
+                Cancelar
+              </Button>
+            </DrawerFooter>
+          </div>
         </DrawerContent>
       </Drawer>
 
