@@ -3,13 +3,15 @@ import { Flame } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import MacroProgressCircle from "./MacroProgressCircle";
 import AnimatedNumber from "./AnimatedNumber";
+import { cn } from "@/lib/utils";
 
 interface CaloriesCardProps {
   current: number;
   goal: number;
+  className?: string;
 }
 
-const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
+const CaloriesCard = ({ current, goal, className }: CaloriesCardProps) => {
   const { t } = useTranslation();
   const currentVal = current || 0;
   const goalVal = goal || 0;
@@ -22,7 +24,7 @@ const CaloriesCard = ({ current, goal }: CaloriesCardProps) => {
   const remaining = goalVal - currentVal;
 
   return (
-    <Card className="w-full">
+    <Card className={cn("w-full flex flex-col justify-center", className)}>
       <CardContent className="flex items-center justify-between p-6 gap-4">
         <div className="space-y-2 flex-1">
           <p className="text-5xl font-bold text-foreground leading-none">

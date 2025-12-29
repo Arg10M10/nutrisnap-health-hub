@@ -154,35 +154,37 @@ const Index = () => {
             <CarouselContent>
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-3 min-h-[360px]">
-                    <div className="w-full">
-                      <CaloriesCard current={intake.calories} goal={dailyGoals.calories} />
+                  <div className="flex flex-col gap-3 h-[400px]">
+                    <div className="flex-1 w-full">
+                      <CaloriesCard current={intake.calories} goal={dailyGoals.calories} className="h-full" />
                     </div>
-                    <div className="grid grid-cols-3 gap-2 w-full">
-                      <MacroCard
-                        value={getSafePercentage(intake.protein, dailyGoals.protein)}
-                        color="#ef4444"
-                        icon={<Beef className="w-6 h-6 text-red-500" />}
-                        current={intake.protein}
-                        unit="g"
-                        label={t('home.protein')}
-                      />
-                      <MacroCard
-                        value={getSafePercentage(intake.carbs, dailyGoals.carbs)}
-                        color="#f97316"
-                        icon={<Wheat className="w-6 h-6 text-orange-500" />}
-                        current={intake.carbs}
-                        unit="g"
-                        label={t('home.carbs')}
-                      />
-                      <MacroCard
-                        value={getSafePercentage(intake.fats, dailyGoals.fats)}
-                        color="#3b82f6"
-                        icon={<Droplets className="w-6 h-6 text-blue-500" />}
-                        current={intake.fats}
-                        unit="g"
-                        label={t('home.fats')}
-                      />
+                    <div className="h-36 w-full">
+                      <div className="grid grid-cols-3 gap-2 w-full h-full">
+                        <MacroCard
+                          value={getSafePercentage(intake.protein, dailyGoals.protein)}
+                          color="#ef4444"
+                          icon={<Beef className="w-6 h-6 text-red-500" />}
+                          current={intake.protein}
+                          unit="g"
+                          label={t('home.protein')}
+                        />
+                        <MacroCard
+                          value={getSafePercentage(intake.carbs, dailyGoals.carbs)}
+                          color="#f97316"
+                          icon={<Wheat className="w-6 h-6 text-orange-500" />}
+                          current={intake.carbs}
+                          unit="g"
+                          label={t('home.carbs')}
+                        />
+                        <MacroCard
+                          value={getSafePercentage(intake.fats, dailyGoals.fats)}
+                          color="#3b82f6"
+                          icon={<Droplets className="w-6 h-6 text-blue-500" />}
+                          current={intake.fats}
+                          unit="g"
+                          label={t('home.fats')}
+                        />
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -190,18 +192,20 @@ const Index = () => {
 
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-3 min-h-[360px]">
-                    <div className="grid grid-cols-2 gap-2 w-full">
-                      <HealthScoreCard score={healthScore} />
-                      <WaterTrackerCard
-                        count={waterIntake}
-                        goal={dailyGoals.water}
-                        onAdd={(amount) => addWaterGlass(selectedDate, amount)}
-                        onRemove={() => removeWaterGlass(selectedDate)}
-                        isUpdating={isWaterUpdating}
-                      />
+                  <div className="flex flex-col gap-3 h-[400px]">
+                    <div className="flex-1 w-full">
+                      <div className="grid grid-cols-2 gap-2 w-full h-full">
+                        <HealthScoreCard score={healthScore} />
+                        <WaterTrackerCard
+                          count={waterIntake}
+                          goal={dailyGoals.water}
+                          onAdd={(amount) => addWaterGlass(selectedDate, amount)}
+                          onRemove={() => removeWaterGlass(selectedDate)}
+                          isUpdating={isWaterUpdating}
+                        />
+                      </div>
                     </div>
-                    <div className="w-full">
+                    <div className="h-36 w-full">
                       <MacroCard
                           value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
                           color="#a855f7"
