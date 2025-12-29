@@ -1,36 +1,37 @@
 import { useMemo } from "react";
 import { format, subDays, isSameDay, isToday as checkIsToday } from "date-fns";
-import { es, enUS } from "date-fns/locale"; // Importamos ambos locales
+import { es, enUS } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
 interface DayProgressProps {
   percentage: number;
   color: string;
+  trackColor?: string;
   size?: number;
   strokeWidth?: number;
 }
 
-const DayProgressRing = ({ percentage, color, size = 32, strokeWidth = 3 }: DayProgressProps) => {
+const DayProgressRing = ({ percentage, color, trackColor, size = 32, strokeWidth = 3 }: DayProgressProps) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = Math.max(0, circumference - (percentage / 100) * circumference);
 
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-      {/* Fondo del anillo (track) */}
-      <svg className="w-full h-full -rotate-90">
+      <svg className="w-full h-full -rotate-90" viewBox={`0 0 ${size} ${size}`}>
+        {/* Track (Fondo del anillo) */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="currentColor"
+          stroke={trackColor || "currentColor"}
           strokeWidth={strokeWidth}
-          className="text-muted/30"
+          className={!trackColor ? "text-muted/20" : ""}
         />
-        {/* Progreso */}
+        {/* Progress (Progreso) */}
         {percentage > 0 && (
           <motion.circle
             initial={{ strokeDashoffset: circumference }}
@@ -60,13 +61,10 @@ interface WeeklyCalendarProps {
 
 const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorieGoal }: WeeklyCalendarProps) => {
   const { i18n } = useTranslation();
-  
-  // Determinar el locale basado en el idioma actual
   const currentLocale = i18n.language.startsWith('es') ? es : enUS;
 
   const weekDays = useMemo(() => {
     const today = new Date();
-    // Generar los últimos 7 días incluyendo hoy
     return Array.from({ length: 7 })
       .map((_, i) => subDays(today, i))
       .reverse();
@@ -86,15 +84,20 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
 
           // Lógica de colores semáforo
           const difference = calories - calorieGoal;
-          let progressColor = '#22c55e'; // Green (default safe)
+          let progressColor = '#22c55e'; // Verde por defecto
           
           if (percentage === 0) progressColor = 'transparent';
-          else if (difference > 200) progressColor = '#ef4444'; // Red (exceeded)
-          else if (difference > 50) progressColor = '#f59e0b'; // Amber (warning)
+          else if (difference > 200) progressColor = '#ef4444'; // Rojo
+          else if (difference > 50) progressColor = '#f59e0b'; // Naranja
 
-          // Color del texto del día (cambia si está seleccionado)
+          // Configuración de colores dinámica basada en la selección
           const textColor = isSelected ? "text-primary-foreground" : "text-muted-foreground";
           const numberColor = isSelected ? "text-primary-foreground font-bold" : "text-foreground font-semibold";
+          
+          // Si está seleccionado, el anillo es blanco (para contrastar con la pastilla verde).
+          // Si no, usa el color calculado (semáforo).
+          const ringColor = isSelected ? "currentColor" : progressColor;
+          const trackColor = isSelected ? "rgba(255,255,255,0.2)" : undefined;
 
           return (
             <motion.button
@@ -112,7 +115,7 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
                 />
               )}
 
-              {/* Indicador de "Hoy" (Puntito arriba) */}
+              {/* Indicador de "Hoy" */}
               <div className="h-1.5 w-1.5 mb-1 relative z-10">
                 {isToday && (
                   <motion.div 
@@ -133,13 +136,13 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
 
               {/* Número y Anillo */}
               <div className="relative z-10 mt-1 flex items-center justify-center">
-                {/* El anillo va detrás del número pero visualmente lo envuelve */}
                 <div className="absolute inset-0 flex items-center justify-center">
                    <DayProgressRing 
                       percentage={Math.min(percentage, 100)} 
-                      color={isSelected ? "currentColor" : progressColor} // Si está seleccionado, usa el color del texto (blanco/negro), sino el color de progreso
-                      size={36}
-                      strokeWidth={isSelected ? 3 : 2.5}
+                      color={ringColor}
+                      trackColor={trackColor}
+                      size={38} // Ligeramente más grande para rodear bien el número
+                      strokeWidth={3}
                    />
                 </div>
                 
@@ -148,10 +151,10 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
                 </span>
               </div>
 
-              {/* Pequeño punto si hay datos pero no hay progreso visual claro (opcional) */}
+              {/* Punto indicador si no hay progreso visual pero sí datos (opcional) */}
               <div className="h-1 w-1 mt-1 relative z-10">
                  {!hasData && !isSelected && (
-                    <div className="w-full h-full rounded-full bg-muted-foreground/20" />
+                    <div className="w-full h-full rounded-full bg-muted-foreground/10" />
                  )}
               </div>
             </motion.button>
