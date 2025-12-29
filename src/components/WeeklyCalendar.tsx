@@ -21,7 +21,7 @@ const DayProgressRing = ({ percentage, color, trackColor, size = 32, strokeWidth
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       <svg className="w-full h-full -rotate-90" viewBox={`0 0 ${size} ${size}`}>
-        {/* Track (Fondo del anillo) */}
+        {/* Track (Fondo del anillo) - Ahora punteado */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -29,7 +29,8 @@ const DayProgressRing = ({ percentage, color, trackColor, size = 32, strokeWidth
           fill="none"
           stroke={trackColor || "currentColor"}
           strokeWidth={strokeWidth}
-          className={!trackColor ? "text-muted/20" : ""}
+          strokeDasharray={!trackColor ? "4 4" : "none"}
+          className={!trackColor ? "text-muted-foreground/20" : ""}
         />
         {/* Progress (Progreso) */}
         {percentage > 0 && (

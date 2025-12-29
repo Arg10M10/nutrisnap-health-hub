@@ -7,7 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 
 const ColorRing = ({ color, isDotted = false }: { color: string; isDotted?: boolean }) => (
   <div className="w-10 h-10 rounded-full flex-shrink-0" style={{
-    border: isDotted ? `3px dashed hsl(var(--muted-foreground))` : `4px solid ${color}`
+    border: isDotted ? `3px dashed ${color}` : `4px solid ${color}`
   }} />
 );
 
@@ -19,7 +19,7 @@ const RingColors = () => {
     { color: 'hsl(var(--primary))', title: t('ring_colors.green_title'), description: t('ring_colors.green_desc') },
     { color: '#f59e0b', title: t('ring_colors.yellow_title'), description: t('ring_colors.yellow_desc') },
     { color: 'hsl(var(--destructive))', title: t('ring_colors.red_title'), description: t('ring_colors.red_desc') },
-    { color: 'hsl(var(--muted-foreground))', isDotted: true, title: t('ring_colors.dotted_title'), description: t('ring_colors.dotted_desc') },
+    { color: 'hsl(var(--muted-foreground) / 0.3)', isDotted: true, title: t('ring_colors.dotted_title'), description: t('ring_colors.dotted_desc') },
   ];
 
   return (
