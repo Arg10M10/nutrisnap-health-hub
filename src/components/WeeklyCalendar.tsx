@@ -94,8 +94,6 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
           const textColor = isSelected ? "text-primary-foreground" : "text-muted-foreground";
           const numberColor = isSelected ? "text-primary-foreground font-bold" : "text-foreground font-semibold";
           
-          // Si está seleccionado, el anillo es blanco (para contrastar con la pastilla verde).
-          // Si no, usa el color calculado (semáforo).
           const ringColor = isSelected ? "currentColor" : progressColor;
           const trackColor = isSelected ? "rgba(255,255,255,0.2)" : undefined;
 
@@ -104,7 +102,7 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
               key={day.toString()}
               onClick={() => onDateSelect(day)}
               whileTap={{ scale: 0.95 }}
-              className="relative flex flex-col items-center justify-between py-3 rounded-[20px] h-[88px] w-full outline-none focus-visible:ring-2 focus-visible:ring-primary overflow-hidden group"
+              className="relative flex flex-col items-center justify-between py-3 rounded-[20px] h-[92px] w-full outline-none focus-visible:ring-2 focus-visible:ring-primary overflow-hidden group"
             >
               {/* Fondo Animado de Selección ("La Pastilla") */}
               {isSelected && (
@@ -134,25 +132,27 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
                 {format(day, "EEE", { locale: currentLocale }).replace('.', '')}
               </span>
 
-              {/* Número y Anillo */}
-              <div className="relative z-10 mt-1 flex items-center justify-center">
+              {/* Número y Anillo - Contenedor ajustado para evitar solapamiento */}
+              <div className="relative z-10 flex items-center justify-center mt-1">
+                {/* Aumentamos el tamaño a 44px para dar espacio al texto */}
                 <div className="absolute inset-0 flex items-center justify-center">
                    <DayProgressRing 
                       percentage={Math.min(percentage, 100)} 
                       color={ringColor}
                       trackColor={trackColor}
-                      size={38} // Ligeramente más grande para rodear bien el número
+                      size={44} 
                       strokeWidth={3}
                    />
                 </div>
                 
+                {/* Z-index 20 asegura que el texto esté encima si algo fallara, pero con size 44 ya hay espacio de sobra */}
                 <span className={cn("text-base relative z-20 transition-colors duration-200", numberColor)}>
                   {format(day, "d")}
                 </span>
               </div>
 
-              {/* Punto indicador si no hay progreso visual pero sí datos (opcional) */}
-              <div className="h-1 w-1 mt-1 relative z-10">
+              {/* Punto indicador inferior */}
+              <div className="h-1 w-1 mt-auto mb-1 relative z-10">
                  {!hasData && !isSelected && (
                     <div className="w-full h-full rounded-full bg-muted-foreground/10" />
                  )}
