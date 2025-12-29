@@ -22,7 +22,7 @@ const StreakModal = ({ isOpen, onClose, streak, streakDays }: StreakModalProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-card border-none shadow-2xl rounded-[32px] w-[85vw] max-w-[300px] p-0 overflow-hidden outline-none">
+      <DialogContent className="bg-card border-none shadow-2xl rounded-[32px] w-[90vw] max-w-[350px] p-0 overflow-hidden outline-none">
         <div className="w-full">
           <div className="bg-gradient-to-b from-orange-500/10 via-orange-500/5 to-transparent p-6 pb-2 flex flex-col items-center">
             <div className="relative mb-3">
