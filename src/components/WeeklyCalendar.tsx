@@ -102,7 +102,7 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
               key={day.toString()}
               onClick={() => onDateSelect(day)}
               whileTap={{ scale: 0.95 }}
-              className="relative flex flex-col items-center justify-between py-3 rounded-[20px] h-[92px] w-full outline-none focus-visible:ring-2 focus-visible:ring-primary overflow-hidden group"
+              className="relative flex flex-col items-center justify-between py-2 rounded-[20px] h-[96px] w-full outline-none focus-visible:ring-2 focus-visible:ring-primary overflow-hidden group"
             >
               {/* Fondo Animado de Selección ("La Pastilla") */}
               {isSelected && (
@@ -114,7 +114,7 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
               )}
 
               {/* Indicador de "Hoy" */}
-              <div className="h-1.5 w-1.5 mb-1 relative z-10">
+              <div className="h-1.5 w-1.5 mb-0.5 relative z-10">
                 {isToday && (
                   <motion.div 
                     initial={{ scale: 0 }} 
@@ -132,20 +132,18 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
                 {format(day, "EEE", { locale: currentLocale }).replace('.', '')}
               </span>
 
-              {/* Número y Anillo - Contenedor ajustado para evitar solapamiento */}
-              <div className="relative z-10 flex items-center justify-center mt-1">
-                {/* Aumentamos el tamaño a 44px para dar espacio al texto */}
+              {/* Número y Anillo - Contenedor con tamaño fijo para evitar solapamiento */}
+              <div className="relative z-10 mt-0.5 flex items-center justify-center w-12 h-12">
                 <div className="absolute inset-0 flex items-center justify-center">
                    <DayProgressRing 
                       percentage={Math.min(percentage, 100)} 
                       color={ringColor}
                       trackColor={trackColor}
-                      size={44} 
+                      size={48} 
                       strokeWidth={3}
                    />
                 </div>
                 
-                {/* Z-index 20 asegura que el texto esté encima si algo fallara, pero con size 44 ya hay espacio de sobra */}
                 <span className={cn("text-base relative z-20 transition-colors duration-200", numberColor)}>
                   {format(day, "d")}
                 </span>
