@@ -11,16 +11,13 @@ const GPT_MODEL = "gpt-5-nano";
 
 const safeParseJson = (text: string) => {
   try {
-    // Intentar parseo directo primero
     return JSON.parse(text);
   } catch {
-    // Si falla, limpiar bloques de código markdown ```json ... ```
     try {
       const cleanedText = text.replace(/```json\n?/g, "").replace(/\n?```/g, "").trim();
       return JSON.parse(cleanedText);
     } catch (e) {
       console.error("Failed to parse JSON from AI:", e);
-      console.error("Original text:", text);
       return null;
     }
   }
@@ -40,33 +37,30 @@ serve(async (req) => {
 
     const userLang = language && language.startsWith('es') ? 'Spanish' : 'English';
     
-    // Traducir objetivos para el contexto de la IA
     let goalContext = "maintain a healthy weight";
-    if (goal === 'lose_weight') goalContext = `lose weight at a rate of ${weeklyRate || 0.5}kg per week`;
-    else if (goal === 'gain_weight') goalContext = `gain muscle/weight at a rate of ${weeklyRate || 0.5}kg per week`;
+    if (goal === 'lose_weight') goalContext = `lose weight`;
+    else if (goal === 'gain_weight') goalContext = `gain muscle/weight`;
 
     const prompt = `
-      You are an expert nutritionist assisting a user who wants to ${goalContext}.
-      Analyze the provided image of a food menu.
+      Analyze the provided image of a restaurant menu.
+      User Goal: ${goalContext}.
       
       Task:
-      1. Identify the food items listed on the menu.
-      2. Select the Top 3-4 HEALTHIEST options aligned with the user's goal.
-      3. Identify 1-2 options to AVOID or consume in moderation (high calorie/sugar/bad fats).
+      1. Identify food items visible on the menu.
+      2. Select the 3-4 HEALTHIEST options aligned with the user's goal.
+      3. Identify 1-2 options to AVOID (high calorie/sugar/bad fats).
       4. Provide a very brief explanation for each choice.
       
-      Constraints:
-      - Keep the list SHORT and concise. Do not list everything.
-      - Output language MUST be ${userLang}.
-      - Return ONLY valid JSON.
+      Output Language: ${userLang}.
+      Format: Return ONLY a valid JSON object. No markdown, no extra text.
       
       JSON Structure:
       {
         "recommended": [
-          { "name": "Dish Name", "calories": "Est. ~500kcal", "reason": "Why it's good (max 10 words)" }
+          { "name": "Dish Name", "calories": "Est. ~500kcal", "reason": "Brief reason why it's good" }
         ],
         "avoid": [
-          { "name": "Dish Name", "calories": "Est. ~1200kcal", "reason": "Why avoid it (max 10 words)" }
+          { "name": "Dish Name", "calories": "Est. ~1200kcal", "reason": "Brief reason why to avoid" }
         ],
         "summary": "One sentence summary advice for this menu."
       }
@@ -87,7 +81,6 @@ serve(async (req) => {
         },
       ],
       response_format: { type: "json_object" },
-      max_tokens: 1000,
     };
 
     const aiRes = await fetch(GPT_API_URL, {
