@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets, X, ChevronDown } from "lucide-react";
+import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
@@ -51,6 +51,19 @@ const BottomNav = () => {
     { icon: Book, label: t('bottom_nav.diets'), path: "/diets" },
   ];
 
+  const circularButtons = [
+    { 
+      label: t('bottom_nav.scan_food'), 
+      icon: Scan, 
+      action: () => handleMenuAction(() => navigate("/scanner", { state: { mode: 'food' } })) 
+    },
+    { 
+      label: t('bottom_nav.scan_menu'), 
+      icon: FileText, 
+      action: () => handleMenuAction(() => navigate("/scanner", { state: { mode: 'menu' } })) 
+    },
+  ];
+
   const handleMenuAction = (action: () => void) => {
     setIsMenuOpen(false);
     setTimeout(() => {
@@ -98,35 +111,19 @@ const BottomNav = () => {
   const isImperial = profile?.units === 'imperial';
   const currentWeight = isImperial && profile?.weight ? Math.round(profile.weight * 2.20462) : (profile?.weight || 70);
 
-  // Botones Circulares (Fila superior)
-  const circularButtons = [
-    { 
-      label: t('bottom_nav.scan_food'), 
-      icon: Scan, 
-      action: () => handleMenuAction(() => navigate("/scanner", { state: { mode: 'food' } })) 
-    },
-    { 
-      label: t('bottom_nav.scan_menu'), 
-      icon: FileText, 
-      action: () => handleMenuAction(() => navigate("/scanner", { state: { mode: 'menu' } })) 
-    },
-  ];
-
   return (
     <>
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 z-50 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
               onClick={() => setIsMenuOpen(false)}
             />
             
-            {/* Bottom Sheet Menu - Fixed Position */}
             <motion.div
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
@@ -138,79 +135,83 @@ const BottomNav = () => {
               onDragEnd={(_, info) => {
                 if (info.offset.y > 100) setIsMenuOpen(false);
               }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F6] dark:bg-card rounded-t-[32px] p-6 pb-8 shadow-2xl border-t border-border/10"
+              className="fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F6] dark:bg-card rounded-t-[32px] p-6 pb-10 shadow-2xl border-t border-border/10"
             >
               {/* Drag Handle */}
-              <div className="w-12 h-1.5 bg-muted-foreground/20 rounded-full mx-auto mb-6" />
+              <div className="w-12 h-1.5 bg-muted-foreground/20 rounded-full mx-auto mb-8" />
 
-              {/* Top Row: Circular Buttons */}
-              <div className="flex justify-center gap-10 mb-8">
+              {/* Top Row: Circular Buttons (Main Actions) */}
+              <div className="flex justify-center gap-12 mb-8">
                 {circularButtons.map((btn, idx) => (
-                  <div key={idx} className="flex flex-col items-center gap-2">
+                  <div key={idx} className="flex flex-col items-center gap-3">
                     <button
                       onClick={btn.action}
-                      className="w-16 h-16 rounded-full bg-white dark:bg-muted shadow-sm border-2 border-primary/10 flex items-center justify-center text-primary active:scale-95 transition-transform"
+                      className="w-20 h-20 rounded-full bg-white dark:bg-muted shadow-lg border-4 border-primary/5 flex items-center justify-center text-primary active:scale-95 transition-transform"
                     >
-                      <btn.icon className="w-7 h-7" strokeWidth={2} />
+                      <btn.icon className="w-9 h-9" strokeWidth={2} />
                     </button>
-                    <span className="text-xs font-semibold text-foreground/80 text-center max-w-[80px] leading-tight">
+                    <span className="text-sm font-bold text-foreground/80 text-center leading-tight">
                       {btn.label}
                     </span>
                   </div>
                 ))}
               </div>
 
-              {/* Separator Line */}
-              <div className="h-px w-full bg-border/60 mb-6" />
+              {/* Divider */}
+              <div className="h-px w-full bg-border/60 mb-8" />
 
-              {/* Bottom Rows: Compact Buttons */}
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={handleOpenWeight}
-                    disabled={hasReachedDailyWeightUpdateLimit}
-                    className={cn(
-                      "flex items-center justify-center gap-2 p-3 rounded-xl transition-all border shadow-sm active:scale-[0.98]",
-                      hasReachedDailyWeightUpdateLimit 
-                        ? "bg-muted/10 text-muted-foreground/50 border-border/10 cursor-not-allowed" 
-                        : "bg-white dark:bg-muted border-border/40 text-foreground hover:border-primary/30"
-                    )}
-                  >
-                    <Scale className="w-4 h-4 text-primary" />
-                    <span className="text-xs font-semibold">
-                      {hasReachedDailyWeightUpdateLimit ? t('progress.updated_today', 'Hoy OK') : t('bottom_nav.log_weight', 'Peso')}
-                    </span>
-                  </button>
+              {/* Middle Row: Small Secondary Buttons (Centered) */}
+              <div className="grid grid-cols-3 gap-4 mb-10 px-2">
+                <button
+                  onClick={handleOpenWeight}
+                  disabled={hasReachedDailyWeightUpdateLimit}
+                  className={cn(
+                    "flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all border shadow-sm active:scale-95 bg-white dark:bg-muted/50 border-border/40 aspect-square",
+                    hasReachedDailyWeightUpdateLimit && "opacity-50 cursor-not-allowed"
+                  )}
+                >
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Scale className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-semibold text-foreground text-center leading-tight">
+                    {hasReachedDailyWeightUpdateLimit ? t('progress.updated_today', 'Hoy OK') : t('bottom_nav.log_weight', 'Peso')}
+                  </span>
+                </button>
 
-                  <button
-                    onClick={() => handleMenuAction(() => navigate("/exercise"))}
-                    className="flex items-center justify-center gap-2 p-3 bg-white dark:bg-muted rounded-xl shadow-sm border border-border/40 active:scale-[0.98] transition-all hover:border-primary/30"
-                  >
-                    <Dumbbell className="w-4 h-4 text-primary" />
-                    <span className="text-xs font-semibold text-foreground">
-                      {t('bottom_nav.log_exercise', 'Ejercicio')}
-                    </span>
-                  </button>
-                </div>
+                <button
+                  onClick={() => handleMenuAction(() => navigate("/exercise"))}
+                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all border shadow-sm active:scale-95 bg-white dark:bg-muted/50 border-border/40 aspect-square"
+                >
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Dumbbell className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-semibold text-foreground text-center leading-tight">
+                    {t('bottom_nav.log_exercise', 'Ejercicio')}
+                  </span>
+                </button>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={handleOpenWater}
-                    className="flex items-center justify-center gap-2 p-3 bg-white dark:bg-muted rounded-xl shadow-sm border border-border/40 active:scale-[0.98] transition-all hover:border-primary/30"
-                  >
-                    <Droplets className="w-4 h-4 text-primary" />
-                    <span className="text-xs font-semibold text-foreground">{t('bottom_nav.log_water', 'Agua')}</span>
-                  </button>
-                  
-                  {/* Close Button in grid */}
-                  <button
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/20 hover:bg-muted/30 border border-transparent text-muted-foreground active:scale-[0.98] transition-all"
-                  >
-                    <ChevronDown className="w-4 h-4" />
-                    <span className="text-xs font-semibold">{t('analysis.close', 'Cerrar')}</span>
-                  </button>
-                </div>
+                <button
+                  onClick={handleOpenWater}
+                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all border shadow-sm active:scale-95 bg-white dark:bg-muted/50 border-border/40 aspect-square"
+                >
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Droplets className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-semibold text-foreground text-center leading-tight">
+                    {t('bottom_nav.log_water', 'Agua')}
+                  </span>
+                </button>
+              </div>
+
+              {/* Bottom: Close Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-2 px-6 py-3 rounded-full bg-muted/30 hover:bg-muted/50 text-muted-foreground font-medium transition-all active:scale-95"
+                >
+                  <ChevronDown className="w-5 h-5" />
+                  {t('analysis.close', 'Cerrar')}
+                </button>
               </div>
             </motion.div>
           </>
@@ -226,11 +227,11 @@ const BottomNav = () => {
               whileTap={{ scale: 0.9 }}
               className={cn(
                 "flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-                isMenuOpen ? "bg-background text-foreground border-2 border-muted" : "bg-primary text-primary-foreground"
+                isMenuOpen ? "bg-background text-foreground border-2 border-muted rotate-45" : "bg-primary text-primary-foreground"
               )}
               aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú de acciones"}
             >
-              <Plus className={cn("w-7 h-7 transition-transform duration-300", isMenuOpen && "rotate-45 text-muted-foreground")} />
+              <Plus className="w-7 h-7" />
             </motion.button>
           </div>
 
