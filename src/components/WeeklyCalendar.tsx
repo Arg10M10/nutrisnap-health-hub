@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { format, subDays, isSameDay, isToday as checkIsToday } from "date-fns";
 import { es, enUS } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
 interface DayProgressProps {
@@ -100,13 +100,18 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
               onClick={() => onDateSelect(day)}
               className="relative flex flex-col items-center justify-between py-2 rounded-[20px] h-[96px] w-full outline-none focus-visible:ring-2 focus-visible:ring-primary overflow-hidden group active:scale-95 transition-transform"
             >
-              {isSelected && (
-                <motion.div
-                  layoutId="activeDayBackground"
-                  className="absolute inset-0 bg-primary shadow-lg shadow-primary/20 rounded-[20px] z-0"
-                  transition={{ type: "tween", ease: "circOut", duration: 0.25 }}
-                />
-              )}
+              {/* Fondo de Selección - Sin layoutId para evitar deslizamiento */}
+              <AnimatePresence>
+                {isSelected && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute inset-0 bg-primary shadow-lg shadow-primary/20 rounded-[20px] z-0"
+                  />
+                )}
+              </AnimatePresence>
 
               <div className="h-1.5 w-1.5 mb-0.5 relative z-10">
                 {isToday && (
