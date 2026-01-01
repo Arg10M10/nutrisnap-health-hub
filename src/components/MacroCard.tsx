@@ -15,16 +15,20 @@ const MacroCard = ({ value, color, icon, current, unit, label }: MacroCardProps)
   const currentVal = current || 0;
 
   return (
-    <Card className="p-4 text-center space-y-2 h-full flex flex-col justify-between">
-      <div className="w-16 h-16 mx-auto relative">
+    <Card className="p-2 px-3 flex flex-row items-center justify-between h-full gap-2 shadow-sm">
+      <div className="w-10 h-10 relative flex-shrink-0">
         <MacroProgressCircle value={value} color={color} />
-        <div className="absolute inset-0 flex items-center justify-center">{icon}</div>
+        <div className="absolute inset-0 flex items-center justify-center [&>svg]:w-5 [&>svg]:h-5">
+          {icon}
+        </div>
       </div>
-      <p className="text-xl font-bold text-foreground">
-        <AnimatedNumber value={currentVal} />
-        {unit}
-      </p>
-      <p className="text-sm text-muted-foreground">{label}</p>
+      <div className="flex flex-col items-end min-w-0 overflow-hidden">
+        <p className="font-bold text-lg text-foreground leading-none truncate">
+          <AnimatedNumber value={currentVal} />
+          <span className="text-sm ml-0.5">{unit}</span>
+        </p>
+        <p className="text-xs text-muted-foreground truncate w-full text-right">{label}</p>
+      </div>
     </Card>
   );
 };

@@ -19,53 +19,47 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
   const { t } = useTranslation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Calcular porcentaje para visualización (tope en 100%)
   const percentage = Math.min((count / goal) * 100, 100);
 
   return (
     <>
-      <Card className="relative overflow-hidden h-full flex flex-col justify-between group bg-card">
-        {/* Fondo con efecto de llenado de agua */}
+      <Card className="relative overflow-hidden h-full flex flex-col justify-between group bg-card shadow-sm">
         <div 
           className="absolute bottom-0 left-0 right-0 bg-blue-50/80 dark:bg-blue-500/15 transition-all duration-700 ease-in-out z-0"
           style={{ height: `${percentage}%` }}
         />
         
-        <div className="p-4 flex flex-col justify-between h-full z-10 relative">
-          <div className="text-center space-y-1">
-            <div className="bg-blue-100/80 dark:bg-blue-900/30 w-12 h-12 rounded-full flex items-center justify-center mx-auto text-blue-600 dark:text-blue-400 mb-2 shadow-sm group-hover:scale-110 transition-transform">
-              <GlassWater className="w-6 h-6" />
-            </div>
-            
+        <div className="p-3 flex flex-col justify-between h-full z-10 relative">
+          <div className="text-center">
             <div className="flex items-baseline justify-center gap-1">
-              <p className="text-3xl font-bold text-foreground tabular-nums">
-                <AnimatedNumber value={count} toFixed={1} />
+              <p className="text-2xl font-bold text-foreground tabular-nums leading-none">
+                <AnimatedNumber value={count} toFixed={0} />
               </p>
-              <span className="text-sm text-muted-foreground">/ {goal}</span>
+              <span className="text-xs text-muted-foreground">/ {goal}</span>
             </div>
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide mt-0.5">
               {t('home.water_tracker_title', 'Vasos')}
             </p>
           </div>
 
-          <div className="flex justify-center items-center gap-2 mt-2">
+          <div className="flex justify-center items-center gap-2 mt-1">
             <Button 
               variant="outline" 
               size="icon" 
               onClick={onRemove} 
               disabled={count === 0 || isUpdating}
-              className="h-9 w-9 rounded-full border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-background/80 backdrop-blur-sm"
+              className="h-8 w-8 rounded-full border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-background/80 backdrop-blur-sm"
             >
-              <Minus className="w-4 h-4" />
+              <Minus className="w-3 h-3" />
             </Button>
             
             <Button 
               size="sm" 
               onClick={() => setIsDrawerOpen(true)} 
               disabled={isUpdating}
-              className="flex-1 h-9 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-blue-200 dark:shadow-none shadow-md transition-all active:scale-95"
+              className="flex-1 h-8 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-sm transition-all active:scale-95 text-xs font-semibold"
             >
-              <Plus className="w-4 h-4 mr-1" /> {t('common.add', 'Añadir')}
+              <Plus className="w-3 h-3 mr-1" /> {t('common.add', 'Añadir')}
             </Button>
           </div>
         </div>

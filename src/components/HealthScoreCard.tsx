@@ -4,7 +4,7 @@ import { ShieldCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface HealthScoreCardProps {
-  score: number; // Score from 0 to 100
+  score: number;
 }
 
 const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
@@ -23,15 +23,17 @@ const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
   };
 
   return (
-    <Card className="p-4 text-center space-y-2 h-full flex flex-col justify-between">
-      <div className="w-16 h-16 mx-auto relative">
+    <Card className="p-3 text-center h-full flex flex-col justify-center items-center gap-1 shadow-sm">
+      <div className="w-12 h-12 relative flex-shrink-0">
         <MacroProgressCircle value={safeScore} color={color} />
         <div className="absolute inset-0 flex items-center justify-center">
-          <ShieldCheck className="w-6 h-6" style={{ color }} />
+          <ShieldCheck className="w-5 h-5" style={{ color }} />
         </div>
       </div>
-      <p className="text-xl font-bold text-foreground">{getLabel()}</p>
-      <p className="text-sm text-muted-foreground">{t('home.health_score')}</p>
+      <div className="min-w-0 w-full">
+        <p className="text-base font-bold text-foreground leading-tight truncate">{getLabel()}</p>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wide truncate">{t('home.health_score')}</p>
+      </div>
     </Card>
   );
 };
