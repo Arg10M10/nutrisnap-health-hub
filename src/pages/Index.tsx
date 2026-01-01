@@ -104,18 +104,20 @@ const Index = () => {
   return (
     <PageLayout>
       <AppTutorial />
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Leaf className="w-8 h-8 text-primary" />
-            <h1 className="text-primary text-3xl font-black tracking-tight">{t('home.title')}</h1>
+      <div className="space-y-8">
+        {/* Header Rediseñado */}
+        <header className="flex justify-between items-center px-1 pt-2">
+          <div className="flex items-center gap-3">
+            <Leaf className="w-9 h-9 text-foreground fill-current" strokeWidth={2.5} />
+            <h1 className="text-4xl font-black tracking-tighter text-foreground">Calorel</h1>
           </div>
+          
           <button 
             onClick={() => setIsStreakModalOpen(true)}
-            className="flex items-center gap-2 bg-background border text-foreground px-3 py-1.5 rounded-full shadow-md transition-transform active:scale-95 hover:bg-muted/50"
+            className="flex items-center gap-2 bg-muted/30 backdrop-blur-md px-4 py-2 rounded-full transition-transform active:scale-95 hover:bg-muted/50"
           >
-            <Flame className="w-5 h-5 text-orange-400 fill-current" />
-            <span className="font-bold text-sm">
+            <Flame className="w-5 h-5 text-orange-500 fill-current" />
+            <span className="font-bold text-lg text-foreground">
               <AnimatedNumber value={streak} />
             </span>
           </button>
@@ -214,7 +216,7 @@ const Index = () => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-foreground text-2xl font-semibold">{t('home.todays_analysis')}</h2>
+          <h2 className="text-foreground text-2xl font-semibold px-1">{t('home.todays_analysis')}</h2>
           
           <div 
             className={cn(
