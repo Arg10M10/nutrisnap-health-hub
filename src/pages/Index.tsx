@@ -154,11 +154,16 @@ const Index = () => {
             <CarouselContent>
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-3 h-[290px]">
+                  {/* Altura total ajustada a 270px */}
+                  <div className="flex flex-col gap-2 h-[270px]">
+                    
+                    {/* Parte Superior: Calorías (ocupa el espacio flexible, aprox 172px) */}
                     <div className="flex-1 w-full min-h-0">
                       <CaloriesCard current={intake.calories} goal={dailyGoals.calories} className="h-full" />
                     </div>
-                    <div className="h-[90px] w-full">
+                    
+                    {/* Parte Inferior: Macros (altura fija aumentada a 96px para que no se corte) */}
+                    <div className="h-[96px] w-full flex-shrink-0">
                       <div className="grid grid-cols-3 gap-2 w-full h-full">
                         <MacroCard
                           value={getSafePercentage(intake.protein, dailyGoals.protein)}
@@ -192,7 +197,7 @@ const Index = () => {
 
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-3 h-[290px]">
+                  <div className="flex flex-col gap-2 h-[270px]">
                     <div className="flex-1 w-full min-h-0">
                       <div className="grid grid-cols-2 gap-2 w-full h-full">
                         <HealthScoreCard score={healthScore} />
@@ -205,7 +210,7 @@ const Index = () => {
                         />
                       </div>
                     </div>
-                    <div className="h-[90px] w-full">
+                    <div className="h-[96px] w-full flex-shrink-0">
                       <MacroCard
                           value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
                           color="#a855f7"
@@ -220,7 +225,7 @@ const Index = () => {
               </CarouselItem>
             </CarouselContent>
           </Carousel>
-          <div className="flex justify-center gap-2 mt-4">
+          <div className="flex justify-center gap-2 mt-2">
             {Array.from({ length: count }).map((_, index) => (
               <button
                 key={index}
@@ -235,7 +240,7 @@ const Index = () => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-foreground text-2xl font-semibold">{t('home.todays_analysis')}</h2>
+          <h2 className="text-foreground text-xl font-bold tracking-tight">{t('home.todays_analysis')}</h2>
           
           <div 
             className={cn(
@@ -244,14 +249,14 @@ const Index = () => {
             )}
           >
             <button 
-                className="w-full flex items-center justify-between p-4 h-auto min-h-[3.5rem] text-base font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
+                className="w-full flex items-center justify-between p-3.5 h-auto text-sm font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
                 onClick={() => setIsManualEntryOpen(!isManualEntryOpen)}
             >
                 <span className="flex items-center gap-2">
-                    <Utensils className="w-5 h-5" />
+                    <Utensils className="w-4 h-4" />
                     {t('manual_food.title')}
                 </span>
-                {isManualEntryOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                {isManualEntryOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
 
             <AnimatePresence>
@@ -277,7 +282,6 @@ const Index = () => {
             <div className="space-y-3">
               {analyses.map((item) => {
                 if ('food_name' in item) {
-                  // Determinar si es un menú basándonos en la estructura de los datos
                   const isMenu = item.analysis_data && isMenuAnalysis(item.analysis_data);
                   
                   return (
@@ -318,22 +322,20 @@ const Index = () => {
             </div>
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2 border-dashed shadow-none bg-muted/20">
-              <Plus className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground">{t('home.no_data')}</p>
-              <p className="text-sm text-muted-foreground">{t('home.start_logging')}</p>
+              <Plus className="w-10 h-10 text-muted-foreground/40" />
+              <p className="text-muted-foreground font-medium">{t('home.no_data')}</p>
+              <p className="text-xs text-muted-foreground/70">{t('home.start_logging')}</p>
             </Card>
           )}
         </div>
       </div>
       
-      {/* Drawer para comida normal */}
       <AnalysisDetailDrawer
         entry={selectedAnalysis}
         isOpen={!!selectedAnalysis}
         onClose={() => setSelectedAnalysis(null)}
       />
 
-      {/* Drawer para menús */}
       <MenuAnalysisDrawer
         isOpen={isMenuDrawerOpen}
         onClose={() => setIsMenuDrawerOpen(false)}

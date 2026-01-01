@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { GlassWater, Minus, Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import AnimatedNumber from "./AnimatedNumber";
 import { WaterSelectionDrawer } from "./WaterSelectionDrawer";
-import { cn } from "@/lib/utils";
 
 interface WaterTrackerCardProps {
   count: number;
@@ -29,26 +28,26 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
           style={{ height: `${percentage}%` }}
         />
         
-        <div className="p-3 flex flex-col justify-between h-full z-10 relative">
-          <div className="text-center">
+        <div className="p-3 flex flex-col justify-between h-full z-10 relative gap-1">
+          <div className="text-center pt-1">
             <div className="flex items-baseline justify-center gap-1">
               <p className="text-2xl font-bold text-foreground tabular-nums leading-none">
                 <AnimatedNumber value={count} toFixed={0} />
               </p>
-              <span className="text-xs text-muted-foreground">/ {goal}</span>
+              <span className="text-[10px] text-muted-foreground">/ {goal}</span>
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide mt-0.5">
-              {t('home.water_tracker_title', 'Vasos')}
+            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">
+              {t('home.water_tracker_title', 'oz')}
             </p>
           </div>
 
-          <div className="flex justify-center items-center gap-2 mt-1">
+          <div className="flex justify-center items-center gap-2 pb-1">
             <Button 
               variant="outline" 
               size="icon" 
               onClick={onRemove} 
               disabled={count === 0 || isUpdating}
-              className="h-8 w-8 rounded-full border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-background/80 backdrop-blur-sm"
+              className="h-7 w-7 rounded-full border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-background/80 backdrop-blur-sm"
             >
               <Minus className="w-3 h-3" />
             </Button>
@@ -57,7 +56,7 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
               size="sm" 
               onClick={() => setIsDrawerOpen(true)} 
               disabled={isUpdating}
-              className="flex-1 h-8 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-sm transition-all active:scale-95 text-xs font-semibold"
+              className="flex-1 h-7 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-sm transition-all active:scale-95 text-[10px] font-bold px-0"
             >
               <Plus className="w-3 h-3 mr-1" /> {t('common.add', 'Añadir')}
             </Button>
