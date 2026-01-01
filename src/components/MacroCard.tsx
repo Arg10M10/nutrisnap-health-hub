@@ -15,7 +15,7 @@ const MacroCard = ({ value, color, icon, current, unit, label }: MacroCardProps)
   const currentVal = current || 0;
 
   return (
-    <Card className="p-2 flex flex-col items-center justify-center h-full gap-1 shadow-sm">
+    <Card className="p-2 flex flex-col items-center justify-center h-full gap-1.5 shadow-sm">
       <div className="w-10 h-10 relative flex-shrink-0">
         <MacroProgressCircle value={value} color={color} />
         <div className="absolute inset-0 flex items-center justify-center [&>svg]:w-5 [&>svg]:h-5">
@@ -23,11 +23,11 @@ const MacroCard = ({ value, color, icon, current, unit, label }: MacroCardProps)
         </div>
       </div>
       <div className="flex flex-col items-center w-full min-w-0 overflow-hidden">
-        <p className="font-bold text-base text-foreground leading-none truncate mt-1">
+        <p className="font-bold text-lg text-foreground leading-none truncate mt-0.5">
           <AnimatedNumber value={currentVal} />
-          <span className="text-[10px] ml-0.5 font-normal text-muted-foreground">{unit}</span>
+          <span className="text-xs ml-0.5 font-normal text-muted-foreground">{unit}</span>
         </p>
-        <p className="text-[10px] text-muted-foreground truncate w-full text-center uppercase tracking-wide">{label}</p>
+        <p className="text-[10px] text-muted-foreground truncate w-full text-center uppercase tracking-wide font-medium">{label}</p>
       </div>
     </Card>
   );

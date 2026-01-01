@@ -25,12 +25,12 @@ const CaloriesCard = ({ current, goal, className }: CaloriesCardProps) => {
 
   return (
     <Card className={cn("w-full flex flex-col justify-center shadow-sm", className)}>
-      <CardContent className="flex items-center justify-between p-4 gap-4 h-full">
-        <div className="space-y-0.5 flex-1 min-w-0">
-          <p className="text-4xl font-bold text-foreground leading-none tracking-tight">
+      <CardContent className="flex items-center justify-between p-6 gap-6 h-full">
+        <div className="space-y-1.5 flex-1 min-w-0">
+          <p className="text-5xl font-bold text-foreground leading-none tracking-tight">
             <AnimatedNumber value={currentVal} />
           </p>
-          <p className="text-muted-foreground text-sm truncate">
+          <p className="text-muted-foreground text-sm font-medium truncate">
             {remaining >= 0 ? (
               <>
                 <AnimatedNumber value={remaining} /> {t('home.kcal_remaining', { count: remaining }).replace(String(remaining), '').trim()}
@@ -42,10 +42,10 @@ const CaloriesCard = ({ current, goal, className }: CaloriesCardProps) => {
             )}
           </p>
         </div>
-        <div className="w-16 h-16 relative flex-shrink-0">
+        <div className="w-24 h-24 relative flex-shrink-0">
           <MacroProgressCircle value={percentage} color="hsl(var(--primary))" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <Flame className="w-7 h-7 text-primary" />
+            <Flame className="w-10 h-10 text-primary" />
           </div>
         </div>
       </CardContent>
