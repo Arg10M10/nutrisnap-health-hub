@@ -49,7 +49,7 @@ serve(async (req) => {
       1. Identify food items visible on the menu.
       2. Select the 3-4 HEALTHIEST options aligned with the user's goal.
       3. Identify 1-2 options to AVOID (high calorie/sugar/bad fats).
-      4. Provide a very brief explanation for each choice.
+      4. For each choice, provide a brief explanation and estimate its full nutritional profile.
       
       Output Language: ${userLang}.
       Format: Return ONLY a valid JSON object. No markdown, no extra text.
@@ -57,10 +57,30 @@ serve(async (req) => {
       JSON Structure:
       {
         "recommended": [
-          { "name": "Dish Name", "calories": "Est. ~500kcal", "reason": "Brief reason why it's good" }
+          { 
+            "name": "Dish Name", 
+            "calories": "Est. ~500 kcal", 
+            "protein": "Est. ~30g",
+            "carbs": "Est. ~40g",
+            "fats": "Est. ~20g",
+            "sugars": "Est. ~5g",
+            "fiber": "Est. ~8g",
+            "healthRating": "Saludable",
+            "reason": "Brief reason why it's good" 
+          }
         ],
         "avoid": [
-          { "name": "Dish Name", "calories": "Est. ~1200kcal", "reason": "Brief reason why to avoid" }
+          { 
+            "name": "Dish Name", 
+            "calories": "Est. ~1200 kcal", 
+            "protein": "Est. ~50g",
+            "carbs": "Est. ~80g",
+            "fats": "Est. ~60g",
+            "sugars": "Est. ~20g",
+            "fiber": "Est. ~5g",
+            "healthRating": "Evitar",
+            "reason": "Brief reason why to avoid" 
+          }
         ],
         "summary": "One sentence summary advice for this menu."
       }
