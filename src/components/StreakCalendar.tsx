@@ -24,12 +24,12 @@ const StreakCalendar = ({ streakDays }: StreakCalendarProps) => {
             key={day.toString()}
             className={cn(
               "aspect-square rounded-full flex items-center justify-center transition-all duration-200",
-              isInStreak ? "bg-orange-400" : "bg-muted",
+              isInStreak ? "bg-primary" : "bg-muted",
               isToday && "ring-2 ring-primary ring-offset-1 ring-offset-background"
             )}
           >
             {isInStreak ? (
-              <Flame className="w-2/3 h-2/3 text-white fill-current" />
+              <Flame className="w-2/3 h-2/3 text-primary-foreground fill-current" />
             ) : (
               <span className="font-bold text-[10px] text-muted-foreground">
                 {format(day, "d")}
