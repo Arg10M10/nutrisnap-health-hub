@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,10 @@ import EditWeightDrawer from "@/components/EditWeightDrawer";
 import { WaterSelectionDrawer } from "@/components/WaterSelectionDrawer";
 import { useAuth } from "@/context/AuthContext";
 import { useNutrition } from "@/context/NutritionContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { startOfDay } from "date-fns";
+import { toast } from "sonner";
 
 const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,8 +21,29 @@ const BottomNav = () => {
   
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const { addWaterGlass } = useNutrition();
+
+  // Consulta para contar las actualizaciones de peso de hoy
+  const { data: todaysWeightUpdatesCount } = useQuery({
+    queryKey: ['todays_weight_updates_count', user?.id],
+    queryFn: async () => {
+      if (!user) return 0;
+      const todayStart = startOfDay(new Date()).toISOString();
+      const { count, error } = await supabase
+        .from('weight_history')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('created_at', todayStart);
+      if (error) throw error;
+      return count ?? 0;
+    },
+    enabled: !!user,
+  });
+
+  const hasReachedDailyWeightUpdateLimit = useMemo(() => {
+    return (todaysWeightUpdatesCount ?? 0) >= 2;
+  }, [todaysWeightUpdatesCount]);
 
   const navItems = [
     { icon: Home, label: t('bottom_nav.home'), path: "/" },
@@ -41,6 +66,10 @@ const BottomNav = () => {
   };
 
   const handleOpenWeight = () => {
+    if (hasReachedDailyWeightUpdateLimit) {
+      toast.info(t('progress.weight_updated_today', 'Has alcanzado el límite diario de actualizaciones de peso.'));
+      return;
+    }
     setIsMenuOpen(false);
     setIsWeightDrawerOpen(true);
   };
@@ -124,10 +153,18 @@ const BottomNav = () => {
                 <div className="grid grid-cols-2 gap-3 w-full">
                   <button
                     onClick={handleOpenWeight}
-                    className="flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/30 hover:bg-muted active:scale-95 transition-all border border-border/30"
+                    disabled={hasReachedDailyWeightUpdateLimit}
+                    className={cn(
+                      "flex items-center justify-center gap-2 p-3 rounded-xl transition-all border",
+                      hasReachedDailyWeightUpdateLimit 
+                        ? "bg-muted/10 text-muted-foreground/50 border-border/10 cursor-not-allowed" 
+                        : "bg-muted/30 hover:bg-muted active:scale-95 border-border/30 text-muted-foreground"
+                    )}
                   >
-                    <Scale className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm font-medium text-muted-foreground">{t('bottom_nav.log_weight', 'Peso')}</span>
+                    <Scale className="w-4 h-4" />
+                    <span className="text-sm font-medium">
+                      {hasReachedDailyWeightUpdateLimit ? t('progress.updated_today', 'Hoy OK') : t('bottom_nav.log_weight', 'Peso')}
+                    </span>
                   </button>
 
                   <button
