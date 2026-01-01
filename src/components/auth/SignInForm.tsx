@@ -48,6 +48,11 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-2 text-center mb-8">
+          <h3 className="text-xl font-bold">{t('login.welcome', 'Bienvenido de nuevo')}</h3>
+          <p className="text-sm text-muted-foreground">{t('login.subtitle', 'Ingresa tus datos para continuar')}</p>
+        </div>
+
         <FormField
           control={form.control}
           name="email"
@@ -102,7 +107,7 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
           )}
         />
         
-        <div className="space-y-4 pt-2">
+        <div className="space-y-4 pt-4">
           <Button type="submit" size="lg" className="w-full h-14 text-lg rounded-2xl shadow-lg shadow-primary/20" disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t('auth.sign_in_button')}

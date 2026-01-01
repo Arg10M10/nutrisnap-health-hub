@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Leaf, ArrowRight } from "lucide-react";
 import { SignInForm } from '@/components/auth/SignInForm';
 import { SignUpForm } from '@/components/auth/SignUpForm';
@@ -111,15 +111,8 @@ export default function Login() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
             >
-              <Card className="border-none shadow-xl bg-card/80 backdrop-blur-sm">
-                <CardHeader className="flex flex-col items-center space-y-2 pb-2 pt-8">
-                  <Leaf className="w-10 h-10 text-primary mb-2" />
-                  <h2 className="text-2xl font-bold text-foreground">
-                    {view === 'sign_in' ? t('login.welcome') : t('login.create_account')}
-                  </h2>
-                </CardHeader>
-                
-                <CardContent className="px-6 sm:px-8 py-6 pb-10">
+              <Card className="border-none shadow-xl bg-card/80 backdrop-blur-sm min-h-[300px] flex flex-col justify-center">
+                <CardContent className="px-6 sm:px-8 py-8">
                   {view === 'sign_in' ? (
                     <SignInForm onSwitchToSignUp={handleSwitchToSignUp} />
                   ) : (
