@@ -11,7 +11,7 @@ interface DayProgressProps {
   strokeWidth?: number;
 }
 
-const DayProgressRing = ({ percentage, color, size = 36, strokeWidth = 2.5 }: DayProgressProps) => {
+const DayProgressRing = ({ percentage, color, size = 32, strokeWidth = 2 }: DayProgressProps) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = Math.max(0, circumference - (percentage / 100) * circumference);
@@ -27,7 +27,7 @@ const DayProgressRing = ({ percentage, color, size = 36, strokeWidth = 2.5 }: Da
           fill="none"
           stroke="currentColor"
           strokeWidth={strokeWidth}
-          strokeDasharray="4 4"
+          strokeDasharray="3 3"
           className="text-muted-foreground/30"
         />
       </svg>
@@ -66,19 +66,13 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
 
   const weekDays = useMemo(() => {
     const today = new Date();
-    // Generar últimos 6 días + hoy (total 7), invertido para que hoy esté a la derecha usualmente
-    // La imagen muestra una secuencia natural de izquierda a derecha. Vamos a ordenarlo cronológicamente.
-    // La imagen muestra miercoles 31 seleccionado.
-    // Vamos a mostrar los últimos 3 días y los próximos 3? O la última semana?
-    // El componente anterior mostraba los últimos 7 días terminando en hoy.
-    // Vamos a mantener esa lógica pero ordenarlos de izquierda a derecha (el más antiguo a la izquierda).
-    
+    // Últimos 7 días hasta hoy, orden cronológico (el más antiguo primero)
     return Array.from({ length: 7 })
-      .map((_, i) => subDays(today, 6 - i)); // 6 días atrás hasta hoy
+      .map((_, i) => subDays(today, 6 - i));
   }, []);
 
   return (
-    <div className="w-full flex justify-between items-end px-2 py-2">
+    <div className="w-full flex justify-between items-end px-1 py-2 overflow-x-auto no-scrollbar gap-1">
       {weekDays.map((day) => {
         const isSelected = isSameDay(day, selectedDate);
         const dayKey = format(day, 'yyyy-MM-dd');
@@ -97,16 +91,16 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
             key={day.toString()}
             onClick={() => onDateSelect(day)}
             className={cn(
-              "group flex flex-col items-center gap-3 pb-3 pt-4 rounded-[2rem] transition-all duration-200 min-w-[3.5rem]",
-              isSelected ? "bg-muted/15 backdrop-blur-sm shadow-sm" : "hover:bg-muted/5"
+              "group flex flex-col items-center gap-1.5 pb-2 pt-2.5 rounded-[1.5rem] transition-all duration-200 min-w-[2.8rem] flex-1",
+              isSelected ? "bg-muted/15 backdrop-blur-sm shadow-sm scale-105" : "hover:bg-muted/5 opacity-80 hover:opacity-100"
             )}
           >
             {/* Day Name */}
             <span className={cn(
-              "text-sm font-medium capitalize",
-              isSelected ? "text-foreground font-bold" : "text-muted-foreground/60"
+              "text-[10px] uppercase font-bold tracking-tight",
+              isSelected ? "text-foreground" : "text-muted-foreground/70"
             )}>
-              {format(day, "EEE", { locale: currentLocale }).replace('.', '')}
+              {format(day, "EEE", { locale: currentLocale }).replace('.', '').substring(0, 3)}
             </span>
 
             {/* Date Circle */}
@@ -114,11 +108,11 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
               <DayProgressRing 
                 percentage={Math.min(percentage, 100)} 
                 color={progressColor}
-                size={42} 
-                strokeWidth={2}
+                size={34} 
+                strokeWidth={2.5}
               />
               <span className={cn(
-                "absolute text-lg font-semibold",
+                "absolute text-sm font-bold",
                 isSelected ? "text-foreground" : "text-muted-foreground"
               )}>
                 {format(day, "d")}
