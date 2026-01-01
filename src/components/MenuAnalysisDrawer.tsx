@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 export interface MenuItem {
   name: string;
@@ -28,27 +29,40 @@ interface MenuAnalysisDrawerProps {
 }
 
 const MealItem = ({ item, type, onSelect, isAnalyzing, isCompleted }: { item: MenuItem, type: 'recommended' | 'avoid', onSelect: () => void, isAnalyzing: boolean, isCompleted: boolean }) => {
-  const colorClass = type === 'recommended' ? 'green' : 'red';
-
   return (
-    <div className={`bg-${colorClass}-50 dark:bg-${colorClass}-900/20 border border-${colorClass}-100 dark:border-${colorClass}-900/50 p-3 rounded-xl flex justify-between items-center`}>
+    <div className={cn(
+      "p-4 rounded-2xl flex justify-between items-center transition-all border",
+      type === 'recommended' 
+        ? "bg-green-50/50 dark:bg-green-900/10 border-green-100/50 dark:border-green-900/30" 
+        : "bg-red-50/50 dark:bg-red-900/10 border-red-100/50 dark:border-red-900/30"
+    )}>
       <div className="flex-1 pr-4">
-        <span className="font-bold text-foreground">{item.name}</span>
-        <p className="text-xs text-muted-foreground mt-1">{item.reason}</p>
+        <span className="font-bold text-foreground leading-tight block">{item.name}</span>
+        <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">{item.reason}</p>
       </div>
-      <Button size="icon" className="h-12 w-12 rounded-full shrink-0" onClick={onSelect} disabled={isAnalyzing || isCompleted}>
+      <Button 
+        size="icon" 
+        className={cn(
+          "h-10 w-10 rounded-full shrink-0 shadow-sm transition-all active:scale-90",
+          isCompleted 
+            ? "bg-green-500 hover:bg-green-500 text-white" 
+            : "bg-background border border-border/60 hover:bg-muted text-foreground"
+        )} 
+        onClick={onSelect} 
+        disabled={isAnalyzing || isCompleted}
+      >
         <AnimatePresence mode="wait" initial={false}>
           {isAnalyzing ? (
             <motion.div key="loader" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-              <Loader2 className="w-6 h-6 animate-spin" />
+              <Loader2 className="w-5 h-5 animate-spin" />
             </motion.div>
           ) : isCompleted ? (
             <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-              <Check className="w-6 h-6" />
+              <Check className="w-5 h-5" />
             </motion.div>
           ) : (
             <motion.div key="plus" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-              <Plus className="w-6 h-6" />
+              <Plus className="w-5 h-5 text-muted-foreground" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -118,8 +132,8 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent className="max-h-[90vh] flex flex-col">
-        <DrawerHeader>
-          <DrawerTitle className="flex items-center gap-2 justify-center text-xl text-primary">
+        <DrawerHeader className="pb-2">
+          <DrawerTitle className="flex items-center gap-2 justify-center text-xl text-primary font-bold">
             <Sparkles className="w-5 h-5" />
             {t('menu_analysis.title', 'Análisis del Menú')}
           </DrawerTitle>
@@ -127,57 +141,61 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
 
         <ScrollArea className="flex-1 overflow-y-auto px-4 pb-4">
           <div className="space-y-6">
-            <div className="bg-muted/50 p-4 rounded-xl text-sm text-center text-muted-foreground italic">
+            <div className="bg-muted/40 p-4 rounded-2xl text-sm text-center text-muted-foreground italic border border-border/30 shadow-inner">
               "{data.summary}"
             </div>
 
             <div className="space-y-3">
-              <h3 className="font-semibold text-lg flex items-center gap-2 text-green-600">
+              <h3 className="font-bold text-base flex items-center gap-2 text-green-600 px-1">
                 <CheckCircle2 className="w-5 h-5" />
                 {t('menu_analysis.recommended', 'Mejores Opciones')}
               </h3>
-              {data.recommended.map((item, idx) => (
-                <MealItem 
-                  key={`rec-${idx}`}
-                  item={item}
-                  type="recommended"
-                  onSelect={() => handleSelect(item)}
-                  isAnalyzing={analyzingMeal === item.name}
-                  isCompleted={completedMeal === item.name}
-                />
-              ))}
-            </div>
-
-            {data.avoid && data.avoid.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="font-semibold text-lg flex items-center gap-2 text-red-500">
-                  <XCircle className="w-5 h-5" />
-                  {t('menu_analysis.avoid', 'Limitar o Evitar')}
-                </h3>
-                {data.avoid.map((item, idx) => (
+              <div className="grid gap-3">
+                {data.recommended.map((item, idx) => (
                   <MealItem 
-                    key={`avoid-${idx}`}
+                    key={`rec-${idx}`}
                     item={item}
-                    type="avoid"
+                    type="recommended"
                     onSelect={() => handleSelect(item)}
                     isAnalyzing={analyzingMeal === item.name}
                     isCompleted={completedMeal === item.name}
                   />
                 ))}
               </div>
+            </div>
+
+            {data.avoid && data.avoid.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="font-bold text-base flex items-center gap-2 text-red-500 px-1">
+                  <XCircle className="w-5 h-5" />
+                  {t('menu_analysis.avoid', 'Limitar o Evitar')}
+                </h3>
+                <div className="grid gap-3">
+                  {data.avoid.map((item, idx) => (
+                    <MealItem 
+                      key={`avoid-${idx}`}
+                      item={item}
+                      type="avoid"
+                      onSelect={() => handleSelect(item)}
+                      isAnalyzing={analyzingMeal === item.name}
+                      isCompleted={completedMeal === item.name}
+                    />
+                  ))}
+                </div>
+              </div>
             )}
 
-            <div className="mt-4 flex gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-900/50">
+            <div className="mt-4 flex gap-3 p-4 bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl border border-blue-100/50 dark:border-blue-900/20">
               <Info className="w-5 h-5 text-blue-500 flex-shrink-0" />
-              <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+              <p className="text-xs text-blue-700/80 dark:text-blue-300/80 leading-relaxed">
                 {t('menu_analysis.partial_list_note', 'Nota: Este análisis no incluye todo el menú. La IA ha filtrado el contenido para mostrarte únicamente las mejores opciones para tu objetivo y aquellas que deberías evitar.')}
               </p>
             </div>
           </div>
         </ScrollArea>
 
-        <DrawerFooter className="pt-2">
-          <Button onClick={onClose} size="lg" variant="outline" className="w-full h-14 text-lg rounded-xl">
+        <DrawerFooter className="pt-2 pb-6 px-6">
+          <Button onClick={onClose} size="lg" variant="secondary" className="w-full h-14 text-lg rounded-2xl font-semibold">
             {t('analysis.close', 'Cerrar')}
           </Button>
         </DrawerFooter>
