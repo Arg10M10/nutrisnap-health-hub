@@ -11,10 +11,8 @@ const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
   const { t } = useTranslation();
   const safeScore = score;
 
-  let color = "#22c55e";
-  if (safeScore > 0 && safeScore < 80) color = "#f97316";
-  if (safeScore > 0 && safeScore < 50) color = "#ef4444";
-  if (safeScore === 0) color = "#9ca3af";
+  // Usamos el color primario (lima) definido en CSS global
+  const color = "hsl(var(--primary))";
 
   const getLabel = () => {
     if (safeScore === 0) return "--";
