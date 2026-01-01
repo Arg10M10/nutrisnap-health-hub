@@ -535,6 +535,7 @@
     "protein": "Protein",
     "fat": "Fat",
     "edit": "Edit",
+    "macros": "Macros",
     "profileCard": {
       "namePlaceholder": "Complete Profile",
       "viewAndEdit": "Edit Details"
@@ -602,12 +603,12 @@
     "gender": "Gender",
     "goal": "Goal",
     "experience": "Experience",
-    "gender_female": "Femenino",
-    "gender_male": "Masculino",
-    "gender_not_say": "Prefiero no decirlo",
-    "goal_lose": "Perder Peso",
-    "goal_maintain": "Mantener Peso",
-    "goal_gain": "Ganar Peso",
+    "gender_female": "Female",
+    "gender_male": "Male",
+    "gender_not_say": "Prefer not to say",
+    "goal_lose": "Lose Weight",
+    "goal_maintain": "Maintain Weight",
+    "goal_gain": "Gain Weight",
     "experience_several": "Used several apps",
     "experience_one_or_two": "Used one or two apps",
     "experience_first_time": "First time using an app"

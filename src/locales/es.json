@@ -535,6 +535,7 @@
     "protein": "Proteína",
     "fat": "Grasa",
     "edit": "Editar",
+    "macros": "Macros",
     "profileCard": {
       "namePlaceholder": "Completar Perfil",
       "viewAndEdit": "Editar Datos"
