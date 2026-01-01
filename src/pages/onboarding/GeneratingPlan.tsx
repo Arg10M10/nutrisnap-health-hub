@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ const GeneratingPlan = () => {
   const { t } = useTranslation();
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState(0);
+  const hasStartedRef = useRef(false);
 
   const stages = [
     { text: t('generating_plan.step1'), icon: <Brain className="w-8 h-8 text-primary" /> },
@@ -117,19 +118,22 @@ const GeneratingPlan = () => {
       setStage(3);
       await refetchProfile();
       setTimeout(() => {
-        // CAMBIO: Redirigir a la nueva pantalla de proyección
-        navigate('/goal-projection');
+        // Usamos replace: true para que no se pueda volver atrás a esta pantalla de carga
+        // Esto ayuda a prevenir el efecto de "pantalla doble" si el usuario intenta retroceder
+        navigate('/goal-projection', { replace: true });
       }, 1500);
     },
     onError: (error) => {
       console.error("Error generating plan", error);
       // Fallback a home en caso de error
-      navigate('/');
+      navigate('/', { replace: true });
     }
   });
 
   useEffect(() => {
-    if (user && profile) {
+    // Aseguramos que la mutación solo se ejecute una vez
+    if (user && profile && !hasStartedRef.current) {
+      hasStartedRef.current = true;
       const timeout = setTimeout(() => {
         generatePlanMutation.mutate();
       }, 1000);

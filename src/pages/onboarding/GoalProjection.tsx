@@ -9,7 +9,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Calendar, ArrowRight, Target, TrendingUp, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use'; // Usaremos un hook simple o window directo si no existe la lib
 
 const GoalProjection = () => {
   const { profile } = useAuth();
@@ -17,6 +16,7 @@ const GoalProjection = () => {
   const { t, i18n } = useTranslation();
   const [targetDate, setTargetDate] = useState<Date | null>(null);
   const [showConfetti, setShowConfetti] = useState(true);
+  const [confettiOpacity, setConfettiOpacity] = useState(1);
   
   // Simple window size for confetti
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -28,9 +28,15 @@ const GoalProjection = () => {
   }, []);
 
   useEffect(() => {
-    // Detener confeti después de 5 segundos
-    const timer = setTimeout(() => setShowConfetti(false), 5000);
-    return () => clearTimeout(timer);
+    // Iniciar fade out a los 2.5 segundos
+    const fadeTimer = setTimeout(() => setConfettiOpacity(0), 2500);
+    // Eliminar completamente del DOM un poco después
+    const removeTimer = setTimeout(() => setShowConfetti(false), 4000);
+    
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -42,7 +48,6 @@ const GoalProjection = () => {
         const weightDifference = Math.abs(profile.weight - profile.goal_weight);
         
         // El weekly_rate en la base de datos ya está en la unidad correcta según la lógica de guardado
-        // Pero para asegurar, hacemos el cálculo agnóstico a la unidad siempre que sean consistentes
         const weeksNeeded = weightDifference / profile.weekly_rate;
         
         const date = addWeeks(new Date(), weeksNeeded);
@@ -75,8 +80,17 @@ const GoalProjection = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
       {showConfetti && (
-        <div className="absolute inset-0 pointer-events-none z-50">
-          <Confetti width={windowSize.width} height={windowSize.height} numberOfPieces={200} gravity={0.15} />
+        <div 
+          className="absolute inset-0 pointer-events-none z-50 transition-opacity duration-1000 ease-out"
+          style={{ opacity: confettiOpacity }}
+        >
+          <Confetti 
+            width={windowSize.width} 
+            height={windowSize.height} 
+            numberOfPieces={150} 
+            gravity={0.2} 
+            recycle={false} // Evitar que siga generando piezas infinitamente
+          />
         </div>
       )}
 
