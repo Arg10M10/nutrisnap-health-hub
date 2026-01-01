@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle2, XCircle, Sparkles, Info, Plus, Check, Loader2 } from "lucide-react";
+import { CheckCircle2, XCircle, Sparkles, Info, Check, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -43,10 +43,10 @@ const MealItem = ({ item, type, onSelect, isAnalyzing, isCompleted }: { item: Me
       <Button 
         size="icon" 
         className={cn(
-          "h-10 w-10 rounded-full shrink-0 shadow-sm transition-all active:scale-90",
+          "h-9 w-9 rounded-full shrink-0 shadow-sm transition-all active:scale-90 border",
           isCompleted 
-            ? "bg-green-500 hover:bg-green-500 text-white border-transparent" 
-            : "bg-background border border-border/60 hover:bg-muted text-foreground"
+            ? "bg-green-500 text-white border-transparent" 
+            : "bg-background border-border/60 hover:bg-muted text-foreground"
         )} 
         onClick={onSelect} 
         disabled={isAnalyzing || isCompleted}
@@ -54,16 +54,14 @@ const MealItem = ({ item, type, onSelect, isAnalyzing, isCompleted }: { item: Me
         <AnimatePresence mode="wait" initial={false}>
           {isAnalyzing ? (
             <motion.div key="loader" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin" />
             </motion.div>
           ) : isCompleted ? (
             <motion.div key="check" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Check className="w-5 h-5" />
             </motion.div>
           ) : (
-            <motion.div key="plus" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-              <Plus className="w-5 h-5 text-muted-foreground" />
-            </motion.div>
+            <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/30" />
           )}
         </AnimatePresence>
       </Button>
@@ -97,7 +95,6 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
 
       if (insertError) throw insertError;
 
-      // Actualizar lista inmediatamente para mostrar la carga en el fondo
       queryClient.invalidateQueries({ queryKey: ['food_entries', user.id] });
 
       const { error: functionError } = await supabase.functions.invoke('analyze-text-food', {
@@ -118,12 +115,11 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
       setAnalyzingMeal(null);
       setAddedMeals(prev => [...prev, item.name]);
 
-      // Esperar 1 segundo para mostrar el éxito antes de cerrar
+      // Cerrar rápidamente para mostrar el progreso en el diario
       setTimeout(() => {
         onClose();
-        // Resetear estado después de que la animación de cierre termine
         setTimeout(() => setAddedMeals([]), 500);
-      }, 1000);
+      }, 600);
 
     } catch (error) {
       console.error("Error analyzing selected meal:", error);
