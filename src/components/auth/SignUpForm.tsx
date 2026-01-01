@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Loader2, Eye, EyeOff, ArrowLeft, ArrowRight, User, Mail, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -153,16 +153,6 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                 >
                   Continuar <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
-                
-                <div className="text-center">
-                  <button
-                    type="button"
-                    onClick={onSwitchToSignIn}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    ¿Ya tienes una cuenta? <span className="font-semibold text-primary">Inicia Sesión</span>
-                  </button>
-                </div>
               </div>
             </motion.div>
           )}

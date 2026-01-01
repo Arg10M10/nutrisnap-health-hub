@@ -107,16 +107,6 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t('auth.sign_in_button')}
           </Button>
-
-          <Button 
-            type="button" 
-            variant="ghost" 
-            size="lg" 
-            onClick={onSwitchToSignUp}
-            className="w-full h-14 text-base rounded-2xl text-muted-foreground hover:bg-transparent hover:text-primary"
-          >
-            {t('auth.no_account')} <span className="font-semibold ml-1">{t('auth.sign_up_link')}</span>
-          </Button>
         </div>
       </form>
     </Form>
