@@ -37,22 +37,18 @@ serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  const { entry_id, foodName, description, portionSize, language } = await req.json();
-  if (!entry_id || !foodName || !portionSize) {
-    return new Response(JSON.stringify({ error: "entry_id, foodName, and portionSize are required." }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 400,
-    });
-  }
-
-  const userLang = language && language.startsWith('es') ? 'Español' : 'Inglés';
-
-  const supabaseAdmin = createClient(
-    Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-  );
-
   try {
+    const { entry_id, foodName, description, portionSize, language } = await req.json();
+    
+    if (!foodName || !portionSize) {
+      return new Response(JSON.stringify({ error: "foodName and portionSize are required." }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400,
+      });
+    }
+
+    const userLang = language && language.startsWith('es') ? 'Español' : 'Inglés';
+
     const prompt = `
       Analiza esta comida basándote en su nombre, descripción y porción.
       - Nombre: "${foodName}"
@@ -95,42 +91,48 @@ serve(async (req) => {
     const aiData = await aiRes.json();
     const jsonText = aiData.choices?.[0]?.message?.content ?? "";
     const analysisResult = safeParseJson(jsonText);
+    
     if (!analysisResult) throw new Error("La IA devolvió una respuesta en un formato inesperado.");
 
-    const { error: updateError } = await supabaseAdmin
-      .from('food_entries')
-      .update({
-        calories: analysisResult.calories,
-        protein: analysisResult.protein,
-        carbs: analysisResult.carbs,
-        fats: analysisResult.fats,
-        sugars: analysisResult.sugars,
-        fiber: analysisResult.fiber,
-        health_rating: analysisResult.healthRating,
-        reason: analysisResult.reason,
-        calories_value: parseNutrientValue(analysisResult.calories),
-        protein_value: parseNutrientValue(analysisResult.protein),
-        carbs_value: parseNutrientValue(analysisResult.carbs),
-        fats_value: parseNutrientValue(analysisResult.fats),
-        sugars_value: parseNutrientValue(analysisResult.sugars),
-        fiber_value: parseNutrientValue(analysisResult.fiber),
-        status: 'completed',
-      })
-      .eq('id', entry_id);
+    // Si hay un entry_id, actualizamos la base de datos (comportamiento para entrada manual)
+    if (entry_id) {
+      const supabaseAdmin = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      );
 
-    if (updateError) throw updateError;
+      const { error: updateError } = await supabaseAdmin
+        .from('food_entries')
+        .update({
+          calories: analysisResult.calories,
+          protein: analysisResult.protein,
+          carbs: analysisResult.carbs,
+          fats: analysisResult.fats,
+          sugars: analysisResult.sugars,
+          fiber: analysisResult.fiber,
+          health_rating: analysisResult.healthRating,
+          reason: analysisResult.reason,
+          calories_value: parseNutrientValue(analysisResult.calories),
+          protein_value: parseNutrientValue(analysisResult.protein),
+          carbs_value: parseNutrientValue(analysisResult.carbs),
+          fats_value: parseNutrientValue(analysisResult.fats),
+          sugars_value: parseNutrientValue(analysisResult.sugars),
+          fiber_value: parseNutrientValue(analysisResult.fiber),
+          status: 'completed',
+        })
+        .eq('id', entry_id);
 
-    return new Response(JSON.stringify({ success: true }), {
+      if (updateError) throw updateError;
+    }
+
+    // Siempre devolvemos el resultado para que el frontend pueda usarlo directamente
+    return new Response(JSON.stringify(analysisResult), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
+
   } catch (error) {
     console.error("Error en la función Edge:", error);
-    await supabaseAdmin
-      .from('food_entries')
-      .update({ status: 'failed', reason: (error as Error).message })
-      .eq('id', entry_id);
-
     return new Response(JSON.stringify({ error: (error as Error).message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,

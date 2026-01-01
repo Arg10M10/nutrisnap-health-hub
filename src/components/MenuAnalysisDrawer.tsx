@@ -5,7 +5,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckCircle2, XCircle, Sparkles, Info, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { AnalysisResult } from "./FoodAnalysisCard";
-import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -39,13 +38,14 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysi
       const { data: analysisResult, error } = await supabase.functions.invoke('analyze-text-food', {
         body: {
           foodName: item.name,
-          portionSize: 'medium', // Asumimos porción media por defecto
+          portionSize: 'medium',
           language: i18n.language,
         },
       });
 
       if (error) throw error;
-
+      
+      // La función ahora devuelve el objeto AnalysisResult directamente
       onSelectMeal(analysisResult);
 
     } catch (error) {
