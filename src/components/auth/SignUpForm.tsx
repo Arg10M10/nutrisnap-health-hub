@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { Loader2, Eye, EyeOff, ArrowLeft, ArrowRight, User, Mail, Lock } from 'lucide-react';
+import { Loader2, Eye, EyeOff, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { getDeviceId } from '@/lib/device';
@@ -100,14 +100,14 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
   };
 
   const variants = {
-    enter: (direction: number) => ({ x: direction > 0 ? 50 : -50, opacity: 0 }),
+    enter: (direction: number) => ({ x: direction > 0 ? 20 : -20, opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit: (direction: number) => ({ x: direction < 0 ? 50 : -50, opacity: 0 }),
+    exit: (direction: number) => ({ x: direction < 0 ? 20 : -20, opacity: 0 }),
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 relative min-h-[220px]">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 relative min-h-[300px] flex flex-col justify-center">
         <AnimatePresence mode="wait" initial={false}>
           {step === 1 && (
             <motion.div
@@ -116,12 +116,11 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="space-y-6"
+              transition={{ type: "tween", duration: 0.2 }}
+              className="space-y-8 w-full"
             >
-              <div className="space-y-2 text-center mb-6">
-                <h3 className="text-lg font-semibold">¿Cuál es tu email?</h3>
-                <p className="text-sm text-muted-foreground">Te enviaremos un enlace mágico o código.</p>
+              <div className="space-y-2 text-center">
+                <h3 className="text-2xl font-bold tracking-tight">¿Cuál es tu email?</h3>
               </div>
 
               <FormField
@@ -129,29 +128,26 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                      <FormControl>
-                        <Input 
-                          placeholder="tu@email.com" 
-                          {...field} 
-                          className="h-14 pl-10 text-lg bg-muted/30 border-transparent focus:bg-background focus:border-primary transition-all" 
-                          autoFocus
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
+                    <FormControl>
+                      <Input 
+                        placeholder="tu@email.com" 
+                        {...field} 
+                        className="h-14 text-lg bg-background border-input px-4 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all text-center placeholder:text-muted-foreground/50" 
+                        autoFocus
+                      />
+                    </FormControl>
+                    <FormMessage className="text-center" />
                   </FormItem>
                 )}
               />
 
-              <div className="space-y-4">
+              <div className="pt-4">
                 <Button 
                   type="button" 
                   onClick={validateStep} 
-                  className="w-full h-14 text-lg rounded-2xl"
+                  className="w-full h-14 text-lg font-medium rounded-lg"
                 >
-                  Continuar <ArrowRight className="ml-2 w-5 h-5" />
+                  Continuar
                 </Button>
               </div>
             </motion.div>
@@ -164,12 +160,11 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="space-y-6"
+              transition={{ type: "tween", duration: 0.2 }}
+              className="space-y-8 w-full"
             >
-              <div className="space-y-2 text-center mb-6">
-                <h3 className="text-lg font-semibold">Crea una contraseña segura</h3>
-                <p className="text-sm text-muted-foreground">Debe tener al menos 6 caracteres.</p>
+              <div className="space-y-2 text-center">
+                <h3 className="text-2xl font-bold tracking-tight">Crea una contraseña</h3>
               </div>
 
               <FormField
@@ -178,35 +173,34 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                       <FormControl>
                         <Input
                           type={showPassword ? 'text' : 'password'}
-                          placeholder="••••••••"
+                          placeholder="Mínimo 6 caracteres"
                           {...field}
-                          className="h-14 pl-10 pr-10 text-lg bg-muted/30 border-transparent focus:bg-background focus:border-primary transition-all"
+                          className="h-14 text-lg bg-background border-input px-4 pr-12 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all text-center placeholder:text-muted-foreground/50"
                           autoFocus
                         />
                       </FormControl>
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
+                        className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                       </button>
                     </div>
-                    <FormMessage />
+                    <FormMessage className="text-center" />
                   </FormItem>
                 )}
               />
 
-              <div className="flex gap-3">
-                <Button type="button" variant="outline" onClick={goBack} className="h-14 w-14 rounded-2xl shrink-0 p-0">
-                  <ArrowLeft className="w-5 h-5" />
+              <div className="flex flex-col gap-3 pt-4">
+                <Button type="button" onClick={validateStep} className="w-full h-14 text-lg font-medium rounded-lg">
+                  Continuar
                 </Button>
-                <Button type="button" onClick={validateStep} className="w-full h-14 text-lg rounded-2xl">
-                  Continuar <ArrowRight className="ml-2 w-5 h-5" />
+                <Button type="button" variant="ghost" onClick={goBack} className="w-full h-12 text-muted-foreground hover:text-foreground rounded-lg">
+                  <ArrowLeft className="w-4 h-4 mr-2" /> Volver
                 </Button>
               </div>
             </motion.div>
@@ -219,12 +213,11 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="space-y-6"
+              transition={{ type: "tween", duration: 0.2 }}
+              className="space-y-8 w-full"
             >
-              <div className="space-y-2 text-center mb-6">
-                <h3 className="text-lg font-semibold">¿Cómo te llamas?</h3>
-                <p className="text-sm text-muted-foreground">Para dirigirnos a ti correctamente.</p>
+              <div className="space-y-2 text-center">
+                <h3 className="text-2xl font-bold tracking-tight">¿Cómo te llamas?</h3>
               </div>
 
               <div className="space-y-4">
@@ -233,18 +226,15 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                        <FormControl>
-                          <Input 
-                            placeholder="Nombre" 
-                            {...field} 
-                            className="h-14 pl-10 text-lg bg-muted/30 border-transparent focus:bg-background focus:border-primary transition-all"
-                            autoFocus
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
+                      <FormControl>
+                        <Input 
+                          placeholder="Nombre" 
+                          {...field} 
+                          className="h-14 text-lg bg-background border-input px-4 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all text-center placeholder:text-muted-foreground/50"
+                          autoFocus
+                        />
+                      </FormControl>
+                      <FormMessage className="text-center" />
                     </FormItem>
                   )}
                 />
@@ -253,29 +243,26 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                        <FormControl>
-                          <Input 
-                            placeholder="Apellido" 
-                            {...field} 
-                            className="h-14 pl-10 text-lg bg-muted/30 border-transparent focus:bg-background focus:border-primary transition-all"
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
+                      <FormControl>
+                        <Input 
+                          placeholder="Apellido" 
+                          {...field} 
+                          className="h-14 text-lg bg-background border-input px-4 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all text-center placeholder:text-muted-foreground/50"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-center" />
                     </FormItem>
                   )}
                 />
               </div>
 
-              <div className="flex gap-3">
-                <Button type="button" variant="outline" onClick={goBack} className="h-14 w-14 rounded-2xl shrink-0 p-0">
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-                <Button type="submit" disabled={loading} className="w-full h-14 text-lg rounded-2xl">
+              <div className="flex flex-col gap-3 pt-4">
+                <Button type="submit" disabled={loading} className="w-full h-14 text-lg font-medium rounded-lg">
                   {loading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                   Crear Cuenta
+                </Button>
+                <Button type="button" variant="ghost" onClick={goBack} className="w-full h-12 text-muted-foreground hover:text-foreground rounded-lg">
+                  <ArrowLeft className="w-4 h-4 mr-2" /> Volver
                 </Button>
               </div>
             </motion.div>
