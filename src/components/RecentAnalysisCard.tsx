@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Flame, Beef, Wheat, Droplets, Sparkles, Loader2, AlertTriangle, Wand2, FileText, ChevronRight } from "lucide-react";
+import { Flame, Beef, Wheat, Droplets, Sparkles, Loader2, AlertTriangle, Wand2, FileText, ChevronRight, Sprout } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
@@ -13,6 +13,7 @@ interface RecentAnalysisCardProps {
   carbs: number | null;
   fats: number | null;
   sugars: number | null;
+  fiber?: number | null; // Nuevo prop opcional
   status: 'processing' | 'completed' | 'failed';
   reason: string | null;
   onClick: () => void;
@@ -27,7 +28,8 @@ const RecentAnalysisCard = ({
   protein, 
   carbs, 
   fats, 
-  sugars, 
+  sugars,
+  fiber, 
   status, 
   reason, 
   onClick,
@@ -43,15 +45,12 @@ const RecentAnalysisCard = ({
 
   useEffect(() => {
     if (isProcessing) {
-      setProgress(10); // Empezar con algo de progreso visual inmediato
+      setProgress(10);
       
-      // Actualizar mucho más rápido (cada 150ms en lugar de 500ms)
       timerRef.current = window.setInterval(() => {
         setProgress((p) => {
-          // Incrementos más grandes al principio
           const increment = Math.random() * 5 + 1; 
           const next = p + increment;
-          // Pausar visualmente al 90% esperando la respuesta real
           if (next > 90) return 90 + Math.random(); 
           return next;
         });
@@ -133,18 +132,18 @@ const RecentAnalysisCard = ({
               <span className="font-medium text-foreground">{calories ?? 0}</span>
             </div>
             <div className="w-px h-3 bg-border hidden sm:block" />
-            <div className="flex items-center gap-1">
+            
+            {/* Solo mostramos macros principales y fibra para no saturar */}
+            <div className="flex items-center gap-1" title="Proteína">
               <Beef className="w-3.5 h-3.5 text-red-500" />
               <span className="font-medium text-foreground">{protein ?? 0}g</span>
             </div>
-            <div className="flex items-center gap-1">
-              <Wheat className="w-3.5 h-3.5 text-orange-500" />
-              <span className="font-medium text-foreground">{carbs ?? 0}g</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Droplets className="w-3.5 h-3.5 text-blue-500" />
-              <span className="font-medium text-foreground">{fats ?? 0}g</span>
-            </div>
+            {fiber !== undefined && fiber !== null && (
+                <div className="flex items-center gap-1" title="Fibra">
+                  <Sprout className="w-3.5 h-3.5 text-emerald-500" />
+                  <span className="font-medium text-foreground">{fiber}g</span>
+                </div>
+            )}
           </div>
         )}
       </div>

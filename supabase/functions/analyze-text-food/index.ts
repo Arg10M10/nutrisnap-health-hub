@@ -19,7 +19,6 @@ const safeParseJson = (text: string) => {
       return JSON.parse(cleanedText);
     } catch (e) {
       console.error("Failed to parse JSON even after cleaning:", e);
-      console.error("Original text:", text);
       return null;
     }
   }
@@ -71,6 +70,7 @@ serve(async (req) => {
         "carbs": "Estimación (ej. '30-40g')",
         "fats": "Estimación (ej. '15-20g')",
         "sugars": "Estimación (ej. '5-10g')",
+        "fiber": "Estimación (ej. '5-10g')",
         "healthRating": "Clasificación ('Saludable', 'Moderado', 'Evitar' - en ${userLang})",
         "reason": "Explicación breve (máx 20 palabras, en ${userLang})."
       }
@@ -78,12 +78,7 @@ serve(async (req) => {
 
     const body = {
       model: GPT_MODEL,
-      messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
+      messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" },
     };
 
@@ -94,8 +89,6 @@ serve(async (req) => {
     });
 
     if (!aiRes.ok) {
-      const errorBody = await aiRes.text();
-      console.error("Error from GPT API:", errorBody);
       throw new Error(`Error en la API de IA: ${aiRes.statusText}`);
     }
 
@@ -112,6 +105,7 @@ serve(async (req) => {
         carbs: analysisResult.carbs,
         fats: analysisResult.fats,
         sugars: analysisResult.sugars,
+        fiber: analysisResult.fiber,
         health_rating: analysisResult.healthRating,
         reason: analysisResult.reason,
         calories_value: parseNutrientValue(analysisResult.calories),
@@ -119,6 +113,7 @@ serve(async (req) => {
         carbs_value: parseNutrientValue(analysisResult.carbs),
         fats_value: parseNutrientValue(analysisResult.fats),
         sugars_value: parseNutrientValue(analysisResult.sugars),
+        fiber_value: parseNutrientValue(analysisResult.fiber),
         status: 'completed',
       })
       .eq('id', entry_id);

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Droplets, HeartPulse, Beef, Wheat, Sparkles, ChefHat } from "lucide-react";
+import { Flame, Droplets, HeartPulse, Beef, Wheat, Sparkles, ChefHat, Sprout } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export type AnalysisResult = {
@@ -10,9 +10,10 @@ export type AnalysisResult = {
   carbs: string;
   fats: string;
   sugars: string;
+  fiber?: string;
   healthRating: string;
   reason: string;
-  ingredients?: string[]; // Nuevo campo opcional
+  ingredients?: string[]; 
 };
 
 interface FoodAnalysisCardProps {
@@ -86,9 +87,15 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
             <p className="font-bold text-foreground text-lg">{result.sugars}</p>
             <p className="text-xs text-muted-foreground font-medium">{t('analysis.sugars')}</p>
           </div>
+          {/* Fibra - Ocupa ancho completo si es impar o se ajusta */}
+          <div className="p-3 bg-muted/50 rounded-lg border border-border/30 col-span-2">
+            <Sprout className="w-5 h-5 mx-auto text-emerald-500 mb-1" />
+            <p className="font-bold text-foreground text-lg">{result.fiber || '0g'}</p>
+            <p className="text-xs text-muted-foreground font-medium">{t('analysis.fiber')}</p>
+          </div>
         </div>
 
-        {/* Sección de Ingredientes Detectados - Lista Vertical */}
+        {/* Sección de Ingredientes Detectados */}
         {result.ingredients && result.ingredients.length > 0 && (
           <div className="space-y-3">
             <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm uppercase tracking-wide opacity-80 pl-1">

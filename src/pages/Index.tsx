@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-import { Flame, Leaf, Plus, Beef, Wheat, Droplets, Sparkles, Utensils, ChevronDown, ChevronUp } from "lucide-react";
+import { Flame, Leaf, Plus, Beef, Wheat, Droplets, Sparkles, Utensils, ChevronDown, ChevronUp, Sprout } from "lucide-react";
 import { useNutrition, FoodEntry, ExerciseEntry } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
@@ -62,6 +62,7 @@ const Index = () => {
     fats: profile?.goal_fats || 65,
     water: 64, 
     sugars: profile?.goal_sugars || 25,
+    fiber: profile?.goal_fiber || 30, // Default 30g
   };
 
   const getSafePercentage = (current?: number | null, goal?: number | null) => {
@@ -105,7 +106,6 @@ const Index = () => {
     <PageLayout>
       <AppTutorial />
       <div className="space-y-8">
-        {/* Header Rediseñado */}
         <header className="flex justify-between items-center px-1 pt-2">
           <div className="flex items-center gap-3">
             <Leaf className="w-9 h-9 text-foreground fill-current" strokeWidth={2.5} />
@@ -187,14 +187,24 @@ const Index = () => {
                       </div>
                     </div>
                     <div className="h-[150px] w-full flex-shrink-0">
-                      <MacroCard
-                          value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
-                          color="#a855f7"
-                          icon={<Sparkles className="w-5 h-5 text-purple-500" />}
-                          current={intake.sugars}
-                          unit="g"
-                          label={t('home.sugars')}
-                      />
+                      <div className="grid grid-cols-2 gap-3 w-full h-full">
+                        <MacroCard
+                            value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
+                            color="#a855f7"
+                            icon={<Sparkles className="w-5 h-5 text-purple-500" />}
+                            current={intake.sugars}
+                            unit="g"
+                            label={t('home.sugars')}
+                        />
+                        <MacroCard
+                            value={getSafePercentage(intake.fiber, dailyGoals.fiber)}
+                            color="#10b981" // Verde esmeralda para fibra
+                            icon={<Sprout className="w-5 h-5 text-emerald-500" />}
+                            current={intake.fiber}
+                            unit="g"
+                            label={t('home.fiber')}
+                        />
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -275,6 +285,7 @@ const Index = () => {
                         carbs={item.carbs_value}
                         fats={item.fats_value}
                         sugars={item.sugars_value}
+                        fiber={item.fiber_value} // Pasamos la fibra
                         status={item.status}
                         reason={item.reason}
                         onClick={() => handleEntryClick(item)}

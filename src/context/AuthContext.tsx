@@ -23,6 +23,7 @@ export interface Profile {
   goal_carbs: number | null;
   goal_fats: number | null;
   goal_sugars: number | null;
+  goal_fiber: number | null;
   weekly_rate: number | null;
   avatar_color: string | null;
   time_format: '12h' | '24h' | null;

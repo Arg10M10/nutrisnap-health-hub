@@ -212,6 +212,7 @@
     "carbs": "Carbohidratos",
     "fats": "Grasas",
     "sugars": "Azúcares",
+    "fiber": "Fibra",
     "health_score": "Puntuación de Salud",
     "health_score_excellent": "Excelente",
     "health_score_good": "Buena",
@@ -265,6 +266,7 @@
     "carbs": "Carbohidratos",
     "fats": "Grasas",
     "sugars": "Azúcares",
+    "fiber": "Fibra",
     "recommendation": "Recomendación IA",
     "default_reason": "Análisis basado en estimación visual y tamaños de porción comunes.",
     "health_rating": {
@@ -512,7 +514,7 @@
     "mexico": "México",
     "spain": "Spain",
     "argentina": "Argentina",
-    "brazil": "Brasil",
+    "brazil": "Brazil",
     "dominican_republic": "República Dominicana",
     "colombia": "Colombia",
     "chile": "Chile",
@@ -629,6 +631,7 @@
     "carbs": "Carbohidratos",
     "fats": "Grasas",
     "sugars": "Azúcares",
+    "fiber": "Fibra",
     "save_error": "Fallo al guardar las metas.",
     "ai_suggestions": "Sugerencias de IA"
   },

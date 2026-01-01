@@ -56,9 +56,9 @@ serve(async (req) => {
   try {
     const base64Image = imageData.split(",")[1];
     const prompt = `
-      Analiza la imagen de este plato de comida y proporciona una estimación nutricional.
+      Analiza la imagen de este plato de comida y proporciona una estimación nutricional completa.
       Responde ÚNICA y EXCLUSIVAMENTE con un objeto JSON.
-      IMPORTANTE: Todos los textos (foodName, healthRating, reason, ingredients) deben estar en ${userLang}.
+      IMPORTANTE: Todos los textos deben estar en ${userLang}.
 
       Estructura JSON requerida:
       {
@@ -68,12 +68,11 @@ serve(async (req) => {
         "carbs": "Estimación de carbohidratos (ej. '30-40g')",
         "fats": "Estimación de grasas (ej. '15-20g')",
         "sugars": "Estimación de azúcares (ej. '5-10g')",
+        "fiber": "Estimación de fibra (ej. '8-12g')",
         "healthRating": "Clasificación ('Saludable', 'Moderado', 'Evitar' - Traducido al ${userLang})",
         "reason": "Breve explicación (máx 20 palabras, en ${userLang}).",
-        "ingredients": ["Ingrediente 1", "Ingrediente 2", "Ingrediente 3"]
+        "ingredients": ["Ingrediente 1", "Ingrediente 2"]
       }
-      
-      Nota sobre 'ingredients': Lista los alimentos o componentes visibles detectados en el plato (ej. 'Arroz', 'Pollo', 'Brócoli').
     `;
 
     const body = {
@@ -118,6 +117,7 @@ serve(async (req) => {
         carbs: analysisResult.carbs,
         fats: analysisResult.fats,
         sugars: analysisResult.sugars,
+        fiber: analysisResult.fiber,
         health_rating: analysisResult.healthRating,
         reason: analysisResult.reason,
         calories_value: parseNutrientValue(analysisResult.calories),
@@ -125,6 +125,7 @@ serve(async (req) => {
         carbs_value: parseNutrientValue(analysisResult.carbs),
         fats_value: parseNutrientValue(analysisResult.fats),
         sugars_value: parseNutrientValue(analysisResult.sugars),
+        fiber_value: parseNutrientValue(analysisResult.fiber),
         analysis_data: analysisResult, 
         status: 'completed',
       })

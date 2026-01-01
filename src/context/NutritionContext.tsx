@@ -18,6 +18,7 @@ export interface FoodEntry {
   carbs: string | null;
   fats: string | null;
   sugars: string | null;
+  fiber: string | null;
   health_rating: 'Saludable' | 'Moderado' | 'Evitar';
   reason: string | null;
   calories_value: number | null;
@@ -25,8 +26,9 @@ export interface FoodEntry {
   carbs_value: number | null;
   fats_value: number | null;
   sugars_value: number | null;
+  fiber_value: number | null;
   status: 'processing' | 'completed' | 'failed';
-  analysis_data?: MenuAnalysisData | null; // Nuevo campo para menús
+  analysis_data?: MenuAnalysisData | null;
 }
 
 export interface ExerciseEntry {
@@ -53,6 +55,7 @@ interface DailyIntake {
   carbs: number;
   fats: number;
   sugars: number;
+  fiber: number;
 }
 
 interface DailyData {
@@ -101,20 +104,15 @@ const healthRatingToScore = (rating: string | null): number => {
   
   const r = rating.toLowerCase();
   
-  // Saludable = 100 puntos (Verde)
   if (r.includes('health') || r.includes('saludable')) return 100;
-  
-  // Moderado = 65 puntos (Amarillo/Naranja) - Penalización leve
   if (r.includes('moderate') || r.includes('moderado')) return 65;
-  
-  // Evitar = 30 puntos (Rojo) - Penalización fuerte
   if (r.includes('avoid') || r.includes('evitar') || r.includes('limit')) return 30;
   
-  return 50; // Fallback
+  return 50; 
 };
 
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [newlyUnlockedBadge, setNewlyUnlockedBadge] = useState<UnlockedBadgeInfo | null>(null);
   const { t } = useTranslation();
@@ -274,6 +272,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       carbs: result.carbs || '0g',
       fats: result.fats || '0g',
       sugars: result.sugars || '0g',
+      fiber: result.fiber || '0g',
       health_rating: result.healthRating,
       reason: result.reason,
       calories_value: parseNutrientValue(result.calories),
@@ -281,6 +280,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       carbs_value: parseNutrientValue(result.carbs),
       fats_value: parseNutrientValue(result.fats),
       sugars_value: parseNutrientValue(result.sugars),
+      fiber_value: parseNutrientValue(result.fiber),
       status: 'completed' as const,
     };
     addEntryMutation.mutate(newEntry);
@@ -305,8 +305,9 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
         carbs: acc.carbs + (entry.carbs_value || 0),
         fats: acc.fats + (entry.fats_value || 0),
         sugars: acc.sugars + (entry.sugars_value || 0),
+        fiber: acc.fiber + (entry.fiber_value || 0),
       }),
-      { calories: 0, protein: 0, carbs: 0, fats: 0, sugars: 0 }
+      { calories: 0, protein: 0, carbs: 0, fats: 0, sugars: 0, fiber: 0 }
     );
 
     const caloriesBurned = dailyExercise.reduce((acc, entry) => acc + (entry.calories_burned || 0), 0);
@@ -316,28 +317,15 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       calories: foodIntake.calories + caloriesBurned,
     };
 
-    // Calculo de Health Score más robusto
-    let healthScore = 100; // Empieza el día con 100
+    let healthScore = 100; 
     if (dailyFood.length > 0) {
-      // Promedio ponderado de los alimentos consumidos
       const totalScore = dailyFood.reduce((acc, entry) => acc + healthRatingToScore(entry.health_rating), 0);
       healthScore = Math.round(totalScore / dailyFood.length);
     } else {
-      // Si no hay comida registrada, verificamos si hay agua o ejercicio para no dejarlo en 0 absoluto si hay actividad
-      // Si no hay NADA, mantenemos 100 (día nuevo) o 0?
-      // Estrategia: "Calidad de lo ingerido". Si no comes, no hay calidad que medir.
-      // Retornaremos 100 por defecto para que se vea "Limpio", pero la UI puede manejarlo.
-      // O retornamos 0 si queremos obligar a registrar.
-      // El usuario pidió "realista". Si no comes nada, tu salud no es 100.
-      // Pero si apenas empieza el día, no debería ser rojo.
-      // Dejaremos 100 como "Día Limpio" y si comes mal baja.
       healthScore = 100;
-      
-      // Si ya pasó el día y no registraste nada, técnicamente no debería contar, pero para la vista diaria:
       if (dailyFood.length === 0 && dailyExercise.length === 0 && dailyWater.length === 0) {
-         healthScore = 0; // Estado "Sin Datos"
+         healthScore = 0; 
       } else if (dailyFood.length === 0) {
-         // Hizo ejercicio o tomó agua pero no comió -> 100 (neutral/bueno)
          healthScore = 100;
       }
     }
@@ -392,8 +380,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   }, [waterEntries]);
 
   const triggerBadgeUnlock = (badgeInfo: UnlockedBadgeInfo) => {
-    // Badges disabled - do nothing
-    // setNewlyUnlockedBadge(badgeInfo);
+    // Badges disabled
   };
 
   const isLoading = isFoodLoading || isWaterLoading || isExerciseLoading || isBadgesLoading;

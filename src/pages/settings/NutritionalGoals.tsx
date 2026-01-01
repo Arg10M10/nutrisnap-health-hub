@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { ArrowLeft, Flame, Beef, Wheat, Droplets, Sparkles, Wand2 } from 'lucide-react';
+import { ArrowLeft, Flame, Beef, Wheat, Droplets, Sparkles, Wand2, Sprout } from 'lucide-react';
 import { GoalRow } from '@/components/settings/GoalRow';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -22,6 +22,7 @@ const NutritionalGoals = () => {
     carbs: 220,
     fats: 65,
     sugars: 25,
+    fiber: 30,
   });
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const NutritionalGoals = () => {
         carbs: profile.goal_carbs || 220,
         fats: profile.goal_fats || 65,
         sugars: profile.goal_sugars || 25,
+        fiber: profile.goal_fiber || 30,
       });
     }
   }, [profile]);
@@ -47,6 +49,7 @@ const NutritionalGoals = () => {
           goal_carbs: updatedGoals.carbs,
           goal_fats: updatedGoals.fats,
           goal_sugars: updatedGoals.sugars,
+          goal_fiber: updatedGoals.fiber,
         })
         .eq('id', user.id);
       if (error) throw error;
@@ -75,6 +78,7 @@ const NutritionalGoals = () => {
     { id: 'carbs', label: t('nutritional_goals.carbs'), unit: 'g', icon: <Wheat className="w-5 h-5 text-white" />, color: 'bg-orange-500' },
     { id: 'fats', label: t('nutritional_goals.fats'), unit: 'g', icon: <Droplets className="w-5 h-5 text-white" />, color: 'bg-blue-500' },
     { id: 'sugars', label: t('nutritional_goals.sugars'), unit: 'g', icon: <Sparkles className="w-5 h-5 text-white" />, color: 'bg-purple-500' },
+    { id: 'fiber', label: t('nutritional_goals.fiber'), unit: 'g', icon: <Sprout className="w-5 h-5 text-white" />, color: 'bg-emerald-500' },
   ];
 
   return (

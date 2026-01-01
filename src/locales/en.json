@@ -212,6 +212,7 @@
     "carbs": "Carbs",
     "fats": "Fats",
     "sugars": "Sugars",
+    "fiber": "Fiber",
     "health_score": "Health Score",
     "health_score_excellent": "Excellent",
     "health_score_good": "Good",
@@ -265,6 +266,7 @@
     "carbs": "Carbs",
     "fats": "Fats",
     "sugars": "Sugars",
+    "fiber": "Fiber",
     "recommendation": "AI Recommendation",
     "default_reason": "Analysis based on visual estimation and common portion sizes.",
     "health_rating": {
@@ -629,6 +631,7 @@
     "carbs": "Carbohidratos",
     "fats": "Grasas",
     "sugars": "Azúcares",
+    "fiber": "Fibra",
     "save_error": "Failed to save goals.",
     "ai_suggestions": "AI Suggestions"
   },
