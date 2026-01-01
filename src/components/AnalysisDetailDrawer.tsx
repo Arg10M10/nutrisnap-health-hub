@@ -76,6 +76,8 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
     onClose();
   };
 
+  const hasRealImage = entry.image_url && !entry.image_url.includes('placeholder');
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -88,9 +90,9 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
 
           <div className="relative flex-1 overflow-y-auto no-scrollbar">
             <div className="relative w-full h-[45vh] min-h-[350px]">
-              {entry.image_url ? (
+              {hasRealImage ? (
                 <img 
-                  src={entry.image_url} 
+                  src={entry.image_url!} 
                   alt={entry.food_name} 
                   className="w-full h-full object-cover" 
                 />
@@ -191,9 +193,9 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
         </div>
 
         <div className="w-full h-[300px] relative bg-gray-100 flex items-center justify-center">
-          {entry.image_url ? (
+          {hasRealImage ? (
             <img 
-              src={entry.image_url} 
+              src={entry.image_url!} 
               alt={entry.food_name} 
               className="w-full h-full object-cover"
               crossOrigin="anonymous" 

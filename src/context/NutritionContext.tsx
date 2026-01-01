@@ -72,7 +72,7 @@ export interface UnlockedBadgeInfo {
 }
 
 interface NutritionState {
-  addAnalysis: (result: AnalysisResult, imageUrl?: string) => void;
+  addAnalysis: (result: AnalysisResult, imageUrl?: string | null) => void;
   deleteEntry: (id: string, type: 'food' | 'exercise') => void;
   getDataForDate: (date: Date) => DailyData;
   addWaterGlass: (date: Date, amount?: number) => void;
@@ -263,7 +263,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
-  const addAnalysis = (result: AnalysisResult, imageUrl = '/placeholder.svg') => {
+  const addAnalysis = (result: AnalysisResult, imageUrl: string | null = null) => {
     const newEntry = {
       food_name: result.foodName,
       image_url: imageUrl,
@@ -273,7 +273,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       fats: result.fats || '0g',
       sugars: result.sugars || '0g',
       fiber: result.fiber || '0g',
-      health_rating: result.healthRating,
+      health_rating: result.healthRating as any,
       reason: result.reason,
       calories_value: parseNutrientValue(result.calories),
       protein_value: parseNutrientValue(result.protein),

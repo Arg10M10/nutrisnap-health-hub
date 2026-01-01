@@ -76,14 +76,17 @@ const RecentAnalysisCard = ({
     };
   }, [isProcessing, hasFailed, status]);
 
+  // Lógica de detección de imagen real vs placeholder
+  const hasRealImage = imageUrl && !imageUrl.includes('placeholder');
+
   return (
     <Card 
       className={cn("p-4 flex flex-row items-start gap-4 relative transition-colors overflow-hidden", isClickable && "cursor-pointer hover:bg-muted/50")} 
       onClick={isClickable ? onClick : undefined}
     >
       <div className="relative w-20 h-20 flex-shrink-0">
-        {imageUrl ? (
-            <img src={imageUrl} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
+        {hasRealImage ? (
+            <img src={imageUrl!} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
         ) : (
             <div className="w-20 h-20 rounded-lg bg-muted flex items-center justify-center text-muted-foreground/30 border border-border/50 shadow-inner">
                 <Utensils className="w-10 h-10" />
