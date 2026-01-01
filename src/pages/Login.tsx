@@ -72,7 +72,7 @@ export default function Login() {
                 <div className="space-y-4">
                   <h1 className="text-4xl font-bold tracking-tight text-foreground">
                     <Trans i18nKey="login.hello_calorel">
-                      Hi, I'm <span className="text-primary">Calorel</span>
+                      Welcome to <span className="text-primary">Calorel</span>
                     </Trans>
                   </h1>
                   <p className="text-lg text-muted-foreground max-w-xs mx-auto leading-relaxed">
