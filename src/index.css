@@ -8,34 +8,36 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* MODO CLARO: fondo blanco estándar */
+    /* MODO CLARO */
     --background: 0 0% 100%;
-    --foreground: 150 30% 15%;
+    --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 150 30% 15%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 150 30% 15%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 150 70% 45%;
+    /* PRIMARY: Verde Lima Vibrante */
+    --primary: 84 81% 44%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 142 76% 36%;
+    /* SECONDARY: Morado */
+    --secondary: 262 83% 58%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 150 20% 96%;
-    --muted-foreground: 150 10% 45%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 84 81% 90%; /* Un lima muy suave para hovers */
+    --accent-foreground: 240 5.9% 10%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 150 20% 94%;
-    --input: 150 20% 94%;
-    --ring: 150 70% 45%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 84 81% 44%; /* Anillo de foco color lima */
 
     --radius: 1.5rem;
 
@@ -50,7 +52,7 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* MODO OSCURO: fondo negro (muy oscuro) */
+    /* MODO OSCURO */
     --background: 220 15% 6%;
     --foreground: 150 10% 95%;
 
@@ -60,16 +62,18 @@ All colors MUST be HSL.
     --popover: 220 15% 10%;
     --popover-foreground: 150 10% 95%;
 
-    --primary: 150 70% 45%;
-    --primary-foreground: 0 0% 100%;
+    /* PRIMARY: Verde Lima (ligeramente más brillante para modo oscuro) */
+    --primary: 84 81% 50%;
+    --primary-foreground: 0 0% 10%; /* Texto oscuro sobre lima brillante */
 
-    --secondary: 142 76% 36%;
+    /* SECONDARY: Morado Brillante */
+    --secondary: 262 80% 65%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 220 10% 18%;
     --muted-foreground: 150 10% 65%;
 
-    --accent: 160 84% 39%;
+    --accent: 220 15% 20%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 50%;
@@ -77,7 +81,7 @@ All colors MUST be HSL.
 
     --border: 220 10% 18%;
     --input: 220 10% 18%;
-    --ring: 150 70% 45%;
+    --ring: 84 81% 50%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
