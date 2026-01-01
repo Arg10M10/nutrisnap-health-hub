@@ -27,7 +27,7 @@ const CaloriesCard = ({ current, goal, className }: CaloriesCardProps) => {
     <Card className={cn("w-full flex flex-col justify-center shadow-sm", className)}>
       <CardContent className="flex items-center justify-between p-5 gap-4 h-full">
         <div className="space-y-1 flex-1 min-w-0">
-          <p className="text-5xl font-black text-foreground leading-none tracking-tight">
+          <p className="text-4xl font-black text-foreground leading-none tracking-tight">
             <AnimatedNumber value={currentVal} />
           </p>
           <p className="text-muted-foreground font-medium text-base truncate">

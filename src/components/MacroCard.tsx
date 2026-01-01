@@ -23,9 +23,9 @@ const MacroCard = ({ value, color, icon, current, unit, label }: MacroCardProps)
         </div>
       </div>
       <div className="flex flex-col items-center w-full min-w-0 overflow-hidden">
-        <p className="font-black text-2xl text-foreground leading-none truncate mt-1">
+        <p className="font-black text-xl text-foreground leading-none truncate mt-1">
           <AnimatedNumber value={currentVal} />
-          <span className="text-xs ml-0.5 font-bold text-muted-foreground/70">{unit}</span>
+          <span className="text-[10px] ml-0.5 font-bold text-muted-foreground/70">{unit}</span>
         </p>
         <p className="text-[10px] text-muted-foreground truncate w-full text-center uppercase tracking-wide font-bold mt-1">{label}</p>
       </div>

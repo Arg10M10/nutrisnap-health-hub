@@ -31,37 +31,37 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
         <div className="p-3 flex flex-col justify-between h-full z-10 relative">
           <div className="text-center pt-1">
             <div className="flex items-baseline justify-center gap-1">
-              {/* Números mucho más grandes */}
-              <p className="text-4xl font-black text-foreground tabular-nums leading-none tracking-tight">
+              {/* Números ajustados */}
+              <p className="text-3xl font-black text-foreground tabular-nums leading-none tracking-tight">
                 <AnimatedNumber value={count} toFixed={0} />
               </p>
-              <span className="text-sm text-muted-foreground font-semibold">/ {goal}</span>
+              <span className="text-xs text-muted-foreground font-semibold">/ {goal}</span>
             </div>
-            <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider mt-1">
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-1">
               {t('home.water_tracker_title', 'oz')}
             </p>
           </div>
 
           <div className="flex justify-center items-center gap-3 pb-1">
-            {/* Botón menos más grande */}
+            {/* Botón menos */}
             <Button 
               variant="outline" 
               size="icon" 
               onClick={onRemove} 
               disabled={count === 0 || isUpdating}
-              className="h-10 w-10 shrink-0 rounded-full border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-background/80 backdrop-blur-sm shadow-sm"
+              className="h-9 w-9 shrink-0 rounded-full border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-background/80 backdrop-blur-sm shadow-sm"
             >
-              <Minus className="w-5 h-5" />
+              <Minus className="w-4 h-4" />
             </Button>
             
-            {/* Botón más (Añadir) más grande y prominente */}
+            {/* Botón más (Añadir) */}
             <Button 
               size="sm" 
               onClick={() => setIsDrawerOpen(true)} 
               disabled={isUpdating}
-              className="flex-1 h-10 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-md transition-all active:scale-95 text-xs font-bold px-0"
+              className="flex-1 h-9 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-md transition-all active:scale-95 text-[10px] font-bold px-0"
             >
-              <Plus className="w-5 h-5 mr-1" /> {t('common.add', 'Añadir')}
+              <Plus className="w-4 h-4 mr-1" /> {t('common.add', 'Añadir')}
             </Button>
           </div>
         </div>

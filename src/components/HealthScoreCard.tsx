@@ -35,7 +35,7 @@ const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
         </div>
       </div>
       <div className="min-w-0 w-full">
-        <p className="text-2xl font-black text-foreground leading-tight truncate">{getLabel()}</p>
+        <p className="text-xl font-black text-foreground leading-tight truncate">{getLabel()}</p>
         <p className="text-xs text-muted-foreground uppercase tracking-wide truncate mt-1 font-bold">{t('home.health_score')}</p>
       </div>
     </Card>
