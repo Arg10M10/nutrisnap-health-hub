@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -76,8 +76,19 @@ const GlobalBadgeModal = () => {
 const AppRoutes = () => {
   const { session, profile, loading: authLoading } = useAuth();
   const location = useLocation();
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
 
-  if (authLoading) {
+  useEffect(() => {
+    // This timer ensures the splash screen is visible for at least 1.2 seconds
+    // to allow the animation to complete smoothly.
+    const timer = setTimeout(() => {
+      setIsSplashVisible(false);
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (authLoading || isSplashVisible) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-background">
         <SplashScreen />

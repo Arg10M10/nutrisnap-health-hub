@@ -9,8 +9,8 @@ const SplashScreen = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
+        staggerChildren: 0.05,
+        delayChildren: 0.1,
       },
     },
   };
@@ -34,7 +34,7 @@ const SplashScreen = () => {
         className="flex items-center gap-3"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <Leaf className="w-16 h-16 text-primary" />
         <motion.h1
