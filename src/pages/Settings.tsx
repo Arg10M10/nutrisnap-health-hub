@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { Settings as SettingsIcon, ChevronRight, MessageSquareText } from "lucide-react";
+import { Settings as SettingsIcon, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import PageLayout from "@/components/PageLayout";
 import UserAvatar from "@/components/UserAvatar";
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedNumber from "@/components/AnimatedNumber";
+import { SupportIcon } from "@/components/icons/SupportIcon";
 
 const SUPPORT_EMAIL = "calorel.help@gmail.com";
 
@@ -108,7 +109,7 @@ const Settings = () => {
               onClick={openGmailCompose} 
               className="rounded-full w-10 h-10 hover:bg-muted"
             >
-              <MessageSquareText className="w-6 h-6 text-foreground" />
+              <SupportIcon className="w-6 h-6 text-foreground" />
             </Button>
             <Button 
               variant="ghost" 
