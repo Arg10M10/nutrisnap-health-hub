@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle2, XCircle, Sparkles, Info, Plus, Check, Loader2 } from "lucide-react";
+import { CheckCircle2, XCircle, Sparkles, Info, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { AnalysisResult } from "./FoodAnalysisCard";
-import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
 
 export interface MenuItem {
   name: string;
@@ -24,35 +25,90 @@ interface MenuAnalysisDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   data: MenuAnalysisData | null;
-  onSelectMeal: (meal: AnalysisResult) => void;
 }
 
-const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysisDrawerProps) => {
+const MealItem = ({ item, type, onSelect, isAnalyzing, isLast }: { item: MenuItem, type: 'recommended' | 'avoid', onSelect: () => void, isAnalyzing: boolean, isLast: boolean }) => {
+  const color = type === 'recommended' ? 'green' : 'red';
+
+  return (
+    <div className="relative pl-8">
+      {/* Timeline elements */}
+      <div className="absolute left-0 top-2.5 flex flex-col items-center h-full">
+        <div className={cn(
+          "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all z-10",
+          isAnalyzing ? `border-${color}-500 bg-${color}-500` : `border-muted-foreground/50 bg-background`
+        )}>
+          {isAnalyzing && <Loader2 className="w-3 h-3 animate-spin text-white" />}
+        </div>
+        {!isLast && <div className="flex-1 w-px bg-muted-foreground/20" />}
+      </div>
+
+      {/* Clickable content */}
+      <button 
+        onClick={onSelect} 
+        disabled={isAnalyzing}
+        className="ml-4 p-3 rounded-xl text-left w-full transition-colors hover:bg-muted/50 disabled:hover:bg-transparent"
+      >
+        <p className="font-bold text-foreground">{item.name}</p>
+        <p className="text-sm text-muted-foreground">{item.reason}</p>
+      </button>
+    </div>
+  )
+}
+
+const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) => {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [analyzingMeal, setAnalyzingMeal] = useState<string | null>(null);
 
   if (!data) return null;
 
   const handleSelect = async (item: MenuItem) => {
+    if (!user) {
+      toast.error("You must be logged in to add a meal.");
+      return;
+    }
     setAnalyzingMeal(item.name);
     try {
-      const { data: analysisResult, error } = await supabase.functions.invoke('analyze-text-food', {
+      // 1. Create a processing entry in the database
+      const { data: newEntry, error: insertError } = await supabase
+        .from('food_entries')
+        .insert({
+          user_id: user.id,
+          food_name: item.name,
+          status: 'processing',
+        })
+        .select()
+        .single();
+
+      if (insertError) throw insertError;
+
+      // 2. Invalidate query to show the processing card immediately
+      queryClient.invalidateQueries({ queryKey: ['food_entries', user.id] });
+      onClose(); // Close drawer immediately for better UX
+
+      // 3. Invoke the edge function to perform the analysis
+      const { error: functionError } = await supabase.functions.invoke('analyze-text-food', {
         body: {
+          entry_id: newEntry.id,
           foodName: item.name,
-          portionSize: 'medium', // Asumimos porción media por defecto
+          portionSize: 'medium',
           language: i18n.language,
         },
       });
 
-      if (error) throw error;
-
-      onSelectMeal(analysisResult);
+      if (functionError) {
+        // If function fails, update the entry to 'failed'
+        await supabase.from('food_entries').update({ status: 'failed', reason: 'Analysis failed to start.' }).eq('id', newEntry.id);
+        queryClient.invalidateQueries({ queryKey: ['food_entries', user.id] });
+        throw functionError;
+      }
 
     } catch (error) {
       console.error("Error analyzing selected meal:", error);
       toast.error(t('manual_food.error_analysis'));
-    } finally {
-      setAnalyzingMeal(null);
+      setAnalyzingMeal(null); // Reset loading state on error
     }
   };
 
@@ -78,25 +134,14 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysi
                 {t('menu_analysis.recommended', 'Mejores Opciones')}
               </h3>
               {data.recommended.map((item, idx) => (
-                <div key={idx} className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/50 p-3 rounded-xl flex justify-between items-center">
-                  <div className="flex-1">
-                    <span className="font-bold text-foreground">{item.name}</span>
-                    <p className="text-xs text-muted-foreground mt-1">{item.reason}</p>
-                  </div>
-                  <Button size="icon" className="h-10 w-10 rounded-full shrink-0 ml-3" onClick={() => handleSelect(item)} disabled={!!analyzingMeal}>
-                    <AnimatePresence mode="wait" initial={false}>
-                      {analyzingMeal === item.name ? (
-                        <motion.div key="loader" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        </motion.div>
-                      ) : (
-                        <motion.div key="plus" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                          <Plus className="w-5 h-5" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </Button>
-                </div>
+                <MealItem 
+                  key={`rec-${idx}`}
+                  item={item}
+                  type="recommended"
+                  onSelect={() => handleSelect(item)}
+                  isAnalyzing={analyzingMeal === item.name}
+                  isLast={idx === data.recommended.length - 1 && (!data.avoid || data.avoid.length === 0)}
+                />
               ))}
             </div>
 
@@ -107,25 +152,14 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysi
                   {t('menu_analysis.avoid', 'Limitar o Evitar')}
                 </h3>
                 {data.avoid.map((item, idx) => (
-                  <div key={idx} className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 p-3 rounded-xl opacity-90 flex justify-between items-center">
-                    <div className="flex-1">
-                      <span className="font-medium text-foreground">{item.name}</span>
-                      <p className="text-xs text-muted-foreground mt-1">{item.reason}</p>
-                    </div>
-                    <Button size="icon" variant="destructive" className="h-10 w-10 rounded-full shrink-0 ml-3" onClick={() => handleSelect(item)} disabled={!!analyzingMeal}>
-                      <AnimatePresence mode="wait" initial={false}>
-                        {analyzingMeal === item.name ? (
-                          <motion.div key="loader" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                          </motion.div>
-                        ) : (
-                          <motion.div key="plus" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                            <Plus className="w-5 h-5" />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </Button>
-                  </div>
+                  <MealItem 
+                    key={`avoid-${idx}`}
+                    item={item}
+                    type="avoid"
+                    onSelect={() => handleSelect(item)}
+                    isAnalyzing={analyzingMeal === item.name}
+                    isLast={idx === data.avoid.length - 1}
+                  />
                 ))}
               </div>
             )}

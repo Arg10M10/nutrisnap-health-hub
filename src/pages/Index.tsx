@@ -23,12 +23,10 @@ import AppTutorial from "@/components/AppTutorial";
 import StreakModal from "@/components/StreakModal";
 import SwipeToDelete from "@/components/SwipeToDelete";
 import MenuAnalysisDrawer, { MenuAnalysisData } from "@/components/MenuAnalysisDrawer";
-import { AnalysisResult } from "@/components/FoodAnalysisCard";
-import { toast } from "sonner";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { getDataForDate, streak, streakDays, addWaterGlass, removeWaterGlass, isWaterUpdating, deleteEntry, addAnalysis } = useNutrition();
+  const { getDataForDate, streak, streakDays, addWaterGlass, removeWaterGlass, isWaterUpdating, deleteEntry } = useNutrition();
   const { profile } = useAuth();
   const { intake, analyses, healthScore, waterIntake } = getDataForDate(selectedDate);
   const [api, setApi] = useState<CarouselApi>();
@@ -99,12 +97,6 @@ const Index = () => {
     } else {
       setSelectedAnalysis(item);
     }
-  };
-
-  const handleSelectMenuMeal = (meal: AnalysisResult) => {
-    addAnalysis(meal);
-    setIsMenuDrawerOpen(false);
-    toast.success(t('analysis.save_to_diary'));
   };
 
   return (
@@ -296,7 +288,6 @@ const Index = () => {
         isOpen={isMenuDrawerOpen}
         onClose={() => setIsMenuDrawerOpen(false)}
         data={selectedMenuData}
-        onSelectMeal={handleSelectMenuMeal}
       />
 
       <StreakModal 
