@@ -139,15 +139,18 @@ const BottomNav = () => {
                     <button
                       key={mi.label}
                       onClick={() => handleMenuAction(mi.action)}
-                      className="flex flex-col items-center justify-center gap-3 p-3 rounded-2xl bg-muted/40 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square border border-transparent hover:border-border/50"
+                      className="flex flex-col items-center justify-center gap-3 p-3 rounded-2xl bg-muted/40 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square border border-transparent hover:border-primary/20 group"
                     >
-                      <div className="bg-background p-4 rounded-full shadow-sm text-primary ring-1 ring-border/10">
+                      <div className="bg-background p-4 rounded-full shadow-sm text-primary ring-1 ring-border/10 group-hover:text-primary group-hover:scale-105 transition-transform">
                         <mi.icon className="w-8 h-8" />
                       </div>
                       <span className="text-sm font-semibold text-center text-foreground leading-tight px-1">{mi.label}</span>
                     </button>
                   ))}
                 </div>
+
+                {/* Línea divisoria */}
+                <div className="h-px w-full bg-border/60 my-1" />
 
                 {/* Botones pequeños de acción rápida (Peso y Agua) */}
                 <div className="grid grid-cols-2 gap-3 w-full">
@@ -158,10 +161,10 @@ const BottomNav = () => {
                       "flex items-center justify-center gap-2 p-3 rounded-xl transition-all border",
                       hasReachedDailyWeightUpdateLimit 
                         ? "bg-muted/10 text-muted-foreground/50 border-border/10 cursor-not-allowed" 
-                        : "bg-muted/30 hover:bg-muted active:scale-95 border-border/30 text-muted-foreground"
+                        : "bg-muted/30 hover:bg-muted active:scale-95 border-border/30 text-muted-foreground hover:text-primary hover:border-primary/30"
                     )}
                   >
-                    <Scale className="w-4 h-4" />
+                    <Scale className={cn("w-4 h-4", !hasReachedDailyWeightUpdateLimit && "text-primary")} />
                     <span className="text-sm font-medium">
                       {hasReachedDailyWeightUpdateLimit ? t('progress.updated_today', 'Hoy OK') : t('bottom_nav.log_weight', 'Peso')}
                     </span>
@@ -169,10 +172,10 @@ const BottomNav = () => {
 
                   <button
                     onClick={handleOpenWater}
-                    className="flex items-center justify-center gap-2 p-3 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 active:scale-95 transition-all border border-blue-500/20"
+                    className="flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/30 hover:bg-muted active:scale-95 transition-all border border-border/30 text-muted-foreground hover:text-primary hover:border-primary/30"
                   >
-                    <Droplets className="w-4 h-4 text-blue-500" />
-                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">{t('bottom_nav.log_water', 'Agua')}</span>
+                    <Droplets className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium">{t('bottom_nav.log_water', 'Agua')}</span>
                   </button>
                 </div>
 
