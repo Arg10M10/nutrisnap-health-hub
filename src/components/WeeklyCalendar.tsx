@@ -110,7 +110,7 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
                 <motion.div
                   layoutId="activeDayBackground"
                   className="absolute inset-0 bg-primary shadow-lg shadow-primary/20 rounded-[20px] z-0"
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  transition={{ type: "tween", ease: "easeInOut", duration: 0.2 }}
                 />
               )}
 
