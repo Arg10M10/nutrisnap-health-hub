@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ForgotPasswordDialog } from './ForgotPasswordDialog';
@@ -16,7 +16,11 @@ const formSchema = z.object({
   password: z.string().min(1, { message: 'La contraseña no puede estar vacía.' }),
 });
 
-export const SignInForm = () => {
+interface SignInFormProps {
+  onSwitchToSignUp: () => void;
+}
+
+export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -50,9 +54,17 @@ export const SignInForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t('auth.email_label')}</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="tu@ejemplo.com" {...field} className="h-12 text-base" />
-              </FormControl>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <FormControl>
+                  <Input 
+                    type="email" 
+                    placeholder="tu@ejemplo.com" 
+                    {...field} 
+                    className="h-14 pl-10 text-lg bg-muted/30 border-transparent focus:bg-background focus:border-primary transition-all" 
+                  />
+                </FormControl>
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -67,18 +79,19 @@ export const SignInForm = () => {
                 <ForgotPasswordDialog />
               </div>
               <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <FormControl>
                   <Input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     {...field}
-                    className="h-12 text-base pr-10"
+                    className="h-14 pl-10 pr-10 text-lg bg-muted/30 border-transparent focus:bg-background focus:border-primary transition-all"
                   />
                 </FormControl>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -88,10 +101,23 @@ export const SignInForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {t('auth.sign_in_button')}
-        </Button>
+        
+        <div className="space-y-4 pt-2">
+          <Button type="submit" size="lg" className="w-full h-14 text-lg rounded-2xl shadow-lg shadow-primary/20" disabled={loading}>
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {t('auth.sign_in_button')}
+          </Button>
+
+          <Button 
+            type="button" 
+            variant="ghost" 
+            size="lg" 
+            onClick={onSwitchToSignUp}
+            className="w-full h-14 text-base rounded-2xl text-muted-foreground hover:bg-transparent hover:text-primary"
+          >
+            {t('auth.no_account')} <span className="font-semibold ml-1">{t('auth.sign_up_link')}</span>
+          </Button>
+        </div>
       </form>
     </Form>
   );

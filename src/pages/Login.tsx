@@ -1,94 +1,144 @@
 import { useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Leaf } from "lucide-react";
+import { Leaf, ArrowRight } from "lucide-react";
 import { SignInForm } from '@/components/auth/SignInForm';
 import { SignUpForm } from '@/components/auth/SignUpForm';
 import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const TERMS_URL = "https://www.calorel.online/termsandconditions";
 const PRIVACY_URL = "https://www.calorel.online/privacypolicy";
 
+type AuthView = 'welcome' | 'sign_in' | 'sign_up';
+
 export default function Login() {
   const { t } = useTranslation();
-  const [view, setView] = useState<'sign_in' | 'sign_up'>('sign_up');
+  const [view, setView] = useState<AuthView>('welcome');
 
   const openLink = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4">
-      <div className="w-full max-w-md">
-        <Card className="border-none shadow-lg">
-          <CardHeader className="flex flex-col items-center space-y-2.5 pb-6 pt-8">
-            <Leaf className="w-16 h-16 text-primary" />
-            <div className="space-y-1.5 flex flex-col items-center text-center">
-              <h2 className="text-3xl font-bold text-foreground">
-                {view === 'sign_in' ? t('login.welcome') : t('login.create_account')}
-              </h2>
-              <p className="text-muted-foreground px-4">
-                {view === 'sign_in' ? t('login.subtitle') : t('login.create_account_subtitle')}
-              </p>
-            </div>
-          </CardHeader>
-          <CardContent className="px-8 space-y-4">
-            {view === 'sign_in' ? <SignInForm /> : <SignUpForm />}
-            
-            <div className="relative !mt-6">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  {view === 'sign_in' ? t('auth.no_account') : t('auth.already_have_account')}
-                </span>
-              </div>
-            </div>
+  const handleSwitchToSignIn = () => setView('sign_in');
+  const handleSwitchToSignUp = () => setView('sign_up');
 
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="w-full h-14 text-lg hover:bg-background active:bg-background hover:text-foreground" 
-              onClick={() => setView(view === 'sign_in' ? 'sign_up' : 'sign_in')}
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-background p-4 relative overflow-hidden">
+      {/* Fondo decorativo sutil */}
+      <div className="absolute top-[-20%] right-[-20%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[-20%] left-[-20%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="w-full max-w-md relative z-10">
+        <AnimatePresence mode="wait">
+          {view === 'welcome' && (
+            <motion.div
+              key="welcome"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="text-center space-y-8 py-10"
             >
-              {view === 'sign_in' ? t('auth.sign_up_link') : t('auth.sign_in_link')}
-            </Button>
-          </CardContent>
-          <CardFooter className="flex justify-center !py-6 mt-4">
-            <p className="text-center text-xs text-muted-foreground px-4 leading-relaxed">
-              <Trans
-                i18nKey="login.terms_privacy"
-                components={{
-                  1: (
-                    <a
-                      href={TERMS_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary font-semibold hover:underline cursor-pointer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        openLink(TERMS_URL);
+              <div className="flex justify-center mb-6">
+                <div className="bg-primary/10 p-6 rounded-3xl shadow-xl shadow-primary/10">
+                  <Leaf className="w-20 h-20 text-primary" />
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h1 className="text-4xl font-bold tracking-tight text-foreground">
+                  Hola, soy <span className="text-primary">Calorel</span>
+                </h1>
+                <p className="text-lg text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                  Tu compañero inteligente para comer mejor, moverte más y alcanzar tus metas de salud sin estrés.
+                </p>
+              </div>
+
+              <div className="space-y-3 pt-4 px-4">
+                <Button 
+                  size="lg" 
+                  className="w-full h-14 text-lg rounded-2xl shadow-lg shadow-primary/20"
+                  onClick={() => setView('sign_up')}
+                >
+                  Empezar Ahora <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="lg" 
+                  className="w-full h-14 text-lg rounded-2xl hover:bg-transparent hover:text-primary"
+                  onClick={() => setView('sign_in')}
+                >
+                  Ya tengo una cuenta
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
+          {(view === 'sign_in' || view === 'sign_up') && (
+            <motion.div
+              key="auth-form"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+            >
+              <Card className="border-none shadow-xl bg-card/80 backdrop-blur-sm">
+                <CardHeader className="flex flex-col items-center space-y-2 pb-2 pt-8">
+                  <Leaf className="w-10 h-10 text-primary mb-2" />
+                  <h2 className="text-2xl font-bold text-foreground">
+                    {view === 'sign_in' ? t('login.welcome') : t('login.create_account')}
+                  </h2>
+                </CardHeader>
+                
+                <CardContent className="px-6 sm:px-8 py-6">
+                  {view === 'sign_in' ? (
+                    <SignInForm onSwitchToSignUp={handleSwitchToSignUp} />
+                  ) : (
+                    <SignUpForm onSwitchToSignIn={handleSwitchToSignIn} />
+                  )}
+                </CardContent>
+
+                <CardFooter className="flex justify-center pb-8 pt-0">
+                  <p className="text-center text-[10px] text-muted-foreground px-8 leading-tight">
+                    <Trans
+                      i18nKey="login.terms_privacy"
+                      components={{
+                        1: (
+                          <a
+                            href={TERMS_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary font-medium hover:underline cursor-pointer"
+                            onClick={(e) => { e.preventDefault(); openLink(TERMS_URL); }}
+                          />
+                        ),
+                        3: (
+                          <a
+                            href={PRIVACY_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary font-medium hover:underline cursor-pointer"
+                            onClick={(e) => { e.preventDefault(); openLink(PRIVACY_URL); }}
+                          />
+                        ),
                       }}
                     />
-                  ),
-                  3: (
-                    <a
-                      href={PRIVACY_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary font-semibold hover:underline cursor-pointer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        openLink(PRIVACY_URL);
-                      }}
-                    />
-                  ),
-                }}
-              />
-            </p>
-          </CardFooter>
-        </Card>
+                  </p>
+                </CardFooter>
+              </Card>
+              
+              <div className="mt-6 text-center">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setView('welcome')}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Volver al inicio
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
