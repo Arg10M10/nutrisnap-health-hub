@@ -9,23 +9,27 @@ interface HealthScoreCardProps {
 
 const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
   const { t } = useTranslation();
-  const safeScore = score || 0;
+  const safeScore = score; // Permitimos 0 para lógica de "Sin Datos"
 
-  let color = "#22c55e"; // Green
-  if (safeScore < 75) color = "#f97316"; // Orange
-  if (safeScore < 50) color = "#ef4444"; // Red
+  // Definición de colores basada en el nuevo algoritmo (Escala más estricta)
+  let color = "#22c55e"; // Green (80-100)
+  if (safeScore > 0 && safeScore < 80) color = "#f97316"; // Orange (50-79) - Moderado
+  if (safeScore > 0 && safeScore < 50) color = "#ef4444"; // Red (1-49) - Malo
+  if (safeScore === 0) color = "#9ca3af"; // Gray (0) - Sin Datos
 
   const getLabel = () => {
-    if (safeScore >= 85) return t('home.health_score_excellent');
-    if (safeScore >= 70) return t('home.health_score_good');
-    if (safeScore >= 50) return t('home.health_score_fair');
+    if (safeScore === 0) return "--"; // O "Inicio"
+    if (safeScore >= 80) return t('home.health_score_excellent');
+    if (safeScore >= 50) return t('home.health_score_good'); // Aunque sea "moderado", visualmente es "Bueno" o "Regular"
     return t('home.health_score_improvable');
   };
 
   return (
     <Card className="p-3 text-center h-full flex flex-col justify-center items-center gap-2 shadow-sm">
       <div className="w-20 h-20 relative flex-shrink-0">
-        <MacroProgressCircle value={safeScore} color={color} />
+        <MacroProgressCircle value={safeScore || 100} color={color} /> 
+        {/* Si es 0 (sin datos), mostramos el círculo gris lleno o vacío. Lleno (100) en gris se ve mejor como placeholder */}
+        
         <div className="absolute inset-0 flex items-center justify-center">
           <ShieldCheck className="w-10 h-10" style={{ color }} />
         </div>

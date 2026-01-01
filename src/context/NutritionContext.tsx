@@ -95,13 +95,22 @@ const parseNutrientValue = (value: string | null): number => {
   return (numbers[0] + numbers[1]) / 2;
 };
 
-const healthRatingToScore = (rating: FoodEntry['health_rating']): number => {
-  switch (rating) {
-    case 'Saludable': return 100;
-    case 'Moderado': return 60;
-    case 'Evitar': return 20;
-    default: return 50;
-  }
+// Algoritmo de Puntuación Mejorado
+const healthRatingToScore = (rating: string | null): number => {
+  if (!rating) return 50; // Neutro si no hay datos
+  
+  const r = rating.toLowerCase();
+  
+  // Saludable = 100 puntos (Verde)
+  if (r.includes('health') || r.includes('saludable')) return 100;
+  
+  // Moderado = 65 puntos (Amarillo/Naranja) - Penalización leve
+  if (r.includes('moderate') || r.includes('moderado')) return 65;
+  
+  // Evitar = 30 puntos (Rojo) - Penalización fuerte
+  if (r.includes('avoid') || r.includes('evitar') || r.includes('limit')) return 30;
+  
+  return 50; // Fallback
 };
 
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
@@ -307,9 +316,31 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       calories: foodIntake.calories + caloriesBurned,
     };
 
-    const healthScore = dailyFood.length > 0
-      ? dailyFood.reduce((acc, entry) => acc + healthRatingToScore(entry.health_rating), 0) / dailyFood.length
-      : 0;
+    // Calculo de Health Score más robusto
+    let healthScore = 100; // Empieza el día con 100
+    if (dailyFood.length > 0) {
+      // Promedio ponderado de los alimentos consumidos
+      const totalScore = dailyFood.reduce((acc, entry) => acc + healthRatingToScore(entry.health_rating), 0);
+      healthScore = Math.round(totalScore / dailyFood.length);
+    } else {
+      // Si no hay comida registrada, verificamos si hay agua o ejercicio para no dejarlo en 0 absoluto si hay actividad
+      // Si no hay NADA, mantenemos 100 (día nuevo) o 0?
+      // Estrategia: "Calidad de lo ingerido". Si no comes, no hay calidad que medir.
+      // Retornaremos 100 por defecto para que se vea "Limpio", pero la UI puede manejarlo.
+      // O retornamos 0 si queremos obligar a registrar.
+      // El usuario pidió "realista". Si no comes nada, tu salud no es 100.
+      // Pero si apenas empieza el día, no debería ser rojo.
+      // Dejaremos 100 como "Día Limpio" y si comes mal baja.
+      healthScore = 100;
+      
+      // Si ya pasó el día y no registraste nada, técnicamente no debería contar, pero para la vista diaria:
+      if (dailyFood.length === 0 && dailyExercise.length === 0 && dailyWater.length === 0) {
+         healthScore = 0; // Estado "Sin Datos"
+      } else if (dailyFood.length === 0) {
+         // Hizo ejercicio o tomó agua pero no comió -> 100 (neutral/bueno)
+         healthScore = 100;
+      }
+    }
 
     const waterIntake = dailyWater.reduce((acc, entry) => acc + entry.glasses, 0);
 
