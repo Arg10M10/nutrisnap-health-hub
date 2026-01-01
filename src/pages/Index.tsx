@@ -135,12 +135,12 @@ const Index = () => {
             <CarouselContent>
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-3 h-[330px]">
+                  <div className="flex flex-col gap-4 h-[350px]">
                     <div className="flex-1 w-full min-h-0">
                       <CaloriesCard current={intake.calories} goal={dailyGoals.calories} className="h-full" />
                     </div>
-                    <div className="h-[160px] w-full flex-shrink-0">
-                      <div className="grid grid-cols-3 gap-2 w-full h-full">
+                    <div className="h-[150px] w-full flex-shrink-0">
+                      <div className="grid grid-cols-3 gap-3 w-full h-full">
                         <MacroCard
                           value={getSafePercentage(intake.protein, dailyGoals.protein)}
                           color="#ef4444"
@@ -173,9 +173,9 @@ const Index = () => {
 
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-3 h-[330px]">
+                  <div className="flex flex-col gap-4 h-[350px]">
                     <div className="flex-1 w-full min-h-0">
-                      <div className="grid grid-cols-2 gap-2 w-full h-full">
+                      <div className="grid grid-cols-2 gap-3 w-full h-full">
                         <HealthScoreCard score={healthScore} />
                         <WaterTrackerCard
                           count={waterIntake}
@@ -186,7 +186,7 @@ const Index = () => {
                         />
                       </div>
                     </div>
-                    <div className="h-[160px] w-full flex-shrink-0">
+                    <div className="h-[150px] w-full flex-shrink-0">
                       <MacroCard
                           value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
                           color="#a855f7"
@@ -216,11 +216,11 @@ const Index = () => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-foreground text-2xl font-semibold px-1">{t('home.todays_analysis')}</h2>
+          <h2 className="text-foreground text-2xl font-bold px-1">{t('home.todays_analysis')}</h2>
           
           <div 
             className={cn(
-                "rounded-xl border-2 border-dashed transition-all duration-300 overflow-hidden",
+                "rounded-2xl border-2 border-dashed transition-all duration-300 overflow-hidden",
                 isManualEntryOpen ? "border-primary bg-card shadow-sm" : "border-border hover:border-primary/50"
             )}
           >
@@ -228,7 +228,7 @@ const Index = () => {
                 className="w-full flex items-center justify-between p-4 h-auto min-h-[3.5rem] text-base font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
                 onClick={() => setIsManualEntryOpen(!isManualEntryOpen)}
             >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-3">
                     <Utensils className="w-5 h-5" />
                     {t('manual_food.title')}
                 </span>
@@ -264,7 +264,7 @@ const Index = () => {
                     <SwipeToDelete 
                       key={item.id} 
                       onDelete={() => deleteEntry(item.id, 'food')}
-                      className="rounded-xl"
+                      className="rounded-2xl"
                     >
                       <RecentAnalysisCard 
                         imageUrl={item.image_url}
@@ -287,7 +287,7 @@ const Index = () => {
                     <SwipeToDelete 
                       key={item.id} 
                       onDelete={() => deleteEntry(item.id, 'exercise')}
-                      className="rounded-xl"
+                      className="rounded-2xl"
                     >
                       <RecentExerciseCard entry={item as ExerciseEntry} />
                     </SwipeToDelete>
@@ -297,10 +297,10 @@ const Index = () => {
               })}
             </div>
           ) : (
-            <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2 border-dashed shadow-none bg-muted/20">
+            <Card className="p-8 flex flex-col items-center justify-center text-center space-y-3 border-dashed shadow-none bg-muted/20 rounded-[2rem]">
               <Plus className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground">{t('home.no_data')}</p>
-              <p className="text-sm text-muted-foreground">{t('home.start_logging')}</p>
+              <p className="text-muted-foreground font-medium">{t('home.no_data')}</p>
+              <p className="text-sm text-muted-foreground opacity-80">{t('home.start_logging')}</p>
             </Card>
           )}
         </div>

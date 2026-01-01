@@ -15,19 +15,19 @@ const MacroCard = ({ value, color, icon, current, unit, label }: MacroCardProps)
   const currentVal = current || 0;
 
   return (
-    <Card className="p-2 flex flex-col items-center justify-center h-full gap-1 shadow-sm">
-      <div className="w-16 h-16 relative flex-shrink-0">
+    <Card className="p-3 flex flex-col items-center justify-center h-full gap-2 shadow-sm border-none bg-card rounded-[2rem]">
+      <div className="w-14 h-14 relative flex-shrink-0">
         <MacroProgressCircle value={value} color={color} />
-        <div className="absolute inset-0 flex items-center justify-center [&>svg]:w-8 [&>svg]:h-8">
+        <div className="absolute inset-0 flex items-center justify-center [&>svg]:w-6 [&>svg]:h-6">
           {icon}
         </div>
       </div>
-      <div className="flex flex-col items-center w-full min-w-0 overflow-hidden">
-        <p className="font-black text-xl text-foreground leading-none truncate mt-1">
+      <div className="flex flex-col items-center w-full min-w-0">
+        <p className="font-bold text-lg text-foreground leading-none">
           <AnimatedNumber value={currentVal} />
-          <span className="text-[10px] ml-0.5 font-bold text-muted-foreground/70">{unit}</span>
+          <span className="text-xs ml-0.5 font-medium text-muted-foreground">{unit}</span>
         </p>
-        <p className="text-[10px] text-muted-foreground truncate w-full text-center uppercase tracking-wide font-bold mt-1">{label}</p>
+        <p className="text-xs text-muted-foreground font-medium mt-1 capitalize">{label.toLowerCase()}</p>
       </div>
     </Card>
   );
