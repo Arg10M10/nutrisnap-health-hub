@@ -108,7 +108,7 @@ const Index = () => {
         <header className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Leaf className="w-8 h-8 text-primary" />
-            <h1 className="text-primary text-3xl font-normal">{t('home.title')}</h1>
+            <h1 className="text-primary text-3xl font-black tracking-tight">{t('home.title')}</h1>
           </div>
           <button 
             onClick={() => setIsStreakModalOpen(true)}
