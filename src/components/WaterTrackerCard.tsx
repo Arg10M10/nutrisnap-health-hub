@@ -28,15 +28,15 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
           style={{ height: `${percentage}%` }}
         />
         
-        <div className="p-4 flex flex-col justify-between h-full z-10 relative gap-2">
+        <div className="p-3 flex flex-col justify-between h-full z-10 relative gap-1">
           <div className="text-center pt-2">
             <div className="flex items-baseline justify-center gap-1.5">
-              <p className="text-3xl font-bold text-foreground tabular-nums leading-none">
+              <p className="text-2xl font-bold text-foreground tabular-nums leading-none">
                 <AnimatedNumber value={count} toFixed={0} />
               </p>
-              <span className="text-xs text-muted-foreground font-medium">/ {goal}</span>
+              <span className="text-[10px] text-muted-foreground font-medium">/ {goal}</span>
             </div>
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mt-1">
+            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide mt-0.5">
               {t('home.water_tracker_title', 'oz')}
             </p>
           </div>
@@ -47,18 +47,18 @@ const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTra
               size="icon" 
               onClick={onRemove} 
               disabled={count === 0 || isUpdating}
-              className="h-8 w-8 rounded-full border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-background/80 backdrop-blur-sm"
+              className="h-7 w-7 rounded-full border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-background/80 backdrop-blur-sm"
             >
-              <Minus className="w-4 h-4" />
+              <Minus className="w-3 h-3" />
             </Button>
             
             <Button 
               size="sm" 
               onClick={() => setIsDrawerOpen(true)} 
               disabled={isUpdating}
-              className="flex-1 h-8 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-sm transition-all active:scale-95 text-xs font-bold px-0"
+              className="flex-1 h-7 rounded-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-sm transition-all active:scale-95 text-[10px] font-bold px-0"
             >
-              <Plus className="w-3.5 h-3.5 mr-1.5" /> {t('common.add', 'Añadir')}
+              <Plus className="w-3 h-3 mr-1" /> {t('common.add', 'Añadir')}
             </Button>
           </div>
         </div>
