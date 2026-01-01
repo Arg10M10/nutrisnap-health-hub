@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText } from "lucide-react";
+import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import EditWeightDrawer from "@/components/EditWeightDrawer";
+import { useAuth } from "@/context/AuthContext";
 
 const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { profile } = useAuth();
 
   const navItems = [
     { icon: Home, label: t('bottom_nav.home'), path: "/" },
@@ -31,6 +35,11 @@ const BottomNav = () => {
     }, 50);
   };
 
+  const handleOpenWeight = () => {
+    setIsMenuOpen(false);
+    setIsWeightDrawerOpen(true);
+  };
+
   const NavItem = ({ item }: { item: typeof navItems[0] }) => (
     <NavLink
       id={`nav-${item.path.replace('/', '') || 'home'}`}
@@ -49,6 +58,9 @@ const BottomNav = () => {
       )}
     </NavLink>
   );
+
+  const isImperial = profile?.units === 'imperial';
+  const currentWeight = isImperial && profile?.weight ? Math.round(profile.weight * 2.20462) : (profile?.weight || 70);
 
   return (
     <>
@@ -74,21 +86,35 @@ const BottomNav = () => {
                 animate={{ scale: 1, opacity: 1, y: 0, x: "-50%" }}
                 exit={{ scale: 0.9, opacity: 0, y: 10, x: "-50%" }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="absolute bottom-28 left-1/2 w-[95%] max-w-[380px] bg-card border border-border/50 rounded-[2rem] shadow-2xl p-6 grid grid-cols-3 gap-4 z-50 origin-bottom"
+                className="absolute bottom-28 left-1/2 w-[95%] max-w-[380px] bg-card border border-border/50 rounded-[2rem] shadow-2xl p-6 flex flex-col gap-4 z-50 origin-bottom"
               >
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-card rotate-45 border-b border-r border-border/50"></div>
-                {menuItems.map((mi) => (
-                  <button
-                    key={mi.label}
-                    onClick={() => handleMenuAction(mi.action)}
-                    className="flex flex-col items-center justify-center gap-3 p-3 rounded-2xl bg-muted/40 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square border border-transparent hover:border-border/50"
-                  >
-                    <div className="bg-background p-4 rounded-full shadow-sm text-primary ring-1 ring-border/10">
-                      <mi.icon className="w-8 h-8" />
-                    </div>
-                    <span className="text-sm font-semibold text-center text-foreground leading-tight px-1">{mi.label}</span>
-                  </button>
-                ))}
+                
+                {/* Grid de botones principales */}
+                <div className="grid grid-cols-3 gap-4">
+                  {menuItems.map((mi) => (
+                    <button
+                      key={mi.label}
+                      onClick={() => handleMenuAction(mi.action)}
+                      className="flex flex-col items-center justify-center gap-3 p-3 rounded-2xl bg-muted/40 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square border border-transparent hover:border-border/50"
+                    >
+                      <div className="bg-background p-4 rounded-full shadow-sm text-primary ring-1 ring-border/10">
+                        <mi.icon className="w-8 h-8" />
+                      </div>
+                      <span className="text-sm font-semibold text-center text-foreground leading-tight px-1">{mi.label}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Botón pequeño de peso */}
+                <button
+                  onClick={handleOpenWeight}
+                  className="flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/30 hover:bg-muted active:scale-95 transition-all w-full border border-border/30"
+                >
+                  <Scale className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm font-medium text-muted-foreground">{t('bottom_nav.log_weight', 'Registrar Peso')}</span>
+                </button>
+
               </motion.div>
             )}
           </AnimatePresence>
@@ -120,6 +146,12 @@ const BottomNav = () => {
           </div>
         </div>
       </nav>
+
+      <EditWeightDrawer 
+        isOpen={isWeightDrawerOpen} 
+        onClose={() => setIsWeightDrawerOpen(false)} 
+        currentWeight={currentWeight}
+      />
     </>
   );
 };

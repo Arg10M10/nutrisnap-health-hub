@@ -233,7 +233,8 @@
     "log_title": "Registrar Actividad",
     "scan_food": "Escanear Comida",
     "scan_menu": "Escanear Menú",
-    "log_exercise": "Registrar Ejercicio"
+    "log_exercise": "Registrar Ejercicio",
+    "log_weight": "Registrar Peso"
   },
   "scanner": {
     "starting": "Iniciando cámara...",
@@ -732,5 +733,17 @@
     "water_body_2": "Mantente hidratado para mejores resultados.",
     "weight_title_1": "Control de Peso",
     "weight_body_1": "Actualiza tu peso hoy para ver tu progreso."
+  },
+  "bottom_nav": {
+    "home": "Inicio",
+    "settings": "Perfil",
+    "profile": "Perfil",
+    "progress": "Progreso",
+    "diets": "Dietas",
+    "log_title": "Registrar Actividad",
+    "scan_food": "Escanear Comida",
+    "scan_menu": "Escanear Menú",
+    "log_exercise": "Registrar Ejercicio",
+    "log_weight": "Registrar Peso"
   }
 }
