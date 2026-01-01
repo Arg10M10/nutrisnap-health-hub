@@ -147,7 +147,10 @@
       "title": "Stay Consistent",
       "description": "Turn on notifications to get reminders for meals, hydration, and weight checks. It helps you stay on track!",
       "enable_button": "Enable Notifications",
-      "skip_button": "Maybe Later"
+      "skip_button": "Maybe Later",
+      "smart_reminders_title": "Smart Reminders",
+      "smart_reminders_desc": "We'll send you tips and reminders every 3 hours (9am - 9pm) to keep you focused.",
+      "enabled_button": "Enabled!"
     },
     "final": {
       "title": "Ready to start?",
@@ -589,7 +592,9 @@
     "weight_desc": "Mondays & Thursdays (9am)",
     "toast_enabled": "Reminders enabled",
     "toast_disabled": "Reminders disabled",
-    "toast_denied": "Notification permissions denied"
+    "toast_denied": "Notification permissions denied",
+    "toast_denied_desc": "Please enable notifications in your phone's settings.",
+    "toast_error_generic": "An error occurred while enabling notifications."
   },
   "edit_profile": {
     "title": "Edit Profile",

@@ -147,7 +147,10 @@
       "title": "Mantén la Constancia",
       "description": "Activa las notificaciones para recibir recordatorios de comidas, hidratación y control de peso. ¡Te ayudará a no perder el ritmo!",
       "enable_button": "Activar Notificaciones",
-      "skip_button": "Quizás más tarde"
+      "skip_button": "Quizás más tarde",
+      "smart_reminders_title": "Recordatorios Inteligentes",
+      "smart_reminders_desc": "Te enviaremos consejos y recordatorios cada 3 horas (9am - 9pm) para mantenerte enfocado.",
+      "enabled_button": "¡Activado!"
     },
     "final": {
       "title": "¿Listo para empezar?",
@@ -589,7 +592,9 @@
     "weight_desc": "Lunes y Jueves (9am)",
     "toast_enabled": "Recordatorios activados",
     "toast_disabled": "Recordatorios desactivados",
-    "toast_denied": "Permisos de notificación denegados"
+    "toast_denied": "Permisos de notificación denegados",
+    "toast_denied_desc": "Por favor, habilita las notificaciones en la configuración de tu teléfono.",
+    "toast_error_generic": "Ocurrió un error al activar las notificaciones."
   },
   "edit_profile": {
     "title": "Editar Perfil",
@@ -707,18 +712,18 @@
     "delete_error_title": "Fallo al Eliminar"
   },
   "tutorial": {
-    "welcome_title": "¡Bienvenido a Calorel!",
-    "welcome_content": "Vamos a dar un rápido recorrido por las funciones principales para que comiences tu viaje de salud.",
-    "carousel_title": "Tu Resumen Diario",
-    "carousel_content": "Aquí encontrarás tu progreso diario de calorías, macros y otras métricas clave. ¡Desliza para ver más detalles!",
-    "scanner_title": "Registra Todo Fácilmente",
-    "scanner_content": "Toca el botón central para abrir el menú. Puedes escanear tu comida con IA, registrar un ejercicio o añadir entradas manualmente.",
-    "progress_title": "Sigue Tu Progreso",
-    "progress_content": "Visita la pestaña de Progreso para ver la evolución de tu peso, tu IMC y seguir tus rachas diarias.",
-    "profile_title": "Tu Perfil",
-    "profile_content": "La pestaña de Perfil es tu espacio personal. Aquí puedes editar tus datos, gestionar metas y configurar los ajustes de la aplicación.",
-    "finish": "Finalizar",
-    "next": "Siguiente"
+    "welcome_title": "Welcome to Calorel!",
+    "welcome_content": "Let's take a quick tour of the main features to start your health journey.",
+    "carousel_title": "Your Daily Summary",
+    "carousel_content": "Here you will find your daily progress for calories, macros, and other key metrics. Swipe to see more details!",
+    "scanner_title": "Log Everything Easily",
+    "scanner_content": "Tap the center button to open the menu. You can scan your food with AI, log an exercise, or add entries manually.",
+    "progress_title": "Track Your Progress",
+    "progress_content": "Visit the Progress tab to see your weight evolution, BMI, and track your daily streaks.",
+    "profile_title": "Your Profile",
+    "profile_content": "The Profile tab is your personal space. Here you can edit your details, manage goals, and configure app settings.",
+    "finish": "Finish",
+    "next": "Next"
   },
   "notifications": {
     "title": "Mantén la Constancia",

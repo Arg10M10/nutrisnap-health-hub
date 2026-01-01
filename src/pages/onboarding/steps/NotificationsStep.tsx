@@ -41,13 +41,13 @@ export const NotificationsStep = ({ onNext }: NotificationsStepProps) => {
         }, 800);
       } else {
         toast.error(t('reminders.toast_denied'), {
-          description: "Por favor, habilita las notificaciones en la configuración de tu teléfono."
+          description: t('reminders.toast_denied_desc')
         });
         setIsLoading(false); // Permitir reintentar
       }
     } catch (error) {
       console.error("Error enabling notifications:", error);
-      toast.error("Ocurrió un error al activar las notificaciones.");
+      toast.error(t('reminders.toast_error_generic'));
       setIsLoading(false);
     }
   };
@@ -78,9 +78,9 @@ export const NotificationsStep = ({ onNext }: NotificationsStepProps) => {
       </div>
 
       <div className="text-center space-y-2 max-w-xs mx-auto">
-        <h3 className="text-lg font-semibold">Recordatorios Inteligentes</h3>
+        <h3 className="text-lg font-semibold">{t('onboarding.notifications.smart_reminders_title')}</h3>
         <p className="text-sm text-muted-foreground">
-          Te enviaremos consejos y recordatorios cada 3 horas (9am - 9pm) para mantenerte enfocado.
+          {t('onboarding.notifications.smart_reminders_desc')}
         </p>
       </div>
 
@@ -91,7 +91,7 @@ export const NotificationsStep = ({ onNext }: NotificationsStepProps) => {
           onClick={handleEnable}
           disabled={isLoading || isEnabled}
         >
-          {isEnabled ? "¡Activado!" : t('onboarding.notifications.enable_button')}
+          {isEnabled ? t('onboarding.notifications.enabled_button') : t('onboarding.notifications.enable_button')}
         </Button>
         
         <Button 
