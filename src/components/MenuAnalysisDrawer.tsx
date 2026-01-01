@@ -45,7 +45,7 @@ const MealItem = ({ item, type, onSelect, isAnalyzing, isCompleted }: { item: Me
         className={cn(
           "h-10 w-10 rounded-full shrink-0 shadow-sm transition-all active:scale-90",
           isCompleted 
-            ? "bg-green-500 hover:bg-green-500 text-white" 
+            ? "bg-green-500 hover:bg-green-500 text-white border-transparent" 
             : "bg-background border border-border/60 hover:bg-muted text-foreground"
         )} 
         onClick={onSelect} 
@@ -57,7 +57,7 @@ const MealItem = ({ item, type, onSelect, isAnalyzing, isCompleted }: { item: Me
               <Loader2 className="w-5 h-5 animate-spin" />
             </motion.div>
           ) : isCompleted ? (
-            <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+            <motion.div key="check" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Check className="w-5 h-5" />
             </motion.div>
           ) : (
@@ -76,12 +76,12 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [analyzingMeal, setAnalyzingMeal] = useState<string | null>(null);
-  const [completedMeal, setCompletedMeal] = useState<string | null>(null);
+  const [addedMeals, setAddedMeals] = useState<string[]>([]);
 
   if (!data) return null;
 
   const handleSelect = async (item: MenuItem) => {
-    if (!user || analyzingMeal || completedMeal) return;
+    if (!user || analyzingMeal || addedMeals.includes(item.name)) return;
     
     setAnalyzingMeal(item.name);
     try {
@@ -97,6 +97,7 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
 
       if (insertError) throw insertError;
 
+      // Actualizar lista inmediatamente para mostrar la carga en el fondo
       queryClient.invalidateQueries({ queryKey: ['food_entries', user.id] });
 
       const { error: functionError } = await supabase.functions.invoke('analyze-text-food', {
@@ -115,12 +116,14 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
       }
 
       setAnalyzingMeal(null);
-      setCompletedMeal(item.name);
+      setAddedMeals(prev => [...prev, item.name]);
 
+      // Esperar 1 segundo para mostrar el éxito antes de cerrar
       setTimeout(() => {
         onClose();
-        setTimeout(() => setCompletedMeal(null), 300); 
-      }, 800);
+        // Resetear estado después de que la animación de cierre termine
+        setTimeout(() => setAddedMeals([]), 500);
+      }, 1000);
 
     } catch (error) {
       console.error("Error analyzing selected meal:", error);
@@ -158,7 +161,7 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
                     type="recommended"
                     onSelect={() => handleSelect(item)}
                     isAnalyzing={analyzingMeal === item.name}
-                    isCompleted={completedMeal === item.name}
+                    isCompleted={addedMeals.includes(item.name)}
                   />
                 ))}
               </div>
@@ -178,7 +181,7 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
                       type="avoid"
                       onSelect={() => handleSelect(item)}
                       isAnalyzing={analyzingMeal === item.name}
-                      isCompleted={completedMeal === item.name}
+                      isCompleted={addedMeals.includes(item.name)}
                     />
                   ))}
                 </div>
