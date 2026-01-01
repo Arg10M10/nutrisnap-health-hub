@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle2, XCircle, Sparkles, Info, Plus, Check, Loader2 } from "lucide-react";
+import { CheckCircle2, XCircle, Sparkles, Info, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { AnalysisResult } from "./FoodAnalysisCard";
 import { motion, AnimatePresence } from "framer-motion";
@@ -78,24 +78,23 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysi
                 {t('menu_analysis.recommended', 'Mejores Opciones')}
               </h3>
               {data.recommended.map((item, idx) => (
-                <div key={idx} className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/50 p-3 rounded-xl flex justify-between items-center">
-                  <div className="flex-1">
-                    <span className="font-bold text-foreground">{item.name}</span>
-                    <p className="text-xs text-muted-foreground mt-1">{item.reason}</p>
-                  </div>
-                  <Button size="icon" className="h-10 w-10 rounded-full shrink-0 ml-3" onClick={() => handleSelect(item)} disabled={!!analyzingMeal}>
-                    <AnimatePresence mode="wait" initial={false}>
+                <div key={idx} className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/50 p-3 rounded-xl">
+                  <div className="flex justify-between items-start mb-1 gap-2">
+                    <span className="font-bold text-foreground flex-1">{item.name}</span>
+                    <Button 
+                      size="sm" 
+                      className="h-8 rounded-full min-w-[70px]" 
+                      onClick={() => handleSelect(item)} 
+                      disabled={!!analyzingMeal}
+                    >
                       {analyzingMeal === item.name ? (
-                        <motion.div key="loader" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        </motion.div>
+                        <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
-                        <motion.div key="plus" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                          <Plus className="w-5 h-5" />
-                        </motion.div>
+                        t('common.add')
                       )}
-                    </AnimatePresence>
-                  </Button>
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">{item.reason}</p>
                 </div>
               ))}
             </div>
@@ -107,24 +106,24 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysi
                   {t('menu_analysis.avoid', 'Limitar o Evitar')}
                 </h3>
                 {data.avoid.map((item, idx) => (
-                  <div key={idx} className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 p-3 rounded-xl opacity-90 flex justify-between items-center">
-                    <div className="flex-1">
-                      <span className="font-medium text-foreground">{item.name}</span>
-                      <p className="text-xs text-muted-foreground mt-1">{item.reason}</p>
-                    </div>
-                    <Button size="icon" variant="destructive" className="h-10 w-10 rounded-full shrink-0 ml-3" onClick={() => handleSelect(item)} disabled={!!analyzingMeal}>
-                      <AnimatePresence mode="wait" initial={false}>
+                  <div key={idx} className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 p-3 rounded-xl opacity-90">
+                    <div className="flex justify-between items-start mb-1 gap-2">
+                      <span className="font-medium text-foreground flex-1">{item.name}</span>
+                      <Button 
+                        size="sm" 
+                        variant="destructive"
+                        className="h-8 rounded-full min-w-[70px]" 
+                        onClick={() => handleSelect(item)} 
+                        disabled={!!analyzingMeal}
+                      >
                         {analyzingMeal === item.name ? (
-                          <motion.div key="loader" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                          </motion.div>
+                          <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                          <motion.div key="plus" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                            <Plus className="w-5 h-5" />
-                          </motion.div>
+                          t('common.add')
                         )}
-                      </AnimatePresence>
-                    </Button>
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">{item.reason}</p>
                   </div>
                 ))}
               </div>
