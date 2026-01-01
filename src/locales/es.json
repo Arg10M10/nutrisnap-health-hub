@@ -202,6 +202,7 @@
   "bottom_nav": {
     "home": "Inicio",
     "settings": "Ajustes",
+    "profile": "Perfil",
     "progress": "Progreso",
     "diets": "Dietas",
     "log_title": "Registrar Actividad",
@@ -491,11 +492,12 @@
     "peru": "Perú"
   },
   "settings": {
-    "title": "Ajustes",
-    "subtitle": "Gestiona tu perfil, objetivos y preferencias.",
+    "title": "Perfil",
+    "subtitle": "Tu espacio personal",
+    "configuration_title": "Configuración",
     "profileCard": {
       "namePlaceholder": "Completar Perfil",
-      "viewAndEdit": "Ver y Editar Perfil"
+      "viewAndEdit": "Editar Datos"
     },
     "account": {
       "title": "Cuenta",

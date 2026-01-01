@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, Settings, LineChart, Book, Plus, Scan, Dumbbell, FileText } from "lucide-react";
+import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
@@ -13,7 +13,7 @@ const BottomNav = () => {
 
   const navItems = [
     { icon: Home, label: t('bottom_nav.home'), path: "/" },
-    { icon: Settings, label: t('bottom_nav.settings'), path: "/settings" },
+    { icon: User, label: t('bottom_nav.profile'), path: "/settings" },
     { icon: LineChart, label: t('bottom_nav.progress'), path: "/progress" },
     { icon: Book, label: t('bottom_nav.diets'), path: "/diets" },
   ];
@@ -74,7 +74,6 @@ const BottomNav = () => {
                 animate={{ scale: 1, opacity: 1, y: 0, x: "-50%" }}
                 exit={{ scale: 0.9, opacity: 0, y: 10, x: "-50%" }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                // Aumentado ancho máximo a 380px para más holgura
                 className="absolute bottom-28 left-1/2 w-[95%] max-w-[380px] bg-card border border-border/50 rounded-[2rem] shadow-2xl p-6 grid grid-cols-3 gap-4 z-50 origin-bottom"
               >
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-card rotate-45 border-b border-r border-border/50"></div>
@@ -82,15 +81,11 @@ const BottomNav = () => {
                   <button
                     key={mi.label}
                     onClick={() => handleMenuAction(mi.action)}
-                    // Padding interno del botón aumentado a p-3
                     className="flex flex-col items-center justify-center gap-3 p-3 rounded-2xl bg-muted/40 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square border border-transparent hover:border-border/50"
                   >
-                    {/* Círculo del icono más grande (p-4) */}
                     <div className="bg-background p-4 rounded-full shadow-sm text-primary ring-1 ring-border/10">
-                      {/* Icono más grande (w-8 h-8) */}
                       <mi.icon className="w-8 h-8" />
                     </div>
-                    {/* Texto más grande (text-sm) */}
                     <span className="text-sm font-semibold text-center text-foreground leading-tight px-1">{mi.label}</span>
                   </button>
                 ))}

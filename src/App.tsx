@@ -19,6 +19,7 @@ import Progress from "./pages/Progress";
 import Diets from "./pages/Diets";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
+import Configuration from "./pages/Configuration";
 import Preferences from "./pages/settings/Preferences";
 import NutritionalGoals from "./pages/settings/NutritionalGoals";
 import Login from "./pages/Login";
@@ -142,6 +143,7 @@ const AppRoutes = () => {
     "/exercise/weights",
     "/exercise/write",
     "/exercise/manual",
+    "/configuration",
     "/settings/preferences",
     "/settings/nutritional-goals",
     "/settings/ai-suggestions",
@@ -166,6 +168,7 @@ const AppRoutes = () => {
               <Route path="/exercise/weights" element={<Weights />} />
               <Route path="/exercise/write" element={<WriteExercise />} />
               <Route path="/exercise/manual" element={<ManualExercise />} />
+              <Route path="/configuration" element={<Configuration />} />
               <Route path="/settings/preferences" element={<Preferences />} />
               <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />
               <Route path="/settings/ai-suggestions" element={<AISuggestions />} />
