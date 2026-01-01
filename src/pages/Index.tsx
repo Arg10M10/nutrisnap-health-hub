@@ -125,7 +125,7 @@ const Index = () => {
   return (
     <PageLayout>
       <AppTutorial />
-      <div className="space-y-5">
+      <div className="space-y-6">
         <header className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Leaf className="w-8 h-8 text-primary" />
@@ -154,16 +154,16 @@ const Index = () => {
             <CarouselContent>
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-2 h-[260px]">
+                  <div className="flex flex-col gap-3 h-[290px]">
                     <div className="flex-1 w-full min-h-0">
                       <CaloriesCard current={intake.calories} goal={dailyGoals.calories} className="h-full" />
                     </div>
-                    <div className="h-[84px] w-full">
+                    <div className="h-[90px] w-full">
                       <div className="grid grid-cols-3 gap-2 w-full h-full">
                         <MacroCard
                           value={getSafePercentage(intake.protein, dailyGoals.protein)}
                           color="#ef4444"
-                          icon={<Beef className="text-red-500" />}
+                          icon={<Beef className="w-5 h-5 text-red-500" />}
                           current={intake.protein}
                           unit="g"
                           label={t('home.protein')}
@@ -171,7 +171,7 @@ const Index = () => {
                         <MacroCard
                           value={getSafePercentage(intake.carbs, dailyGoals.carbs)}
                           color="#f97316"
-                          icon={<Wheat className="text-orange-500" />}
+                          icon={<Wheat className="w-5 h-5 text-orange-500" />}
                           current={intake.carbs}
                           unit="g"
                           label={t('home.carbs')}
@@ -179,7 +179,7 @@ const Index = () => {
                         <MacroCard
                           value={getSafePercentage(intake.fats, dailyGoals.fats)}
                           color="#3b82f6"
-                          icon={<Droplets className="text-blue-500" />}
+                          icon={<Droplets className="w-5 h-5 text-blue-500" />}
                           current={intake.fats}
                           unit="g"
                           label={t('home.fats')}
@@ -192,7 +192,7 @@ const Index = () => {
 
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-2 h-[260px]">
+                  <div className="flex flex-col gap-3 h-[290px]">
                     <div className="flex-1 w-full min-h-0">
                       <div className="grid grid-cols-2 gap-2 w-full h-full">
                         <HealthScoreCard score={healthScore} />
@@ -205,11 +205,11 @@ const Index = () => {
                         />
                       </div>
                     </div>
-                    <div className="h-[84px] w-full">
+                    <div className="h-[90px] w-full">
                       <MacroCard
                           value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
                           color="#a855f7"
-                          icon={<Sparkles className="text-purple-500" />}
+                          icon={<Sparkles className="w-5 h-5 text-purple-500" />}
                           current={intake.sugars}
                           unit="g"
                           label={t('home.sugars')}
@@ -220,7 +220,7 @@ const Index = () => {
               </CarouselItem>
             </CarouselContent>
           </Carousel>
-          <div className="flex justify-center gap-2 mt-2">
+          <div className="flex justify-center gap-2 mt-4">
             {Array.from({ length: count }).map((_, index) => (
               <button
                 key={index}
@@ -235,7 +235,7 @@ const Index = () => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-foreground text-xl font-bold tracking-tight">{t('home.todays_analysis')}</h2>
+          <h2 className="text-foreground text-2xl font-semibold">{t('home.todays_analysis')}</h2>
           
           <div 
             className={cn(
@@ -244,14 +244,14 @@ const Index = () => {
             )}
           >
             <button 
-                className="w-full flex items-center justify-between p-3.5 h-auto text-sm font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
+                className="w-full flex items-center justify-between p-4 h-auto min-h-[3.5rem] text-base font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
                 onClick={() => setIsManualEntryOpen(!isManualEntryOpen)}
             >
                 <span className="flex items-center gap-2">
-                    <Utensils className="w-4 h-4" />
+                    <Utensils className="w-5 h-5" />
                     {t('manual_food.title')}
                 </span>
-                {isManualEntryOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                {isManualEntryOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
 
             <AnimatePresence>
@@ -318,9 +318,9 @@ const Index = () => {
             </div>
           ) : (
             <Card className="p-8 flex flex-col items-center justify-center text-center space-y-2 border-dashed shadow-none bg-muted/20">
-              <Plus className="w-10 h-10 text-muted-foreground/40" />
-              <p className="text-muted-foreground font-medium">{t('home.no_data')}</p>
-              <p className="text-xs text-muted-foreground/70">{t('home.start_logging')}</p>
+              <Plus className="w-12 h-12 text-muted-foreground/50" />
+              <p className="text-muted-foreground">{t('home.no_data')}</p>
+              <p className="text-sm text-muted-foreground">{t('home.start_logging')}</p>
             </Card>
           )}
         </div>

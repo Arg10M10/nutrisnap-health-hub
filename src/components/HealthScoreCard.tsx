@@ -23,16 +23,16 @@ const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
   };
 
   return (
-    <Card className="p-3 text-center h-full flex flex-col justify-center items-center gap-1 shadow-sm">
-      <div className="w-12 h-12 relative flex-shrink-0">
+    <Card className="p-4 text-center h-full flex flex-col justify-center items-center gap-2 shadow-sm">
+      <div className="w-14 h-14 relative flex-shrink-0">
         <MacroProgressCircle value={safeScore} color={color} />
         <div className="absolute inset-0 flex items-center justify-center">
-          <ShieldCheck className="w-5 h-5" style={{ color }} />
+          <ShieldCheck className="w-6 h-6" style={{ color }} />
         </div>
       </div>
       <div className="min-w-0 w-full">
-        <p className="text-base font-bold text-foreground leading-tight truncate">{getLabel()}</p>
-        <p className="text-[10px] text-muted-foreground uppercase tracking-wide truncate">{t('home.health_score')}</p>
+        <p className="text-lg font-bold text-foreground leading-tight truncate">{getLabel()}</p>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wide truncate mt-0.5">{t('home.health_score')}</p>
       </div>
     </Card>
   );
