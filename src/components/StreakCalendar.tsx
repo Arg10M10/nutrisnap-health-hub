@@ -25,7 +25,7 @@ const StreakCalendar = ({ streakDays }: StreakCalendarProps) => {
             className={cn(
               "aspect-square rounded-full flex items-center justify-center transition-all duration-200",
               isInStreak ? "bg-primary" : "bg-muted",
-              isToday && "ring-2 ring-primary ring-offset-1 ring-offset-background"
+              isToday && "ring-1 ring-primary ring-offset-1 ring-offset-background"
             )}
           >
             {isInStreak ? (
