@@ -1,14 +1,14 @@
 import { useState, useMemo, useEffect } from "react";
 import { format, subDays } from "date-fns";
 import { es, enUS } from "date-fns/locale";
-import { motion, Variants, AnimatePresence } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-import { Flame, Leaf, Plus, Beef, Wheat, Droplets, Sparkles, Utensils, ChevronDown, ChevronUp, Sprout } from "lucide-react";
-import { useNutrition, FoodEntry, ExerciseEntry } from "@/context/NutritionContext";
+import { Flame, Leaf, Plus, Beef, Wheat, Droplets, Sparkles, Sprout } from "lucide-react";
+import { useNutrition, FoodEntry } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import WeeklyCalendar from "@/components/WeeklyCalendar";
 import HealthScoreCard from "@/components/HealthScoreCard";
@@ -20,8 +20,6 @@ import RecentExerciseCard from "@/components/RecentExerciseCard";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import AnalysisDetailDrawer from "@/components/AnalysisDetailDrawer";
 import AppTutorial from "@/components/AppTutorial";
-import ManualFoodEntry from "@/components/ManualFoodEntry";
-import { cn } from "@/lib/utils";
 import StreakModal from "@/components/StreakModal";
 import SwipeToDelete from "@/components/SwipeToDelete";
 import MenuAnalysisDrawer, { MenuAnalysisData } from "@/components/MenuAnalysisDrawer";
@@ -40,7 +38,6 @@ const Index = () => {
   const [selectedMenuData, setSelectedMenuData] = useState<MenuAnalysisData | null>(null);
   const [isMenuDrawerOpen, setIsMenuDrawerOpen] = useState(false);
 
-  const [isManualEntryOpen, setIsManualEntryOpen] = useState(false);
   const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -228,42 +225,6 @@ const Index = () => {
         <div className="space-y-4">
           <h2 className="text-foreground text-2xl font-bold px-1">{t('home.todays_analysis')}</h2>
           
-          <div 
-            className={cn(
-                "rounded-2xl border-2 border-dashed transition-all duration-300 overflow-hidden",
-                isManualEntryOpen ? "border-primary bg-card shadow-sm" : "border-border hover:border-primary/50"
-            )}
-          >
-            <button 
-                className="w-full flex items-center justify-between p-4 h-auto min-h-[3.5rem] text-base font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
-                onClick={() => setIsManualEntryOpen(!isManualEntryOpen)}
-            >
-                <span className="flex items-center gap-3">
-                    <Utensils className="w-5 h-5" />
-                    {t('manual_food.title')}
-                </span>
-                {isManualEntryOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-            </button>
-
-            <AnimatePresence>
-                {isManualEntryOpen && (
-                    <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: "auto" }}
-                        exit={{ height: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                    >
-                        <div className="px-4 pb-6">
-                            <ManualFoodEntry 
-                                embedded={true} 
-                                onSuccess={() => setIsManualEntryOpen(false)}
-                            />
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-          </div>
-
           {analyses.length > 0 ? (
             <div className="space-y-3">
               {analyses.map((item) => {

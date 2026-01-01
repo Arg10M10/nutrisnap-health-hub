@@ -227,13 +227,14 @@
   },
   "bottom_nav": {
     "home": "Home",
-    "settings": "Settings",
+    "settings": "Profile",
     "profile": "Profile",
     "progress": "Progress",
     "diets": "Diets",
     "log_title": "Log Activity",
     "scan_food": "Scan Food",
     "scan_menu": "Scan Menu",
+    "describe_food": "Describe Food",
     "log_exercise": "Log Exercise",
     "log_weight": "Log Weight",
     "log_water": "Log Water"
