@@ -99,19 +99,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
 
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
-
       if (event === 'SIGNED_OUT') {
+        setSession(null);
+        setUser(null);
         setProfile(null);
-        setLoading(false);
-      } else if (event === 'SIGNED_IN' && newSession?.user) {
-        setUser(currentUser => {
-            if (currentUser?.id !== newSession.user.id) {
-                 fetchProfile(newSession.user.id);
-            }
-            return newSession.user;
-        });
+      } else if (newSession?.user) {
+        setSession(newSession);
+        setUser(newSession.user);
+        
+        if (event === 'SIGNED_IN') {
+          setLoading(true);
+          await fetchProfile(newSession.user.id);
+          setLoading(false);
+        }
       }
     });
 
