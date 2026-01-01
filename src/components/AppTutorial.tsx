@@ -67,8 +67,8 @@ const AppTutorial = () => {
     },
     {
       target: '#nav-settings',
-      content: t('tutorial.settings_content'),
-      title: t('tutorial.settings_title'),
+      content: t('tutorial.profile_content'),
+      title: t('tutorial.profile_title'),
       placement: 'top',
       disableScrolling: true,
     },

@@ -715,8 +715,8 @@
     "scanner_content": "Tap the center button to open the menu. You can scan your food with AI, log an exercise, or add entries manually.",
     "progress_title": "Track Your Progress",
     "progress_content": "Visit the Progress tab to see your weight evolution, BMI, and track your daily streaks.",
-    "settings_title": "Customize Your Experience",
-    "settings_content": "In Settings, you can modify your goals, change preferences, and manage your account.",
+    "profile_title": "Your Profile",
+    "profile_content": "The Profile tab is your personal space. Here you can edit your details, manage goals, and configure app settings.",
     "finish": "Finish",
     "next": "Next"
   },

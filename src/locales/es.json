@@ -715,8 +715,8 @@
     "scanner_content": "Toca el botón central para abrir el menú. Puedes escanear tu comida con IA, registrar un ejercicio o añadir entradas manualmente.",
     "progress_title": "Sigue Tu Progreso",
     "progress_content": "Visita la pestaña de Progreso para ver la evolución de tu peso, tu IMC y seguir tus rachas diarias.",
-    "settings_title": "Personaliza Tu Experiencia",
-    "settings_content": "En Ajustes, puedes modificar tus metas, cambiar preferencias y gestionar tu cuenta.",
+    "profile_title": "Tu Perfil",
+    "profile_content": "La pestaña de Perfil es tu espacio personal. Aquí puedes editar tus datos, gestionar metas y configurar los ajustes de la aplicación.",
     "finish": "Finalizar",
     "next": "Siguiente"
   },
@@ -739,19 +739,5 @@
     "water_body_2": "Mantente hidratado para mejores resultados.",
     "weight_title_1": "Control de Peso",
     "weight_body_1": "Actualiza tu peso hoy para ver tu progreso."
-  },
-  "bottom_nav": {
-    "home": "Inicio",
-    "settings": "Perfil",
-    "profile": "Perfil",
-    "progress": "Progreso",
-    "diets": "Dietas",
-    "log_title": "Registrar Actividad",
-    "scan_food": "Escanear Comida",
-    "scan_menu": "Escanear Menú",
-    "describe_food": "Describir Comida",
-    "log_exercise": "Registrar Ejercicio",
-    "log_weight": "Registrar Peso",
-    "log_water": "Registrar Agua"
   }
 }
