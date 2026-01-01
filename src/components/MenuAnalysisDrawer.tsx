@@ -42,11 +42,12 @@ const MealItem = ({ item, type, onSelect, isAnalyzing, isCompleted }: { item: Me
       </div>
       <Button 
         size="icon" 
+        variant="ghost"
         className={cn(
-          "h-9 w-9 rounded-full shrink-0 shadow-sm transition-all active:scale-90 border",
+          "h-9 w-9 rounded-full shrink-0 transition-all active:scale-90 border-2 hover:bg-transparent",
           isCompleted 
-            ? "bg-green-500 text-white border-transparent" 
-            : "bg-background border-border/60 hover:bg-muted text-foreground"
+            ? "border-green-500 text-green-500" 
+            : "border-muted-foreground/30 text-muted-foreground"
         )} 
         onClick={onSelect} 
         disabled={isAnalyzing || isCompleted}
@@ -60,9 +61,7 @@ const MealItem = ({ item, type, onSelect, isAnalyzing, isCompleted }: { item: Me
             <motion.div key="check" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
               <Check className="w-5 h-5" />
             </motion.div>
-          ) : (
-            <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/30" />
-          )}
+          ) : null}
         </AnimatePresence>
       </Button>
     </div>
@@ -115,7 +114,6 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data }: MenuAnalysisDrawerProps) 
       setAnalyzingMeal(null);
       setAddedMeals(prev => [...prev, item.name]);
 
-      // Cerrar rápidamente para mostrar el progreso en el diario
       setTimeout(() => {
         onClose();
         setTimeout(() => setAddedMeals([]), 500);
