@@ -21,7 +21,6 @@ const DayProgressRing = ({ percentage, color, trackColor, size = 32, strokeWidth
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       <svg className="w-full h-full -rotate-90" viewBox={`0 0 ${size} ${size}`}>
-        {/* Track (Fondo del anillo) - Ahora punteado */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -32,12 +31,11 @@ const DayProgressRing = ({ percentage, color, trackColor, size = 32, strokeWidth
           strokeDasharray={!trackColor ? "4 4" : "none"}
           className={!trackColor ? "text-muted-foreground/20" : ""}
         />
-        {/* Progress (Progreso) */}
         {percentage > 0 && (
           <motion.circle
-            initial={{ strokeDashoffset: circumference }}
+            initial={false}
             animate={{ strokeDashoffset: offset }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             cx={size / 2}
             cy={size / 2}
             r={radius}
@@ -83,15 +81,13 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
           const hasData = calories > 0;
           const percentage = calorieGoal > 0 ? (calories / calorieGoal) * 100 : 0;
 
-          // Lógica de colores semáforo
           const difference = calories - calorieGoal;
-          let progressColor = '#22c55e'; // Verde por defecto
+          let progressColor = '#22c55e';
           
           if (percentage === 0) progressColor = 'transparent';
-          else if (difference > 200) progressColor = '#ef4444'; // Rojo
-          else if (difference > 50) progressColor = '#f59e0b'; // Naranja
+          else if (difference > 200) progressColor = '#ef4444';
+          else if (difference > 50) progressColor = '#f59e0b';
 
-          // Configuración de colores dinámica basada en la selección
           const textColor = isSelected ? "text-primary-foreground" : "text-muted-foreground";
           const numberColor = isSelected ? "text-primary-foreground font-bold" : "text-foreground font-semibold";
           
@@ -99,41 +95,29 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
           const trackColor = isSelected ? "rgba(255,255,255,0.2)" : undefined;
 
           return (
-            <motion.button
+            <button
               key={day.toString()}
               onClick={() => onDateSelect(day)}
-              whileTap={{ scale: 0.95 }}
-              className="relative flex flex-col items-center justify-between py-2 rounded-[20px] h-[96px] w-full outline-none focus-visible:ring-2 focus-visible:ring-primary overflow-hidden group"
+              className="relative flex flex-col items-center justify-between py-2 rounded-[20px] h-[96px] w-full outline-none focus-visible:ring-2 focus-visible:ring-primary overflow-hidden group active:scale-95 transition-transform"
             >
-              {/* Fondo Animado de Selección ("La Pastilla") */}
               {isSelected && (
                 <motion.div
                   layoutId="activeDayBackground"
                   className="absolute inset-0 bg-primary shadow-lg shadow-primary/20 rounded-[20px] z-0"
-                  transition={{ type: "tween", ease: "easeInOut", duration: 0.2 }}
+                  transition={{ type: "tween", ease: "circOut", duration: 0.25 }}
                 />
               )}
 
-              {/* Indicador de "Hoy" */}
               <div className="h-1.5 w-1.5 mb-0.5 relative z-10">
                 {isToday && (
-                  <motion.div 
-                    initial={{ scale: 0 }} 
-                    animate={{ scale: 1 }}
-                    className={cn(
-                      "w-full h-full rounded-full",
-                      isSelected ? "bg-white" : "bg-primary"
-                    )} 
-                  />
+                  <div className={cn("w-full h-full rounded-full", isSelected ? "bg-white" : "bg-primary")} />
                 )}
               </div>
 
-              {/* Nombre del día */}
               <span className={cn("text-[10px] uppercase tracking-wider font-bold relative z-10 transition-colors duration-200", textColor)}>
                 {format(day, "EEE", { locale: currentLocale }).replace('.', '')}
               </span>
 
-              {/* Número y Anillo - Contenedor con tamaño fijo para evitar solapamiento */}
               <div className="relative z-10 mt-0.5 flex items-center justify-center w-12 h-12">
                 <div className="absolute inset-0 flex items-center justify-center">
                    <DayProgressRing 
@@ -150,13 +134,12 @@ const WeeklyCalendar = ({ selectedDate, onDateSelect, weeklyCalorieData, calorie
                 </span>
               </div>
 
-              {/* Punto indicador inferior */}
               <div className="h-1 w-1 mt-auto mb-1 relative z-10">
                  {!hasData && !isSelected && (
                     <div className="w-full h-full rounded-full bg-muted-foreground/10" />
                  )}
               </div>
-            </motion.button>
+            </button>
           );
         })}
       </div>
