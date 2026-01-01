@@ -625,15 +625,15 @@
     "toast_error": "Failed to save preference."
   },
   "nutritional_goals": {
-    "title": "Metas Nutricionales",
-    "daily_goals": "Metas Diarias de Macros",
-    "subtitle": "Ajusta tus objetivos diarios. Los cambios se guardan automáticamente.",
-    "calories": "Calorías",
-    "protein": "Proteína",
-    "carbs": "Carbohidratos",
-    "fats": "Grasas",
-    "sugars": "Azúcares",
-    "fiber": "Fibra",
+    "title": "Nutritional Goals",
+    "daily_goals": "Daily Macro Goals",
+    "subtitle": "Adjust your daily goals. Changes are saved automatically.",
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbohydrates",
+    "fats": "Fats",
+    "sugars": "Sugars",
+    "fiber": "Fiber",
     "save_error": "Failed to save goals.",
     "ai_suggestions": "AI Suggestions"
   },
@@ -656,12 +656,12 @@
     "toast_error": "Failed to generate goals."
   },
   "weight_goal": {
-    "title": "Meta de Peso",
-    "change_button": "Cambiar Meta",
-    "current_weight": "Peso Actual",
-    "height": "Altura",
-    "gender": "Género",
-    "updated_today": "Actualizado hoy"
+    "title": "Weight Goal",
+    "change_button": "Change Goal",
+    "current_weight": "Current Weight",
+    "height": "Height",
+    "gender": "Gender",
+    "updated_today": "Updated today"
   },
   "ring_colors": {
     "title": "Ring Colors",
@@ -739,18 +739,5 @@
     "water_body_2": "Stay hydrated for better results.",
     "weight_title_1": "Weight Control",
     "weight_body_1": "Update your weight today to see your progress."
-  },
-  "bottom_nav": {
-    "home": "Inicio",
-    "settings": "Perfil",
-    "profile": "Perfil",
-    "progress": "Progreso",
-    "diets": "Dietas",
-    "log_title": "Registrar Actividad",
-    "scan_food": "Escanear Comida",
-    "scan_menu": "Escanear Menú",
-    "log_exercise": "Registrar Ejercicio",
-    "log_weight": "Registrar Peso",
-    "log_water": "Registrar Agua"
   }
 }
