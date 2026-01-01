@@ -13,7 +13,7 @@ interface RecentAnalysisCardProps {
   carbs: number | null;
   fats: number | null;
   sugars: number | null;
-  fiber?: number | null; // Nuevo prop opcional
+  fiber?: number | null;
   status: 'processing' | 'completed' | 'failed';
   reason: string | null;
   onClick: () => void;
@@ -126,24 +126,31 @@ const RecentAnalysisCard = ({
             </span>
           </div>
         ) : (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <Flame className="w-3.5 h-3.5 text-primary" />
               <span className="font-medium text-foreground">{calories ?? 0}</span>
             </div>
+            
             <div className="w-px h-3 bg-border hidden sm:block" />
             
-            {/* Solo mostramos macros principales y fibra para no saturar */}
+            {/* Proteínas */}
             <div className="flex items-center gap-1" title="Proteína">
               <Beef className="w-3.5 h-3.5 text-red-500" />
               <span className="font-medium text-foreground">{protein ?? 0}g</span>
             </div>
-            {fiber !== undefined && fiber !== null && (
-                <div className="flex items-center gap-1" title="Fibra">
-                  <Sprout className="w-3.5 h-3.5 text-emerald-500" />
-                  <span className="font-medium text-foreground">{fiber}g</span>
-                </div>
-            )}
+
+            {/* Carbohidratos */}
+            <div className="flex items-center gap-1" title="Carbohidratos">
+              <Wheat className="w-3.5 h-3.5 text-orange-500" />
+              <span className="font-medium text-foreground">{carbs ?? 0}g</span>
+            </div>
+
+            {/* Grasas */}
+            <div className="flex items-center gap-1" title="Grasas">
+              <Droplets className="w-3.5 h-3.5 text-blue-500" />
+              <span className="font-medium text-foreground">{fats ?? 0}g</span>
+            </div>
           </div>
         )}
       </div>
