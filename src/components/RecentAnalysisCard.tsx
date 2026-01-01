@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Flame, Beef, Wheat, Droplets, Sparkles, Loader2, AlertTriangle, Wand2, FileText, ChevronRight, Sprout } from "lucide-react";
+import { Flame, Beef, Wheat, Droplets, AlertTriangle, Wand2, FileText, ChevronRight, Utensils } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
@@ -29,7 +29,6 @@ const RecentAnalysisCard = ({
   carbs, 
   fats, 
   sugars,
-  fiber, 
   status, 
   reason, 
   onClick,
@@ -83,7 +82,14 @@ const RecentAnalysisCard = ({
       onClick={isClickable ? onClick : undefined}
     >
       <div className="relative w-20 h-20 flex-shrink-0">
-        <img src={imageUrl || '/placeholder.svg'} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
+        {imageUrl ? (
+            <img src={imageUrl} alt={foodName} className="w-20 h-20 rounded-lg object-cover" />
+        ) : (
+            <div className="w-20 h-20 rounded-lg bg-muted flex items-center justify-center text-muted-foreground/30 border border-border/50 shadow-inner">
+                <Utensils className="w-10 h-10" />
+            </div>
+        )}
+        
         {isProcessing && (
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] rounded-lg flex flex-col items-center justify-center p-2 z-10">
              <Wand2 className="w-6 h-6 text-white animate-pulse mb-1" />
@@ -134,19 +140,16 @@ const RecentAnalysisCard = ({
             
             <div className="w-px h-3 bg-border hidden sm:block" />
             
-            {/* Proteínas */}
             <div className="flex items-center gap-1" title="Proteína">
               <Beef className="w-3.5 h-3.5 text-red-500" />
               <span className="font-medium text-foreground">{protein ?? 0}g</span>
             </div>
 
-            {/* Carbohidratos */}
             <div className="flex items-center gap-1" title="Carbohidratos">
               <Wheat className="w-3.5 h-3.5 text-orange-500" />
               <span className="font-medium text-foreground">{carbs ?? 0}g</span>
             </div>
 
-            {/* Grasas */}
             <div className="flex items-center gap-1" title="Grasas">
               <Droplets className="w-3.5 h-3.5 text-blue-500" />
               <span className="font-medium text-foreground">{fats ?? 0}g</span>

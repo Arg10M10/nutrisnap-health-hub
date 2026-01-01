@@ -3,7 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/dialog";
 import {
   Drawer,
   DrawerContent,
@@ -13,12 +13,12 @@ import {
   DrawerFooter,
   DrawerClose,
   DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
+} from "@/drawer";
+import { Button } from "@/button";
 import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { FoodEntry, useNutrition } from "@/context/NutritionContext";
 import { useTranslation } from "react-i18next";
-import { Leaf, Loader2, Flame, Beef, Wheat, Droplets, Trash2, X, Sprout } from "lucide-react";
+import { Leaf, Loader2, Trash2, X, Utensils } from "lucide-react";
 import { shareElement } from '@/lib/share';
 import { DownloadIcon } from './icons/DownloadIcon';
 
@@ -95,8 +95,8 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                   className="w-full h-full object-cover" 
                 />
               ) : (
-                <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground">
-                  No Image
+                <div className="w-full h-full bg-muted/50 flex flex-col items-center justify-center text-muted-foreground/30">
+                  <Utensils className="w-32 h-32 mb-2" strokeWidth={1} />
                 </div>
               )}
               
@@ -190,7 +190,7 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
           <h1 className="text-2xl font-normal text-green-700">Calorel</h1>
         </div>
 
-        <div className="w-full h-[300px] relative bg-white">
+        <div className="w-full h-[300px] relative bg-gray-100 flex items-center justify-center">
           {entry.image_url ? (
             <img 
               src={entry.image_url} 
@@ -199,41 +199,12 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
               crossOrigin="anonymous" 
             />
           ) : (
-            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
-              No Image
+            <div className="flex flex-col items-center justify-center text-gray-300">
+                <Utensils className="w-24 h-24" />
             </div>
           )}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 pt-12">
             <h2 className="text-white text-2xl font-bold drop-shadow-md">{entry.food_name}</h2>
-          </div>
-        </div>
-
-        <div className="p-6 bg-white">
-          <div className="grid grid-cols-4 gap-4 text-center">
-            <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl">
-              <Flame className="w-6 h-6 text-orange-500 mb-1" />
-              <span className="font-bold text-gray-800 text-sm">{entry.calories_value || 0}</span>
-              <span className="text-xs text-gray-500">kcal</span>
-            </div>
-            <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl">
-              <Beef className="w-6 h-6 text-red-500 mb-1" />
-              <span className="font-bold text-gray-800 text-sm">{entry.protein_value || 0}g</span>
-              <span className="text-xs text-gray-500">{t('share.prot_short')}</span>
-            </div>
-            <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl">
-              <Wheat className="w-6 h-6 text-yellow-500 mb-1" />
-              <span className="font-bold text-gray-800 text-sm">{entry.carbs_value || 0}g</span>
-              <span className="text-xs text-gray-500">{t('share.carb_short')}</span>
-            </div>
-            <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl">
-              <Droplets className="w-6 h-6 text-blue-500 mb-1" />
-              <span className="font-bold text-gray-800 text-sm">{entry.fats_value || 0}g</span>
-              <span className="text-xs text-gray-500">{t('share.fat_short')}</span>
-            </div>
-          </div>
-          
-          <div className="mt-6 text-center">
-             <p className="text-sm text-gray-400">{t('share.generated_with')}</p>
           </div>
         </div>
       </div>
