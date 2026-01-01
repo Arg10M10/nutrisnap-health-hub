@@ -30,7 +30,6 @@ import Running from "./pages/exercise/Running";
 import Weights from "./pages/exercise/Weights";
 import WriteExercise from "./pages/exercise/Write";
 import ManualExercise from "./pages/exercise/Manual";
-import ManualFood from "./pages/ManualFood";
 import BottomNav from "./components/BottomNav";
 import ScrollToTop from "./components/ScrollToTop";
 import AISuggestions from "./pages/settings/AISuggestions";
@@ -144,7 +143,6 @@ const AppRoutes = () => {
     "/exercise/weights",
     "/exercise/write",
     "/exercise/manual",
-    "/manual-food",
     "/configuration",
     "/settings/preferences",
     "/settings/nutritional-goals",
@@ -170,7 +168,6 @@ const AppRoutes = () => {
               <Route path="/exercise/weights" element={<Weights />} />
               <Route path="/exercise/write" element={<WriteExercise />} />
               <Route path="/exercise/manual" element={<ManualExercise />} />
-              <Route path="/manual-food" element={<ManualFood />} />
               <Route path="/configuration" element={<Configuration />} />
               <Route path="/settings/preferences" element={<Preferences />} />
               <Route path="/settings/nutritional-goals" element={<NutritionalGoals />} />

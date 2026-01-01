@@ -13,11 +13,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { startOfDay } from "date-fns";
 import { toast } from "sonner";
+import ManualFoodDrawer from "@/components/ManualFoodDrawer";
 
 const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
   const [isWaterDrawerOpen, setIsWaterDrawerOpen] = useState(false);
+  const [isManualFoodDrawerOpen, setIsManualFoodDrawerOpen] = useState(false);
   
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -60,7 +62,7 @@ const BottomNav = () => {
     { 
       label: t('bottom_nav.describe_food'), 
       icon: Utensils, 
-      action: () => handleMenuAction(() => navigate("/manual-food")) 
+      action: () => handleMenuAction(() => setIsManualFoodDrawerOpen(true)) 
     },
     { 
       label: t('bottom_nav.scan_menu'), 
@@ -264,6 +266,11 @@ const BottomNav = () => {
         isOpen={isWaterDrawerOpen}
         onClose={() => setIsWaterDrawerOpen(false)}
         onAdd={handleAddWater}
+      />
+
+      <ManualFoodDrawer
+        isOpen={isManualFoodDrawerOpen}
+        onClose={() => setIsManualFoodDrawerOpen(false)}
       />
     </>
   );
