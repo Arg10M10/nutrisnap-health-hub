@@ -94,7 +94,7 @@ const BadgeDetailModal = ({ isOpen, onClose, badge }: BadgeDetailModalProps) => 
           <div className="bg-green-600 p-2 rounded-full">
             <Leaf className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-green-700">Calorel</h1>
+          <h1 className="text-3xl font-normal text-green-700">Calorel</h1>
         </div>
         
         <div className="w-full h-px bg-gray-200" />

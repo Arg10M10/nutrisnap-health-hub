@@ -192,7 +192,7 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
           <div className="bg-green-600 p-2 rounded-full">
             <Leaf className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-green-700">Calorel</h1>
+          <h1 className="text-2xl font-normal text-green-700">Calorel</h1>
         </div>
 
         <div className="w-full h-[300px] relative bg-white">
