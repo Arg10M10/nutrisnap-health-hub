@@ -106,9 +106,9 @@ const Settings = () => {
               variant="ghost" 
               size="icon" 
               onClick={openGmailCompose} 
-              className="rounded-full w-10 h-10 hover:bg-muted"
+              className="rounded-full w-10 h-10 hover:bg-muted p-1.5"
             >
-              <MessageSquareText className="w-6 h-6 text-foreground" />
+              <img src="/support-icon.png" alt="Soporte" className="w-full h-full object-contain dark:invert" />
             </Button>
             <Button 
               variant="ghost" 
