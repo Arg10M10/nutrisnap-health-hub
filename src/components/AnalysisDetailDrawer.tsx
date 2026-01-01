@@ -3,7 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-} from "@/dialog";
+} from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
@@ -13,8 +13,8 @@ import {
   DrawerFooter,
   DrawerClose,
   DrawerTrigger,
-} from "@/drawer";
-import { Button } from "@/button";
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
 import FoodAnalysisCard, { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { FoodEntry, useNutrition } from "@/context/NutritionContext";
 import { useTranslation } from "react-i18next";
