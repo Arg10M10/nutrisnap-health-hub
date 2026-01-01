@@ -201,7 +201,7 @@
   },
   "bottom_nav": {
     "home": "Inicio",
-    "settings": "Ajustes",
+    "settings": "Perfil",
     "profile": "Perfil",
     "progress": "Progreso",
     "diets": "Dietas",
@@ -495,6 +495,16 @@
     "title": "Perfil",
     "subtitle": "Tu espacio personal",
     "configuration_title": "Configuración",
+    "manage_intake": "Gestionar mi ingesta",
+    "current_weight": "Peso actual",
+    "goal_weight_short": "Peso objetivo",
+    "current_bmi": "IMC actual",
+    "daily_goal": "Meta Diaria",
+    "caloric_budget": "Presupuesto calórico",
+    "net_carbs": "Carb. Net.",
+    "protein": "Proteína",
+    "fat": "Grasa",
+    "edit": "Editar",
     "profileCard": {
       "namePlaceholder": "Completar Perfil",
       "viewAndEdit": "Editar Datos"

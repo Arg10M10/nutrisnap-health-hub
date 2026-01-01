@@ -495,6 +495,16 @@
     "title": "Profile",
     "subtitle": "Your personal space",
     "configuration_title": "Configuration",
+    "manage_intake": "Manage my intake",
+    "current_weight": "Current weight",
+    "goal_weight_short": "Goal weight",
+    "current_bmi": "Current BMI",
+    "daily_goal": "Daily Goal",
+    "caloric_budget": "Caloric budget",
+    "net_carbs": "Net Carbs",
+    "protein": "Protein",
+    "fat": "Fat",
+    "edit": "Edit",
     "profileCard": {
       "namePlaceholder": "Complete Profile",
       "viewAndEdit": "Edit Details"
