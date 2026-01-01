@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets, ChevronDown } from "lucide-react";
+import { Home, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { startOfDay } from "date-fns";
 import { toast } from "sonner";
+import { SettingsMinimalisticIcon } from "./icons/SettingsMinimalisticIcon";
 
 const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,7 +47,7 @@ const BottomNav = () => {
 
   const navItems = [
     { icon: Home, label: t('bottom_nav.home'), path: "/" },
-    { icon: User, label: t('bottom_nav.profile'), path: "/settings" },
+    { icon: SettingsMinimalisticIcon, label: t('bottom_nav.profile'), path: "/settings" },
     { icon: LineChart, label: t('bottom_nav.progress'), path: "/progress" },
     { icon: Book, label: t('bottom_nav.diets'), path: "/diets" },
   ];
