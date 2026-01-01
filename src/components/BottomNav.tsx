@@ -1,19 +1,24 @@
 import { useState } from "react";
-import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale } from "lucide-react";
+import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import EditWeightDrawer from "@/components/EditWeightDrawer";
+import { WaterSelectionDrawer } from "@/components/WaterSelectionDrawer";
 import { useAuth } from "@/context/AuthContext";
+import { useNutrition } from "@/context/NutritionContext";
 
 const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
+  const [isWaterDrawerOpen, setIsWaterDrawerOpen] = useState(false);
+  
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { profile } = useAuth();
+  const { addWaterGlass } = useNutrition();
 
   const navItems = [
     { icon: Home, label: t('bottom_nav.home'), path: "/" },
@@ -38,6 +43,15 @@ const BottomNav = () => {
   const handleOpenWeight = () => {
     setIsMenuOpen(false);
     setIsWeightDrawerOpen(true);
+  };
+
+  const handleOpenWater = () => {
+    setIsMenuOpen(false);
+    setIsWaterDrawerOpen(true);
+  };
+
+  const handleAddWater = (amount: number) => {
+    addWaterGlass(new Date(), amount);
   };
 
   const NavItem = ({ item }: { item: typeof navItems[0] }) => (
@@ -106,14 +120,24 @@ const BottomNav = () => {
                   ))}
                 </div>
 
-                {/* Botón pequeño de peso */}
-                <button
-                  onClick={handleOpenWeight}
-                  className="flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/30 hover:bg-muted active:scale-95 transition-all w-full border border-border/30"
-                >
-                  <Scale className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm font-medium text-muted-foreground">{t('bottom_nav.log_weight', 'Registrar Peso')}</span>
-                </button>
+                {/* Botones pequeños de acción rápida (Peso y Agua) */}
+                <div className="grid grid-cols-2 gap-3 w-full">
+                  <button
+                    onClick={handleOpenWeight}
+                    className="flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/30 hover:bg-muted active:scale-95 transition-all border border-border/30"
+                  >
+                    <Scale className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium text-muted-foreground">{t('bottom_nav.log_weight', 'Peso')}</span>
+                  </button>
+
+                  <button
+                    onClick={handleOpenWater}
+                    className="flex items-center justify-center gap-2 p-3 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 active:scale-95 transition-all border border-blue-500/20"
+                  >
+                    <Droplets className="w-4 h-4 text-blue-500" />
+                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">{t('bottom_nav.log_water', 'Agua')}</span>
+                  </button>
+                </div>
 
               </motion.div>
             )}
@@ -151,6 +175,12 @@ const BottomNav = () => {
         isOpen={isWeightDrawerOpen} 
         onClose={() => setIsWeightDrawerOpen(false)} 
         currentWeight={currentWeight}
+      />
+
+      <WaterSelectionDrawer 
+        isOpen={isWaterDrawerOpen}
+        onClose={() => setIsWaterDrawerOpen(false)}
+        onAdd={handleAddWater}
       />
     </>
   );

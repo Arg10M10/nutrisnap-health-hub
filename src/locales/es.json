@@ -234,7 +234,8 @@
     "scan_food": "Escanear Comida",
     "scan_menu": "Escanear Menú",
     "log_exercise": "Registrar Ejercicio",
-    "log_weight": "Registrar Peso"
+    "log_weight": "Registrar Peso",
+    "log_water": "Registrar Agua"
   },
   "scanner": {
     "starting": "Iniciando cámara...",
@@ -744,6 +745,7 @@
     "scan_food": "Escanear Comida",
     "scan_menu": "Escanear Menú",
     "log_exercise": "Registrar Ejercicio",
-    "log_weight": "Registrar Peso"
+    "log_weight": "Registrar Peso",
+    "log_water": "Registrar Agua"
   }
 }
