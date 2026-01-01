@@ -24,7 +24,7 @@ const GeneratingPlan = () => {
 
   // Simulación de progreso visual - Ajustado para ~25 segundos
   useEffect(() => {
-    const totalDuration = 25000; // 25 segundos (Aumentado de 8000)
+    const totalDuration = 25000; // 25 segundos
     const intervalTime = 100;
     const totalSteps = totalDuration / intervalTime;
     const increment = 100 / totalSteps;
@@ -43,7 +43,6 @@ const GeneratingPlan = () => {
   }, []);
 
   useEffect(() => {
-    // Ajustamos los umbrales para que las etapas duren tiempos razonables
     if (progress < 25) setStage(0);
     else if (progress < 50) setStage(1);
     else if (progress < 85) setStage(2);
@@ -61,7 +60,6 @@ const GeneratingPlan = () => {
       const finalWeight = isImperial ? weightInKg * 0.453592 : weightInKg;
       const finalHeight = isImperial ? heightInCm * 2.54 : heightInCm;
       
-      // Inferir actividad basada en experiencia previa
       let estimatedWorkouts = 3;
       if (profile.previous_apps_experience) {
         const exp = profile.previous_apps_experience.toLowerCase();
@@ -70,7 +68,6 @@ const GeneratingPlan = () => {
         else if (exp.includes("several")) estimatedWorkouts = 5;
       }
 
-      // Si es mantener, el peso objetivo es el actual
       let goalWeight = profile.goal_weight;
       if (profile.goal === 'maintain_weight' || !goalWeight) {
         goalWeight = finalWeight;
@@ -78,12 +75,10 @@ const GeneratingPlan = () => {
         goalWeight = goalWeight * 0.453592;
       }
       
-      // Si es mantener, el ritmo semanal es 0
       let weeklyRate = profile.weekly_rate || 0.5;
       if (profile.goal === 'maintain_weight') {
         weeklyRate = 0;
       } else if (isImperial) {
-        // Si es imperial, el valor en DB está en lbs, convertir a kg para el cálculo
         weeklyRate = weeklyRate * 0.453592;
       }
 
@@ -118,16 +113,17 @@ const GeneratingPlan = () => {
       return suggestions;
     },
     onSuccess: async () => {
-      // Si la API termina antes, forzamos el 100%
       setProgress(100);
       setStage(3);
       await refetchProfile();
       setTimeout(() => {
-        navigate('/', { state: { fromGeneratingPlan: true } });
+        // CAMBIO: Redirigir a la nueva pantalla de proyección
+        navigate('/goal-projection');
       }, 1500);
     },
     onError: (error) => {
       console.error("Error generating plan", error);
+      // Fallback a home en caso de error
       navigate('/');
     }
   });
@@ -173,7 +169,6 @@ const GeneratingPlan = () => {
           </div>
         </div>
 
-        {/* Elementos decorativos de fondo */}
         <div className="grid grid-cols-2 gap-4 opacity-40 pointer-events-none mt-8">
           <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse" />
           <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-75" />

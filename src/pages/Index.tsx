@@ -1,10 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
-import { format, subDays, addWeeks } from "date-fns";
+import { format, subDays } from "date-fns";
 import { es, enUS } from "date-fns/locale";
 import { motion, Variants, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import PageLayout from "@/components/PageLayout";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
@@ -35,34 +34,15 @@ const Index = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   
-  // Estado para detalles de comida normal
   const [selectedAnalysis, setSelectedAnalysis] = useState<FoodEntry | null>(null);
-  // Estado para detalles de menú
   const [selectedMenuData, setSelectedMenuData] = useState<MenuAnalysisData | null>(null);
   const [isMenuDrawerOpen, setIsMenuDrawerOpen] = useState(false);
 
   const [isManualEntryOpen, setIsManualEntryOpen] = useState(false);
   const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
-  const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (location.state?.fromGeneratingPlan && profile) {
-      if (profile.goal !== 'maintain_weight' && profile.weight && profile.goal_weight && profile.weekly_rate && profile.weekly_rate > 0) {
-        const weightDifference = Math.abs(profile.weight - profile.goal_weight);
-        const weeksNeeded = weightDifference / profile.weekly_rate;
-        const targetDate = addWeeks(new Date(), weeksNeeded);
-        
-        const locale = i18n.language.startsWith('es') ? es : enUS;
-        const formattedDate = format(targetDate, 'd \'de\' MMMM \'de\' yyyy', { locale });
-
-        toast.success(t('home.goal_achieved_toast', { date: formattedDate }));
-      }
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location.state, profile, navigate, t, i18n.language]);
 
   useEffect(() => {
     if (!api) {
@@ -80,7 +60,7 @@ const Index = () => {
     protein: profile?.goal_protein || 90,
     carbs: profile?.goal_carbs || 220,
     fats: profile?.goal_fats || 65,
-    water: 64, // Meta actualizada a 64 onzas
+    water: 64, 
     sugars: profile?.goal_sugars || 25,
   };
 
@@ -108,7 +88,6 @@ const Index = () => {
     inactive: { opacity: 0.6, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } },
   };
 
-  // Función helper para determinar si es un análisis de menú
   const isMenuAnalysis = (data: any): boolean => {
     return data && typeof data === 'object' && Array.isArray(data.recommended);
   };

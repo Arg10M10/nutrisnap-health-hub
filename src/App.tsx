@@ -41,6 +41,7 @@ import Reminders from "./pages/settings/Reminders";
 import BadgeDetailModal from "./components/BadgeDetailModal";
 import Subscribe from "./pages/Subscribe";
 import GeneratingPlan from "./pages/onboarding/GeneratingPlan";
+import GoalProjection from "./pages/onboarding/GoalProjection";
 
 const queryClient = new QueryClient();
 
@@ -120,11 +121,16 @@ const AppRoutes = () => {
 
   // 4. Authenticated, Onboarded & Subscribed -> Full App access
   
-  if (location.pathname === '/generating-plan') {
+  const onboardingRoutes = ['/generating-plan', '/goal-projection'];
+  
+  if (onboardingRoutes.includes(location.pathname)) {
      return (
       <div className={shellClass}>
         <div className="relative z-10">
-          <GeneratingPlan />
+          <Routes location={location}>
+             <Route path="/generating-plan" element={<GeneratingPlan />} />
+             <Route path="/goal-projection" element={<GoalProjection />} />
+          </Routes>
         </div>
       </div>
      );

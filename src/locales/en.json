@@ -132,6 +132,16 @@
       "button": "Start My Journey"
     }
   },
+  "goal_projection": {
+    "title": "Goal Insight",
+    "desc": "Based on your personalized plan, here is an estimation of when you'll reach your goal.",
+    "maintenance_title": "Ready to Maintain!",
+    "maintenance_desc": "Your plan is designed to maintain your current weight and improve your overall health.",
+    "estimated_date": "Estimated Achievement Date",
+    "goal_weight": "Goal Weight",
+    "weekly_pace": "Weekly Pace",
+    "button": "Let's Do This!"
+  },
   "subscribe": {
     "title": "Unlock Your Full Potential",
     "trial_tab": "3-Day Free Trial",
@@ -166,7 +176,7 @@
     "step1": "Analyzing your profile and goals...",
     "step2": "Calculating your personalized macro targets...",
     "step3": "Generating your first week's meal plan...",
-    "step4": "Plan ready! Redirecting to your dashboard."
+    "step4": "Plan ready!"
   },
   "home": {
     "title": "Calorel",

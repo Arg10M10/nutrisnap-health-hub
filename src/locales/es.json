@@ -132,6 +132,16 @@
       "button": "Comenzar Mi Viaje"
     }
   },
+  "goal_projection": {
+    "title": "¡Objetivo a la Vista!",
+    "desc": "Basado en tu plan personalizado, aquí tienes una estimación de cuándo alcanzarás tu meta.",
+    "maintenance_title": "¡Listo para Mantener!",
+    "maintenance_desc": "Tu plan está diseñado para mantener tu peso actual y mejorar tu salud general.",
+    "estimated_date": "Fecha Estimada de Logro",
+    "goal_weight": "Peso Meta",
+    "weekly_pace": "Ritmo Semanal",
+    "button": "¡Vamos a Lograrlo!"
+  },
   "subscribe": {
     "title": "Desbloquea Tu Potencial Completo",
     "trial_tab": "Prueba Gratuita de 3 Días",
@@ -166,7 +176,7 @@
     "step1": "Analizando tu perfil y objetivos...",
     "step2": "Calculando tus objetivos de macros personalizados...",
     "step3": "Generando tu plan de comidas para la primera semana...",
-    "step4": "¡Plan listo! Redirigiendo a tu panel."
+    "step4": "¡Plan listo!"
   },
   "home": {
     "title": "Calorel",
@@ -615,7 +625,7 @@
     "green_title": "Verde (Principal)",
     "green_desc": "Estás dentro del 10% de tu objetivo (o lo has superado de forma segura).",
     "yellow_title": "Amarillo (Ámbar)",
-    "yellow_desc": "Estás entre un 10% y un 20% por encima de tu objetivo (ej. demasiadas calorías).",
+    "yellow_desc": "Estás entre un 10% y un 20% por encima de tu objetivo (e.g. demasiadas calorías).",
     "red_title": "Rojo (Destructivo)",
     "red_desc": "Estás más del 20% por encima de tu objetivo, indicando un exceso significativo.",
     "dotted_title": "Línea Punteada",
