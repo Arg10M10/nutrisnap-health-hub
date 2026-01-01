@@ -22,9 +22,9 @@ All colors MUST be HSL.
     --primary: 84 81% 44%;
     --primary-foreground: 0 0% 100%;
 
-    /* SECONDARY: Morado */
-    --secondary: 262 83% 58%;
-    --secondary-foreground: 0 0% 100%;
+    /* SECONDARY: Neutro (Gris suave) para no competir con el verde */
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
@@ -66,9 +66,9 @@ All colors MUST be HSL.
     --primary: 84 81% 50%;
     --primary-foreground: 0 0% 10%; /* Texto oscuro sobre lima brillante */
 
-    /* SECONDARY: Morado Brillante */
-    --secondary: 262 80% 65%;
-    --secondary-foreground: 0 0% 100%;
+    /* SECONDARY: Neutro Oscuro */
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
 
     --muted: 220 10% 18%;
     --muted-foreground: 150 10% 65%;
