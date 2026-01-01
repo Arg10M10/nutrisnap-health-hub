@@ -114,9 +114,9 @@ const Settings = () => {
               variant="ghost" 
               size="icon" 
               onClick={() => navigate('/configuration')} 
-              className="rounded-full w-10 h-10 hover:bg-muted"
+              className="rounded-full w-10 h-10 hover:bg-muted p-1.5"
             >
-              <SettingsIcon className="w-6 h-6 text-foreground" />
+              <img src="/settings-icon.png" alt="Configuración" className="w-full h-full object-contain dark:invert" />
             </Button>
           </div>
         </div>
