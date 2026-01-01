@@ -2,21 +2,15 @@ import { useState } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle2, XCircle, Sparkles, Info, Plus, Check } from "lucide-react";
+import { CheckCircle2, XCircle, Sparkles, Info, Plus, Check, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { AnalysisResult } from "./FoodAnalysisCard";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export interface MenuItem {
   name: string;
-  calories: string;
-  protein: string;
-  carbs: string;
-  fats: string;
-  sugars: string;
-  fiber: string;
-  healthRating: string;
   reason: string;
 }
 
@@ -34,30 +28,32 @@ interface MenuAnalysisDrawerProps {
 }
 
 const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysisDrawerProps) => {
-  const { t } = useTranslation();
-  const [selectedMealName, setSelectedMealName] = useState<string | null>(null);
+  const { t, i18n } = useTranslation();
+  const [analyzingMeal, setAnalyzingMeal] = useState<string | null>(null);
 
   if (!data) return null;
 
-  const handleSelect = (item: MenuItem) => {
-    setSelectedMealName(item.name);
+  const handleSelect = async (item: MenuItem) => {
+    setAnalyzingMeal(item.name);
+    try {
+      const { data: analysisResult, error } = await supabase.functions.invoke('analyze-text-food', {
+        body: {
+          foodName: item.name,
+          portionSize: 'medium', // Asumimos porción media por defecto
+          language: i18n.language,
+        },
+      });
 
-    const mealResult: AnalysisResult = {
-      foodName: item.name,
-      calories: item.calories,
-      protein: item.protein,
-      carbs: item.carbs,
-      fats: item.fats,
-      sugars: item.sugars,
-      fiber: item.fiber,
-      healthRating: item.healthRating,
-      reason: item.reason,
-    };
-    
-    // Pequeño delay para que el usuario vea el check
-    setTimeout(() => {
-      onSelectMeal(mealResult);
-    }, 300);
+      if (error) throw error;
+
+      onSelectMeal(analysisResult);
+
+    } catch (error) {
+      console.error("Error analyzing selected meal:", error);
+      toast.error(t('manual_food.error_analysis'));
+    } finally {
+      setAnalyzingMeal(null);
+    }
   };
 
   return (
@@ -87,11 +83,11 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysi
                     <span className="font-bold text-foreground">{item.name}</span>
                     <p className="text-xs text-muted-foreground mt-1">{item.reason}</p>
                   </div>
-                  <Button size="icon" className="h-10 w-10 rounded-full shrink-0 ml-3" onClick={() => handleSelect(item)}>
+                  <Button size="icon" className="h-10 w-10 rounded-full shrink-0 ml-3" onClick={() => handleSelect(item)} disabled={!!analyzingMeal}>
                     <AnimatePresence mode="wait" initial={false}>
-                      {selectedMealName === item.name ? (
-                        <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                          <Check className="w-5 h-5" />
+                      {analyzingMeal === item.name ? (
+                        <motion.div key="loader" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                          <Loader2 className="w-5 h-5 animate-spin" />
                         </motion.div>
                       ) : (
                         <motion.div key="plus" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
@@ -116,11 +112,11 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysi
                       <span className="font-medium text-foreground">{item.name}</span>
                       <p className="text-xs text-muted-foreground mt-1">{item.reason}</p>
                     </div>
-                    <Button size="icon" variant="destructive" className="h-10 w-10 rounded-full shrink-0 ml-3" onClick={() => handleSelect(item)}>
+                    <Button size="icon" variant="destructive" className="h-10 w-10 rounded-full shrink-0 ml-3" onClick={() => handleSelect(item)} disabled={!!analyzingMeal}>
                       <AnimatePresence mode="wait" initial={false}>
-                        {selectedMealName === item.name ? (
-                          <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                            <Check className="w-5 h-5" />
+                        {analyzingMeal === item.name ? (
+                          <motion.div key="loader" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                            <Loader2 className="w-5 h-5 animate-spin" />
                           </motion.div>
                         ) : (
                           <motion.div key="plus" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
