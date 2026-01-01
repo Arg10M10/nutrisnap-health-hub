@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets } from "lucide-react";
+import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
@@ -24,7 +24,6 @@ const BottomNav = () => {
   const { profile, user } = useAuth();
   const { addWaterGlass } = useNutrition();
 
-  // Consulta para contar las actualizaciones de peso de hoy
   const { data: todaysWeightUpdatesCount } = useQuery({
     queryKey: ['todays_weight_updates_count', user?.id],
     queryFn: async () => {
@@ -52,17 +51,11 @@ const BottomNav = () => {
     { icon: Book, label: t('bottom_nav.diets'), path: "/diets" },
   ];
 
-  const menuItems = [
-    { icon: Scan, label: t('bottom_nav.scan_food'), action: () => navigate("/scanner", { state: { mode: 'food' } }) },
-    { icon: FileText, label: t('bottom_nav.scan_menu'), action: () => navigate("/scanner", { state: { mode: 'menu' } }) },
-    { icon: Dumbbell, label: t('bottom_nav.log_exercise'), action: () => navigate("/exercise") },
-  ];
-
   const handleMenuAction = (action: () => void) => {
     setIsMenuOpen(false);
     setTimeout(() => {
       action();
-    }, 50);
+    }, 150);
   };
 
   const handleOpenWeight = () => {
@@ -105,95 +98,135 @@ const BottomNav = () => {
   const isImperial = profile?.units === 'imperial';
   const currentWeight = isImperial && profile?.weight ? Math.round(profile.weight * 2.20462) : (profile?.weight || 70);
 
+  // Botones Circulares (Fila superior)
+  const circularButtons = [
+    { 
+      label: t('bottom_nav.scan_food'), 
+      icon: Scan, 
+      action: () => handleMenuAction(() => navigate("/scanner", { state: { mode: 'food' } })) 
+    },
+    { 
+      label: t('bottom_nav.scan_menu'), 
+      icon: FileText, 
+      action: () => handleMenuAction(() => navigate("/scanner", { state: { mode: 'menu' } })) 
+    },
+  ];
+
   return (
     <>
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 z-40 backdrop-blur-[2px]"
-            onClick={() => setIsMenuOpen(false)}
-          />
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/40 z-50 backdrop-blur-sm"
+              onClick={() => setIsMenuOpen(false)}
+            />
+            
+            {/* Bottom Sheet Menu */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F6] dark:bg-card rounded-t-[32px] p-6 pb-8 shadow-2xl border-t border-border/10"
+            >
+              {/* Top Row: Circular Buttons */}
+              <div className="flex justify-center gap-8 mb-8">
+                {circularButtons.map((btn, idx) => (
+                  <div key={idx} className="flex flex-col items-center gap-2">
+                    <button
+                      onClick={btn.action}
+                      className="w-16 h-16 rounded-full bg-white dark:bg-muted shadow-sm border border-primary/20 flex items-center justify-center text-primary active:scale-95 transition-transform"
+                    >
+                      <btn.icon className="w-8 h-8" strokeWidth={1.5} />
+                    </button>
+                    <span className="text-xs font-medium text-foreground/80 text-center max-w-[80px] leading-tight">
+                      {btn.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Middle Row: Rectangular Buttons (Peso & Ejercicio) */}
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <button
+                  onClick={handleOpenWeight}
+                  disabled={hasReachedDailyWeightUpdateLimit}
+                  className={cn(
+                    "flex items-center gap-3 p-4 bg-white dark:bg-muted rounded-2xl shadow-sm border border-border/40 active:scale-[0.98] transition-all",
+                    hasReachedDailyWeightUpdateLimit && "opacity-50 cursor-not-allowed"
+                  )}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Scale className="w-6 h-6" />
+                  </div>
+                  <span className="font-semibold text-foreground text-left">
+                    {hasReachedDailyWeightUpdateLimit ? t('progress.updated_today', 'Hoy OK') : t('bottom_nav.log_weight', 'Peso')}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => handleMenuAction(() => navigate("/exercise"))}
+                  className="flex items-center gap-3 p-4 bg-white dark:bg-muted rounded-2xl shadow-sm border border-border/40 active:scale-[0.98] transition-all"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Dumbbell className="w-6 h-6" />
+                  </div>
+                  <span className="font-semibold text-foreground text-left">
+                    {t('bottom_nav.log_exercise', 'Ejercicio')}
+                  </span>
+                </button>
+              </div>
+
+              {/* Bottom Row: Water Button */}
+              <div className="grid grid-cols-2 gap-3 mb-8">
+                <button
+                  onClick={handleOpenWater}
+                  className="flex items-center gap-3 p-4 bg-white dark:bg-muted rounded-2xl shadow-sm border border-border/40 active:scale-[0.98] transition-all"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Droplets className="w-6 h-6" />
+                  </div>
+                  <span className="font-semibold text-foreground text-left">
+                    {t('bottom_nav.log_water', 'Agua')}
+                  </span>
+                </button>
+                {/* Empty spacer or placeholder if needed, otherwise Water takes one slot in a 2-col grid as per image having a gap */}
+                <div /> 
+              </div>
+
+              {/* Close Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="w-12 h-12 rounded-full bg-muted dark:bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-muted/80 active:scale-90 transition-all"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 p-4">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 p-4">
         <div className="relative max-w-2xl mx-auto">
           
-          <AnimatePresence>
-            {isMenuOpen && (
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 10, x: "-50%" }}
-                animate={{ scale: 1, opacity: 1, y: 0, x: "-50%" }}
-                exit={{ scale: 0.9, opacity: 0, y: 10, x: "-50%" }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="absolute bottom-28 left-1/2 w-[95%] max-w-[380px] bg-card border border-border/50 rounded-[2rem] shadow-2xl p-6 flex flex-col gap-4 z-50 origin-bottom"
-              >
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-card rotate-45 border-b border-r border-border/50"></div>
-                
-                {/* Grid de botones principales */}
-                <div className="grid grid-cols-3 gap-4">
-                  {menuItems.map((mi) => (
-                    <button
-                      key={mi.label}
-                      onClick={() => handleMenuAction(mi.action)}
-                      className="flex flex-col items-center justify-center gap-3 p-3 rounded-2xl bg-muted/40 hover:bg-muted active:scale-95 transition-all cursor-pointer aspect-square border border-transparent hover:border-primary/20 group"
-                    >
-                      <div className="bg-background p-4 rounded-full shadow-sm text-primary ring-1 ring-border/10 group-hover:text-primary group-hover:scale-105 transition-transform">
-                        <mi.icon className="w-8 h-8" />
-                      </div>
-                      <span className="text-sm font-semibold text-center text-foreground leading-tight px-1">{mi.label}</span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Línea divisoria */}
-                <div className="h-px w-full bg-border/60 my-1" />
-
-                {/* Botones pequeños de acción rápida (Peso y Agua) */}
-                <div className="grid grid-cols-2 gap-3 w-full">
-                  <button
-                    onClick={handleOpenWeight}
-                    disabled={hasReachedDailyWeightUpdateLimit}
-                    className={cn(
-                      "flex items-center justify-center gap-2 p-3 rounded-xl transition-all border",
-                      hasReachedDailyWeightUpdateLimit 
-                        ? "bg-muted/10 text-muted-foreground/50 border-border/10 cursor-not-allowed" 
-                        : "bg-muted/30 hover:bg-muted active:scale-95 border-border/30 text-muted-foreground hover:text-primary hover:border-primary/30"
-                    )}
-                  >
-                    <Scale className={cn("w-4 h-4", !hasReachedDailyWeightUpdateLimit && "text-primary")} />
-                    <span className="text-sm font-medium">
-                      {hasReachedDailyWeightUpdateLimit ? t('progress.updated_today', 'Hoy OK') : t('bottom_nav.log_weight', 'Peso')}
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={handleOpenWater}
-                    className="flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/30 hover:bg-muted active:scale-95 transition-all border border-border/30 text-muted-foreground hover:text-primary hover:border-primary/30"
-                  >
-                    <Droplets className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium">{t('bottom_nav.log_water', 'Agua')}</span>
-                  </button>
-                </div>
-
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           <div id="scan-action-button" className="absolute bottom-5 left-1/2 -translate-x-1/2 z-50">
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               whileTap={{ scale: 0.9 }}
               className={cn(
                 "flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-                isMenuOpen ? "bg-foreground text-background rotate-45" : "bg-primary text-primary-foreground"
+                isMenuOpen ? "bg-background text-foreground border-2 border-muted" : "bg-primary text-primary-foreground"
               )}
               aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú de acciones"}
             >
-              <Plus className="w-7 h-7" />
+              <Plus className={cn("w-7 h-7 transition-transform duration-300", isMenuOpen && "rotate-45 text-muted-foreground")} />
             </motion.button>
           </div>
 
