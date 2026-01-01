@@ -71,10 +71,12 @@ export default function Login() {
                 
                 <div className="space-y-4">
                   <h1 className="text-4xl font-bold tracking-tight text-foreground">
-                    Hola, soy <span className="text-primary">Calorel</span>
+                    <Trans i18nKey="login.hello_calorel">
+                      Hi, I'm <span className="text-primary">Calorel</span>
+                    </Trans>
                   </h1>
                   <p className="text-lg text-muted-foreground max-w-xs mx-auto leading-relaxed">
-                    Tu compañero inteligente para comer mejor, moverte más y alcanzar tus metas de salud sin estrés.
+                    {t('login.tagline')}
                   </p>
                 </div>
               </div>
@@ -86,7 +88,7 @@ export default function Login() {
                     className="w-full h-14 text-lg rounded-2xl shadow-lg shadow-primary/20"
                     onClick={() => setView('sign_up')}
                   >
-                    Empezar Ahora <ArrowRight className="ml-2 w-5 h-5" />
+                    {t('login.start_now')} <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                   <Button 
                     variant="ghost" 
@@ -94,7 +96,7 @@ export default function Login() {
                     className="w-full h-14 text-lg rounded-2xl hover:bg-transparent hover:text-primary"
                     onClick={() => setView('sign_in')}
                   >
-                    Ya tengo una cuenta
+                    {t('login.have_account')}
                   </Button>
                 </div>
 
@@ -151,7 +153,7 @@ export default function Login() {
                   onClick={() => setView('welcome')}
                   className="text-muted-foreground hover:text-foreground"
                 >
-                  Volver al inicio
+                  {t('login.back_to_home')}
                 </Button>
               </div>
             </motion.div>

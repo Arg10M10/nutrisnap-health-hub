@@ -6,15 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ForgotPasswordDialog } from './ForgotPasswordDialog';
-
-const formSchema = z.object({
-  email: z.string().email({ message: 'Por favor, introduce un email válido.' }),
-  password: z.string().min(1, { message: 'La contraseña no puede estar vacía.' }),
-});
 
 interface SignInFormProps {
   onSwitchToSignUp: () => void;
@@ -24,6 +19,11 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const formSchema = z.object({
+    email: z.string().email({ message: t('auth.error_email_invalid') }),
+    password: z.string().min(1, { message: t('auth.error_password_empty') }),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,8 +49,8 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pt-4">
         <div className="space-y-2 text-center mb-8">
-          <h3 className="text-2xl font-bold tracking-tight">Bienvenido de nuevo</h3>
-          <p className="text-muted-foreground">Ingresa tus credenciales para continuar</p>
+          <h3 className="text-2xl font-bold tracking-tight">{t('login.welcome_back')}</h3>
+          <p className="text-muted-foreground">{t('login.enter_details')}</p>
         </div>
 
         <FormField
@@ -59,14 +59,17 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="sr-only">{t('auth.email_label')}</FormLabel>
-              <FormControl>
-                <Input 
-                  type="email" 
-                  placeholder="Correo electrónico" 
-                  {...field} 
-                  className="h-14 text-lg bg-background border-input px-4 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all placeholder:text-muted-foreground/50" 
-                />
-              </FormControl>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <FormControl>
+                  <Input 
+                    type="email" 
+                    placeholder={t('auth.email_placeholder')} 
+                    {...field} 
+                    className="h-14 pl-10 text-lg bg-background border-input px-4 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all placeholder:text-muted-foreground/50" 
+                  />
+                </FormControl>
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -80,12 +83,13 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
                 <FormLabel className="sr-only">{t('auth.password_label')}</FormLabel>
               </div>
               <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <FormControl>
                   <Input
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Contraseña"
+                    placeholder={t('auth.password_input_placeholder')}
                     {...field}
-                    className="h-14 text-lg bg-background border-input px-4 pr-12 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all placeholder:text-muted-foreground/50"
+                    className="h-14 pl-10 pr-12 text-lg bg-background border-input px-4 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all placeholder:text-muted-foreground/50"
                   />
                 </FormControl>
                 <button
@@ -108,7 +112,7 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
         <div className="space-y-4 pt-4">
           <Button type="submit" size="lg" className="w-full h-14 text-lg font-medium rounded-lg" disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {t('auth.sign_in_button')}
+            {t('auth.sign_in_action')}
           </Button>
         </div>
       </form>

@@ -6,18 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { Loader2, Eye, EyeOff, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Loader2, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { getDeviceId } from '@/lib/device';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const formSchema = z.object({
-  firstName: z.string().min(2, { message: 'El nombre es requerido.' }),
-  lastName: z.string().min(2, { message: 'El apellido es requerido.' }),
-  email: z.string().email({ message: 'Por favor, introduce un email válido.' }),
-  password: z.string().min(6, { message: 'La contraseña debe tener al menos 6 caracteres.' }),
-});
 
 interface SignUpFormProps {
   onSwitchToSignIn: () => void;
@@ -28,6 +21,13 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [step, setStep] = useState(1); // 1: Email, 2: Password, 3: Name
+
+  const formSchema = z.object({
+    firstName: z.string().min(2, { message: t('auth.error_first_name_required') }),
+    lastName: z.string().min(2, { message: t('auth.error_last_name_required') }),
+    email: z.string().email({ message: t('auth.error_email_invalid') }),
+    password: z.string().min(6, { message: t('auth.error_password_length') }),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,11 +60,11 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         body: { deviceId }
       });
 
-      if (checkError) throw new Error("Error verificando dispositivo. Intenta de nuevo.");
+      if (checkError) throw new Error(t('common.error_friendly'));
       
       if (!checkData.allowed) {
-        toast.error("Límite de Cuentas Alcanzado", {
-          description: checkData.message || "No puedes crear más cuentas en este dispositivo."
+        toast.error(t('auth.limit_reached_title'), {
+          description: checkData.message || t('auth.limit_reached_desc')
         });
         setLoading(false);
         return;
@@ -88,12 +88,12 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         if (data.session) {
             toast.success(t('login.welcome'));
         } else {
-            toast.success("Cuenta creada correctamente. ¡Bienvenido!");
+            toast.success(t('auth.signup_success_toast'));
         }
       }
     } catch (error: any) {
       console.error("Sign up error:", error);
-      toast.error(error.message || "Error al crear la cuenta.");
+      toast.error(error.message || t('common.error_friendly'));
     } finally {
       setLoading(false);
     }
@@ -120,7 +120,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
               className="space-y-8 w-full"
             >
               <div className="space-y-2 text-center">
-                <h3 className="text-2xl font-bold tracking-tight">¿Cuál es tu email?</h3>
+                <h3 className="text-2xl font-bold tracking-tight">{t('auth.step_email_title')}</h3>
               </div>
 
               <FormField
@@ -130,7 +130,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                   <FormItem>
                     <FormControl>
                       <Input 
-                        placeholder="tu@email.com" 
+                        placeholder={t('auth.email_placeholder')} 
                         {...field} 
                         className="h-14 text-lg bg-background border-input px-4 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all text-center placeholder:text-muted-foreground/50" 
                         autoFocus
@@ -147,7 +147,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                   onClick={validateStep} 
                   className="w-full h-14 text-lg font-medium rounded-lg"
                 >
-                  Continuar
+                  {t('common.continue')}
                 </Button>
               </div>
             </motion.div>
@@ -164,7 +164,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
               className="space-y-8 w-full"
             >
               <div className="space-y-2 text-center">
-                <h3 className="text-2xl font-bold tracking-tight">Crea una contraseña</h3>
+                <h3 className="text-2xl font-bold tracking-tight">{t('auth.step_password_title')}</h3>
               </div>
 
               <FormField
@@ -176,7 +176,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                       <FormControl>
                         <Input
                           type={showPassword ? 'text' : 'password'}
-                          placeholder="Mínimo 6 caracteres"
+                          placeholder={t('auth.password_placeholder')}
                           {...field}
                           className="h-14 text-lg bg-background border-input px-4 pr-12 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all text-center placeholder:text-muted-foreground/50"
                           autoFocus
@@ -197,10 +197,10 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
 
               <div className="flex flex-col gap-3 pt-4">
                 <Button type="button" onClick={validateStep} className="w-full h-14 text-lg font-medium rounded-lg">
-                  Continuar
+                  {t('common.continue')}
                 </Button>
                 <Button type="button" variant="ghost" onClick={goBack} className="w-full h-12 text-muted-foreground hover:text-foreground rounded-lg">
-                  <ArrowLeft className="w-4 h-4 mr-2" /> Volver
+                  <ArrowLeft className="w-4 h-4 mr-2" /> {t('common.back')}
                 </Button>
               </div>
             </motion.div>
@@ -217,7 +217,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
               className="space-y-8 w-full"
             >
               <div className="space-y-2 text-center">
-                <h3 className="text-2xl font-bold tracking-tight">¿Cómo te llamas?</h3>
+                <h3 className="text-2xl font-bold tracking-tight">{t('auth.step_name_title')}</h3>
               </div>
 
               <div className="space-y-4">
@@ -228,7 +228,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                     <FormItem>
                       <FormControl>
                         <Input 
-                          placeholder="Nombre" 
+                          placeholder={t('auth.first_name_placeholder')} 
                           {...field} 
                           className="h-14 text-lg bg-background border-input px-4 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all text-center placeholder:text-muted-foreground/50"
                           autoFocus
@@ -245,7 +245,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
                     <FormItem>
                       <FormControl>
                         <Input 
-                          placeholder="Apellido" 
+                          placeholder={t('auth.last_name_placeholder')} 
                           {...field} 
                           className="h-14 text-lg bg-background border-input px-4 rounded-lg shadow-sm focus-visible:ring-1 focus-visible:ring-primary transition-all text-center placeholder:text-muted-foreground/50"
                         />
@@ -259,10 +259,10 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
               <div className="flex flex-col gap-3 pt-4">
                 <Button type="submit" disabled={loading} className="w-full h-14 text-lg font-medium rounded-lg">
                   {loading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                  Crear Cuenta
+                  {t('auth.create_account_action')}
                 </Button>
                 <Button type="button" variant="ghost" onClick={goBack} className="w-full h-12 text-muted-foreground hover:text-foreground rounded-lg">
-                  <ArrowLeft className="w-4 h-4 mr-2" /> Volver
+                  <ArrowLeft className="w-4 h-4 mr-2" /> {t('common.back')}
                 </Button>
               </div>
             </motion.div>
