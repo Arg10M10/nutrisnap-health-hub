@@ -32,6 +32,12 @@ const Recipes = () => {
             />
           ))}
         </div>
+
+        <div className="px-2 pt-4 pb-8">
+          <p className="text-center text-xs text-muted-foreground opacity-70">
+            {t('recipes.recipes_disclaimer')}
+          </p>
+        </div>
       </div>
 
       <RecipeDetailDrawer 

@@ -246,6 +246,7 @@
   "recipes": {
     "title": "Recipes",
     "coming_soon": "Coming soon...",
+    "recipes_disclaimer": "Note: All nutritional values are approximations and not exact.",
     "spaghetti_bolognese": {
       "name": "Spaghetti Bolognese",
       "ingredients": "Ingredients",

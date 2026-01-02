@@ -246,6 +246,7 @@
   "recipes": {
     "title": "Recetas",
     "coming_soon": "Próximamente...",
+    "recipes_disclaimer": "Nota: Todos los valores nutricionales son aproximaciones y no exactos.",
     "spaghetti_bolognese": {
       "name": "Espaguetis a la Boloñesa",
       "ingredients": "Ingredientes",
@@ -837,6 +838,7 @@
   "recipes": {
     "title": "Recetas",
     "coming_soon": "Próximamente...",
+    "recipes_disclaimer": "Nota: Todos los valores nutricionales son aproximaciones y no exactos.",
     "spaghetti_bolognese": {
       "name": "Espaguetis a la Boloñesa",
       "ingredients": "Ingredientes",
