@@ -43,6 +43,7 @@ import BadgeDetailModal from "./components/BadgeDetailModal";
 import Subscribe from "./pages/Subscribe";
 import GeneratingPlan from "./pages/onboarding/GeneratingPlan";
 import GoalProjection from "./pages/onboarding/GoalProjection";
+import Recipes from "./pages/Recipes";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const AnimatedRoutes = () => {
         <Route path="/" element={<Index />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/diets" element={<Diets />} />
+        <Route path="/recipes" element={<Recipes />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/exercise" element={<Exercise />} />
         <Route path="*" element={<NotFound />} />
@@ -165,6 +167,7 @@ const AppRoutes = () => {
     "/settings/personal-details",
     "/settings/reminders",
     "/subscribe",
+    "/recipes",
   ];
 
   if (fullScreenRoutes.includes(location.pathname)) {
@@ -190,6 +193,7 @@ const AppRoutes = () => {
               <Route path="/settings/personal-details" element={<PersonalDetails />} />
               <Route path="/settings/reminders" element={<Reminders />} />
               <Route path="/subscribe" element={<Subscribe />} />
+              <Route path="/recipes" element={<Recipes />} />
             </Routes>
           </AnimatePresence>
         </div>

@@ -240,7 +240,12 @@
     "describe_food": "Describir Comida",
     "log_exercise": "Registrar Ejercicio",
     "log_weight": "Registrar Peso",
-    "log_water": "Registrar Agua"
+    "log_water": "Registrar Agua",
+    "recipes": "Recetas"
+  },
+  "recipes": {
+    "title": "Recetas",
+    "coming_soon": "Próximamente..."
   },
   "scanner": {
     "starting": "Iniciando cámara...",

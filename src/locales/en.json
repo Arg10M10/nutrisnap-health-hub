@@ -240,7 +240,12 @@
     "describe_food": "Describe Food",
     "log_exercise": "Log Exercise",
     "log_weight": "Log Weight",
-    "log_water": "Log Water"
+    "log_water": "Log Water",
+    "recipes": "Recipes"
+  },
+  "recipes": {
+    "title": "Recipes",
+    "coming_soon": "Coming soon..."
   },
   "scanner": {
     "starting": "Starting camera...",

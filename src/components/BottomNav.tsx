@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets, ChevronDown, Utensils } from "lucide-react";
+import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets, ChevronDown, Utensils, ChefHat } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
@@ -68,6 +68,11 @@ const BottomNav = () => {
       label: t('bottom_nav.scan_menu'), 
       icon: FileText, 
       action: () => handleMenuAction(() => navigate("/scanner", { state: { mode: 'menu' } })) 
+    },
+    { 
+      label: t('bottom_nav.recipes', 'Recetas'), 
+      icon: ChefHat, 
+      action: () => handleMenuAction(() => navigate("/recipes")) 
     },
   ];
 
@@ -148,7 +153,7 @@ const BottomNav = () => {
               <div className="w-12 h-1.5 bg-muted-foreground/20 rounded-full mx-auto mb-8" />
 
               {/* Top Row: Circular Buttons (Main Actions) */}
-              <div className="flex justify-center gap-8 mb-8">
+              <div className="grid grid-cols-2 gap-x-8 gap-y-6 justify-items-center mb-8 px-4">
                 {circularButtons.map((btn, idx) => (
                   <div key={idx} className="flex flex-col items-center gap-3">
                     <button
