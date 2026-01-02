@@ -78,13 +78,14 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
               className="w-full h-full object-cover" 
             />
             
-            {/* Eliminado el gradiente superior negro/gris */}
+            {/* Degradado superior restaurado */}
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
             
             <div className="absolute top-0 left-0 right-0 p-4 pt-12 flex justify-between items-start z-10">
               <Button 
-                variant="secondary" 
+                variant="ghost" 
                 size="icon" 
-                className="bg-black/30 text-white hover:bg-black/50 backdrop-blur-md rounded-full w-10 h-10 border border-white/10 shadow-lg" 
+                className="bg-black/20 text-white hover:bg-black/40 backdrop-blur-md rounded-full w-10 h-10" 
                 onClick={onClose}
               >
                 <ChevronDown className="w-6 h-6" />
