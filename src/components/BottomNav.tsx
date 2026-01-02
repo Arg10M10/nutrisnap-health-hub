@@ -147,22 +147,22 @@ const BottomNav = () => {
               onDragEnd={(_, info) => {
                 if (info.offset.y > 100) setIsMenuOpen(false);
               }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F6] dark:bg-card rounded-t-[32px] p-6 pb-10 shadow-2xl border-t border-border/10"
+              className="fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F6] dark:bg-card rounded-t-[32px] p-6 pb-8 shadow-2xl border-t border-border/10"
             >
               {/* Drag Handle */}
-              <div className="w-12 h-1.5 bg-muted-foreground/20 rounded-full mx-auto mb-8" />
+              <div className="w-12 h-1.5 bg-muted-foreground/20 rounded-full mx-auto mb-6" />
 
               {/* Top Row: Circular Buttons (Main Actions) */}
-              <div className="grid grid-cols-2 gap-x-8 gap-y-6 justify-items-center mb-8 px-4">
+              <div className="grid grid-cols-2 gap-x-10 gap-y-5 justify-items-center mb-6 px-4">
                 {circularButtons.map((btn, idx) => (
-                  <div key={idx} className="flex flex-col items-center gap-3">
+                  <div key={idx} className="flex flex-col items-center gap-2">
                     <button
                       onClick={btn.action}
-                      className="w-20 h-20 rounded-full bg-white dark:bg-muted shadow-lg border-4 border-primary/5 flex items-center justify-center text-primary active:scale-95 transition-transform"
+                      className="w-16 h-16 rounded-full bg-white dark:bg-muted shadow-lg border-4 border-primary/5 flex items-center justify-center text-primary active:scale-95 transition-transform"
                     >
-                      <btn.icon className="w-9 h-9" strokeWidth={2} />
+                      <btn.icon className="w-7 h-7" strokeWidth={2} />
                     </button>
-                    <span className="text-sm font-bold text-foreground/80 text-center leading-tight">
+                    <span className="text-xs font-bold text-foreground/80 text-center leading-tight max-w-[90px]">
                       {btn.label}
                     </span>
                   </div>
@@ -170,46 +170,46 @@ const BottomNav = () => {
               </div>
 
               {/* Divider */}
-              <div className="h-px w-full bg-border/60 mb-8" />
+              <div className="h-px w-full bg-border/60 mb-6" />
 
               {/* Middle Row: Small Secondary Buttons (Centered) */}
-              <div className="grid grid-cols-3 gap-4 mb-10 px-2">
+              <div className="grid grid-cols-3 gap-3 mb-8 px-4">
                 <button
                   onClick={handleOpenWeight}
                   disabled={hasReachedDailyWeightUpdateLimit}
                   className={cn(
-                    "flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all border shadow-sm active:scale-95 bg-white dark:bg-muted/50 border-border/40 aspect-square",
+                    "flex flex-col items-center justify-center gap-1.5 p-2 rounded-2xl transition-all border shadow-sm active:scale-95 bg-white dark:bg-muted/50 border-border/40 aspect-square",
                     hasReachedDailyWeightUpdateLimit && "opacity-50 cursor-not-allowed"
                   )}
                 >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <Scale className="w-5 h-5" />
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Scale className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-semibold text-foreground text-center leading-tight">
+                  <span className="text-[10px] font-semibold text-foreground text-center leading-tight">
                     {hasReachedDailyWeightUpdateLimit ? t('progress.updated_today', 'Hoy OK') : t('bottom_nav.log_weight', 'Peso')}
                   </span>
                 </button>
 
                 <button
                   onClick={() => handleMenuAction(() => navigate("/exercise"))}
-                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all border shadow-sm active:scale-95 bg-white dark:bg-muted/50 border-border/40 aspect-square"
+                  className="flex flex-col items-center justify-center gap-1.5 p-2 rounded-2xl transition-all border shadow-sm active:scale-95 bg-white dark:bg-muted/50 border-border/40 aspect-square"
                 >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <Dumbbell className="w-5 h-5" />
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Dumbbell className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-semibold text-foreground text-center leading-tight">
+                  <span className="text-[10px] font-semibold text-foreground text-center leading-tight">
                     {t('bottom_nav.log_exercise', 'Ejercicio')}
                   </span>
                 </button>
 
                 <button
                   onClick={handleOpenWater}
-                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all border shadow-sm active:scale-95 bg-white dark:bg-muted/50 border-border/40 aspect-square"
+                  className="flex flex-col items-center justify-center gap-1.5 p-2 rounded-2xl transition-all border shadow-sm active:scale-95 bg-white dark:bg-muted/50 border-border/40 aspect-square"
                 >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <Droplets className="w-5 h-5" />
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Droplets className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-semibold text-foreground text-center leading-tight">
+                  <span className="text-[10px] font-semibold text-foreground text-center leading-tight">
                     {t('bottom_nav.log_water', 'Agua')}
                   </span>
                 </button>
@@ -219,9 +219,9 @@ const BottomNav = () => {
               <div className="flex justify-center">
                 <button
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center gap-2 px-6 py-3 rounded-full bg-muted/30 hover:bg-muted/50 text-muted-foreground font-medium transition-all active:scale-95"
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-muted/30 hover:bg-muted/50 text-muted-foreground font-medium transition-all active:scale-95 text-sm"
                 >
-                  <ChevronDown className="w-5 h-5" />
+                  <ChevronDown className="w-4 h-4" />
                   {t('analysis.close', 'Cerrar')}
                 </button>
               </div>
