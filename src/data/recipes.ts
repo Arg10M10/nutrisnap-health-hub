@@ -55,4 +55,20 @@ export const recipes: Recipe[] = [
       { key: "pepper", amount: 0, unit: "" },
     ],
   },
+  {
+    id: "blueberry_almond_smoothie",
+    image: "/recipes/blueberry-almond-smoothie.webp",
+    time: 5,
+    calories: 310,
+    protein: 13,
+    carbs: 32,
+    fats: 15,
+    ingredients: [
+      { key: "blueberries", amount: 120, unit: "g" },
+      { key: "almond_milk", amount: 250, unit: "ml" },
+      { key: "almonds", amount: 15, unit: "g" },
+      { key: "yogurt", amount: 100, unit: "g" },
+      { key: "honey", amount: 10, unit: "g" },
+    ],
+  },
 ];

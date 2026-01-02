@@ -304,6 +304,31 @@
         "Cortar la lechuga y el tomate, mezclar y aliñar con limón y los 5 g restantes de aceite.",
         "Servir el pollo junto al arroz y la ensalada."
       ]
+    },
+    "blueberry_almond_smoothie": {
+      "name": "Smoothie de Blueberry y Almendras",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "blueberries": "Arándanos frescos",
+        "almond_milk": "Leche de almendras sin azúcar",
+        "almonds": "Almendras naturales",
+        "yogurt": "Yogur natural descremado",
+        "honey": "Miel (opcional)"
+      },
+      "instructions": [
+        "Colocar los arándanos, la leche de almendras, las almendras y el yogur en la licuadora.",
+        "Licuar durante 30–45 segundos hasta obtener una mezcla homogénea.",
+        "Probar y agregar miel si se desea más dulzor. Licuar unos segundos más.",
+        "Servir inmediatamente."
+      ]
     }
   },
   "scanner": {
@@ -869,6 +894,31 @@
         "Calentar una sartén o plancha con 5 g de aceite y cocinar el pollo 5–6 minutos por lado hasta que esté bien cocido.",
         "Cortar la lechuga y el tomate, mezclar y aliñar con limón y los 5 g restantes de aceite.",
         "Servir el pollo junto al arroz y la ensalada."
+      ]
+    },
+    "blueberry_almond_smoothie": {
+      "name": "Smoothie de Blueberry y Almendras",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "blueberries": "Arándanos frescos",
+        "almond_milk": "Leche de almendras sin azúcar",
+        "almonds": "Almendras naturales",
+        "yogurt": "Yogur natural descremado",
+        "honey": "Miel (opcional)"
+      },
+      "instructions": [
+        "Colocar los arándanos, la leche de almendras, las almendras y el yogur en la licuadora.",
+        "Licuar durante 30–45 segundos hasta obtener una mezcla homogénea.",
+        "Probar y agregar miel si se desea más dulzor. Licuar unos segundos más.",
+        "Servir inmediatamente."
       ]
     }
   }
