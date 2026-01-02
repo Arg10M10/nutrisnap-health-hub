@@ -36,4 +36,23 @@ export const recipes: Recipe[] = [
       { key: "herbs", amount: 0, unit: "" },
     ],
   },
+  {
+    id: "grilled_chicken_rice",
+    image: "/recipes/grilled-chicken-rice-salad.jpg",
+    time: 25,
+    calories: 540,
+    protein: 45,
+    carbs: 55,
+    fats: 15,
+    ingredients: [
+      { key: "chicken_breast", amount: 180, unit: "g" },
+      { key: "white_rice", amount: 70, unit: "g" },
+      { key: "lettuce", amount: 60, unit: "g" },
+      { key: "tomato", amount: 80, unit: "g" },
+      { key: "olive_oil", amount: 10, unit: "g" },
+      { key: "lemon_juice", amount: 10, unit: "ml" },
+      { key: "salt", amount: 0, unit: "" },
+      { key: "pepper", amount: 0, unit: "" },
+    ],
+  },
 ];

@@ -275,6 +275,35 @@
         "Añadir el tomate triturado, sal, pimienta y especias. Cocinar durante 10–15 minutos.",
         "Mezclar la pasta con la salsa o servir la salsa sobre los espaguetis."
       ]
+    },
+    "grilled_chicken_rice": {
+      "name": "Pollo a la plancha con arroz y ensalada",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "chicken_breast": "Pechuga de pollo",
+        "white_rice": "Arroz blanco crudo",
+        "lettuce": "Lechuga",
+        "tomato": "Tomate",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta",
+        "lemon_juice": "Jugo de limón"
+      },
+      "instructions": [
+        "Cocinar el arroz en agua con sal durante 15–18 minutos. Escurrir.",
+        "Sazonar la pechuga de pollo con sal y pimienta.",
+        "Calentar una sartén o plancha con 5 g de aceite y cocinar el pollo 5–6 minutos por lado hasta que esté bien cocido.",
+        "Cortar la lechuga y el tomate, mezclar y aliñar con limón y los 5 g restantes de aceite.",
+        "Servir el pollo junto al arroz y la ensalada."
+      ]
     }
   },
   "scanner": {
@@ -811,6 +840,35 @@
         "Agregar la carne molida y cocinar hasta que esté bien dorada.",
         "Añadir el tomate triturado, sal, pimienta y especias. Cocinar durante 10–15 minutos.",
         "Mezclar la pasta con la salsa o servir la salsa sobre los espaguetis."
+      ]
+    },
+    "grilled_chicken_rice": {
+      "name": "Pollo a la plancha con arroz y ensalada",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "chicken_breast": "Pechuga de pollo",
+        "white_rice": "Arroz blanco crudo",
+        "lettuce": "Lechuga",
+        "tomato": "Tomate",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta",
+        "lemon_juice": "Jugo de limón"
+      },
+      "instructions": [
+        "Cocinar el arroz en agua con sal durante 15–18 minutos. Escurrir.",
+        "Sazonar la pechuga de pollo con sal y pimienta.",
+        "Calentar una sartén o plancha con 5 g de aceite y cocinar el pollo 5–6 minutos por lado hasta que esté bien cocido.",
+        "Cortar la lechuga y el tomate, mezclar y aliñar con limón y los 5 g restantes de aceite.",
+        "Servir el pollo junto al arroz y la ensalada."
       ]
     }
   }
