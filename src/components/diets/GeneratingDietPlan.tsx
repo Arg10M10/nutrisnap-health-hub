@@ -44,12 +44,8 @@ const GeneratingDietPlan = ({ countryValue, onAnimationComplete }: GeneratingDie
   ];
 
   useEffect(() => {
-    // Objetivo: 100% en 70 segundos (70000ms)
-    // Actualización cada 100ms
-    // Total de pasos: 700
-    // Incremento por paso: 100 / 700 = ~0.1428
-    
-    const totalDuration = 70000; // 70 segundos
+    // Objetivo: 100% en 80 segundos (80000ms)
+    const totalDuration = 80000; 
     const intervalTime = 100;
     const totalSteps = totalDuration / intervalTime;
     const increment = 100 / totalSteps;
@@ -61,7 +57,6 @@ const GeneratingDietPlan = ({ countryValue, onAnimationComplete }: GeneratingDie
           onAnimationComplete();
           return 100;
         }
-        // Añadir una pequeña variabilidad aleatoria para que parezca más "orgánico"
         const jitter = (Math.random() - 0.5) * 0.05; 
         return Math.min(prev + increment + jitter, 100);
       });
@@ -72,8 +67,6 @@ const GeneratingDietPlan = ({ countryValue, onAnimationComplete }: GeneratingDie
 
   // Sincronizar etapas con el progreso
   useEffect(() => {
-    // 5 etapas
-    // 0-20, 20-40, 40-60, 60-80, 80-100
     if (progress < 20) setStage(0);
     else if (progress < 40) setStage(1);
     else if (progress < 60) setStage(2);
@@ -85,7 +78,6 @@ const GeneratingDietPlan = ({ countryValue, onAnimationComplete }: GeneratingDie
     <div className="flex flex-col items-center justify-center h-full min-h-[60vh] p-6 text-center animate-in fade-in zoom-in duration-500">
       <div className="w-full max-w-md space-y-12">
         <div className="flex justify-center h-40 items-center mb-8 relative">
-          {/* Anillos decorativos animados de fondo */}
           <div className="absolute inset-0 flex items-center justify-center">
              <div className="w-32 h-32 border-4 border-primary/20 rounded-full animate-ping opacity-20" style={{ animationDuration: '3s' }} />
           </div>

@@ -23,9 +23,9 @@ const GeneratingPlan = () => {
     { text: t('generating_plan.step4'), icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
   ];
 
-  // Simulación de progreso visual - Ajustado para ~25 segundos
+  // Simulación de progreso visual - Ajustado para ~35 segundos
   useEffect(() => {
-    const totalDuration = 25000; // 25 segundos
+    const totalDuration = 35000; 
     const intervalTime = 100;
     const totalSteps = totalDuration / intervalTime;
     const increment = 100 / totalSteps;
@@ -33,7 +33,6 @@ const GeneratingPlan = () => {
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 99) {
-          // Pausa en 99% esperando que la API termine si tarda más de 25s
           return 99;
         }
         return Math.min(prev + increment, 99);
@@ -118,20 +117,16 @@ const GeneratingPlan = () => {
       setStage(3);
       await refetchProfile();
       setTimeout(() => {
-        // Usamos replace: true para que no se pueda volver atrás a esta pantalla de carga
-        // Esto ayuda a prevenir el efecto de "pantalla doble" si el usuario intenta retroceder
         navigate('/goal-projection', { replace: true });
       }, 1500);
     },
     onError: (error) => {
       console.error("Error generating plan", error);
-      // Fallback a home en caso de error
       navigate('/', { replace: true });
     }
   });
 
   useEffect(() => {
-    // Aseguramos que la mutación solo se ejecute una vez
     if (user && profile && !hasStartedRef.current) {
       hasStartedRef.current = true;
       const timeout = setTimeout(() => {

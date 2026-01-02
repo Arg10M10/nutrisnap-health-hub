@@ -44,11 +44,12 @@ const RecentAnalysisCard = ({
 
   useEffect(() => {
     if (isProcessing) {
-      setProgress(10);
+      setProgress(5); // Iniciar un poco más bajo
       
       timerRef.current = window.setInterval(() => {
         setProgress((p) => {
-          const increment = Math.random() * 5 + 1; 
+          // Ajustado para llegar a 90% en aprox 100 pasos de 150ms (~15 segundos)
+          const increment = Math.random() * 0.8 + 0.5; 
           const next = p + increment;
           if (next > 90) return 90 + Math.random(); 
           return next;
