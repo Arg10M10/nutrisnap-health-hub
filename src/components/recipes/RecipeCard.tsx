@@ -14,7 +14,7 @@ const RecipeCard = ({ recipe, onClick }: RecipeCardProps) => {
       className="group cursor-pointer flex flex-col gap-3"
       onClick={onClick}
     >
-      <div className="relative aspect-square w-full overflow-hidden rounded-[2rem] shadow-sm bg-muted/20">
+      <div className="relative aspect-square w-full overflow-hidden rounded-[2rem]">
         <img
           src={recipe.image}
           alt={t(`recipes.${recipe.id}.name` as any)}
