@@ -245,7 +245,37 @@
   },
   "recipes": {
     "title": "Recetas",
-    "coming_soon": "Próximamente..."
+    "coming_soon": "Próximamente...",
+    "spaghetti_bolognese": {
+      "name": "Espaguetis a la Boloñesa",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "spaghetti": "Espaguetis",
+        "ground_beef": "Carne molida de res (10–15% grasa)",
+        "tomato_sauce": "Tomate triturado o salsa de tomate natural",
+        "onion": "Cebolla",
+        "garlic": "Diente de ajo",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta",
+        "herbs": "Orégano o albahaca"
+      },
+      "instructions": [
+        "Hervir agua con sal y cocinar los espaguetis según las instrucciones del paquete (8–10 minutos). Escurrir.",
+        "Calentar el aceite en una sartén y sofreír la cebolla picada y el ajo durante 2–3 minutos.",
+        "Agregar la carne molida y cocinar hasta que esté bien dorada.",
+        "Añadir el tomate triturado, sal, pimienta y especias. Cocinar durante 10–15 minutos.",
+        "Mezclar la pasta con la salsa o servir la salsa sobre los espaguetis."
+      ]
+    }
   },
   "scanner": {
     "starting": "Iniciando cámara...",
@@ -749,5 +779,39 @@
     "water_body_2": "Mantente hidratado para mejores resultados.",
     "weight_title_1": "Control de Peso",
     "weight_body_1": "Actualiza tu peso hoy para ver tu progreso."
+  },
+  "recipes": {
+    "title": "Recetas",
+    "coming_soon": "Próximamente...",
+    "spaghetti_bolognese": {
+      "name": "Espaguetis a la Boloñesa",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "spaghetti": "Espaguetis",
+        "ground_beef": "Carne molida de res (10–15% grasa)",
+        "tomato_sauce": "Tomate triturado o salsa de tomate natural",
+        "onion": "Cebolla",
+        "garlic": "Diente de ajo",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta",
+        "herbs": "Orégano o albahaca"
+      },
+      "instructions": [
+        "Hervir agua con sal y cocinar los espaguetis según las instrucciones del paquete (8–10 minutos). Escurrir.",
+        "Calentar el aceite en una sartén y sofreír la cebolla picada y el ajo durante 2–3 minutos.",
+        "Agregar la carne molida y cocinar hasta que esté bien dorada.",
+        "Añadir el tomate triturado, sal, pimienta y especias. Cocinar durante 10–15 minutos.",
+        "Mezclar la pasta con la salsa o servir la salsa sobre los espaguetis."
+      ]
+    }
   }
 }

@@ -245,7 +245,37 @@
   },
   "recipes": {
     "title": "Recipes",
-    "coming_soon": "Coming soon..."
+    "coming_soon": "Coming soon...",
+    "spaghetti_bolognese": {
+      "name": "Spaghetti Bolognese",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "spaghetti": "Spaghetti",
+        "ground_beef": "Ground Beef (10–15% fat)",
+        "tomato_sauce": "Crushed tomatoes or natural tomato sauce",
+        "onion": "Onion",
+        "garlic": "Clove of garlic",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper",
+        "herbs": "Oregano or basil"
+      },
+      "instructions": [
+        "Boil salted water and cook spaghetti according to package instructions (8–10 minutes). Drain.",
+        "Heat oil in a pan and sauté chopped onion and garlic for 2–3 minutes.",
+        "Add ground beef and cook until browned.",
+        "Add crushed tomatoes, salt, pepper, and herbs. Simmer for 10–15 minutes.",
+        "Mix pasta with sauce or serve sauce over spaghetti."
+      ]
+    }
   },
   "scanner": {
     "starting": "Starting camera...",
