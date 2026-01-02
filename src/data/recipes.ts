@@ -12,6 +12,8 @@ export interface Recipe {
   protein: number;
   carbs: number;
   fats: number;
+  sugars: number;
+  fiber: number;
   ingredients: Ingredient[];
 }
 
@@ -24,6 +26,8 @@ export const recipes: Recipe[] = [
     protein: 32,
     carbs: 75,
     fats: 22,
+    sugars: 8,
+    fiber: 6,
     ingredients: [
       { key: "spaghetti", amount: 100, unit: "g" },
       { key: "ground_beef", amount: 120, unit: "g" },
@@ -44,6 +48,8 @@ export const recipes: Recipe[] = [
     protein: 45,
     carbs: 55,
     fats: 15,
+    sugars: 5,
+    fiber: 4,
     ingredients: [
       { key: "chicken_breast", amount: 180, unit: "g" },
       { key: "white_rice", amount: 70, unit: "g" },
@@ -63,6 +69,8 @@ export const recipes: Recipe[] = [
     protein: 13,
     carbs: 32,
     fats: 15,
+    sugars: 22,
+    fiber: 6,
     ingredients: [
       { key: "blueberries", amount: 120, unit: "g" },
       { key: "almond_milk", amount: 250, unit: "ml" },

@@ -35,6 +35,8 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
   const currentProtein = recipe.protein * portions;
   const currentCarbs = recipe.carbs * portions;
   const currentFats = recipe.fats * portions;
+  const currentSugars = recipe.sugars * portions;
+  const currentFiber = recipe.fiber * portions;
 
   const handleAddToLog = () => {
     const analysisResult: AnalysisResult = {
@@ -43,8 +45,8 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
       protein: `${currentProtein}g`,
       carbs: `${currentCarbs}g`,
       fats: `${currentFats}g`,
-      sugars: '0g', // Not tracked in simple recipe model yet
-      fiber: '0g', // Not tracked in simple recipe model yet
+      sugars: `${currentSugars}g`,
+      fiber: `${currentFiber}g`,
       healthRating: 'Saludable', // Default for homemade
       reason: t('share.generated_with'),
       ingredients: recipe.ingredients.map(ing => t(`recipes.${recipe.id}.list.${ing.key}` as any)),
