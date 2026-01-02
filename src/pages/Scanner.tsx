@@ -96,9 +96,6 @@ const Scanner = () => {
       if (originalStyleRef.current) {
         document.body.style.overflow = originalStyleRef.current.overflow;
         document.body.style.overscrollBehavior = originalStyleRef.current.overscrollBehavior;
-      } else {
-        document.body.style.overflow = '';
-        document.body.style.overscrollBehavior = '';
       }
       stopCamera();
     };
@@ -327,7 +324,6 @@ const Scanner = () => {
     setCapturedImage(imageData);
     stopCamera();
     
-    // Check limit first
     const canProceed = await checkLimit('food_scan', 4, 'daily');
     
     if (canProceed) {
@@ -338,7 +334,6 @@ const Scanner = () => {
         startFoodAnalysisMutation.mutate(imageData);
       }
     } else {
-      // Logic handled by context
       setState("captured");
     }
   };
@@ -350,7 +345,6 @@ const Scanner = () => {
     if (file) {
       const canProceed = await checkLimit('food_scan', 4, 'daily');
       if (!canProceed) {
-        // Logic handled by context
         return;
       }
 
@@ -378,7 +372,6 @@ const Scanner = () => {
           }
           
           const resizedImageData = canvas.toDataURL("image/jpeg", 0.6);
-          
           setCapturedImage(resizedImageData);
           
           if (scanMode === 'menu') {
@@ -567,7 +560,7 @@ const Scanner = () => {
         <DrawerContent className="max-h-[90vh]">
           <div className="mx-auto w-full max-w-sm">
             <div className="p-6 pb-0 flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4 text-blue-600 dark:text-blue-400">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4 text-muted-foreground">
                 <Info className="w-8 h-8" />
               </div>
               <DrawerHeader className="px-0 pb-2">

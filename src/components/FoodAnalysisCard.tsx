@@ -87,7 +87,6 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
             <p className="font-bold text-foreground text-lg">{result.sugars}</p>
             <p className="text-xs text-muted-foreground font-medium">{t('analysis.sugars')}</p>
           </div>
-          {/* Fibra - Ocupa ancho completo si es impar o se ajusta */}
           <div className="p-3 bg-muted/50 rounded-lg border border-border/30 col-span-2">
             <Sprout className="w-5 h-5 mx-auto text-emerald-500 mb-1" />
             <p className="font-bold text-foreground text-lg">{result.fiber || '0g'}</p>
@@ -95,7 +94,6 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
           </div>
         </div>
 
-        {/* Sección de Ingredientes Detectados */}
         {result.ingredients && result.ingredients.length > 0 && (
           <div className="space-y-3">
             <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm uppercase tracking-wide opacity-80 pl-1">
@@ -119,11 +117,11 @@ const FoodAnalysisCard = ({ result }: FoodAnalysisCardProps) => {
         )}
 
         <div>
-          <div className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-900/50">
-            <HeartPulse className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+          <div className="flex items-start gap-3 p-4 bg-muted/40 rounded-xl border border-border">
+            <HeartPulse className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
             <div>
-              <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-1 text-sm">{t('analysis.recommendation')}</h4>
-              <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed">{result.reason}</p>
+              <h4 className="font-semibold text-foreground mb-1 text-sm">{t('analysis.recommendation')}</h4>
+              <p className="text-muted-foreground text-sm leading-relaxed">{result.reason}</p>
             </div>
           </div>
         </div>

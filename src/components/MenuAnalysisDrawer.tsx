@@ -44,10 +44,7 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysi
       });
 
       if (error) throw error;
-      
-      // La función ahora devuelve el objeto AnalysisResult directamente
       onSelectMeal(analysisResult);
-
     } catch (error) {
       console.error("Error analyzing selected meal:", error);
       toast.error(t('manual_food.error_analysis'));
@@ -129,10 +126,10 @@ const MenuAnalysisDrawer = ({ isOpen, onClose, data, onSelectMeal }: MenuAnalysi
               </div>
             )}
 
-            <div className="mt-4 flex gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-900/50">
-              <Info className="w-5 h-5 text-blue-500 flex-shrink-0" />
-              <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
-                {t('menu_analysis.partial_list_note', 'Nota: Este análisis no incluye todo el menú. La IA ha filtrado el contenido para mostrarte únicamente las mejores opciones para tu objetivo y aquellas que deberías evitar.')}
+            <div className="mt-4 flex gap-3 p-3 bg-muted/40 rounded-xl border border-border">
+              <Info className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {t('menu_analysis.partial_list_note', 'Nota: Este análisis no incluye todo el menú...')}
               </p>
             </div>
           </div>
