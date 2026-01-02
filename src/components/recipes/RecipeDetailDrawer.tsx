@@ -78,7 +78,7 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
               className="w-full h-full object-cover" 
             />
             
-            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
+            {/* Eliminado el gradiente superior negro/gris */}
             
             <div className="absolute top-0 left-0 right-0 p-4 pt-12 flex justify-between items-start z-10">
               <Button 
