@@ -102,17 +102,14 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                 </div>
               )}
               
-              {/* Degradado superior restaurado */}
               <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
-              
-              {/* Degradado inferior para transición suave */}
               <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
               <div className="absolute top-0 left-0 right-0 p-4 pt-12 flex justify-between items-start z-10">
                 <Button 
-                  variant="ghost" 
+                  variant="secondary" 
                   size="icon" 
-                  className="bg-black/20 text-white hover:bg-black/40 backdrop-blur-md rounded-full w-12 h-12" 
+                  className="bg-black/30 text-white hover:bg-black/50 backdrop-blur-md rounded-full w-12 h-12 border border-white/10 shadow-lg" 
                   onClick={onClose}
                 >
                   <X className="w-6 h-6" />
@@ -122,9 +119,9 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                   <Drawer open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
                     <DrawerTrigger asChild>
                       <Button 
-                        variant="ghost" 
+                        variant="secondary" 
                         size="icon" 
-                        className="bg-black/20 text-white hover:bg-red-500/80 hover:text-white backdrop-blur-md rounded-full w-12 h-12 transition-colors"
+                        className="bg-black/30 text-white hover:bg-red-500/80 hover:text-white hover:border-red-500/50 backdrop-blur-md rounded-full w-12 h-12 border border-white/10 shadow-lg transition-colors"
                       >
                         <Trash2 className="w-6 h-6" />
                       </Button>
@@ -157,9 +154,9 @@ const AnalysisDetailDrawer = ({ entry, isOpen, onClose }: AnalysisDetailDrawerPr
                   </Drawer>
 
                   <Button 
-                    variant="ghost" 
+                    variant="secondary" 
                     size="icon" 
-                    className="bg-black/20 text-white hover:bg-black/40 backdrop-blur-md rounded-full w-12 h-12"
+                    className="bg-black/30 text-white hover:bg-black/50 backdrop-blur-md rounded-full w-12 h-12 border border-white/10 shadow-lg"
                     onClick={handleShare}
                     disabled={isSharing}
                   >
