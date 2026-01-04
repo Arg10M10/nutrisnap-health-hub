@@ -2,10 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const GuestBanner = () => {
   const navigate = useNavigate();
   const { profile } = useAuth();
+  const { t } = useTranslation();
 
   const handleClaim = () => {
     if (profile?.is_guest) {
@@ -22,15 +24,15 @@ const GuestBanner = () => {
       {/* Contenido Izquierdo */}
       <div className="flex flex-col items-start gap-3 z-10 max-w-[60%] relative">
         <h2 className="text-lg font-bold leading-tight">
-          <span className="text-[#0F172A] block">Acceso ilimitado a</span>
-          <span className="text-green-600">Identificador de IA</span>
+          <span className="text-[#0F172A] block">{t('guest_banner.unlimited_access')}</span>
+          <span className="text-green-600">{t('guest_banner.ai_identifier')}</span>
         </h2>
         
         <Button 
           onClick={handleClaim}
           className="bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-full px-5 h-8 font-bold text-[10px] tracking-wider shadow-md"
         >
-          RECLAMAR
+          {t('guest_banner.claim')}
         </Button>
       </div>
 
@@ -51,7 +53,7 @@ const GuestBanner = () => {
             <div className="bg-green-500 rounded-full p-0.5">
                 <Check className="w-2 h-2 text-white" strokeWidth={3} />
             </div>
-            <span className="text-[9px] font-bold text-slate-800 tracking-wide">CALORÍAS</span>
+            <span className="text-[9px] font-bold text-slate-800 tracking-wide">{t('guest_banner.calories')}</span>
          </div>
 
          {/* Etiqueta 2: Nutrición - Movida más a la derecha */}
@@ -59,7 +61,7 @@ const GuestBanner = () => {
             <div className="bg-green-500 rounded-full p-0.5">
                 <Check className="w-2 h-2 text-white" strokeWidth={3} />
             </div>
-            <span className="text-[9px] font-bold text-slate-800 tracking-wide">NUTRICIÓN</span>
+            <span className="text-[9px] font-bold text-slate-800 tracking-wide">{t('guest_banner.nutrition')}</span>
          </div>
       </div>
     </div>
