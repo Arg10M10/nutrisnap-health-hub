@@ -7,6 +7,7 @@ import { AnalysisResult } from '@/components/FoodAnalysisCard';
 import { format, isSameDay, subDays, parseISO } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { MenuAnalysisData } from '@/components/MenuAnalysisDrawer';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface FoodEntry {
   id: string;
@@ -156,12 +157,16 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
   const { data: waterEntries = [], isLoading: isWaterLoading } = useQuery<WaterEntry[]>({
     queryKey: ['water_entries', user?.id],
     queryFn: async () => {
-      if (!user) return [];
+      if (!user) {
+        // Cargar desde localStorage si no hay usuario
+        const localData = localStorage.getItem('calorel_local_water_entries');
+        return localData ? JSON.parse(localData) : [];
+      }
       const { data, error } = await supabase.from('water_entries').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
       if (error) throw new Error(error.message);
       return data || [];
     },
-    enabled: !!user,
+    // Habilitado siempre para que funcione en modo invitado
   });
 
   const { data: unlockedBadgeIds = [], isLoading: isBadgesLoading } = useQuery<string[]>({
@@ -243,7 +248,33 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
   const waterMutation = useMutation({
     mutationFn: async ({ action, date, amount = 1 }: { action: 'add' | 'remove', date: Date, amount?: number }) => {
-      if (!user) throw new Error('User not found');
+      if (!user) {
+        // Manejo LOCAL para usuarios invitados
+        const localData = localStorage.getItem('calorel_local_water_entries');
+        let entries: WaterEntry[] = localData ? JSON.parse(localData) : [];
+
+        if (action === 'add') {
+          const newEntry: WaterEntry = {
+            id: uuidv4(),
+            created_at: date.toISOString(),
+            glasses: amount || 1
+          };
+          entries.push(newEntry);
+        } else {
+          // Lógica de borrado local (borra el último del día seleccionado)
+          const targetDay = format(date, 'yyyy-MM-dd');
+          const dayEntries = entries.filter(e => format(parseISO(e.created_at), 'yyyy-MM-dd') === targetDay);
+          
+          if (dayEntries.length > 0) {
+             const lastEntry = dayEntries.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+             entries = entries.filter(e => e.id !== lastEntry.id);
+          }
+        }
+        localStorage.setItem('calorel_local_water_entries', JSON.stringify(entries));
+        return; // Retornamos para evitar ejecutar lógica de Supabase
+      }
+
+      // Manejo SUPABASE para usuarios registrados
       if (action === 'add') {
         const { error } = await supabase.from('water_entries').insert({ user_id: user.id, glasses: amount, created_at: date.toISOString() });
         if (error) throw error;
