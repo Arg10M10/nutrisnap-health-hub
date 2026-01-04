@@ -18,7 +18,7 @@
   },
   "guest_banner": {
     "unlimited_access": "Acceso ilimitado a",
-    "ai_identifier": "Identificador de IA",
+    "ai_identifier": "Escáner de IA",
     "claim": "RECLAMAR",
     "calories": "CALORÍAS",
     "nutrition": "NUTRICIÓN"
@@ -892,9 +892,9 @@
     "weight_body_1": "Update your weight today to see your progress."
   },
   "subscribe": {
-    "title": "Desbloquea Tu Potencial",
-    "subtitle": "Accede a todas las funciones premium para alcanzar tus objetivos más rápido.",
-    "best_value": "Mejor Valor - Ahorra 67%",
+    "title": "Unlock Your Full Potential",
+    "subtitle": "Get all premium features to reach your goals faster.",
+    "best_value": "Best Value - Save 67%",
     "month_short": "mes",
     "billed_yearly": "{{price}} facturado anualmente",
     "billed_yearly_simple": "facturado hoy",

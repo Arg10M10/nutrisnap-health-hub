@@ -25,7 +25,7 @@ const GuestBanner = () => {
       <div className="flex flex-col items-start gap-3 z-10 max-w-[60%] relative">
         <h2 className="text-lg font-bold leading-tight">
           <span className="text-[#0F172A] block">{t('guest_banner.unlimited_access')}</span>
-          <span className="text-green-600">{t('guest_banner.ai_identifier')}</span>
+          <span className="text-primary">{t('guest_banner.ai_identifier')}</span>
         </h2>
         
         <Button 

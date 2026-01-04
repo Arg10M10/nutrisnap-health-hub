@@ -18,7 +18,7 @@
   },
   "guest_banner": {
     "unlimited_access": "Unlimited access to",
-    "ai_identifier": "AI Identifier",
+    "ai_identifier": "AI Scanner",
     "claim": "CLAIM",
     "calories": "CALORIES",
     "nutrition": "NUTRITION"
@@ -666,7 +666,7 @@
     "dominican_republic": "Dominican Republic",
     "colombia": "Colombia",
     "chile": "Chile",
-    "peru": "Peru"
+    "peru": "Perú"
   },
   "settings": {
     "title": "Profile",
