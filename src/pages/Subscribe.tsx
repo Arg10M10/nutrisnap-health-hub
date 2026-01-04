@@ -3,20 +3,49 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Lock, Bell, ShoppingBag, Sparkles, Clock, Zap, ChefHat, Target } from 'lucide-react';
+import { Lock, Bell, ShoppingBag, Sparkles, Clock, Zap, ChefHat, Target, Loader2 } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
+import { useMutation } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const Subscribe = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { profile } = useAuth();
+  const { profile, user, refetchProfile } = useAuth();
   const [planType, setPlanType] = useState<'trial' | 'paid'>('trial');
 
+  const subscribeMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("No user");
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update({ is_subscribed: true })
+        .eq('id', user.id);
+        
+      if (error) throw error;
+    },
+    onSuccess: async () => {
+      await refetchProfile();
+      toast.success("¡Plan Premium activado!");
+      navigate('/');
+    },
+    onError: () => {
+      toast.error(t('common.error_friendly'));
+    }
+  });
+
   const handleSubscribe = () => {
-    // Redirigir al registro para guardar datos antes del pago/activación
-    navigate('/register-premium');
+    if (profile && !profile.is_guest) {
+      // Si el usuario ya está registrado (no es invitado), activamos la suscripción directamente
+      subscribeMutation.mutate();
+    } else {
+      // Si es invitado, redirigir al registro para guardar datos antes del pago/activación
+      navigate('/register-premium');
+    }
   };
 
   const handleSkip = () => {
@@ -140,8 +169,10 @@ const Subscribe = () => {
           <Button 
             onClick={handleSubscribe} 
             size="lg" 
+            disabled={subscribeMutation.isPending}
             className="w-full h-auto min-h-[3.5rem] text-lg rounded-xl shadow-lg shadow-primary/30 py-2 whitespace-normal"
           >
+            {subscribeMutation.isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
             {planType === 'trial' ? t('subscribe.buttons.start_trial') : t('subscribe.buttons.unlock_now')}
           </Button>
           
