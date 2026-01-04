@@ -1,16 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { 
-  HealthConnect, 
-  PermissionName, 
-} from '@capacitor-community/health-connect';
+import { HealthConnect } from '@ubie/capacitor-health-connect';
 import { Capacitor } from '@capacitor/core';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { ArrowLeft, Activity, Smartphone, Footprints, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Activity, Smartphone, Footprints } from 'lucide-react';
 import { toast } from 'sonner';
 
 const ConnectApps = () => {
@@ -110,9 +107,6 @@ const ConnectApps = () => {
         endTime: endOfDay.toISOString(),
       });
 
-      // El resultado puede venir como un total directo o un array de registros dependiendo de la versión
-      // La librería suele devolver: { count: number }
-      
       const totalSteps = result.count || 0;
       setStepCount(totalSteps);
 
@@ -142,7 +136,6 @@ const ConnectApps = () => {
             <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border/50">
               <div className="flex items-center gap-4">
                 <div className="bg-white p-2 rounded-full shadow-sm">
-                  {/* Icono genérico o logo de Health Connect si tuviéramos */}
                   <Activity className="w-6 h-6 text-green-600" />
                 </div>
                 <div>
