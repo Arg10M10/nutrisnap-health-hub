@@ -30,6 +30,8 @@ export interface Profile {
   time_format: '12h' | '24h' | null;
   is_subscribed: boolean;
   trial_start_date: string | null;
+  subscription_end_date: string | null;
+  plan_type: 'monthly' | 'annual' | null;
   is_guest?: boolean; // New flag for local profiles
 }
 

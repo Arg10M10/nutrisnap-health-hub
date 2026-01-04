@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { Settings as SettingsIcon, ChevronRight, MessageSquareText, Crown, Clock } from "lucide-react";
+import { Settings as SettingsIcon, ChevronRight, MessageSquareText, Crown, Clock, CalendarDays, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import PageLayout from "@/components/PageLayout";
 import UserAvatar from "@/components/UserAvatar";
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedNumber from "@/components/AnimatedNumber";
-import { differenceInHours, addDays, parseISO } from "date-fns";
+import { differenceInDays, differenceInHours, addDays, parseISO, format } from "date-fns";
+import { es } from "date-fns/locale";
 
 const SUPPORT_EMAIL = "calorel.help@gmail.com";
 
@@ -30,7 +31,7 @@ const calculateBMI = (weight: number | null, height: number | null, units: strin
 const Settings = () => {
   const { profile } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const isImperial = profile?.units === 'imperial';
   const weightUnit = isImperial ? 'lbs' : 'kg';
@@ -91,21 +92,79 @@ const Settings = () => {
     }
   };
 
-  // Lógica de Prueba Gratuita
-  let trialRemainingText = null;
-  let isTrialActive = false;
+  // --- Lógica de Estado de Suscripción ---
+  
+  let subscriptionCard = null;
+  const now = new Date();
 
+  // 1. Verificar Prueba Gratuita (Titanium/Gris Oscuro)
   if (profile?.is_subscribed && profile.trial_start_date) {
     const startDate = parseISO(profile.trial_start_date);
     const endDate = addDays(startDate, 3);
-    const hoursLeft = differenceInHours(endDate, new Date());
+    const hoursLeft = differenceInHours(endDate, now);
 
     if (hoursLeft > 0) {
-      isTrialActive = true;
       const daysLeft = Math.ceil(hoursLeft / 24);
-      trialRemainingText = daysLeft === 1 
-        ? `${hoursLeft}h restantes` 
-        : `${daysLeft} días restantes`;
+      const remainingText = daysLeft === 1 ? `${hoursLeft}h restantes` : `${daysLeft} días restantes`;
+      
+      subscriptionCard = (
+        <div className="bg-gradient-to-br from-zinc-800 to-zinc-950 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between border border-zinc-700/50 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-8 -mt-8 blur-2xl"></div>
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="bg-white/10 p-2.5 rounded-full border border-white/10">
+              <Clock className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="font-bold text-sm text-white/90">Prueba Premium Activa</p>
+              <p className="text-xs text-zinc-400 font-medium">{remainingText} de prueba</p>
+            </div>
+          </div>
+          <div className="bg-white/10 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide border border-white/5">
+            TITANIUM
+          </div>
+        </div>
+      );
+    }
+  } 
+  // 2. Verificar Suscripción Activa (Manual)
+  else if (profile?.is_subscribed && profile.subscription_end_date) {
+    const endDate = parseISO(profile.subscription_end_date);
+    const daysLeft = differenceInDays(endDate, now);
+    const isAnnual = profile.plan_type === 'annual';
+    const planName = isAnnual ? "Plan Anual" : "Plan Mensual";
+    
+    // Estilos dinámicos
+    const bgGradient = isAnnual 
+      ? "from-amber-400 to-yellow-600 shadow-yellow-500/20" // Oro
+      : "from-slate-300 to-slate-500 shadow-slate-400/20"; // Plata
+    
+    const iconColor = isAnnual ? "text-yellow-900" : "text-slate-900";
+    const iconBg = isAnnual ? "bg-yellow-900/20" : "bg-slate-900/10";
+    const textColor = isAnnual ? "text-yellow-50" : "text-white";
+    
+    if (daysLeft >= 0) {
+      subscriptionCard = (
+        <div className={`bg-gradient-to-br ${bgGradient} rounded-2xl p-4 text-white shadow-lg flex items-center justify-between border border-white/20 relative overflow-hidden`}>
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mb-10 blur-3xl"></div>
+          
+          <div className="flex items-center gap-3 relative z-10">
+            <div className={`${iconBg} p-2.5 rounded-full backdrop-blur-sm border border-white/20`}>
+              {isAnnual ? <Crown className={`w-5 h-5 ${iconColor}`} /> : <CalendarDays className={`w-5 h-5 ${iconColor}`} />}
+            </div>
+            <div>
+              <p className={`font-bold text-sm drop-shadow-sm`}>{planName}</p>
+              <p className={`text-xs ${textColor} font-medium opacity-90`}>
+                Renueva el {format(endDate, "d MMM yyyy", { locale: i18n.language === 'es' ? es : undefined })}
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex flex-col items-end relative z-10">
+             <div className="text-2xl font-black leading-none drop-shadow-md">{daysLeft}</div>
+             <div className="text-[10px] font-bold uppercase tracking-wider opacity-80">Días</div>
+          </div>
+        </div>
+      );
     }
   }
 
@@ -125,7 +184,8 @@ const Settings = () => {
                 <h1 className="text-xl font-bold text-foreground leading-tight">
                   {isGuest ? t('settings.register_button') : (profile?.full_name || t('settings.profileCard.namePlaceholder'))}
                 </h1>
-                {profile?.is_subscribed && !isTrialActive && (
+                {profile?.is_subscribed && !subscriptionCard && (
+                  // Fallback simple badge if logic fails or expired but flag true
                   <div className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full text-[10px] font-bold border border-yellow-200 flex items-center gap-1">
                     <Crown className="w-3 h-3 fill-current" /> Premium
                   </div>
@@ -155,20 +215,8 @@ const Settings = () => {
           </div>
         </div>
 
-        {/* Trial Status Card */}
-        {isTrialActive && (
-          <div className="bg-gradient-to-br from-zinc-800 to-zinc-950 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between border border-zinc-700/50">
-            <div className="flex items-center gap-3">
-              <div className="bg-white/10 p-2 rounded-full border border-white/10">
-                <Clock className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="font-bold text-sm">Prueba Premium Activa</p>
-                <p className="text-xs text-zinc-400 font-medium">{trialRemainingText} de prueba</p>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Dynamic Subscription Card */}
+        {subscriptionCard}
 
         {/* Stats Card */}
         <Card className="bg-primary border-none shadow-md rounded-2xl text-primary-foreground overflow-hidden">

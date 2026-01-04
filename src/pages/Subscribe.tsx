@@ -11,6 +11,7 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { addDays } from 'date-fns';
 
 const Subscribe = () => {
   const navigate = useNavigate();
@@ -26,12 +27,24 @@ const Subscribe = () => {
       
       const updateData: any = { is_subscribed: true };
       
-      // Si habilita prueba, guardamos la fecha de inicio
+      // Lógica de Fechas
+      const now = new Date();
+      
       if (enableTrial) {
-        updateData.trial_start_date = new Date().toISOString();
+        // Si es prueba: empieza hoy, no seteamos plan_type ni end_date permanente aún (o podriamos setear +3 dias)
+        updateData.trial_start_date = now.toISOString();
+        // Opcional: Podríamos no setear el end_date todavía hasta que "pague" realmente
+        updateData.subscription_end_date = null; 
+        updateData.plan_type = null;
       } else {
-        // Si paga directo, limpiamos trial_start_date para que no cuente como prueba
+        // Si paga directo (Manual): Limpiamos trial
         updateData.trial_start_date = null;
+        updateData.plan_type = selectedPlan;
+        
+        // Calcular fecha fin
+        const daysToAdd = selectedPlan === 'annual' ? 365 : 30;
+        const endDate = addDays(now, daysToAdd);
+        updateData.subscription_end_date = endDate.toISOString();
       }
 
       const { error } = await supabase
@@ -43,9 +56,15 @@ const Subscribe = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      const message = enableTrial 
-        ? t('subscribe.trial_started', "¡Prueba de 3 días iniciada!") 
-        : t('subscribe.success_toast', "¡Plan Premium activado!");
+      let message;
+      
+      if (enableTrial) {
+        message = t('subscribe.trial_started', "¡Prueba de 3 días iniciada!");
+      } else {
+        const type = selectedPlan === 'annual' ? 'Anual' : 'Mensual';
+        message = `¡Plan ${type} activado exitosamente!`;
+      }
+      
       toast.success(message);
       navigate('/');
     },
