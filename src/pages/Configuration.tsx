@@ -30,7 +30,7 @@ const SUPPORT_EMAIL = "calorel.help@gmail.com";
 const TIKTOK_URL = "https://www.tiktok.com/@calorel.app?_r=1&_t=ZS-920XYSQSag5";
 
 const Configuration = () => {
-  const { signOut } = useAuth();
+  const { signOut, profile } = useAuth();
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
   const navigate = useNavigate();
@@ -152,6 +152,7 @@ const Configuration = () => {
             label={t('settings.actions.deleteAccount')} 
             onClick={() => setIsDeleteDrawerOpen(true)} 
             destructive 
+            disabled={profile?.is_guest}
           />
         </SettingsCategory>
 
