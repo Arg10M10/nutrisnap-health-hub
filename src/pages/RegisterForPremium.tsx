@@ -1,28 +1,30 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { SignUpForm } from '@/components/auth/SignUpForm';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Crown } from 'lucide-react';
+import { ArrowLeft, Crown, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
 const RegisterForPremium = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const { profile, refetchProfile } = useAuth();
 
+  const isStandardRegistration = location.state?.isStandardRegistration === true;
+
   const handleRegistrationSuccess = async (userId: string) => {
-    toast.loading("Activando tu plan premium...", { id: "premium-activation" });
+    const loadingId = "registration-loading";
+    toast.loading(isStandardRegistration ? "Creando tu cuenta..." : "Activando tu plan premium...", { id: loadingId });
 
     try {
       // 1. Sync local profile data to Supabase
       if (profile) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .update({
+        const updateData: any = {
             gender: profile.gender,
             age: profile.age,
             previous_apps_experience: profile.previous_apps_experience,
@@ -35,8 +37,16 @@ const RegisterForPremium = () => {
             goal_weight: profile.goal_weight,
             weekly_rate: profile.weekly_rate,
             onboarding_completed: true,
-            is_subscribed: true, // Activate subscription
-          })
+        };
+
+        // Sólo activamos la suscripción si NO es un registro estándar (es decir, viene de la pantalla de pago)
+        if (!isStandardRegistration) {
+            updateData.is_subscribed = true;
+        }
+
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update(updateData)
           .eq('id', userId);
 
         if (profileError) throw profileError;
@@ -47,14 +57,20 @@ const RegisterForPremium = () => {
       }
 
       await refetchProfile();
-      toast.dismiss("premium-activation");
-      toast.success("¡Cuenta creada y Premium activado!");
-      navigate('/generating-plan');
+      toast.dismiss(loadingId);
+      
+      if (isStandardRegistration) {
+        toast.success("¡Cuenta creada con éxito! Tus datos han sido guardados.");
+        navigate('/'); // Ir al home
+      } else {
+        toast.success("¡Cuenta creada y Premium activado!");
+        navigate('/generating-plan'); // Flujo de onboarding
+      }
 
     } catch (error: any) {
-      console.error("Premium sync error:", error);
-      toast.dismiss("premium-activation");
-      toast.error("Error al activar premium. Contacta a soporte.");
+      console.error("Sync error:", error);
+      toast.dismiss(loadingId);
+      toast.error("Error al crear la cuenta. Por favor, contacta a soporte.");
     }
   };
 
@@ -68,12 +84,18 @@ const RegisterForPremium = () => {
 
       <div className="flex-1 flex flex-col justify-center max-w-md mx-auto w-full">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Crown className="w-8 h-8 text-yellow-600" />
+          <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isStandardRegistration ? 'bg-primary/10' : 'bg-yellow-100'}`}>
+            {isStandardRegistration ? (
+                <UserPlus className="w-8 h-8 text-primary" />
+            ) : (
+                <Crown className="w-8 h-8 text-yellow-600" />
+            )}
           </div>
           <h1 className="text-2xl font-bold text-foreground">Guarda tu progreso</h1>
-          <p className="text-muted-foreground mt-2">
-            Para activar tu plan Premium, primero necesitamos crear tu cuenta segura.
+          <p className="text-muted-foreground mt-2 px-4">
+            {isStandardRegistration 
+                ? "Crea una cuenta gratuita para sincronizar tus datos y no perder tu avance." 
+                : "Para activar tu plan Premium, primero necesitamos crear tu cuenta segura."}
           </p>
         </div>
 

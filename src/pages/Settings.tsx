@@ -89,7 +89,8 @@ const Settings = () => {
 
   const handleProfileClick = () => {
     if (isGuest) {
-      navigate('/register-premium');
+      // Pasamos state: { isStandardRegistration: true } para diferenciar del flujo Premium
+      navigate('/register-premium', { state: { isStandardRegistration: true } });
     } else {
       navigate('/settings/edit-profile');
     }
