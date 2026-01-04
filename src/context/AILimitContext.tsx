@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { startOfDay, subDays } from 'date-fns';
 import AILimitDrawer from '@/components/AILimitDrawer';
-import PremiumLockDrawer from '@/components/PremiumLockDrawer';
+import { useNavigate } from 'react-router-dom';
 
 type AIFeature = 'food_scan' | 'exercise_ai' | 'diet_plan' | 'ai_suggestions' | 'manual_food_scan' | 'weight_log';
 type TimeFrame = 'daily' | 'weekly';
@@ -17,8 +17,8 @@ const AILimitContext = createContext<AILimitContextType | undefined>(undefined);
 
 export const AILimitProvider = ({ children }: { children: ReactNode }) => {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [isLimitOpen, setIsLimitOpen] = useState(false);
-  const [isPremiumLockOpen, setIsPremiumLockOpen] = useState(false);
   const [drawerInfo, setDrawerInfo] = useState<{ limit: number, timeFrame: TimeFrame }>({ limit: 0, timeFrame: 'daily' });
 
   const checkLimit = useCallback(async (feature: AIFeature, limit: number, timeFrame: TimeFrame = 'daily'): Promise<boolean> => {
@@ -30,9 +30,9 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
       return true;
     }
 
-    // 3. GUEST USERS: Block AI features immediately
+    // 3. GUEST USERS: Redirect to Subscribe immediately
     if (profile?.is_guest) {
-      setIsPremiumLockOpen(true);
+      navigate('/subscribe');
       return false;
     }
 
@@ -42,9 +42,9 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
     
     // If the UI requests a "High Limit" (e.g. 9999), it implies this is a Premium-Only action
     // Since we already passed the subscription check above, the user is NOT subscribed here.
-    // Therefore, we block them.
+    // Therefore, we redirect them to subscribe.
     if (limit > 50) {
-      setIsPremiumLockOpen(true);
+      navigate('/subscribe');
       return false;
     }
 
@@ -71,14 +71,14 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
     const currentCount = count || 0;
     
     if (currentCount >= limit) {
-      // Trigger Limit UI
+      // Trigger Limit UI (Still show the daily limit drawer for free users)
       setDrawerInfo({ limit, timeFrame });
       setIsLimitOpen(true);
       return false;
     }
 
     return true;
-  }, [user, profile]);
+  }, [user, profile, navigate]);
 
   const logUsage = useCallback(async (feature: AIFeature) => {
     // If guest, do nothing (should be blocked by checkLimit anyway)
@@ -108,10 +108,6 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
         onClose={() => setIsLimitOpen(false)} 
         limit={drawerInfo.limit} 
         timeFrame={drawerInfo.timeFrame} 
-      />
-      <PremiumLockDrawer
-        isOpen={isPremiumLockOpen}
-        onClose={() => setIsPremiumLockOpen(false)}
       />
     </AILimitContext.Provider>
   );
