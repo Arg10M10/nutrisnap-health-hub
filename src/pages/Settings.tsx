@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import { differenceInDays, differenceInHours, addDays, parseISO, format } from "date-fns";
 import { es } from "date-fns/locale";
+import GuestBanner from "@/components/GuestBanner";
 
 const SUPPORT_EMAIL = "calorel.help@gmail.com";
 
@@ -164,6 +165,11 @@ const Settings = () => {
     }
   }
 
+  // Si no hay tarjeta de suscripción (porque no está suscrito o expiró), mostramos el GuestBanner
+  if (!subscriptionCard) {
+    subscriptionCard = <GuestBanner />;
+  }
+
   return (
     <PageLayout>
       <div className="space-y-6">
@@ -211,7 +217,7 @@ const Settings = () => {
           </div>
         </div>
 
-        {/* Dynamic Subscription Card */}
+        {/* Dynamic Subscription Card or GuestBanner */}
         {subscriptionCard}
 
         {/* Stats Card */}

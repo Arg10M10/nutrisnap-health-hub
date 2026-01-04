@@ -129,7 +129,8 @@ const Index = () => {
           </button>
         </header>
 
-        {profile?.is_guest && (
+        {/* Mostrar banner para TODOS los que NO tengan suscripción activa */}
+        {!profile?.is_subscribed && (
           <GuestBanner />
         )}
 
