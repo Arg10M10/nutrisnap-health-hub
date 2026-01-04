@@ -3,19 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Lock, Bell, ShoppingBag, Sparkles, Clock, Zap, ChefHat, Target, Loader2 } from 'lucide-react';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Lock, Bell, ShoppingBag, Sparkles, Zap, ChefHat, Target, Loader2, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
 import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 const Subscribe = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { profile, user, refetchProfile } = useAuth();
-  const [planType, setPlanType] = useState<'trial' | 'paid'>('trial');
+  
+  const [selectedPlan, setSelectedPlan] = useState<'annual' | 'monthly'>('annual');
 
   const subscribeMutation = useMutation({
     mutationFn: async () => {
@@ -30,7 +31,7 @@ const Subscribe = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success("¡Plan Premium activado!");
+      toast.success(t('subscribe.success_toast', "¡Plan Premium activado!"));
       navigate('/');
     },
     onError: () => {
@@ -40,36 +41,15 @@ const Subscribe = () => {
 
   const handleSubscribe = () => {
     if (profile && !profile.is_guest) {
-      // Si el usuario ya está registrado (no es invitado), activamos la suscripción directamente
       subscribeMutation.mutate();
     } else {
-      // Si es invitado, redirigir al registro para guardar datos antes del pago/activación
       navigate('/register-premium');
     }
   };
 
   const handleSkip = () => {
-    // Si saltan, van a la proyección de objetivos como usuario invitado
     navigate('/goal-projection');
   };
-
-  const timelineItems = [
-    {
-      icon: Lock,
-      title: t('subscribe.timeline.today_title'),
-      description: t('subscribe.timeline.today_desc'),
-    },
-    {
-      icon: Bell,
-      title: t('subscribe.timeline.reminder_title'),
-      description: t('subscribe.timeline.reminder_desc'),
-    },
-    {
-      icon: ShoppingBag,
-      title: t('subscribe.timeline.billing_title'),
-      description: t('subscribe.timeline.billing_desc'),
-    },
-  ];
 
   const premiumFeatures = [
     { icon: Sparkles, text: t('subscribe.features.scanner') },
@@ -80,7 +60,7 @@ const Subscribe = () => {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
   const itemVariants = {
@@ -88,100 +68,143 @@ const Subscribe = () => {
     visible: { opacity: 1, x: 0 },
   };
 
+  const annualPrice = "$36.00";
+  const annualMonthlyEquivalent = "$3.00";
+  const monthlyPrice = "$9.00";
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-end bg-background p-4 sm:justify-center">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 py-8">
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-full max-w-md"
+        className="w-full max-w-md space-y-6"
       >
-        <div className="p-6 text-center">
-          <h1 className="text-3xl font-bold text-foreground mb-4">{t('subscribe.title')}</h1>
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold text-foreground">{t('subscribe.title')}</h1>
+          <p className="text-muted-foreground">{t('subscribe.subtitle', "Desbloquea tu mejor versión")}</p>
         </div>
 
-        <ToggleGroup
-          type="single"
-          value={planType}
-          onValueChange={(value: 'trial' | 'paid') => value && setPlanType(value)}
-          className="grid grid-cols-2 w-full mb-8"
+        {/* Features List */}
+        <motion.div 
+          className="grid grid-cols-2 gap-3"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
         >
-          <ToggleGroupItem value="trial" className="h-auto min-h-[3rem] text-base py-2">{t('subscribe.trial_tab')}</ToggleGroupItem>
-          <ToggleGroupItem value="paid" className="h-auto min-h-[3rem] text-base py-2">{t('subscribe.pay_now_tab')}</ToggleGroupItem>
-        </ToggleGroup>
+          {premiumFeatures.map((feature, index) => (
+            <motion.div 
+              key={index} 
+              className="flex items-center gap-2 bg-muted/30 p-3 rounded-xl border border-border/50" 
+              variants={itemVariants}
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary flex-shrink-0">
+                <feature.icon className="h-4 w-4" />
+              </div>
+              <p className="text-xs font-medium text-foreground leading-tight">{feature.text}</p>
+            </motion.div>
+          ))}
+        </motion.div>
 
-        {planType === 'trial' ? (
-          <motion.div 
-            key="trial"
-            className="relative space-y-8 mb-8"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-          >
-            <div className="absolute left-6 top-2 h-full w-0.5 bg-primary/20 -translate-x-1/2" />
-            {timelineItems.map((item, index) => (
-              <motion.div key={index} className="relative flex items-start gap-4" variants={itemVariants}>
-                <div className="z-10 flex h-12 w-12 items-center justify-center rounded-full bg-card border-4 border-background flex-shrink-0">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <item.icon className="h-5 w-5" />
-                  </div>
-                </div>
-                <div className="pt-1">
-                  <h3 className="font-bold text-foreground">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        ) : (
-          <motion.div 
-            key="paid"
-            className="mb-8 space-y-4"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-          >
-            <h3 className="text-center font-semibold text-lg text-foreground">{t('subscribe.features_title')}</h3>
-            {premiumFeatures.map((feature, index) => (
-              <motion.div key={index} className="flex items-center gap-4" variants={itemVariants}>
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary flex-shrink-0">
-                  <feature.icon className="h-5 w-5" />
-                </div>
-                <p className="text-foreground">{feature.text}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-
-        <Card className="shadow-lg">
-          <CardContent className="p-4 space-y-3">
-            <div className="border-2 border-primary bg-primary/5 rounded-lg p-4 text-center">
-              <p className="font-bold text-lg text-primary">{t('subscribe.plan.title')}</p>
-              <p className="text-2xl font-extrabold text-foreground">$1.99<span className="text-base font-medium text-muted-foreground">{t('subscribe.plan.price_suffix')}</span></p>
-              {planType === 'trial' && <p className="text-sm text-muted-foreground mt-1">{t('subscribe.plan.trial_note')}</p>}
+        {/* Timeline */}
+        <div className="relative pl-4 space-y-6 py-2">
+          <div className="absolute left-[1.15rem] top-2 bottom-2 w-0.5 bg-gradient-to-b from-primary/50 to-transparent" />
+          
+          <div className="relative flex items-center gap-4">
+            <div className="z-10 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md ring-4 ring-background">
+              <Lock className="h-4 w-4" />
             </div>
-          </CardContent>
-        </Card>
+            <div>
+              <h3 className="font-bold text-sm text-foreground">{t('subscribe.timeline.today_title')}</h3>
+              <p className="text-xs text-muted-foreground">{t('subscribe.timeline.today_desc')}</p>
+            </div>
+          </div>
 
-        <div className="mt-6 flex flex-col gap-3">
+          <div className="relative flex items-center gap-4">
+            <div className="z-10 flex h-8 w-8 items-center justify-center rounded-full bg-muted text-muted-foreground ring-4 ring-background border border-border">
+              <Bell className="h-4 w-4" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-sm text-foreground">{t('subscribe.timeline.reminder_title')}</h3>
+              <p className="text-xs text-muted-foreground">{t('subscribe.timeline.reminder_desc')}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Plan Selection */}
+        <div className="space-y-3">
+          {/* Annual Plan */}
+          <motion.div 
+            className={cn(
+              "relative rounded-xl border-2 overflow-hidden cursor-pointer transition-all shadow-sm",
+              selectedPlan === 'annual' ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "border-border bg-card hover:border-primary/50"
+            )}
+            onClick={() => setSelectedPlan('annual')}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="bg-primary text-white text-center py-1 text-[10px] font-bold tracking-wide uppercase">
+              {t('subscribe.best_value', "Mejor Valor - Ahorra 67%")}
+            </div>
+            <div className="p-4 flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-bold text-foreground flex items-center gap-2">
+                  {selectedPlan === 'annual' && <Check className="w-4 h-4 text-primary" />}
+                  {t('subscribe.plan.annual', "Anual")}
+                </span>
+                <span className="text-xs text-muted-foreground line-through">$108.00</span>
+              </div>
+              
+              <div className="flex flex-col items-end">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl font-black text-primary">{annualMonthlyEquivalent}</span>
+                  <span className="text-xs font-medium text-muted-foreground">/{t('subscribe.month_short', "mes")}</span>
+                </div>
+                <span className="text-[10px] font-semibold text-foreground/70">
+                  {t('subscribe.billed_yearly', { price: annualPrice })}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Monthly Plan */}
+          <motion.div 
+            className={cn(
+              "relative rounded-xl border-2 bg-card p-4 flex items-center justify-between cursor-pointer transition-all",
+              selectedPlan === 'monthly' ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20" : "border-border hover:border-primary/50"
+            )}
+            onClick={() => setSelectedPlan('monthly')}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="flex items-center gap-2">
+              {selectedPlan === 'monthly' && <Check className="w-4 h-4 text-primary" />}
+              <span className="text-sm font-bold text-foreground">{t('subscribe.plan.monthly', "Mensual")}</span>
+            </div>
+            <span className="text-base font-bold text-foreground">{monthlyPrice}<span className="text-xs font-normal text-muted-foreground">/{t('subscribe.month_short', "mes")}</span></span>
+          </motion.div>
+        </div>
+
+        {/* Action Button */}
+        <div className="space-y-3 pt-2">
           <Button 
             onClick={handleSubscribe} 
             size="lg" 
             disabled={subscribeMutation.isPending}
-            className="w-full h-auto min-h-[3.5rem] text-lg rounded-xl shadow-lg shadow-primary/30 py-2 whitespace-normal"
+            className="w-full h-14 text-lg rounded-xl shadow-xl shadow-primary/25 font-bold"
           >
-            {subscribeMutation.isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-            {planType === 'trial' ? t('subscribe.buttons.start_trial') : t('subscribe.buttons.unlock_now')}
+            {subscribeMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+            {t('subscribe.buttons.start_trial')}
           </Button>
           
+          <p className="text-center text-xs text-muted-foreground">
+            {t('subscribe.no_charge_text', "Sin cargo por 3 días. Cancela cuando quieras.")}
+          </p>
+
           <Button 
             variant="ghost" 
             onClick={handleSkip}
-            className="w-full text-muted-foreground hover:text-foreground"
+            className="w-full text-muted-foreground hover:text-foreground h-10 text-sm"
           >
-            Continuar sin plan
+            {t('subscribe.continue_limited', "Continuar con versión limitada")}
           </Button>
         </div>
       </motion.div>

@@ -171,9 +171,14 @@
     "button": "¡Vamos a Lograrlo!"
   },
   "subscribe": {
-    "title": "Desbloquea Tu Potencial Completo",
-    "trial_tab": "Prueba Gratuita de 3 Días",
-    "pay_now_tab": "Desbloquear Ahora",
+    "title": "Desbloquea Tu Potencial",
+    "subtitle": "Accede a todas las funciones premium para alcanzar tus objetivos más rápido.",
+    "best_value": "Mejor Valor - Ahorra 67%",
+    "month_short": "mes",
+    "billed_yearly": "{{price}} facturado anualmente",
+    "no_charge_text": "Sin cargo por 3 días. Cancela cuando quieras.",
+    "continue_limited": "Continuar con versión limitada",
+    "success_toast": "¡Plan Premium activado!",
     "timeline": {
       "today_title": "Hoy: Inicia Prueba Gratuita",
       "today_desc": "Accede a todas las funciones premium de inmediato.",
@@ -191,8 +196,10 @@
     },
     "plan": {
       "title": "Plan Mensual",
+      "annual": "Anual",
+      "monthly": "Mensual",
       "price_suffix": "/mes",
-      "trial_note": "Gratis por 3 días, luego $1.99/mes."
+      "trial_note": "Gratis por 3 días."
     },
     "buttons": {
       "start_trial": "Iniciar Prueba Gratuita de 3 Días",
@@ -861,5 +868,42 @@
     "water_body_2": "Stay hydrated for better results.",
     "weight_title_1": "Weight Control",
     "weight_body_1": "Update your weight today to see your progress."
+  },
+  "subscribe": {
+    "title": "Desbloquea Tu Potencial",
+    "subtitle": "Accede a todas las funciones premium para alcanzar tus objetivos más rápido.",
+    "best_value": "Mejor Valor - Ahorra 67%",
+    "month_short": "mes",
+    "billed_yearly": "{{price}} facturado anualmente",
+    "no_charge_text": "Sin cargo por 3 días. Cancela cuando quieras.",
+    "continue_limited": "Continuar con versión limitada",
+    "success_toast": "¡Plan Premium activado!",
+    "timeline": {
+      "today_title": "Hoy: Inicia Prueba Gratuita",
+      "today_desc": "Accede a todas las funciones premium de inmediato.",
+      "reminder_title": "Día 2: Recordatorio",
+      "reminder_desc": "Te enviaremos un recordatorio antes de que finalice la prueba.",
+      "billing_title": "Día 3: Comienza la Facturación",
+      "billing_desc": "Si no cancelas, la suscripción comenzará."
+    },
+    "features_title": "Funciones Premium Incluidas:",
+    "features": {
+      "scanner": "Escáner de Comida con IA (Ilimitado)",
+      "exercise": "Análisis de Ejercicio con IA (Ilimitado)",
+      "diet_plans": "Planes de Dieta Semanales Personalizados",
+      "goals": "Seguimiento Avanzado de Metas y Sugerencias"
+    },
+    "plan": {
+      "title": "Selecciona tu Plan",
+      "annual": "Anual",
+      "monthly": "Mensual",
+      "price_suffix": "/mes",
+      "trial_note": "Gratis por 3 días."
+    },
+    "buttons": {
+      "start_trial": "Iniciar Prueba Gratuita de 3 Días",
+      "unlock_now": "Desbloquear Ahora",
+      "no_payment_note": "Sin cargo durante los primeros 3 días."
+    }
   }
 }

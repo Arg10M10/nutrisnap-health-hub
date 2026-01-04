@@ -172,8 +172,13 @@
   },
   "subscribe": {
     "title": "Unlock Your Full Potential",
-    "trial_tab": "3-Day Free Trial",
-    "pay_now_tab": "Unlock Now",
+    "subtitle": "Get all premium features to reach your goals faster.",
+    "best_value": "Best Value - Save 67%",
+    "month_short": "mo",
+    "billed_yearly": "{{price}} billed yearly",
+    "no_charge_text": "No charge for 3 days. Cancel anytime.",
+    "continue_limited": "Continue with limited version",
+    "success_toast": "Premium plan activated!",
     "timeline": {
       "today_title": "Today: Start Free Trial",
       "today_desc": "Access all premium features immediately.",
@@ -190,9 +195,11 @@
       "goals": "Advanced Goal Tracking & Suggestions"
     },
     "plan": {
-      "title": "Monthly Plan",
+      "title": "Select Plan",
+      "annual": "Annual",
+      "monthly": "Monthly",
       "price_suffix": "/month",
-      "trial_note": "Free for 3 days, then $1.99/month."
+      "trial_note": "Free for 3 days."
     },
     "buttons": {
       "start_trial": "Start 3-Day Free Trial",
@@ -861,5 +868,42 @@
     "water_body_2": "Stay hydrated for better results.",
     "weight_title_1": "Weight Control",
     "weight_body_1": "Update your weight today to see your progress."
+  },
+  "subscribe": {
+    "title": "Unlock Your Full Potential",
+    "subtitle": "Get all premium features to reach your goals faster.",
+    "best_value": "Best Value - Save 67%",
+    "month_short": "mo",
+    "billed_yearly": "{{price}} billed yearly",
+    "no_charge_text": "No charge for 3 days. Cancel anytime.",
+    "continue_limited": "Continue with limited version",
+    "success_toast": "Premium plan activated!",
+    "timeline": {
+      "today_title": "Today: Start Free Trial",
+      "today_desc": "Access all premium features immediately.",
+      "reminder_title": "Day 2: Reminder",
+      "reminder_desc": "We will send you a reminder before the trial ends.",
+      "billing_title": "Day 3: Billing Starts",
+      "billing_desc": "If you don't cancel, the subscription will begin."
+    },
+    "features_title": "Premium Features Included:",
+    "features": {
+      "scanner": "AI Food Scanner (Unlimited)",
+      "exercise": "AI Exercise Analysis (Unlimited)",
+      "diet_plans": "Personalized Weekly Diet Plans",
+      "goals": "Advanced Goal Tracking & Suggestions"
+    },
+    "plan": {
+      "title": "Select Plan",
+      "annual": "Annual",
+      "monthly": "Monthly",
+      "price_suffix": "/month",
+      "trial_note": "Free for 3 days."
+    },
+    "buttons": {
+      "start_trial": "Start 3-Day Free Trial",
+      "unlock_now": "Unlock Now",
+      "no_payment_note": "No charge for the first 3 days."
+    }
   }
 }
