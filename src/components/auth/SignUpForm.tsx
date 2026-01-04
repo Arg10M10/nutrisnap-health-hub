@@ -14,13 +14,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface SignUpFormProps {
   onSwitchToSignIn: () => void;
+  onSuccess?: (userId: string) => void;
 }
 
-export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
+export const SignUpForm = ({ onSwitchToSignIn, onSuccess }: SignUpFormProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [step, setStep] = useState(1); // 1: Email, 2: Password, 3: Name
+  const [step, setStep] = useState(1);
 
   const formSchema = z.object({
     firstName: z.string().min(2, { message: t('auth.error_first_name_required') }),
@@ -55,7 +56,6 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
     try {
       const deviceId = getDeviceId();
 
-      // 1. Verificar límite de cuentas por dispositivo
       const { data: checkData, error: checkError } = await supabase.functions.invoke('check-device-limit', {
         body: { deviceId }
       });
@@ -70,7 +70,6 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         return;
       }
 
-      // 2. Proceder con el registro
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
@@ -85,10 +84,12 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
       if (error) {
         toast.error(error.message);
       } else {
-        if (data.session) {
-            toast.success(t('login.welcome'));
-        } else {
-            toast.success(t('auth.signup_success_toast'));
+        if (data.user) {
+            if (onSuccess) {
+                onSuccess(data.user.id);
+            } else {
+                toast.success(t('auth.signup_success_toast'));
+            }
         }
       }
     } catch (error: any) {

@@ -5,7 +5,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { Capacitor } from '@capacitor/core';
 import { NutritionProvider, useNutrition } from "./context/NutritionContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { AILimitProvider } from "./context/AILimitContext";
@@ -44,6 +43,7 @@ import Subscribe from "./pages/Subscribe";
 import GeneratingPlan from "./pages/onboarding/GeneratingPlan";
 import GoalProjection from "./pages/onboarding/GoalProjection";
 import Recipes from "./pages/Recipes";
+import RegisterForPremium from "./pages/RegisterForPremium";
 
 const queryClient = new QueryClient();
 
@@ -76,13 +76,11 @@ const GlobalBadgeModal = () => {
 };
 
 const AppRoutes = () => {
-  const { session, profile, loading: authLoading } = useAuth();
+  const { profile, loading: authLoading } = useAuth();
   const location = useLocation();
   const [isSplashVisible, setIsSplashVisible] = useState(true);
 
   useEffect(() => {
-    // This timer ensures the splash screen is visible for at least 1.2 seconds
-    // to allow the animation to complete smoothly.
     const timer = setTimeout(() => {
       setIsSplashVisible(false);
     }, 1200);
@@ -100,19 +98,23 @@ const AppRoutes = () => {
 
   const shellClass = "relative min-h-screen"; 
 
-  // 1. Not logged in
-  if (!session) {
+  // Si no hay perfil (ni local ni remoto), ir a Onboarding
+  // EXCEPCIÓN: Si están en Login explícitamente
+  if (!profile && location.pathname !== '/login') {
     return (
       <div className={shellClass}>
         <div className="relative z-10">
-          <Login />
+          <Routes>
+             <Route path="/login" element={<Login />} />
+             <Route path="*" element={<Onboarding />} />
+          </Routes>
         </div>
       </div>
     );
   }
 
-  // 2. Logged in but Profile not ready OR Onboarding not completed
-  if (!profile || !profile.onboarding_completed) {
+  // Si hay perfil pero onboarding incompleto (raro con la lógica local, pero posible)
+  if (profile && !profile.onboarding_completed) {
     return (
       <div className={shellClass}>
         <div className="relative z-10">
@@ -122,26 +124,16 @@ const AppRoutes = () => {
     );
   }
 
-  // 3. Logged in, Onboarded, but NOT Subscribed
-  if (!profile.is_subscribed) {
-    return (
-      <div className={shellClass}>
-        <div className="relative z-10">
-          <Subscribe />
-        </div>
-      </div>
-    );
-  }
-
-  // 4. Authenticated, Onboarded & Subscribed -> Full App access
-  
-  const onboardingRoutes = ['/generating-plan', '/goal-projection'];
+  // Rutas de flujo de onboarding y suscripción
+  const onboardingRoutes = ['/generating-plan', '/goal-projection', '/subscribe', '/register-premium'];
   
   if (onboardingRoutes.includes(location.pathname)) {
      return (
       <div className={shellClass}>
         <div className="relative z-10">
           <Routes location={location}>
+             <Route path="/subscribe" element={<Subscribe />} />
+             <Route path="/register-premium" element={<RegisterForPremium />} />
              <Route path="/generating-plan" element={<GeneratingPlan />} />
              <Route path="/goal-projection" element={<GoalProjection />} />
           </Routes>
@@ -150,6 +142,7 @@ const AppRoutes = () => {
      );
   }
 
+  // Rutas de pantalla completa (sin BottomNav)
   const fullScreenRoutes = [
     "/scanner",
     "/exercise/running",
@@ -166,8 +159,8 @@ const AppRoutes = () => {
     "/settings/edit-profile",
     "/settings/personal-details",
     "/settings/reminders",
-    "/subscribe",
     "/recipes",
+    "/login" // Login accesible desde settings
   ];
 
   if (fullScreenRoutes.includes(location.pathname)) {
@@ -192,8 +185,8 @@ const AppRoutes = () => {
               <Route path="/settings/edit-profile" element={<EditProfile />} />
               <Route path="/settings/personal-details" element={<PersonalDetails />} />
               <Route path="/settings/reminders" element={<Reminders />} />
-              <Route path="/subscribe" element={<Subscribe />} />
               <Route path="/recipes" element={<Recipes />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </AnimatePresence>
         </div>
@@ -201,6 +194,7 @@ const AppRoutes = () => {
     );
   }
 
+  // App Principal
   return (
     <div className={shellClass}>
       <GlobalBadgeModal />

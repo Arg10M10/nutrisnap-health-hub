@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +18,7 @@ import { NotificationsStep } from './steps/NotificationsStep';
 import { FinalStep } from './steps/FinalStep';
 
 const Onboarding = () => {
-  const { user, refetchProfile } = useAuth();
+  const { saveLocalProfile } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
@@ -41,80 +40,58 @@ const Onboarding = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const mutation = useMutation({
-    mutationFn: async () => {
-      if (!user || !formData.weight) throw new Error('User or weight not found');
-      
+  const handleFinish = async () => {
+    try {
       // Lógica inteligente para "Mantener peso"
       let finalGoalWeight = formData.goalWeight;
       let finalWeeklyRate = formData.weeklyRate;
 
       if (formData.goal === 'maintain_weight') {
-        // Si es mantener, el peso objetivo es el actual y el ritmo es 0
         finalGoalWeight = formData.weight;
         finalWeeklyRate = 0;
       }
 
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: user.id,
-          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
-          updated_at: new Date().toISOString(),
-          gender: formData.gender,
-          age: formData.age,
-          previous_apps_experience: formData.experience,
-          units: formData.units,
-          weight: formData.weight,
-          starting_weight: formData.weight,
-          height: formData.height,
-          motivation: formData.motivation,
-          goal: formData.goal,
-          goal_weight: finalGoalWeight, // Usamos el valor calculado
-          weekly_rate: finalWeeklyRate, // Usamos el valor calculado
-          onboarding_completed: true,
-        }, { onConflict: 'id' });
+      // Guardar localmente
+      saveLocalProfile({
+        gender: formData.gender,
+        age: formData.age,
+        previous_apps_experience: formData.experience,
+        units: formData.units,
+        weight: formData.weight,
+        starting_weight: formData.weight,
+        height: formData.height,
+        motivation: formData.motivation,
+        goal: formData.goal,
+        goal_weight: finalGoalWeight,
+        weekly_rate: finalWeeklyRate,
+        onboarding_completed: true,
+        full_name: 'Guest User', // Placeholder
+        is_subscribed: false, // Default to false
+      });
 
-      if (profileError) throw profileError;
-
-      const { error: historyError } = await supabase
-        .from('weight_history')
-        .insert({ user_id: user.id, weight: formData.weight });
-        
-      if (historyError) throw historyError;
-    },
-    onSuccess: async () => {
-      await refetchProfile();
-      
-      if (user?.id) {
-        window.localStorage.removeItem(`tutorial_seen_v4_${user.id}`);
-      }
-      
+      // Ir a la pantalla de suscripción
       navigate('/subscribe');
-    },
-    onError: (error) => {
-      toast.error(t('onboarding.toast_error'));
+      
+    } catch (error) {
       console.error("Onboarding Save Error:", error);
-    },
-  });
+      toast.error(t('onboarding.toast_error'));
+    }
+  };
 
   const nextStep = () => {
     if (currentStepIndex < allSteps.length - 1) {
       setCurrentStepIndex(prev => prev + 1);
       
-      // Inicializar weeklyRate por defecto si el siguiente paso es ese
       const nextStep = allSteps[currentStepIndex + 1];
       if (nextStep && nextStep.id === 'weekly_rate' && formData.weeklyRate === null) {
         updateFormData('weeklyRate', formData.units === 'metric' ? 0.5 : 1.1);
       }
-      // Inicializar goalWeight por defecto si el siguiente paso es ese y está vacío
       if (nextStep && nextStep.id === 'goal_weight' && formData.goalWeight === null && formData.weight) {
-         // Sugerencia simple por defecto
          const suggestion = formData.goal === 'lose_weight' ? formData.weight * 0.9 : formData.weight * 1.1;
          updateFormData('goalWeight', Math.round(suggestion));
       }
     } else {
-      mutation.mutate();
+      handleFinish();
     }
   };
 
@@ -124,7 +101,6 @@ const Onboarding = () => {
     }
   };
 
-  // Definimos todos los pasos posibles
   const allSteps = [
     {
       id: 'gender',
@@ -172,7 +148,6 @@ const Onboarding = () => {
       content: <GoalStep goal={formData.goal} setGoal={(v) => updateFormData('goal', v)} />,
       canContinue: !!formData.goal,
     },
-    // Paso condicional: Solo si el objetivo NO es mantener peso
     ...(formData.goal !== 'maintain_weight' ? [
       {
         id: 'goal_weight',
@@ -205,7 +180,7 @@ const Onboarding = () => {
       description: t('onboarding.notifications.description'),
       content: <NotificationsStep onNext={nextStep} />,
       canContinue: true,
-      hideContinueButton: true, // Ocultar el botón estándar porque el paso tiene sus propios botones
+      hideContinueButton: true,
     },
     {
       id: 'final',
@@ -229,7 +204,7 @@ const Onboarding = () => {
       onContinue={nextStep}
       onBack={onBack}
       canContinue={currentStep.canContinue}
-      isPending={mutation.isPending}
+      isPending={false} 
       continueText={currentStep.continueText}
       hideContinueButton={currentStep.hideContinueButton}
     >

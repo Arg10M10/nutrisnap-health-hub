@@ -3,52 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Lock, Bell, ShoppingBag, Sparkles, Clock, Zap, ChefHat, Target, Loader2 } from 'lucide-react';
+import { Lock, Bell, ShoppingBag, Sparkles, Clock, Zap, ChefHat, Target } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
-import { toast } from 'sonner';
 
 const Subscribe = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { user, refetchProfile } = useAuth();
+  const { profile } = useAuth();
   const [planType, setPlanType] = useState<'trial' | 'paid'>('trial');
 
-  const subscribeMutation = useMutation({
-    mutationFn: async () => {
-      if (!user) throw new Error("User not found");
-      
-      // SIMULACIÓN DE PAGO:
-      // Al no tener Google Play configurado, este botón actúa como un "bypass".
-      // Actualiza directamente la base de datos para marcar al usuario como suscrito.
-      const { error } = await supabase
-        .from('profiles')
-        .update({ is_subscribed: true })
-        .eq('id', user.id);
-        
-      if (error) throw error;
-    },
-    onSuccess: async () => {
-      // 1. Refrescamos el perfil para que la App sepa que ya pagamos
-      await refetchProfile();
-      
-      toast.success("¡Suscripción activada correctamente!");
-      
-      // 2. Redirigimos al flujo de generación de plan (que lleva al inicio)
-      // Esto funciona porque al cambiar is_subscribed a true, el bloqueo en App.tsx desaparece.
-      navigate('/generating-plan');
-    },
-    onError: (error) => {
-      console.error("Subscription error:", error);
-      toast.error("Error al procesar la suscripción. Intenta de nuevo.");
-    }
-  });
-
   const handleSubscribe = () => {
-    subscribeMutation.mutate();
+    // Redirigir al registro para guardar datos antes del pago/activación
+    navigate('/register-premium');
+  };
+
+  const handleSkip = () => {
+    // Si saltan, van a la proyección de objetivos como usuario invitado
+    navigate('/goal-projection');
   };
 
   const timelineItems = [
@@ -167,18 +140,18 @@ const Subscribe = () => {
           <Button 
             onClick={handleSubscribe} 
             size="lg" 
-            disabled={subscribeMutation.isPending}
             className="w-full h-auto min-h-[3.5rem] text-lg rounded-xl shadow-lg shadow-primary/30 py-2 whitespace-normal"
           >
-            {subscribeMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin"/> : null}
             {planType === 'trial' ? t('subscribe.buttons.start_trial') : t('subscribe.buttons.unlock_now')}
           </Button>
-          {planType === 'trial' && (
-            <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-              <Clock className="h-3 w-3" />
-              {t('subscribe.buttons.no_payment_note')}
-            </p>
-          )}
+          
+          <Button 
+            variant="ghost" 
+            onClick={handleSkip}
+            className="w-full text-muted-foreground hover:text-foreground"
+          >
+            Continuar sin plan
+          </Button>
         </div>
       </motion.div>
     </div>

@@ -18,7 +18,6 @@ const GoalProjection = () => {
   const [showConfetti, setShowConfetti] = useState(true);
   const [confettiOpacity, setConfettiOpacity] = useState(1);
   
-  // Simple window size for confetti
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {
@@ -28,9 +27,7 @@ const GoalProjection = () => {
   }, []);
 
   useEffect(() => {
-    // Iniciar fade out a los 2.5 segundos
     const fadeTimer = setTimeout(() => setConfettiOpacity(0), 2500);
-    // Eliminar completamente del DOM un poco después
     const removeTimer = setTimeout(() => setShowConfetti(false), 4000);
     
     return () => {
@@ -44,12 +41,8 @@ const GoalProjection = () => {
       if (profile.goal === 'maintain_weight') {
         setTargetDate(null);
       } else if (profile.weight && profile.goal_weight && profile.weekly_rate && profile.weekly_rate > 0) {
-        // Calcular diferencia absoluta (sirve para ganar o perder peso)
         const weightDifference = Math.abs(profile.weight - profile.goal_weight);
-        
-        // El weekly_rate en la base de datos ya está en la unidad correcta según la lógica de guardado
         const weeksNeeded = weightDifference / profile.weekly_rate;
-        
         const date = addWeeks(new Date(), weeksNeeded);
         setTargetDate(date);
       }
@@ -57,6 +50,7 @@ const GoalProjection = () => {
   }, [profile]);
 
   const handleContinue = () => {
+    // Navigate to Home replacing the history so user can't go back to onboarding
     navigate('/', { replace: true });
   };
 
@@ -89,7 +83,7 @@ const GoalProjection = () => {
             height={windowSize.height} 
             numberOfPieces={150} 
             gravity={0.2} 
-            recycle={false} // Evitar que siga generando piezas infinitamente
+            recycle={false} 
           />
         </div>
       )}

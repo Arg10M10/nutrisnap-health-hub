@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
 export interface Profile {
   id: string;
@@ -28,6 +29,7 @@ export interface Profile {
   avatar_color: string | null;
   time_format: '12h' | '24h' | null;
   is_subscribed: boolean;
+  is_guest?: boolean; // New flag for local profiles
 }
 
 interface AuthContextType {
@@ -37,6 +39,7 @@ interface AuthContextType {
   loading: boolean;
   signOut: () => void;
   refetchProfile: () => Promise<void>;
+  saveLocalProfile: (data: Partial<Profile>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,6 +49,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  
+  // Local storage fallback
+  const [localProfile, setLocalProfile] = useLocalStorage<Profile | null>('calorel_local_profile', null);
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -55,12 +61,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .eq('id', userId)
         .maybeSingle();
       
-      if (error) {
-        console.error("Error fetching profile:", error);
-      }
+      if (error) console.error("Error fetching profile:", error);
       
       if (userProfile) {
-        setProfile(userProfile);
+        setProfile({ ...userProfile, is_guest: false });
       } else {
         setProfile(null);
       }
@@ -68,6 +72,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Critical profile fetch error:", e);
       setProfile(null);
     }
+  };
+
+  const saveLocalProfile = (data: Partial<Profile>) => {
+    const updatedProfile = { 
+      ...localProfile, 
+      ...data,
+      is_guest: true,
+      updated_at: new Date().toISOString()
+    } as Profile;
+    
+    setLocalProfile(updatedProfile);
+    setProfile(updatedProfile);
   };
 
   useEffect(() => {
@@ -83,6 +99,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setSession(initialSession);
             setUser(initialSession.user);
             await fetchProfile(initialSession.user.id);
+          } else {
+            // If no session, load local profile if exists
+            if (localProfile) {
+              setProfile(localProfile);
+            }
           }
         }
       } catch (error) {
@@ -103,7 +124,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(newSession?.user ?? null);
 
       if (event === 'SIGNED_OUT') {
+        // On sign out, clear everything including local profile to avoid confusion
+        // or keep it if you want "offline mode". For now, let's clear to reset state.
         setProfile(null);
+        setLocalProfile(null); 
         setLoading(false);
       } else if (event === 'SIGNED_IN' && newSession?.user) {
         setUser(currentUser => {
@@ -125,12 +149,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true); 
       await supabase.auth.signOut();
+      // Also clear local storage on manual sign out
+      window.localStorage.removeItem('calorel_local_profile');
     } catch (error) {
       console.error("Error signing out:", error);
     } finally {
       setProfile(null);
       setUser(null);
       setSession(null);
+      setLocalProfile(null);
       setLoading(false);
     }
   };
@@ -138,6 +165,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const refetchProfile = async () => {
     if (user) {
       await fetchProfile(user.id);
+    } else if (localProfile) {
+      setProfile(localProfile);
     }
   };
 
@@ -148,6 +177,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loading,
     signOut,
     refetchProfile,
+    saveLocalProfile
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
