@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { Settings as SettingsIcon, ChevronRight, MessageSquareText } from "lucide-react";
+import { Settings as SettingsIcon, ChevronRight, MessageSquareText, Crown, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import PageLayout from "@/components/PageLayout";
 import UserAvatar from "@/components/UserAvatar";
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedNumber from "@/components/AnimatedNumber";
+import { differenceInHours, addDays, parseISO } from "date-fns";
 
 const SUPPORT_EMAIL = "calorel.help@gmail.com";
 
@@ -16,13 +17,11 @@ const calculateBMI = (weight: number | null, height: number | null, units: strin
   let w = weight;
   let h = height;
 
-  // Si es imperial, convertir a métrico para la fórmula estándar
   if (units === 'imperial') {
-    w = weight * 0.453592; // lbs a kg
-    h = height * 2.54;     // in a cm
+    w = weight * 0.453592;
+    h = height * 2.54;
   }
 
-  // Fórmula: peso (kg) / [estatura (m)]^2
   const heightInMeters = h / 100;
   const bmi = w / (heightInMeters * heightInMeters);
   return parseFloat(bmi.toFixed(1));
@@ -40,15 +39,13 @@ const Settings = () => {
   const goalWeight = profile?.goal_weight || 0;
   const bmi = calculateBMI(currentWeight, profile?.height || 0, profile?.units || 'metric');
 
-  // Metas nutricionales
   const goalCalories = profile?.goal_calories || 2000;
   const goalProtein = profile?.goal_protein || 0;
   const goalCarbs = profile?.goal_carbs || 0;
   const goalFats = profile?.goal_fats || 0;
 
-  // Convertir gramos a porcentaje aproximado (4 kcal/g prot/carb, 9 kcal/g fat)
   const totalCalFromMacros = (goalProtein * 4) + (goalCarbs * 4) + (goalFats * 9);
-  const safeTotal = totalCalFromMacros > 0 ? totalCalFromMacros : 1; // Evitar división por cero
+  const safeTotal = totalCalFromMacros > 0 ? totalCalFromMacros : 1;
 
   const proteinPct = Math.round(((goalProtein * 4) / safeTotal) * 100);
   const carbPct = Math.round(((goalCarbs * 4) / safeTotal) * 100);
@@ -76,7 +73,6 @@ const Settings = () => {
       try {
         tryOpenScheme(schemes[1]);
       } catch (e2) {
-        // fallback
       }
     }
 
@@ -89,12 +85,29 @@ const Settings = () => {
 
   const handleProfileClick = () => {
     if (isGuest) {
-      // Pasamos state: { isStandardRegistration: true } para diferenciar del flujo Premium
       navigate('/register-premium', { state: { isStandardRegistration: true } });
     } else {
       navigate('/settings/edit-profile');
     }
   };
+
+  // Lógica de Prueba Gratuita
+  let trialRemainingText = null;
+  let isTrialActive = false;
+
+  if (profile?.is_subscribed && profile.trial_start_date) {
+    const startDate = parseISO(profile.trial_start_date);
+    const endDate = addDays(startDate, 3);
+    const hoursLeft = differenceInHours(endDate, new Date());
+
+    if (hoursLeft > 0) {
+      isTrialActive = true;
+      const daysLeft = Math.ceil(hoursLeft / 24);
+      trialRemainingText = daysLeft === 1 
+        ? `${hoursLeft}h restantes` 
+        : `${daysLeft} días restantes`;
+    }
+  }
 
   return (
     <PageLayout>
@@ -108,9 +121,16 @@ const Settings = () => {
               className="w-12 h-12 text-lg shadow-sm" 
             />
             <div>
-              <h1 className="text-xl font-bold text-foreground leading-tight">
-                {isGuest ? t('settings.register_button') : (profile?.full_name || t('settings.profileCard.namePlaceholder'))}
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-bold text-foreground leading-tight">
+                  {isGuest ? t('settings.register_button') : (profile?.full_name || t('settings.profileCard.namePlaceholder'))}
+                </h1>
+                {profile?.is_subscribed && !isTrialActive && (
+                  <div className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full text-[10px] font-bold border border-yellow-200 flex items-center gap-1">
+                    <Crown className="w-3 h-3 fill-current" /> Premium
+                  </div>
+                )}
+              </div>
               {isGuest && <p className="text-xs text-primary font-medium">{t('settings.save_progress')}</p>}
             </div>
           </div>
@@ -134,6 +154,22 @@ const Settings = () => {
             </Button>
           </div>
         </div>
+
+        {/* Trial Status Card */}
+        {isTrialActive && (
+          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-white/20 p-2 rounded-full">
+                <Clock className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="font-bold text-sm">Prueba Premium Activa</p>
+                <p className="text-xs text-white/80">{trialRemainingText} de prueba</p>
+              </div>
+            </div>
+            {/* Podríamos poner un botón de 'Gestionar' si hubiera integración real */}
+          </div>
+        )}
 
         {/* Stats Card */}
         <Card className="bg-primary border-none shadow-md rounded-2xl text-primary-foreground overflow-hidden">

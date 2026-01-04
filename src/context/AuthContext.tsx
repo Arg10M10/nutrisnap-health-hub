@@ -29,6 +29,7 @@ export interface Profile {
   avatar_color: string | null;
   time_format: '12h' | '24h' | null;
   is_subscribed: boolean;
+  trial_start_date: string | null;
   is_guest?: boolean; // New flag for local profiles
 }
 
