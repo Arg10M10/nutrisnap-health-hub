@@ -143,6 +143,7 @@ const AISuggestions = () => {
   });
 
   const handleGenerate = async (values: z.infer<typeof fullSchema>) => {
+    // Check limit (checks guest status)
     const canProceed = await checkLimit('ai_suggestions', 2, 'weekly');
     if (canProceed) {
       mutation.mutate(values);

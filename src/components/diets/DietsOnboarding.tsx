@@ -119,6 +119,7 @@ export const DietsOnboarding = () => {
   }, [apiFinished, animationFinished, logUsage, refetchProfile, queryClient, t, user?.id]);
 
   const handleGenerate = async (values: z.infer<typeof formSchema>) => {
+    // Check limit/guest status BEFORE executing
     const canProceed = await checkLimit('diet_plan', 1, 'weekly');
     if (canProceed) {
       setIsGenerating(true);

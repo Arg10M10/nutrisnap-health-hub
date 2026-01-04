@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { startOfDay } from "date-fns";
 import { toast } from "sonner";
 import ManualFoodDrawer from "@/components/ManualFoodDrawer";
+import { useAILimit } from "@/hooks/useAILimit";
 
 const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,6 +26,7 @@ const BottomNav = () => {
   const { t } = useTranslation();
   const { profile, user } = useAuth();
   const { addWaterGlass } = useNutrition();
+  const { checkLimit } = useAILimit();
 
   const { data: todaysWeightUpdatesCount } = useQuery({
     queryKey: ['todays_weight_updates_count', user?.id],
@@ -53,26 +55,38 @@ const BottomNav = () => {
     { icon: Book, label: t('bottom_nav.diets'), path: "/diets" },
   ];
 
+  // Helper to check limit before action
+  const handleProtectedAction = async (feature: 'food_scan' | 'manual_food_scan', action: () => void) => {
+    // Check limit (which checks guest status)
+    // Note: We use an arbitrary high limit here just to trigger the guest check
+    const allowed = await checkLimit(feature, 9999, 'daily');
+    if (allowed) {
+      handleMenuAction(action);
+    } else {
+      setIsMenuOpen(false);
+    }
+  };
+
   const circularButtons = [
     { 
       label: t('bottom_nav.scan_food'), 
       icon: Scan, 
-      action: () => handleMenuAction(() => navigate("/scanner", { state: { mode: 'food' } })) 
+      action: () => handleProtectedAction('food_scan', () => navigate("/scanner", { state: { mode: 'food' } }))
     },
     { 
       label: t('bottom_nav.describe_food'), 
       icon: Utensils, 
-      action: () => handleMenuAction(() => setIsManualFoodDrawerOpen(true)) 
+      action: () => handleProtectedAction('manual_food_scan', () => setIsManualFoodDrawerOpen(true)) 
     },
     { 
       label: t('bottom_nav.scan_menu'), 
       icon: FileText, 
-      action: () => handleMenuAction(() => navigate("/scanner", { state: { mode: 'menu' } })) 
+      action: () => handleProtectedAction('food_scan', () => navigate("/scanner", { state: { mode: 'menu' } })) 
     },
     { 
       label: t('bottom_nav.recipes', 'Recetas'), 
       icon: ChefHat, 
-      action: () => handleMenuAction(() => navigate("/recipes")) 
+      action: () => handleMenuAction(() => navigate("/recipes")) // Recipes are allowed
     },
   ];
 

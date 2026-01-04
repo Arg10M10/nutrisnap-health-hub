@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { startOfDay, subDays } from 'date-fns';
 import AILimitDrawer from '@/components/AILimitDrawer';
+import PremiumLockDrawer from '@/components/PremiumLockDrawer';
 
 type AIFeature = 'food_scan' | 'exercise_ai' | 'diet_plan' | 'ai_suggestions' | 'manual_food_scan';
 type TimeFrame = 'daily' | 'weekly';
@@ -15,14 +16,21 @@ interface AILimitContextType {
 const AILimitContext = createContext<AILimitContextType | undefined>(undefined);
 
 export const AILimitProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const { user, profile } = useAuth();
+  const [isLimitOpen, setIsLimitOpen] = useState(false);
+  const [isPremiumLockOpen, setIsPremiumLockOpen] = useState(false);
   const [drawerInfo, setDrawerInfo] = useState<{ limit: number, timeFrame: TimeFrame }>({ limit: 0, timeFrame: 'daily' });
 
   const checkLimit = useCallback(async (feature: AIFeature, limit: number, timeFrame: TimeFrame = 'daily'): Promise<boolean> => {
+    // 1. BLOCK GUEST USERS IMMEDIATELY FOR AI FEATURES
+    if (profile?.is_guest) {
+      setIsPremiumLockOpen(true);
+      return false;
+    }
+
     if (!user) return false;
 
-    // "manual_food_scan" is now unlimited, bypass check
+    // "manual_food_scan" uses AI, so it is now blocked for guests above, but check limit for subscribed
     if (feature === 'manual_food_scan') return true;
 
     const now = new Date();
@@ -47,19 +55,19 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
     const currentCount = count || 0;
     
     if (currentCount >= limit) {
-      // Trigger UI
+      // Trigger Limit UI
       setDrawerInfo({ limit, timeFrame });
-      setIsOpen(true);
+      setIsLimitOpen(true);
       return false;
     }
 
     return true;
-  }, [user]);
+  }, [user, profile]);
 
   const logUsage = useCallback(async (feature: AIFeature) => {
-    if (!user) return;
+    if (!user || profile?.is_guest) return;
     
-    // Don't log manual food scans as usage since they are unlimited
+    // Don't log manual food scans as usage since they are unlimited for PRO
     if (feature === 'manual_food_scan') return;
 
     const { error } = await supabase
@@ -72,16 +80,20 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
     if (error) {
       console.error('Error logging usage:', error);
     }
-  }, [user]);
+  }, [user, profile]);
 
   return (
     <AILimitContext.Provider value={{ checkLimit, logUsage }}>
       {children}
       <AILimitDrawer 
-        isOpen={isOpen} 
-        onClose={() => setIsOpen(false)} 
+        isOpen={isLimitOpen} 
+        onClose={() => setIsLimitOpen(false)} 
         limit={drawerInfo.limit} 
         timeFrame={drawerInfo.timeFrame} 
+      />
+      <PremiumLockDrawer
+        isOpen={isPremiumLockOpen}
+        onClose={() => setIsPremiumLockOpen(false)}
       />
     </AILimitContext.Provider>
   );
