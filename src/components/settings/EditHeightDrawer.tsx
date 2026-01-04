@@ -32,7 +32,15 @@ const EditHeightDrawer = ({ isOpen, onClose, currentHeight }: EditHeightDrawerPr
   const mutation = useMutation({
     mutationFn: async (height: number) => {
       if (user) {
-        const { error } = await supabase.from('profiles').update({ height }).eq('id', user.id);
+        const { error } = await supabase
+          .from('profiles')
+          .upsert({ 
+            id: user.id, 
+            height,
+            updated_at: new Date().toISOString()
+          })
+          .select();
+          
         if (error) throw error;
       } else {
         saveLocalProfile({ height });
@@ -41,10 +49,12 @@ const EditHeightDrawer = ({ isOpen, onClose, currentHeight }: EditHeightDrawerPr
     },
     onSuccess: async () => {
       if (user) await refetchProfile();
+      toast.success(t('edit_profile.save_success', 'Altura actualizada'));
       onClose();
     },
     onError: (error) => {
-      toast.error('Error', { description: error.message });
+      console.error("Error updating height:", error);
+      toast.error(t('common.error'), { description: error.message });
     },
   });
 

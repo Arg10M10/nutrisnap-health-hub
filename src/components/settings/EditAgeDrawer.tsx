@@ -30,21 +30,30 @@ const EditAgeDrawer = ({ isOpen, onClose, currentAge }: EditAgeDrawerProps) => {
   const mutation = useMutation({
     mutationFn: async (age: number) => {
       if (user) {
-        const { error } = await supabase.from('profiles').update({ age }).eq('id', user.id);
+        // Usamos upsert para asegurar que si no existe la fila, se cree
+        const { error } = await supabase
+          .from('profiles')
+          .upsert({ 
+            id: user.id, 
+            age,
+            updated_at: new Date().toISOString()
+          })
+          .select();
+          
         if (error) throw error;
       } else {
-        // Guest mode: save locally
         saveLocalProfile({ age });
-        // Small artificial delay for UX consistency
         await new Promise(resolve => setTimeout(resolve, 300));
       }
     },
     onSuccess: async () => {
       if (user) await refetchProfile();
+      toast.success(t('edit_profile.save_success', 'Edad actualizada'));
       onClose();
     },
     onError: (error) => {
-      toast.error('Error', { description: error.message });
+      console.error("Error updating age:", error);
+      toast.error(t('common.error'), { description: error.message });
     },
   });
 

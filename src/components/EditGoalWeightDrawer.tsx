@@ -43,8 +43,13 @@ const EditGoalWeightDrawer = ({ isOpen, onClose, currentGoalWeight }: EditGoalWe
       if (user) {
         const { error } = await supabase
           .from('profiles')
-          .update({ goal_weight: weight })
-          .eq('id', user.id);
+          .upsert({ 
+            id: user.id, 
+            goal_weight: weight,
+            updated_at: new Date().toISOString()
+          })
+          .select();
+          
         if (error) throw error;
       } else {
         saveLocalProfile({ goal_weight: weight });
@@ -56,10 +61,12 @@ const EditGoalWeightDrawer = ({ isOpen, onClose, currentGoalWeight }: EditGoalWe
         await refetchProfile();
         queryClient.invalidateQueries({ queryKey: ['profiles', user?.id] });
       }
+      toast.success(t('edit_goal_weight.save_success', 'Meta actualizada'));
       onClose();
     },
     onError: (error) => {
-      toast.error('No se pudo actualizar el peso objetivo.', { description: error.message });
+      console.error("Error updating goal weight:", error);
+      toast.error(t('common.error'), { description: error.message });
     },
   });
 

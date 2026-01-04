@@ -41,19 +41,26 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
   const mutation = useMutation({
     mutationFn: async (weight: number) => {
       if (user) {
+        // 1. Update Profile (Upsert to be safe)
         const { error: profileError } = await supabase
           .from('profiles')
-          .update({ weight })
-          .eq('id', user.id);
+          .upsert({ 
+            id: user.id, 
+            weight,
+            updated_at: new Date().toISOString()
+          })
+          .select();
+          
         if (profileError) throw profileError;
 
+        // 2. Insert History
         const { error: historyError } = await supabase
           .from('weight_history')
           .insert({ user_id: user.id, weight });
+          
         if (historyError) throw historyError;
       } else {
         saveLocalProfile({ weight });
-        // For guests, we don't save history to DB yet, or we could save to local storage history if implemented
         await new Promise(resolve => setTimeout(resolve, 300));
       }
     },
@@ -65,10 +72,12 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
           queryClient.invalidateQueries({ queryKey: ['todays_weight_updates_count', user?.id] })
         ]);
       }
+      toast.success(t('edit_weight.save_success', 'Peso actualizado'));
       onClose();
     },
     onError: (error) => {
-      toast.error('Error', { description: error.message });
+      console.error("Error updating weight:", error);
+      toast.error(t('common.error'), { description: error.message });
     },
   });
 

@@ -43,15 +43,18 @@ const NutritionalGoals = () => {
       if (user) {
         const { error } = await supabase
           .from('profiles')
-          .update({
+          .upsert({
+            id: user.id,
             goal_calories: updatedGoals.calories,
             goal_protein: updatedGoals.protein,
             goal_carbs: updatedGoals.carbs,
             goal_fats: updatedGoals.fats,
             goal_sugars: updatedGoals.sugars,
             goal_fiber: updatedGoals.fiber,
+            updated_at: new Date().toISOString()
           })
-          .eq('id', user.id);
+          .select();
+          
         if (error) throw error;
       } else {
         saveLocalProfile({
@@ -68,6 +71,7 @@ const NutritionalGoals = () => {
       if (user) await refetchProfile();
     },
     onError: (error) => {
+      console.error("Error saving goals:", error);
       toast.error(t('nutritional_goals.save_error'), { description: error.message });
     },
   });

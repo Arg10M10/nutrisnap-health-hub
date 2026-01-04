@@ -37,7 +37,15 @@ const EditSelectDetailDrawer = ({ isOpen, onClose, title, currentValue, options,
   const mutation = useMutation({
     mutationFn: async (value: string) => {
       if (user) {
-        const { error } = await supabase.from('profiles').update({ [profileField]: value }).eq('id', user.id);
+        const { error } = await supabase
+          .from('profiles')
+          .upsert({ 
+            id: user.id, 
+            [profileField]: value,
+            updated_at: new Date().toISOString()
+          })
+          .select();
+          
         if (error) throw error;
       } else {
         saveLocalProfile({ [profileField]: value });
@@ -46,10 +54,12 @@ const EditSelectDetailDrawer = ({ isOpen, onClose, title, currentValue, options,
     },
     onSuccess: async () => {
       if (user) await refetchProfile();
+      toast.success(t('edit_profile.save_success', 'Datos actualizados'));
       onClose();
     },
     onError: (error) => {
-      toast.error(t('edit_profile.toast_error'), { description: (error as Error).message });
+      console.error("Error updating details:", error);
+      toast.error(t('common.error'), { description: (error as Error).message });
     },
   });
 
