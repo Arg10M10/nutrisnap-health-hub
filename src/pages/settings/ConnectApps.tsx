@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { HealthConnect } from '@ubie/capacitor-health-connect';
+import { HealthConnect } from '@ubie-oss/capacitor-health-connect';
 import { Capacitor } from '@capacitor/core';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -74,8 +74,6 @@ const ConnectApps = () => {
       const result = await HealthConnect.requestPermissions({ permissions });
 
       // The plugin returns grantedPermissions list. We simply check if we got what we wanted or if the array is not empty.
-      // Note: Android 14+ UI might not return exact granted list in some versions, but we assume success if no error thrown 
-      // and we handle logic.
       
       setIsConnected(true);
       toast.success(t('connect_apps.connected_success'));
