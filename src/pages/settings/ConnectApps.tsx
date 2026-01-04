@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { HealthConnect } from '@ubie/capacitor-health-connect';
+import { HealthConnect } from '@/lib/healthConnect'; // Importamos desde nuestro adaptador local
 import { Capacitor } from '@capacitor/core';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ const ConnectApps = () => {
     const checkPlatform = () => {
       const native = Capacitor.isNativePlatform();
       setIsNative(native);
+      // En desarrollo web, permitimos probar la UI aunque no sea nativo
       if (native) {
         checkPermissions();
       }
@@ -28,7 +29,6 @@ const ConnectApps = () => {
     checkPlatform();
   }, []);
 
-  // Verificar si ya tenemos permisos
   const checkPermissions = async () => {
     try {
       const isAvailable = await HealthConnect.isAvailable();
@@ -37,7 +37,6 @@ const ConnectApps = () => {
         return;
       }
 
-      // Comprobar si tenemos permisos de lectura
       const result = await HealthConnect.checkPermissions({
         read: ['Steps']
       });
@@ -52,18 +51,24 @@ const ConnectApps = () => {
   };
 
   const handleToggle = async (checked: boolean) => {
+    // Permitir activar en web para demo visual, aunque muestre aviso
     if (!isNative) {
-      toast.info("Health Connect solo está disponible en dispositivos Android.");
+      if (checked) {
+        toast.info("Modo Simulación: En un dispositivo real esto abriría Health Connect.");
+        setIsHealthConnectLinked(true);
+        setStepCount(1250); // Pasos simulados
+      } else {
+        setIsHealthConnectLinked(false);
+        setStepCount(0);
+      }
       return;
     }
 
     if (checked) {
-      // Solicitar permisos
       try {
         const isAvailable = await HealthConnect.isAvailable();
         
         if (!isAvailable) {
-          // Intentar abrir la tienda para instalarlo si no está
           try {
              await HealthConnect.openHealthConnectSetting();
           } catch (e) {
@@ -89,7 +94,6 @@ const ConnectApps = () => {
         toast.error("Error al conectar con Health Connect.");
       }
     } else {
-      // Desconectar (simbólico, ya que los permisos persisten en el sistema)
       setIsHealthConnectLinked(false);
       setStepCount(0);
       toast.info("Desconectado de Health Connect.");
@@ -132,7 +136,6 @@ const ConnectApps = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             
-            {/* Google Health Connect Item */}
             <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border/50">
               <div className="flex items-center gap-4">
                 <div className="bg-white p-2 rounded-full shadow-sm">
@@ -148,21 +151,18 @@ const ConnectApps = () => {
               <Switch 
                 checked={isHealthConnectLinked}
                 onCheckedChange={handleToggle}
-                disabled={!isNative}
               />
             </div>
 
-            {/* Aviso si no es nativo */}
             {!isNative && (
               <div className="flex gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/30 rounded-lg text-yellow-800 dark:text-yellow-500">
                 <Smartphone className="w-5 h-5 flex-shrink-0" />
                 <p className="text-xs">
-                  Esta función requiere la aplicación móvil en un dispositivo Android real.
+                  Esta función requiere un dispositivo Android real. (Modo simulación activado)
                 </p>
               </div>
             )}
 
-            {/* Vista Previa de Datos (Solo si conectado) */}
             {isHealthConnectLinked && (
               <div className="space-y-3 pt-2 animate-in fade-in slide-in-from-top-2">
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider px-1">
