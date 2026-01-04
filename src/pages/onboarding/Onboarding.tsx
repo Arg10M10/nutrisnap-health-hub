@@ -69,8 +69,8 @@ const Onboarding = () => {
         is_subscribed: false, // Default to false
       });
 
-      // Ir a la pantalla de suscripción
-      navigate('/subscribe');
+      // Ir a la pantalla de suscripción, indicando que venimos del onboarding
+      navigate('/subscribe', { state: { fromOnboarding: true } });
       
     } catch (error) {
       console.error("Onboarding Save Error:", error);

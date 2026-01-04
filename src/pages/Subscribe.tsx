@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -15,11 +15,15 @@ import { addDays } from 'date-fns';
 
 const Subscribe = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const { profile, user, refetchProfile } = useAuth();
   
   const [selectedPlan, setSelectedPlan] = useState<'annual' | 'monthly'>('annual');
   const [enableTrial, setEnableTrial] = useState(true);
+
+  // Detectar si venimos del onboarding inicial
+  const fromOnboarding = location.state?.fromOnboarding;
 
   const subscribeMutation = useMutation({
     mutationFn: async () => {
@@ -31,9 +35,8 @@ const Subscribe = () => {
       const now = new Date();
       
       if (enableTrial) {
-        // Si es prueba: empieza hoy, no seteamos plan_type ni end_date permanente aún (o podriamos setear +3 dias)
+        // Si es prueba: empieza hoy, no seteamos plan_type ni end_date permanente aún
         updateData.trial_start_date = now.toISOString();
-        // Opcional: Podríamos no setear el end_date todavía hasta que "pague" realmente
         updateData.subscription_end_date = null; 
         updateData.plan_type = null;
       } else {
@@ -82,7 +85,13 @@ const Subscribe = () => {
   };
 
   const handleSkip = () => {
-    navigate('/goal-projection');
+    // Si venimos del onboarding, mostramos la proyección de objetivos como "gancho" final.
+    // Si NO venimos del onboarding (ej. usuario recurrente chocando con un límite), volvemos al home.
+    if (fromOnboarding) {
+      navigate('/goal-projection');
+    } else {
+      navigate('/');
+    }
   };
 
   // Precios
