@@ -254,7 +254,7 @@ const Settings = () => {
           <Card className="border-none shadow-sm rounded-2xl mb-3">
             <CardContent className="p-5">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-orange-500 text-lg">{t('nutritional_goals.calories')}</h3>
+                <h3 className="font-bold text-primary text-lg">{t('nutritional_goals.calories')}</h3>
                 <button 
                   onClick={() => navigate('/settings/nutritional-goals')}
                   className="flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
@@ -284,7 +284,7 @@ const Settings = () => {
           <Card className="border-none shadow-sm rounded-2xl">
             <CardContent className="p-5">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-orange-500 text-lg">{t('settings.macros')}</h3>
+                <h3 className="font-bold text-primary text-lg">{t('settings.macros')}</h3>
                 <button 
                   onClick={() => navigate('/settings/nutritional-goals')}
                   className="flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
