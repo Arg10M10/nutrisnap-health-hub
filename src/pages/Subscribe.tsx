@@ -108,7 +108,16 @@ const Subscribe = () => {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 py-8">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 py-8 relative">
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="absolute top-4 left-4 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors z-50"
+        onClick={handleSkip}
+      >
+        <X className="w-6 h-6" />
+      </Button>
+
       <div className="w-full max-w-md space-y-6">
         
         {/* Header */}
@@ -144,22 +153,22 @@ const Subscribe = () => {
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden"
             >
-              <div className="relative space-y-8 py-2 px-2">
-                {/* Línea conectora absoluta, centrada en el ancho de los iconos (40px / 2 = 20px + margin) */}
-                <div className="absolute left-[28px] top-4 bottom-8 w-0.5 bg-gradient-to-b from-primary/50 to-muted/30 -z-10" />
+              <div className="relative pl-12 space-y-8 py-2">
+                {/* Single Connecting Line */}
+                <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-primary/50 to-muted/20" />
                 
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md ring-4 ring-background z-10">
+                <div className="relative flex items-center gap-4">
+                  <div className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md ring-4 ring-background">
                     <Lock className="h-5 w-5" />
                   </div>
-                  <div className="pt-1">
+                  <div>
                     <h3 className="font-bold text-sm text-foreground">{t('subscribe.timeline.today_title')}</h3>
                     <p className="text-xs text-muted-foreground">{t('subscribe.timeline.today_desc')}</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground ring-4 ring-background border border-border z-10">
+                <div className="relative flex items-center gap-4">
+                  <div className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground ring-4 ring-background border border-border">
                     <Bell className="h-5 w-5" />
                   </div>
                   <div className="pt-1">
@@ -168,8 +177,8 @@ const Subscribe = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground ring-4 ring-background border border-border z-10">
+                <div className="relative flex items-center gap-4">
+                  <div className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground ring-4 ring-background border border-border">
                     <Check className="h-5 w-5" />
                   </div>
                   <div className="pt-1">
