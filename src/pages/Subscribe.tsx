@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Lock, Bell, ShoppingBag, Sparkles, Zap, ChefHat, Target, Loader2, Check } from 'lucide-react';
+import { Check, Lock, Bell, Sparkles, Zap, ChefHat, Target, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
 import { useMutation } from '@tanstack/react-query';
@@ -40,10 +39,11 @@ const Subscribe = () => {
   });
 
   const handleSubscribe = () => {
-    if (profile && !profile.is_guest) {
-      subscribeMutation.mutate();
-    } else {
+    // Si es invitado, redirigir a registro antes de "pagar" (simulado)
+    if (profile?.is_guest) {
       navigate('/register-premium');
+    } else {
+      subscribeMutation.mutate();
     }
   };
 
@@ -68,24 +68,19 @@ const Subscribe = () => {
     visible: { opacity: 1, x: 0 },
   };
 
-  const annualPrice = "$36.00";
-  const annualMonthlyEquivalent = "$3.00";
-  const monthlyPrice = "$9.00";
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 py-8">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
         className="w-full max-w-md space-y-6"
       >
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-foreground">{t('subscribe.title')}</h1>
-          <p className="text-muted-foreground">{t('subscribe.subtitle', "Desbloquea tu mejor versión")}</p>
+          <p className="text-muted-foreground">{t('subscribe.subtitle')}</p>
         </div>
 
-        {/* Features List */}
+        {/* Features Grid */}
         <motion.div 
           className="grid grid-cols-2 gap-3"
           variants={containerVariants}
@@ -106,7 +101,7 @@ const Subscribe = () => {
           ))}
         </motion.div>
 
-        {/* Timeline */}
+        {/* Timeline Visual */}
         <div className="relative pl-4 space-y-6 py-2">
           <div className="absolute left-[1.15rem] top-2 bottom-2 w-0.5 bg-gradient-to-b from-primary/50 to-transparent" />
           
@@ -131,9 +126,9 @@ const Subscribe = () => {
           </div>
         </div>
 
-        {/* Plan Selection */}
+        {/* Plan Selector */}
         <div className="space-y-3">
-          {/* Annual Plan */}
+          {/* Annual Plan ($3/mo) */}
           <motion.div 
             className={cn(
               "relative rounded-xl border-2 overflow-hidden cursor-pointer transition-all shadow-sm",
@@ -143,30 +138,30 @@ const Subscribe = () => {
             whileTap={{ scale: 0.98 }}
           >
             <div className="bg-primary text-white text-center py-1 text-[10px] font-bold tracking-wide uppercase">
-              {t('subscribe.best_value', "Mejor Valor - Ahorra 67%")}
+              {t('subscribe.best_value')}
             </div>
             <div className="p-4 flex items-center justify-between">
               <div className="flex flex-col gap-1">
                 <span className="text-sm font-bold text-foreground flex items-center gap-2">
                   {selectedPlan === 'annual' && <Check className="w-4 h-4 text-primary" />}
-                  {t('subscribe.plan.annual', "Anual")}
+                  {t('subscribe.plan.annual')}
                 </span>
                 <span className="text-xs text-muted-foreground line-through">$108.00</span>
               </div>
               
               <div className="flex flex-col items-end">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-black text-primary">{annualMonthlyEquivalent}</span>
-                  <span className="text-xs font-medium text-muted-foreground">/{t('subscribe.month_short', "mes")}</span>
+                  <span className="text-2xl font-black text-primary">$3.00</span>
+                  <span className="text-xs font-medium text-muted-foreground">/{t('subscribe.month_short')}</span>
                 </div>
                 <span className="text-[10px] font-semibold text-foreground/70">
-                  {t('subscribe.billed_yearly', { price: annualPrice })}
+                  {t('subscribe.billed_yearly', { price: '$36.00' })}
                 </span>
               </div>
             </div>
           </motion.div>
 
-          {/* Monthly Plan */}
+          {/* Monthly Plan ($9/mo) */}
           <motion.div 
             className={cn(
               "relative rounded-xl border-2 bg-card p-4 flex items-center justify-between cursor-pointer transition-all",
@@ -177,13 +172,13 @@ const Subscribe = () => {
           >
             <div className="flex items-center gap-2">
               {selectedPlan === 'monthly' && <Check className="w-4 h-4 text-primary" />}
-              <span className="text-sm font-bold text-foreground">{t('subscribe.plan.monthly', "Mensual")}</span>
+              <span className="text-sm font-bold text-foreground">{t('subscribe.plan.monthly')}</span>
             </div>
-            <span className="text-base font-bold text-foreground">{monthlyPrice}<span className="text-xs font-normal text-muted-foreground">/{t('subscribe.month_short', "mes")}</span></span>
+            <span className="text-base font-bold text-foreground">$9.00<span className="text-xs font-normal text-muted-foreground">/{t('subscribe.month_short')}</span></span>
           </motion.div>
         </div>
 
-        {/* Action Button */}
+        {/* Actions */}
         <div className="space-y-3 pt-2">
           <Button 
             onClick={handleSubscribe} 
@@ -196,7 +191,7 @@ const Subscribe = () => {
           </Button>
           
           <p className="text-center text-xs text-muted-foreground">
-            {t('subscribe.no_charge_text', "Sin cargo por 3 días. Cancela cuando quieras.")}
+            {t('subscribe.no_charge_text')}
           </p>
 
           <Button 
@@ -204,7 +199,7 @@ const Subscribe = () => {
             onClick={handleSkip}
             className="w-full text-muted-foreground hover:text-foreground h-10 text-sm"
           >
-            {t('subscribe.continue_limited', "Continuar con versión limitada")}
+            {t('subscribe.continue_limited')}
           </Button>
         </div>
       </motion.div>
