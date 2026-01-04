@@ -17,7 +17,9 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
 
   const handleUnlock = () => {
     onClose();
-    navigate('/register-premium');
+    // CORRECCIÓN: Redirigir a la página de suscripción/ventas, no al registro directo.
+    // La página /subscribe se encargará de verificar si el usuario necesita registrarse o solo pagar.
+    navigate('/subscribe');
   };
 
   const benefits = [
