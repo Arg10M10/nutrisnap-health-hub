@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { Card, CardContent } from "@/components/ui/card";
 import { Leaf, ArrowRight } from "lucide-react";
@@ -7,18 +7,26 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LanguageDrawer } from '@/components/settings/LanguageDrawer';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 const TERMS_URL = "https://www.calorel.online/termsandconditions";
 const PRIVACY_URL = "https://www.calorel.online/privacypolicy";
 
-// Eliminamos 'sign_up' del flujo inicial
 type AuthView = 'welcome' | 'sign_in';
 
 export default function Login() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [view, setView] = useState<AuthView>('welcome');
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
+
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   const openLink = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
@@ -28,7 +36,6 @@ export default function Login() {
     navigate('/onboarding');
   };
 
-  // Obtener código de idioma actual y su bandera correspondiente
   const currentLangCode = i18n.language.substring(0, 2).toUpperCase();
   const currentFlag = i18n.language.startsWith('es') ? '/es-flag.png' : '/us-flag.png';
 
@@ -141,7 +148,6 @@ export default function Login() {
             >
               <Card className="border-none shadow-xl bg-card/80 backdrop-blur-sm min-h-[300px] flex flex-col justify-center">
                 <CardContent className="px-6 sm:px-8 py-8">
-                  {/* Pasamos una función vacía a onSwitchToSignUp ya que no usamos el registro aquí */}
                   <SignInForm onSwitchToSignUp={() => {}} />
                 </CardContent>
               </Card>

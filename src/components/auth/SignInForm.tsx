@@ -10,6 +10,7 @@ import { Loader2, Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ForgotPasswordDialog } from './ForgotPasswordDialog';
+import { useNavigate } from 'react-router-dom';
 
 interface SignInFormProps {
   onSwitchToSignUp: () => void;
@@ -17,6 +18,7 @@ interface SignInFormProps {
 
 export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,14 +37,18 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: values.email,
       password: values.password,
     });
+    
     if (error) {
       toast.error(error.message);
+      setLoading(false);
+    } else if (data.user) {
+      // Éxito: Redirigir al inicio
+      navigate('/', { replace: true });
     }
-    setLoading(false);
   };
 
   return (
