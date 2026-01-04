@@ -712,8 +712,7 @@
       "title": "Goals & Tracking",
       "editNutrition": "Nutritional Goals",
       "editWeight": "Weight Goal",
-      "ringColors": "Ring Colors",
-      "connectApps": "Connect Apps"
+      "ringColors": "Ring Colors"
     },
     "support": {
       "title": "Support & Legal",
@@ -962,18 +961,5 @@
     "subtitle_monthly": "You have activated the Monthly Plan.",
     "desc_monthly": "Thank you for trusting Calorel. Let's reach those goals together!",
     "button": "Start Now"
-  },
-  "connect_apps": {
-    "title": "Connect Apps",
-    "subtitle": "Sync your health data",
-    "description": "Connect Google Health Connect to automatically sync your steps and daily activity.",
-    "google_health_connect": "Google Health Connect",
-    "status_connected": "Connected",
-    "status_connect": "Connect",
-    "permissions_title": "Permissions Required",
-    "permissions_desc": "Calorel needs permission to read your daily step count.",
-    "read_steps": "Read daily steps",
-    "data_preview": "Data Preview (Today)",
-    "total_steps": "Total Steps"
   }
 }
