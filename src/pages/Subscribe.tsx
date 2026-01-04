@@ -144,34 +144,35 @@ const Subscribe = () => {
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden"
             >
-              <div className="relative pl-6 space-y-6 py-2 ml-4 border-l-2 border-primary/20">
-                <div className="absolute left-[1.65rem] top-2 bottom-2 w-0.5 bg-gradient-to-b from-primary/50 to-transparent" />
+              <div className="relative pl-12 space-y-8 py-2">
+                {/* Single Connecting Line */}
+                <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-primary/50 to-muted/20" />
                 
                 <div className="relative flex items-center gap-4">
-                  <div className="absolute -left-[34px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md ring-4 ring-background">
+                  <div className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md ring-4 ring-background">
                     <Lock className="h-5 w-5" />
                   </div>
-                  <div className="pl-4">
+                  <div>
                     <h3 className="font-bold text-sm text-foreground">{t('subscribe.timeline.today_title')}</h3>
                     <p className="text-xs text-muted-foreground">{t('subscribe.timeline.today_desc')}</p>
                   </div>
                 </div>
 
                 <div className="relative flex items-center gap-4">
-                  <div className="absolute -left-[34px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground ring-4 ring-background border border-border">
+                  <div className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground ring-4 ring-background border border-border">
                     <Bell className="h-5 w-5" />
                   </div>
-                  <div className="pl-4">
+                  <div>
                     <h3 className="font-semibold text-sm text-foreground">{t('subscribe.timeline.reminder_title')}</h3>
                     <p className="text-xs text-muted-foreground">{t('subscribe.timeline.reminder_desc')}</p>
                   </div>
                 </div>
 
                 <div className="relative flex items-center gap-4">
-                  <div className="absolute -left-[34px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground ring-4 ring-background border border-border">
+                  <div className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground ring-4 ring-background border border-border">
                     <Check className="h-5 w-5" />
                   </div>
-                  <div className="pl-4">
+                  <div>
                     <h3 className="font-semibold text-sm text-foreground">{t('subscribe.timeline.billing_title')}</h3>
                     <p className="text-sm text-muted-foreground">{t('subscribe.timeline.billing_desc')}</p>
                   </div>
