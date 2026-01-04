@@ -224,6 +224,18 @@
       "no_payment_note": "Sin cargo durante los primeros 3 días."
     }
   },
+  "subscription_success": {
+    "title_trial": "¡Felicidades!",
+    "subtitle_trial": "Tu prueba gratuita de 3 días ha comenzado.",
+    "desc_trial": "Tienes acceso ilimitado a todas las funciones Premium. ¡Aprovéchalas al máximo!",
+    "title_annual": "¡Excelente Elección!",
+    "subtitle_annual": "Has activado el Plan Anual.",
+    "desc_annual": "Gracias por comprometerte con tu salud a largo plazo. Estamos aquí para apoyarte.",
+    "title_monthly": "¡Todo Listo!",
+    "subtitle_monthly": "Has activado el Plan Mensual.",
+    "desc_monthly": "Gracias por confiar en Calorel. ¡Vamos a lograr esas metas juntos!",
+    "button": "Comenzar Ahora"
+  },
   "generating_plan": {
     "step1": "Analizando tu perfil y objetivos...",
     "step2": "Calculando tus objetivos de macros personalizados...",
@@ -892,9 +904,9 @@
     "weight_body_1": "Update your weight today to see your progress."
   },
   "subscribe": {
-    "title": "Unlock Your Full Potential",
-    "subtitle": "Get all premium features to reach your goals faster.",
-    "best_value": "Best Value - Save 67%",
+    "title": "Desbloquea Tu Potencial",
+    "subtitle": "Accede a todas las funciones premium para alcanzar tus objetivos más rápido.",
+    "best_value": "Mejor Valor - Ahorra 67%",
     "month_short": "mes",
     "billed_yearly": "{{price}} facturado anualmente",
     "billed_yearly_simple": "facturado hoy",
@@ -937,5 +949,17 @@
       "pay_now": "Pagar {{price}} Ahora",
       "no_payment_note": "Sin cargo durante los primeros 3 días."
     }
+  },
+  "subscription_success": {
+    "title_trial": "¡Felicidades!",
+    "subtitle_trial": "Tu prueba gratuita de 3 días ha comenzado.",
+    "desc_trial": "Tienes acceso ilimitado a todas las funciones Premium. ¡Aprovéchalas al máximo!",
+    "title_annual": "¡Excelente Elección!",
+    "subtitle_annual": "Has activado el Plan Anual.",
+    "desc_annual": "Gracias por comprometerte con tu salud a largo plazo. Estamos aquí para apoyarte.",
+    "title_monthly": "¡Todo Listo!",
+    "subtitle_monthly": "Has activado el Plan Mensual.",
+    "desc_monthly": "Gracias por confiar en Calorel. ¡Vamos a lograr esas metas juntos!",
+    "button": "Comenzar Ahora"
   }
 }

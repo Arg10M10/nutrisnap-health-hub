@@ -224,6 +224,18 @@
       "no_payment_note": "No charge for the first 3 days."
     }
   },
+  "subscription_success": {
+    "title_trial": "Congratulations!",
+    "subtitle_trial": "Your 3-Day Free Trial has started.",
+    "desc_trial": "You have unlimited access to all Premium features. Make the most of it!",
+    "title_annual": "Great Choice!",
+    "subtitle_annual": "You have activated the Annual Plan.",
+    "desc_annual": "Thank you for committing to your long-term health. We are here to support you.",
+    "title_monthly": "You're All Set!",
+    "subtitle_monthly": "You have activated the Monthly Plan.",
+    "desc_monthly": "Thank you for trusting Calorel. Let's reach those goals together!",
+    "button": "Start Now"
+  },
   "generating_plan": {
     "step1": "Analyzing your profile and goals...",
     "step2": "Calculating your personalized macro targets...",
@@ -937,5 +949,17 @@
       "pay_now": "Pay {{price}} Now",
       "no_payment_note": "No charge for the first 3 days."
     }
+  },
+  "subscription_success": {
+    "title_trial": "Congratulations!",
+    "subtitle_trial": "Your 3-Day Free Trial has started.",
+    "desc_trial": "You have unlimited access to all Premium features. Make the most of it!",
+    "title_annual": "Great Choice!",
+    "subtitle_annual": "You have activated the Annual Plan.",
+    "desc_annual": "Thank you for committing to your long-term health. We are here to support you.",
+    "title_monthly": "You're All Set!",
+    "subtitle_monthly": "You have activated the Monthly Plan.",
+    "desc_monthly": "Thank you for trusting Calorel. Let's reach those goals together!",
+    "button": "Start Now"
   }
 }

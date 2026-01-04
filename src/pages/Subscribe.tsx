@@ -56,17 +56,15 @@ const Subscribe = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      let message;
       
-      if (enableTrial) {
-        message = t('subscribe.trial_started', "¡Prueba de 3 días iniciada!");
-      } else {
-        const type = selectedPlan === 'annual' ? 'Anual' : 'Mensual';
-        message = `¡Plan ${type} activado exitosamente!`;
-      }
-      
-      toast.success(message);
-      navigate('/');
+      // Redirigir a la página de éxito con la información adecuada
+      navigate('/subscription-success', { 
+        replace: true, 
+        state: { 
+          isTrial: enableTrial, 
+          plan: selectedPlan 
+        } 
+      });
     },
     onError: () => {
       toast.error(t('common.error_friendly'));

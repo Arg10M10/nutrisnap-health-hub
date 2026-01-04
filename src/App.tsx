@@ -44,6 +44,7 @@ import GeneratingPlan from "./pages/onboarding/GeneratingPlan";
 import GoalProjection from "./pages/onboarding/GoalProjection";
 import Recipes from "./pages/Recipes";
 import RegisterForPremium from "./pages/RegisterForPremium";
+import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 
 const queryClient = new QueryClient();
 
@@ -125,7 +126,7 @@ const AppRoutes = () => {
   }
 
   // Rutas de flujo de onboarding y suscripción
-  const onboardingRoutes = ['/generating-plan', '/goal-projection', '/subscribe', '/register-premium'];
+  const onboardingRoutes = ['/generating-plan', '/goal-projection', '/subscribe', '/register-premium', '/subscription-success'];
   
   if (onboardingRoutes.includes(location.pathname)) {
      return (
@@ -136,6 +137,7 @@ const AppRoutes = () => {
              <Route path="/register-premium" element={<RegisterForPremium />} />
              <Route path="/generating-plan" element={<GeneratingPlan />} />
              <Route path="/goal-projection" element={<GoalProjection />} />
+             <Route path="/subscription-success" element={<SubscriptionSuccess />} />
           </Routes>
         </div>
       </div>
