@@ -654,6 +654,8 @@
     "fat": "Grasa",
     "edit": "Editar",
     "macros": "Macros",
+    "register_button": "Registrarse",
+    "save_progress": "Guarda tu progreso",
     "profileCard": {
       "namePlaceholder": "Completar Perfil",
       "viewAndEdit": "Editar Datos"

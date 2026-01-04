@@ -85,20 +85,33 @@ const Settings = () => {
     }, 700);
   };
 
+  const isGuest = profile?.is_guest;
+
+  const handleProfileClick = () => {
+    if (isGuest) {
+      navigate('/register-premium');
+    } else {
+      navigate('/settings/edit-profile');
+    }
+  };
+
   return (
     <PageLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3" onClick={() => navigate('/settings/edit-profile')}>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={handleProfileClick}>
             <UserAvatar 
-              name={profile?.full_name} 
+              name={isGuest ? "?" : profile?.full_name} 
               color={profile?.avatar_color} 
               className="w-12 h-12 text-lg shadow-sm" 
             />
-            <h1 className="text-xl font-bold text-foreground leading-tight">
-              {profile?.full_name || t('settings.profileCard.namePlaceholder')}
-            </h1>
+            <div>
+              <h1 className="text-xl font-bold text-foreground leading-tight">
+                {isGuest ? t('settings.register_button') : (profile?.full_name || t('settings.profileCard.namePlaceholder'))}
+              </h1>
+              {isGuest && <p className="text-xs text-primary font-medium">{t('settings.save_progress')}</p>}
+            </div>
           </div>
           
           <div className="flex gap-2">

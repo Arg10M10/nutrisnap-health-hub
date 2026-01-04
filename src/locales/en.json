@@ -377,7 +377,7 @@
     "recommended": "Best Options",
     "avoid": "Limit or Avoid",
     "view_result": "View Analysis",
-    "partial_list_note": "Note: This analysis does not list the entire menu. The AI has filtered the content to show only the best options for your goal and what to avoid."
+    "partial_list_note": "Nota: This analysis does not list the entire menu. The AI has filtered the content to show only the best options for your goal and what to avoid."
   },
   "analysis": {
     "calories": "Calories",
@@ -654,6 +654,8 @@
     "fat": "Fat",
     "edit": "Edit",
     "macros": "Macros",
+    "register_button": "Sign Up",
+    "save_progress": "Save your progress",
     "profileCard": {
       "namePlaceholder": "Complete Profile",
       "viewAndEdit": "Edit Details"
