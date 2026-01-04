@@ -97,7 +97,10 @@ const Settings = () => {
   let subscriptionCard = null;
   const now = new Date();
 
-  // 1. Verificar Prueba Gratuita (Estilo Oscuro/Titanium sin etiqueta)
+  // Estilo unificado verde lima
+  const cardBaseStyle = "bg-primary rounded-2xl p-5 text-primary-foreground shadow-md flex items-center justify-between border border-primary/20 relative overflow-hidden group";
+
+  // 1. Verificar Prueba Gratuita
   if (profile?.is_subscribed && profile.trial_start_date) {
     const startDate = parseISO(profile.trial_start_date);
     const endDate = addDays(startDate, 3);
@@ -108,16 +111,17 @@ const Settings = () => {
       const remainingText = daysLeft === 1 ? `${hoursLeft}h restantes` : `${daysLeft} días restantes`;
       
       subscriptionCard = (
-        <div className="bg-gradient-to-br from-zinc-800 to-zinc-950 rounded-2xl p-5 text-white shadow-xl flex items-center justify-between border border-zinc-700/50 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-white/10 transition-colors"></div>
+        <div className={cardBaseStyle}>
+          {/* Decoración sutil */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-white/20 transition-colors pointer-events-none"></div>
           
           <div className="flex items-center gap-4 relative z-10">
-            <div className="bg-white/10 p-3 rounded-full border border-white/10 shadow-inner">
+            <div className="bg-white/20 p-3 rounded-full border border-white/20 shadow-inner">
               <Clock className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="font-bold text-base text-white tracking-wide">Prueba Premium</p>
-              <p className="text-sm text-zinc-400 font-medium">{remainingText}</p>
+              <p className="font-bold text-lg text-white tracking-wide">Prueba Premium</p>
+              <p className="text-sm text-white/90 font-medium">{remainingText}</p>
             </div>
           </div>
         </div>
@@ -131,22 +135,16 @@ const Settings = () => {
     const isAnnual = profile.plan_type === 'annual';
     const planName = isAnnual ? "Plan Anual" : "Plan Mensual";
     
-    // Configuración visual según plan
-    const cardStyle = isAnnual 
-      ? "bg-gradient-to-br from-yellow-500 via-amber-500 to-orange-600 shadow-orange-500/20" // Dorado
-      : "bg-gradient-to-br from-slate-400 via-zinc-500 to-zinc-600 shadow-zinc-500/20"; // Plateado
-    
-    const icon = isAnnual ? <Crown className="w-6 h-6 text-white drop-shadow-md" /> : <CalendarDays className="w-6 h-6 text-white drop-shadow-md" />;
+    const icon = isAnnual ? <Crown className="w-6 h-6 text-white drop-shadow-sm" /> : <CalendarDays className="w-6 h-6 text-white drop-shadow-sm" />;
     
     if (daysLeft >= 0) {
       subscriptionCard = (
-        <div className={`${cardStyle} rounded-2xl p-5 text-white shadow-xl flex items-center justify-between border border-white/20 relative overflow-hidden group`}>
-          {/* Brillo decorativo */}
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-3xl pointer-events-none group-hover:bg-white/30 transition-all"></div>
-          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
+        <div className={cardBaseStyle}>
+          {/* Decoración sutil */}
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none group-hover:bg-white/20 transition-all"></div>
           
           <div className="flex items-center gap-4 relative z-10">
-            <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm border border-white/30 shadow-inner">
+            <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm border border-white/20 shadow-inner">
               {icon}
             </div>
             <div>
@@ -158,8 +156,8 @@ const Settings = () => {
           </div>
           
           <div className="flex flex-col items-end relative z-10">
-             <div className="text-3xl font-black leading-none drop-shadow-md">{daysLeft}</div>
-             <div className="text-[10px] font-bold uppercase tracking-wider opacity-90">Días</div>
+             <div className="text-3xl font-black leading-none drop-shadow-sm text-white">{daysLeft}</div>
+             <div className="text-[10px] font-bold uppercase tracking-wider opacity-90 text-white">Días</div>
           </div>
         </div>
       );
@@ -184,7 +182,7 @@ const Settings = () => {
                 </h1>
                 {profile?.is_subscribed && !subscriptionCard && (
                   // Fallback simple si expira o error, pero sigue marcado como suscrito
-                  <div className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full text-[10px] font-bold border border-yellow-200 flex items-center gap-1">
+                  <div className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-[10px] font-bold border border-primary/20 flex items-center gap-1">
                     <Crown className="w-3 h-3 fill-current" /> Premium
                   </div>
                 )}
@@ -217,27 +215,27 @@ const Settings = () => {
         {subscriptionCard}
 
         {/* Stats Card */}
-        <Card className="bg-primary border-none shadow-md rounded-2xl text-primary-foreground overflow-hidden">
+        <Card className="bg-card border-none shadow-md rounded-2xl overflow-hidden">
           <CardContent className="p-6 flex justify-between items-center text-center">
-            <div className="flex flex-col gap-1 flex-1 border-r border-primary-foreground/20 last:border-0">
-              <span className="text-2xl font-bold leading-none">
+            <div className="flex flex-col gap-1 flex-1 border-r border-border last:border-0">
+              <span className="text-2xl font-bold leading-none text-foreground">
                 <AnimatedNumber value={currentWeight} toFixed={1} />
-                <span className="text-sm font-medium ml-0.5">{weightUnit}</span>
+                <span className="text-sm font-medium ml-0.5 text-muted-foreground">{weightUnit}</span>
               </span>
-              <span className="text-[10px] uppercase font-medium opacity-80">{t('settings.current_weight')}</span>
+              <span className="text-[10px] uppercase font-medium text-muted-foreground">{t('settings.current_weight')}</span>
             </div>
-            <div className="flex flex-col gap-1 flex-1 border-r border-primary-foreground/20 last:border-0">
-              <span className="text-2xl font-bold leading-none">
+            <div className="flex flex-col gap-1 flex-1 border-r border-border last:border-0">
+              <span className="text-2xl font-bold leading-none text-foreground">
                 <AnimatedNumber value={goalWeight} toFixed={1} />
-                <span className="text-sm font-medium ml-0.5">{weightUnit}</span>
+                <span className="text-sm font-medium ml-0.5 text-muted-foreground">{weightUnit}</span>
               </span>
-              <span className="text-[10px] uppercase font-medium opacity-80">{t('settings.goal_weight_short')}</span>
+              <span className="text-[10px] uppercase font-medium text-muted-foreground">{t('settings.goal_weight_short')}</span>
             </div>
             <div className="flex flex-col gap-1 flex-1">
-              <span className="text-2xl font-bold leading-none">
+              <span className="text-2xl font-bold leading-none text-foreground">
                 <AnimatedNumber value={bmi} toFixed={1} />
               </span>
-              <span className="text-[10px] uppercase font-medium opacity-80">{t('settings.current_bmi')}</span>
+              <span className="text-[10px] uppercase font-medium text-muted-foreground">{t('settings.current_bmi')}</span>
             </div>
           </CardContent>
         </Card>
