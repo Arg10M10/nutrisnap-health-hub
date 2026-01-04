@@ -97,11 +97,19 @@ const BottomNav = () => {
     }, 150);
   };
 
-  const handleOpenWeight = () => {
+  const handleOpenWeight = async () => {
     if (hasReachedDailyWeightUpdateLimit) {
       toast.info(t('progress.weight_updated_today', 'Has alcanzado el límite diario de actualizaciones de peso.'));
       return;
     }
+
+    // Gate the weight logging feature for guests
+    const allowed = await checkLimit('weight_log', 9999, 'daily');
+    if (!allowed) {
+        setIsMenuOpen(false);
+        return;
+    }
+
     setIsMenuOpen(false);
     setIsWeightDrawerOpen(true);
   };

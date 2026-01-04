@@ -5,7 +5,7 @@ import { startOfDay, subDays } from 'date-fns';
 import AILimitDrawer from '@/components/AILimitDrawer';
 import PremiumLockDrawer from '@/components/PremiumLockDrawer';
 
-type AIFeature = 'food_scan' | 'exercise_ai' | 'diet_plan' | 'ai_suggestions' | 'manual_food_scan';
+type AIFeature = 'food_scan' | 'exercise_ai' | 'diet_plan' | 'ai_suggestions' | 'manual_food_scan' | 'weight_log';
 type TimeFrame = 'daily' | 'weekly';
 
 interface AILimitContextType {
@@ -32,6 +32,9 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
 
     // "manual_food_scan" uses AI, so it is now blocked for guests above, but check limit for subscribed
     if (feature === 'manual_food_scan') return true;
+    
+    // Weight log is gated for guests but unlimited for registered users
+    if (feature === 'weight_log') return true;
 
     const now = new Date();
     let startDate = startOfDay(now);
@@ -69,6 +72,9 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
     
     // Don't log manual food scans as usage since they are unlimited for PRO
     if (feature === 'manual_food_scan') return;
+    
+    // Don't log weight logs as usage
+    if (feature === 'weight_log') return;
 
     const { error } = await supabase
       .from('ai_usage_logs')

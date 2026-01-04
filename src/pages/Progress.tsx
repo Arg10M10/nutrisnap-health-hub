@@ -15,12 +15,14 @@ import EditWeightDrawer from "@/components/EditWeightDrawer";
 import WeightChart from "@/components/WeightChart";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import CalorieIntakeChart from "@/components/CalorieIntakeChart";
+import { useAILimit } from "@/hooks/useAILimit";
 
 const Progress = () => {
   const { streak, streakDays } = useNutrition();
   const { profile, user } = useAuth();
   const { t } = useTranslation();
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
+  const { checkLimit } = useAILimit();
 
   const { data: todaysWeightUpdatesCount } = useQuery({
     queryKey: ['todays_weight_updates_count', user?.id],
@@ -42,8 +44,12 @@ const Progress = () => {
     return (todaysWeightUpdatesCount ?? 0) >= 2;
   }, [todaysWeightUpdatesCount]);
 
-  const handleOpenWeightDrawer = () => {
-    setIsWeightDrawerOpen(true);
+  const handleOpenWeightDrawer = async () => {
+    // Check premium/guest status before opening
+    const allowed = await checkLimit('weight_log', 9999, 'daily');
+    if (allowed) {
+      setIsWeightDrawerOpen(true);
+    }
   };
 
   const isImperial = profile?.units === 'imperial';
