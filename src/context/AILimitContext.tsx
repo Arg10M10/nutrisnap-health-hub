@@ -40,9 +40,6 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
 
     // 4. REGISTERED FREE USERS Logic:
     
-    // "manual_food_scan" is free for registered users
-    if (feature === 'manual_food_scan') return true;
-
     // If the UI requests a "High Limit" (e.g. 9999), it implies this is a Premium-Only action
     // Since we already passed the subscription check above, the user is NOT subscribed here.
     // Therefore, we block them.
@@ -87,14 +84,10 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
     // If guest, do nothing (should be blocked by checkLimit anyway)
     if (!user || profile?.is_guest) return;
     
-    // Don't log manual food scans or weight logs
-    if (feature === 'manual_food_scan' || feature === 'weight_log') return;
+    // Don't log weight logs
+    if (feature === 'weight_log') return;
 
-    // If user is subscribed, we technically don't NEED to log for limits, 
-    // but logging for analytics is good practice. 
-    // However, to save DB space/writes, we can skip logging for premium if analytics aren't critical.
-    // For now, we log everything for consistency.
-
+    // Log everything else for analytics and limit tracking
     const { error } = await supabase
       .from('ai_usage_logs')
       .insert({
