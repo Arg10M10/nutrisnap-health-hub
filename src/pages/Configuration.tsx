@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
-  SlidersHorizontal, Languages, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette
+  SlidersHorizontal, Languages, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette, Link2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -120,6 +120,7 @@ const Configuration = () => {
           <SettingsItem icon={<Target size={20} />} label={t('settings.goals.editNutrition')} onClick={() => navigate('/settings/nutritional-goals')} />
           <SettingsItem icon={<Goal size={20} />} label={t('settings.goals.editWeight')} onClick={() => navigate('/settings/weight-goal')} />
           <SettingsItem icon={<Palette size={20} />} label={t('settings.goals.ringColors')} onClick={() => navigate('/settings/ring-colors')} />
+          <SettingsItem icon={<Link2 size={20} />} label={t('settings.goals.connectApps')} onClick={() => navigate('/settings/connect-apps')} />
         </SettingsCategory>
 
         {/* Support and Legal Category */}

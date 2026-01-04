@@ -23,6 +23,23 @@
     "calories": "CALORÍAS",
     "nutrition": "NUTRICIÓN"
   },
+  "connect_apps": {
+    "title": "Conectar Apps",
+    "description": "Sincroniza tus datos con Health Connect para importar automáticamente pasos, peso y calorías activas desde Samsung Health, Google Fit y otras apps compatibles.",
+    "sync_status": "Sincronizar con Health Connect",
+    "status_active": "Activo",
+    "status_inactive": "Inactivo",
+    "disconnected": "Desconectado de Health Connect.",
+    "connected_success": "¡Conectado exitosamente!",
+    "connection_failed": "Fallo al conectar. Verifica los permisos.",
+    "not_supported": "Health Connect no está disponible en este dispositivo.",
+    "manage_permissions": "Gestionar Permisos",
+    "platform_not_supported": "Health Connect solo está disponible en dispositivos Android.",
+    "data_synced": "Datos a Sincronizar",
+    "data_steps": "Pasos Diarios",
+    "data_calories": "Calorías Activas",
+    "data_weight": "Registros de Peso"
+  },
   "auth": {
     "email_label": "Correo electrónico",
     "email_placeholder": "tu@email.com",
@@ -712,7 +729,8 @@
       "title": "Objetivos y Seguimiento",
       "editNutrition": "Metas Nutricionales",
       "editWeight": "Meta de Peso",
-      "ringColors": "Colores de Anillos"
+      "ringColors": "Colores de Anillos",
+      "connectApps": "Conectar Apps"
     },
     "support": {
       "title": "Soporte y Legal",
