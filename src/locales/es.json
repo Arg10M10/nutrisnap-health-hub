@@ -177,8 +177,12 @@
     "month_short": "mes",
     "billed_yearly": "{{price}} facturado anualmente",
     "no_charge_text": "Sin cargo por 3 días. Cancela cuando quieras.",
+    "immediate_charge_text": "El cargo se realizará inmediatamente.",
     "continue_limited": "Continuar con versión limitada",
     "success_toast": "¡Plan Premium activado!",
+    "trial_started": "¡Prueba de 3 días iniciada!",
+    "enable_trial": "Habilitar prueba de 3 días",
+    "enable_trial_desc": "Pruébalo gratis antes de pagar",
     "timeline": {
       "today_title": "Hoy: Inicia Prueba Gratuita",
       "today_desc": "Accede a todas las funciones premium de inmediato.",
@@ -195,7 +199,7 @@
       "goals": "Seguimiento Avanzado de Metas y Sugerencias"
     },
     "plan": {
-      "title": "Plan Mensual",
+      "title": "Selecciona tu Plan",
       "annual": "Anual",
       "monthly": "Mensual",
       "price_suffix": "/mes",
@@ -204,6 +208,7 @@
     "buttons": {
       "start_trial": "Iniciar Prueba Gratuita de 3 Días",
       "unlock_now": "Desbloquear Ahora",
+      "pay_now": "Pagar {{price}} Ahora",
       "no_payment_note": "Sin cargo durante los primeros 3 días."
     }
   },
@@ -876,8 +881,12 @@
     "month_short": "mes",
     "billed_yearly": "{{price}} facturado anualmente",
     "no_charge_text": "Sin cargo por 3 días. Cancela cuando quieras.",
+    "immediate_charge_text": "El cargo se realizará inmediatamente.",
     "continue_limited": "Continuar con versión limitada",
     "success_toast": "¡Plan Premium activado!",
+    "trial_started": "¡Prueba de 3 días iniciada!",
+    "enable_trial": "Habilitar prueba de 3 días",
+    "enable_trial_desc": "Pruébalo gratis antes de pagar",
     "timeline": {
       "today_title": "Hoy: Inicia Prueba Gratuita",
       "today_desc": "Accede a todas las funciones premium de inmediato.",
@@ -903,6 +912,7 @@
     "buttons": {
       "start_trial": "Iniciar Prueba Gratuita de 3 Días",
       "unlock_now": "Desbloquear Ahora",
+      "pay_now": "Pagar {{price}} Ahora",
       "no_payment_note": "Sin cargo durante los primeros 3 días."
     }
   }

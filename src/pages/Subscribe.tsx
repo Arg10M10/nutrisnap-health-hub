@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { Check, Lock, Bell, Sparkles, Zap, ChefHat, Target, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
@@ -16,10 +18,14 @@ const Subscribe = () => {
   const { profile, user, refetchProfile } = useAuth();
   
   const [selectedPlan, setSelectedPlan] = useState<'annual' | 'monthly'>('annual');
+  const [enableTrial, setEnableTrial] = useState(true);
 
   const subscribeMutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("No user");
+      
+      // En un escenario real, aquí se procesaría el pago o se crearía la suscripción en Stripe/RevenueCat
+      // Si enableTrial es true, se crea con trial_end en el futuro.
       
       const { error } = await supabase
         .from('profiles')
@@ -30,7 +36,10 @@ const Subscribe = () => {
     },
     onSuccess: async () => {
       await refetchProfile();
-      toast.success(t('subscribe.success_toast', "¡Plan Premium activado!"));
+      const message = enableTrial 
+        ? t('subscribe.trial_started', "¡Prueba de 3 días iniciada!") 
+        : t('subscribe.success_toast', "¡Plan Premium activado!");
+      toast.success(message);
       navigate('/');
     },
     onError: () => {
@@ -68,6 +77,11 @@ const Subscribe = () => {
     visible: { opacity: 1, x: 0 },
   };
 
+  // Precios
+  const annualPrice = "$36.00";
+  const annualMonthlyEquivalent = "$3.00";
+  const monthlyPrice = "$9.00";
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 py-8">
       <motion.div
@@ -101,8 +115,8 @@ const Subscribe = () => {
           ))}
         </motion.div>
 
-        {/* Timeline Visual */}
-        <div className="relative pl-4 space-y-6 py-2">
+        {/* Timeline Visual (Sólo visible si Trial está activo) */}
+        <div className={cn("relative pl-4 space-y-6 py-2 transition-all duration-300 overflow-hidden", enableTrial ? "max-h-40 opacity-100" : "max-h-0 opacity-0")}>
           <div className="absolute left-[1.15rem] top-2 bottom-2 w-0.5 bg-gradient-to-b from-primary/50 to-transparent" />
           
           <div className="relative flex items-center gap-4">
@@ -124,6 +138,23 @@ const Subscribe = () => {
               <p className="text-xs text-muted-foreground">{t('subscribe.timeline.reminder_desc')}</p>
             </div>
           </div>
+        </div>
+
+        {/* Trial Toggle */}
+        <div className="flex items-center justify-between bg-muted/40 p-4 rounded-xl border border-border/50">
+          <div className="space-y-0.5">
+            <Label htmlFor="trial-mode" className="text-sm font-semibold text-foreground">
+              {t('subscribe.enable_trial', "Habilitar prueba de 3 días")}
+            </Label>
+            <p className="text-xs text-muted-foreground">
+              {t('subscribe.enable_trial_desc', "Pruébalo gratis antes de pagar")}
+            </p>
+          </div>
+          <Switch 
+            id="trial-mode" 
+            checked={enableTrial}
+            onCheckedChange={setEnableTrial}
+          />
         </div>
 
         {/* Plan Selector */}
@@ -151,11 +182,14 @@ const Subscribe = () => {
               
               <div className="flex flex-col items-end">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-black text-primary">$3.00</span>
+                  <span className="text-2xl font-black text-primary">{annualMonthlyEquivalent}</span>
                   <span className="text-xs font-medium text-muted-foreground">/{t('subscribe.month_short')}</span>
                 </div>
                 <span className="text-[10px] font-semibold text-foreground/70">
-                  {t('subscribe.billed_yearly', { price: '$36.00' })}
+                  {enableTrial 
+                    ? t('subscribe.billed_yearly', { price: annualPrice }) 
+                    : `${annualPrice} facturado hoy`
+                  }
                 </span>
               </div>
             </div>
@@ -174,7 +208,10 @@ const Subscribe = () => {
               {selectedPlan === 'monthly' && <Check className="w-4 h-4 text-primary" />}
               <span className="text-sm font-bold text-foreground">{t('subscribe.plan.monthly')}</span>
             </div>
-            <span className="text-base font-bold text-foreground">$9.00<span className="text-xs font-normal text-muted-foreground">/{t('subscribe.month_short')}</span></span>
+            <div className="flex flex-col items-end">
+                <span className="text-base font-bold text-foreground">{monthlyPrice}<span className="text-xs font-normal text-muted-foreground">/{t('subscribe.month_short')}</span></span>
+                {!enableTrial && <span className="text-[10px] font-semibold text-foreground/70">Facturado hoy</span>}
+            </div>
           </motion.div>
         </div>
 
@@ -186,12 +223,22 @@ const Subscribe = () => {
             disabled={subscribeMutation.isPending}
             className="w-full h-14 text-lg rounded-xl shadow-xl shadow-primary/25 font-bold"
           >
-            {subscribeMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
-            {t('subscribe.buttons.start_trial')}
+            {subscribeMutation.isPending ? (
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            ) : enableTrial ? (
+              t('subscribe.buttons.start_trial')
+            ) : (
+              selectedPlan === 'annual' 
+                ? t('subscribe.buttons.pay_now', { price: annualPrice }) 
+                : t('subscribe.buttons.pay_now', { price: monthlyPrice })
+            )}
           </Button>
           
           <p className="text-center text-xs text-muted-foreground">
-            {t('subscribe.no_charge_text')}
+            {enableTrial 
+              ? t('subscribe.no_charge_text') 
+              : t('subscribe.immediate_charge_text', "El cargo se realizará inmediatamente.")
+            }
           </p>
 
           <Button 

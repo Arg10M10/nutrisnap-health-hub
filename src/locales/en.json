@@ -177,8 +177,12 @@
     "month_short": "mo",
     "billed_yearly": "{{price}} billed yearly",
     "no_charge_text": "No charge for 3 days. Cancel anytime.",
+    "immediate_charge_text": "You will be charged immediately.",
     "continue_limited": "Continue with limited version",
     "success_toast": "Premium plan activated!",
+    "trial_started": "3-Day Trial Started!",
+    "enable_trial": "Enable 3-Day Free Trial",
+    "enable_trial_desc": "Try it free before you pay",
     "timeline": {
       "today_title": "Today: Start Free Trial",
       "today_desc": "Access all premium features immediately.",
@@ -204,6 +208,7 @@
     "buttons": {
       "start_trial": "Start 3-Day Free Trial",
       "unlock_now": "Unlock Now",
+      "pay_now": "Pay {{price}} Now",
       "no_payment_note": "No charge for the first 3 days."
     }
   },
@@ -876,8 +881,12 @@
     "month_short": "mo",
     "billed_yearly": "{{price}} billed yearly",
     "no_charge_text": "No charge for 3 days. Cancel anytime.",
+    "immediate_charge_text": "You will be charged immediately.",
     "continue_limited": "Continue with limited version",
     "success_toast": "Premium plan activated!",
+    "trial_started": "3-Day Trial Started!",
+    "enable_trial": "Enable 3-Day Free Trial",
+    "enable_trial_desc": "Try it free before you pay",
     "timeline": {
       "today_title": "Today: Start Free Trial",
       "today_desc": "Access all premium features immediately.",
@@ -903,6 +912,7 @@
     "buttons": {
       "start_trial": "Start 3-Day Free Trial",
       "unlock_now": "Unlock Now",
+      "pay_now": "Pay {{price}} Now",
       "no_payment_note": "No charge for the first 3 days."
     }
   }
