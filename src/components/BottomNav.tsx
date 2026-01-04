@@ -127,7 +127,7 @@ const BottomNav = () => {
       {({ isActive }) => (
         <>
           <item.icon className={cn("w-[22px] h-[22px]", isActive ? "text-primary" : "text-muted-foreground")} />
-          <span className="text-[11px] leading-tight font-medium", isActive ? "text-primary" : "text-muted-foreground")}>
+          <span className={cn("text-[11px] leading-tight font-medium", isActive ? "text-primary" : "text-muted-foreground")}>
             {item.label}
           </span>
         </>
