@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Check, X, Leaf, Star } from "lucide-react";
+import { Check, X, Leaf } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -17,7 +17,6 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
 
   const handleUnlock = () => {
     onClose();
-    // En un flujo real, aquí pasaríamos el plan seleccionado a la pasarela de pago
     navigate('/register-premium');
   };
 
@@ -32,54 +31,54 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="h-[95vh] rounded-t-[24px] bg-[#FAF9F6] outline-none">
-        <div className="overflow-y-auto no-scrollbar pb-8">
+      <DrawerContent className="max-h-[90vh] rounded-t-[24px] bg-[#FAF9F6] outline-none flex flex-col">
+        <div className="overflow-y-auto no-scrollbar pb- safe-area-bottom flex-1">
           <div className="sr-only">
             <DrawerTitle>Calorel Premium</DrawerTitle>
           </div>
           
           {/* Header Section */}
-          <div className="relative pt-8 px-6 pb-2 text-center">
-            {/* Elemento decorativo esquina superior derecha (tipo zanahoria de la imagen) */}
+          <div className="relative pt-6 px-6 pb-2 text-center">
+            {/* Elemento decorativo */}
             <div className="absolute top-0 right-0 opacity-20 pointer-events-none">
-                <Leaf className="w-24 h-24 text-orange-500 rotate-[-45deg] -mr-8 -mt-4" fill="currentColor" />
+                <Leaf className="w-24 h-24 text-primary rotate-[-45deg] -mr-8 -mt-4" fill="currentColor" />
             </div>
 
-            <h2 className="text-2xl font-bold leading-tight text-foreground mb-2">
-              Únete a <span className="text-orange-500 font-black">Calorel</span> premium para formar una mejor versión de ti.
+            <h2 className="text-xl font-bold leading-tight text-foreground mb-2 px-4">
+              Únete a <span className="text-primary font-black">Calorel</span> premium para formar una mejor versión de ti.
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Con Calorel premium, los usuarios logran su objetivo 3 veces más rápido.
             </p>
           </div>
 
           {/* Comparison Table */}
-          <div className="px-4 py-4">
+          <div className="px-4 py-3">
             <div className="bg-white rounded-2xl shadow-sm border border-border/40 overflow-hidden">
               {/* Table Header */}
               <div className="grid grid-cols-[1.5fr_1fr_1fr] border-b border-border/40">
-                <div className="p-3"></div>
-                <div className="p-3 text-center text-xs font-bold text-muted-foreground tracking-wider">GRATIS</div>
-                <div className="p-3 text-center text-xs font-bold text-orange-600 tracking-wider bg-orange-50">PREMIUM</div>
+                <div className="p-2.5"></div>
+                <div className="p-2.5 text-center text-[10px] font-bold text-muted-foreground tracking-wider self-center">GRATIS</div>
+                <div className="p-2.5 text-center text-[10px] font-bold text-primary-foreground bg-primary tracking-wider self-center">PREMIUM</div>
               </div>
 
               {/* Rows */}
               {benefits.map((benefit, index) => (
                 <div key={index} className="grid grid-cols-[1.5fr_1fr_1fr] border-b border-border/40 last:border-0 items-center">
-                  <div className="p-3 text-xs font-medium text-foreground leading-tight">
+                  <div className="p-2.5 text-[11px] font-medium text-foreground leading-tight">
                     {benefit.name}
                   </div>
-                  <div className="p-2 flex justify-center">
+                  <div className="p-1.5 flex justify-center">
                     {benefit.free ? (
-                      <Check className="w-5 h-5 text-green-500" />
+                      <Check className="w-4 h-4 text-primary" />
                     ) : (
-                      <X className="w-5 h-5 text-red-300" />
+                      <X className="w-4 h-4 text-red-300" />
                     )}
                   </div>
-                  <div className="p-2 flex justify-center bg-orange-50 h-full items-center">
+                  <div className="p-1.5 flex justify-center bg-primary/5 h-full items-center">
                     {benefit.premium && (
-                      <div className="bg-green-500 rounded-full p-0.5">
-                        <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+                      <div className="bg-primary rounded-full p-0.5">
+                        <Check className="w-3 h-3 text-white" strokeWidth={3} />
                       </div>
                     )}
                   </div>
@@ -89,32 +88,32 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
           </div>
 
           {/* Pricing Options */}
-          <div className="px-4 space-y-4 mb-4">
+          <div className="px-4 space-y-3 mb-2">
             {/* Annual Plan (Best Value) */}
             <motion.div 
               className={cn(
-                "relative rounded-2xl border-2 overflow-hidden cursor-pointer transition-all shadow-md",
-                selectedPlan === 'annual' ? "border-orange-500 bg-white" : "border-transparent bg-white shadow-sm"
+                "relative rounded-2xl border-2 overflow-hidden cursor-pointer transition-all shadow-sm",
+                selectedPlan === 'annual' ? "border-primary bg-white" : "border-transparent bg-white/60"
               )}
               onClick={() => setSelectedPlan('annual')}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-center py-1.5 text-sm font-bold tracking-wide">
-                63% DTO
+              <div className="bg-primary text-white text-center py-1 text-xs font-bold tracking-wide">
+                AHORRA 67%
               </div>
-              <div className="p-4 flex flex-col items-center">
-                <p className="text-sm font-semibold text-foreground mb-1">Exclusivo para nuevos usuarios</p>
+              <div className="p-3 flex flex-col items-center">
+                <p className="text-xs font-semibold text-foreground mb-0.5">Plan Anual (Mejor Valor)</p>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black text-foreground">$2.49</span>
-                  <span className="text-muted-foreground font-medium">/mes</span>
+                  <span className="text-2xl font-black text-foreground">$2.99</span>
+                  <span className="text-muted-foreground text-xs font-medium">/mes</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1 line-through opacity-60">$79.99</p>
-                <p className="text-xs text-orange-600 font-bold mt-0.5">Total $29.99/año</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5 line-through opacity-60">$108.00</p>
+                <p className="text-[10px] text-primary font-bold">Se cobra $35.99 al año</p>
                 
                 {selectedPlan === 'annual' && (
-                  <div className="absolute top-10 right-4 text-orange-500">
-                    <div className="bg-orange-100 rounded-full p-1">
-                      <Check className="w-4 h-4" />
+                  <div className="absolute top-8 right-3 text-primary">
+                    <div className="bg-primary/10 rounded-full p-1">
+                      <Check className="w-3 h-3" />
                     </div>
                   </div>
                 )}
@@ -124,19 +123,19 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
             {/* Monthly Plan */}
             <motion.div 
               className={cn(
-                "relative rounded-2xl border-2 bg-white p-4 flex items-center justify-between cursor-pointer transition-all",
-                selectedPlan === 'monthly' ? "border-orange-500 shadow-md" : "border-border/50 shadow-sm"
+                "relative rounded-2xl border-2 bg-white p-3 flex items-center justify-between cursor-pointer transition-all",
+                selectedPlan === 'monthly' ? "border-primary shadow-sm" : "border-border/30 shadow-none opacity-80"
               )}
               onClick={() => setSelectedPlan('monthly')}
               whileTap={{ scale: 0.98 }}
             >
-              <span className="font-semibold text-foreground">1 mes</span>
-              <span className="font-bold text-lg text-foreground">$19.99/mes</span>
+              <span className="font-semibold text-sm text-foreground">Mensual</span>
+              <span className="font-bold text-base text-foreground">$9.00/mes</span>
               
               {selectedPlan === 'monthly' && (
-                <div className="absolute top-1/2 -translate-y-1/2 right-4 text-orange-500">
-                   <div className="bg-orange-100 rounded-full p-1">
-                      <Check className="w-4 h-4" />
+                <div className="absolute top-1/2 -translate-y-1/2 right-3 text-primary">
+                   <div className="bg-primary/10 rounded-full p-1">
+                      <Check className="w-3 h-3" />
                     </div>
                 </div>
               )}
@@ -144,23 +143,24 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
           </div>
 
           {/* CTA Section */}
-          <div className="px-6 mt-6 pb-6">
+          <div className="px-6 mt-4 pb-6">
             <Button 
               size="lg" 
-              className="w-full h-14 text-lg font-bold rounded-full bg-[#0F172A] text-white hover:bg-[#1E293B] shadow-xl"
+              className="w-full h-12 text-base font-bold rounded-full shadow-lg shadow-primary/20 bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={handleUnlock}
             >
-              ¡Reclama tu oferta limitada ahora!
+              Continuar
             </Button>
             
-            <p className="text-center text-[10px] text-muted-foreground mt-4 flex justify-center gap-4">
-              <span className="cursor-pointer underline">Términos del servicio</span>
+            <p className="text-center text-[9px] text-muted-foreground mt-3 flex justify-center gap-4">
+              <span className="cursor-pointer underline">Términos</span>
               <span className="cursor-pointer underline">Privacidad</span>
+              <span className="cursor-pointer underline">Restaurar</span>
             </p>
             
-            <div className="mt-4 text-center">
-               <button onClick={onClose} className="text-xs text-muted-foreground/60 font-medium hover:text-foreground">
-                 Cerrar y continuar como invitado
+            <div className="mt-3 text-center">
+               <button onClick={onClose} className="text-[10px] text-muted-foreground/50 font-medium hover:text-foreground transition-colors p-2">
+                 No gracias, continuaré limitado
                </button>
             </div>
           </div>
