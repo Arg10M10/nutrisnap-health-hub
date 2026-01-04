@@ -13,36 +13,38 @@ const RegisterForPremium = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-  const { profile, refetchProfile } = useAuth();
+  const { refetchProfile } = useAuth();
 
   const isStandardRegistration = location.state?.isStandardRegistration === true;
 
   const handleRegistrationSuccess = async (userId: string) => {
     const loadingId = "registration-loading";
-    toast.loading(isStandardRegistration ? "Creando tu cuenta..." : "Activando tu plan premium...", { id: loadingId });
+    toast.loading("Sincronizando tus datos...", { id: loadingId });
 
     try {
-      // 1. Sync local profile data to Supabase
-      if (profile) {
-        const updateData: any = {
-            gender: profile.gender,
-            age: profile.age,
-            previous_apps_experience: profile.previous_apps_experience,
-            units: profile.units,
-            weight: profile.weight,
-            starting_weight: profile.starting_weight,
-            height: profile.height,
-            motivation: profile.motivation,
-            goal: profile.goal,
-            goal_weight: profile.goal_weight,
-            weekly_rate: profile.weekly_rate,
-            onboarding_completed: true,
-        };
+      // Intentamos recuperar los datos locales directamente del localStorage para asegurar
+      // que no se pierdan si el contexto de autenticación cambia rápido.
+      const localDataString = window.localStorage.getItem('calorel_local_profile');
+      const localProfile = localDataString ? JSON.parse(localDataString) : null;
 
-        // Sólo activamos la suscripción si NO es un registro estándar (es decir, viene de la pantalla de pago)
-        if (!isStandardRegistration) {
-            updateData.is_subscribed = true;
-        }
+      if (localProfile) {
+        const updateData: any = {
+            gender: localProfile.gender,
+            age: localProfile.age,
+            previous_apps_experience: localProfile.previous_apps_experience,
+            units: localProfile.units,
+            weight: localProfile.weight,
+            starting_weight: localProfile.starting_weight,
+            height: localProfile.height,
+            motivation: localProfile.motivation,
+            goal: localProfile.goal,
+            goal_weight: localProfile.goal_weight,
+            weekly_rate: localProfile.weekly_rate,
+            onboarding_completed: true,
+            // IMPORTANTE: No activamos is_subscribed aquí.
+            // El usuario debe completar el pago en la siguiente pantalla.
+            is_subscribed: false 
+        };
 
         const { error: profileError } = await supabase
           .from('profiles')
@@ -51,28 +53,31 @@ const RegisterForPremium = () => {
 
         if (profileError) throw profileError;
 
-        if (profile.weight) {
-             await supabase.from('weight_history').insert({ user_id: userId, weight: profile.weight });
+        if (localProfile.weight) {
+             await supabase.from('weight_history').insert({ user_id: userId, weight: localProfile.weight });
         }
       }
 
-      // Forzamos la recarga del perfil con el ID específico del usuario recién creado
+      // Forzamos la recarga del perfil
       await refetchProfile(userId);
       
       toast.dismiss(loadingId);
       
       if (isStandardRegistration) {
-        toast.success("¡Cuenta creada con éxito! Tus datos han sido guardados.");
-        navigate('/'); // Ir al home
+        toast.success("¡Cuenta creada con éxito!");
+        navigate('/'); 
       } else {
-        toast.success("¡Cuenta creada y Premium activado!");
-        navigate('/generating-plan'); // Flujo de onboarding
+        // FLUJO PREMIUM:
+        // 1. Cuenta creada y datos guardados.
+        // 2. Redirigimos a /subscribe para que el usuario ahora sí realice el pago/activación.
+        toast.success("Cuenta creada. Ahora selecciona tu plan.");
+        navigate('/subscribe', { replace: true }); 
       }
 
     } catch (error: any) {
       console.error("Sync error:", error);
       toast.dismiss(loadingId);
-      toast.error("Error al crear la cuenta. Por favor, contacta a soporte.");
+      toast.error("Error al sincronizar datos. Contacta a soporte.", { description: error.message });
     }
   };
 
@@ -97,7 +102,7 @@ const RegisterForPremium = () => {
           <p className="text-muted-foreground mt-2 px-4">
             {isStandardRegistration 
                 ? "Crea una cuenta gratuita para sincronizar tus datos y no perder tu avance." 
-                : "Para activar tu plan Premium, primero necesitamos crear tu cuenta segura."}
+                : "Para activar tu plan Premium, primero necesitamos crear tu cuenta segura para guardar tus datos."}
           </p>
         </div>
 
