@@ -56,7 +56,9 @@ const RegisterForPremium = () => {
         }
       }
 
-      await refetchProfile();
+      // Forzamos la recarga del perfil con el ID específico del usuario recién creado
+      await refetchProfile(userId);
+      
       toast.dismiss(loadingId);
       
       if (isStandardRegistration) {

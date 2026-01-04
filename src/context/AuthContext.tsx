@@ -38,7 +38,7 @@ interface AuthContextType {
   profile: Profile | null;
   loading: boolean;
   signOut: () => void;
-  refetchProfile: () => Promise<void>;
+  refetchProfile: (userId?: string) => Promise<void>;
   saveLocalProfile: (data: Partial<Profile>) => void;
 }
 
@@ -66,11 +66,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (userProfile) {
         setProfile({ ...userProfile, is_guest: false });
       } else {
-        setProfile(null);
+        // If row doesn't exist yet but user does, we might be in a race condition with the trigger.
+        // We'll handle nulls gracefully in UI, but don't set localProfile here as it would overwrite state.
+        // If explicit fetch fails, stick to what we have or null.
       }
     } catch (e) {
       console.error("Critical profile fetch error:", e);
-      setProfile(null);
     }
   };
 
@@ -125,17 +126,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (event === 'SIGNED_OUT') {
         // On sign out, clear everything including local profile to avoid confusion
-        // or keep it if you want "offline mode". For now, let's clear to reset state.
         setProfile(null);
         setLocalProfile(null); 
         setLoading(false);
       } else if (event === 'SIGNED_IN' && newSession?.user) {
-        setUser(currentUser => {
-            if (currentUser?.id !== newSession.user.id) {
-                 fetchProfile(newSession.user.id);
-            }
-            return newSession.user;
-        });
+        // Fetch immediately on sign in
+        await fetchProfile(newSession.user.id);
       }
     });
 
@@ -162,9 +158,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const refetchProfile = async () => {
-    if (user) {
-      await fetchProfile(user.id);
+  const refetchProfile = async (specificUserId?: string) => {
+    const targetId = specificUserId || user?.id;
+    
+    if (targetId) {
+      await fetchProfile(targetId);
     } else if (localProfile) {
       setProfile(localProfile);
     }

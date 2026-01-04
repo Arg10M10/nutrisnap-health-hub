@@ -142,13 +142,22 @@ export const SignUpForm = ({ onSwitchToSignIn, onSuccess }: SignUpFormProps) => 
                 )}
               />
 
-              <div className="pt-4">
+              <div className="pt-4 space-y-3">
                 <Button 
                   type="button" 
                   onClick={validateStep} 
                   className="w-full h-14 text-lg font-medium rounded-lg"
                 >
                   {t('common.continue')}
+                </Button>
+                
+                <Button 
+                  type="button" 
+                  variant="ghost"
+                  onClick={onSwitchToSignIn} 
+                  className="w-full text-primary hover:bg-primary/5"
+                >
+                  {t('auth.already_have_account')} {t('auth.sign_in_link')}
                 </Button>
               </div>
             </motion.div>
