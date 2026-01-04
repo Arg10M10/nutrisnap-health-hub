@@ -25,6 +25,7 @@ import SwipeToDelete from "@/components/SwipeToDelete";
 import MenuAnalysisDrawer, { MenuAnalysisData } from "@/components/MenuAnalysisDrawer";
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { toast } from "sonner";
+import GuestBanner from "@/components/GuestBanner";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -127,6 +128,10 @@ const Index = () => {
             </span>
           </button>
         </header>
+
+        {profile?.is_guest && (
+          <GuestBanner />
+        )}
 
         <WeeklyCalendar 
           selectedDate={selectedDate} 
