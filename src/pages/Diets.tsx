@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,12 +8,24 @@ import { Loader2 } from "lucide-react";
 import { DietsOnboarding } from "@/components/diets/DietsOnboarding";
 import { WeeklyPlanDisplay } from "@/components/diets/WeeklyPlanDisplay";
 import { useAILimit } from "@/hooks/useAILimit";
+import { useNavigate } from "react-router-dom";
 
 const Diets = () => {
   const { user, profile, refetchProfile } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
-  const { logUsage } = useAILimit();
+  const { logUsage, checkLimit } = useAILimit();
+  const navigate = useNavigate();
+
+  // Protect the page on mount
+  useEffect(() => {
+    const protectPage = async () => {
+      // Just checking if guest to trigger the premium drawer
+      // We use a dummy limit check that will fail for guests
+      await checkLimit('diet_plan', 9999, 'weekly'); 
+    };
+    protectPage();
+  }, []);
 
   const { data: weeklyPlan, isLoading: isLoadingPlan } = useQuery({
     queryKey: ['weekly_diet_plan', user?.id],
@@ -50,6 +62,18 @@ const Diets = () => {
 
   if (isLoadingPlan || !profile) {
     return <PageLayout><div className="flex justify-center mt-10"><Loader2 className="w-8 h-8 animate-spin" /></div></PageLayout>;
+  }
+
+  // If guest, show a placeholder or nothing while the drawer opens (handled by useEffect)
+  if (profile.is_guest) {
+      return (
+          <PageLayout>
+              <div className="flex flex-col items-center justify-center h-[60vh] space-y-4 text-center p-6 opacity-50">
+                  <Loader2 className="w-12 h-12 animate-spin text-muted-foreground" />
+                  <p className="text-muted-foreground">{t('common.loading')}</p>
+              </div>
+          </PageLayout>
+      );
   }
 
   if (!profile.diet_onboarding_completed) {

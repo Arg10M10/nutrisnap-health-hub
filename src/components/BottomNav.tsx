@@ -52,19 +52,30 @@ const BottomNav = () => {
     { icon: Home, label: t('bottom_nav.home'), path: "/" },
     { icon: User, label: t('bottom_nav.profile'), path: "/settings" },
     { icon: LineChart, label: t('bottom_nav.progress'), path: "/progress" },
-    { icon: Book, label: t('bottom_nav.diets'), path: "/diets" },
+    { icon: Book, label: t('bottom_nav.diets'), path: "/diets", protected: true },
   ];
 
   // Helper to check limit before action
-  const handleProtectedAction = async (feature: 'food_scan' | 'manual_food_scan', action: () => void) => {
+  const handleProtectedAction = async (feature: 'food_scan' | 'manual_food_scan' | 'diet_plan', action: () => void) => {
     // Check limit (which checks guest status)
-    // Note: We use an arbitrary high limit here just to trigger the guest check
     const allowed = await checkLimit(feature, 9999, 'daily');
     if (allowed) {
       handleMenuAction(action);
     } else {
       setIsMenuOpen(false);
     }
+  };
+
+  const handleNavClick = async (e: React.MouseEvent, path: string, isProtected?: boolean) => {
+    if (isProtected) {
+      e.preventDefault();
+      // Use diet_plan check for the Diets tab
+      const allowed = await checkLimit('diet_plan', 9999, 'weekly');
+      if (allowed) {
+        navigate(path);
+      }
+    }
+    setIsMenuOpen(false);
   };
 
   const circularButtons = [
@@ -122,7 +133,7 @@ const BottomNav = () => {
       to={item.path}
       className="flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg transition-colors flex-shrink-0 w-1/5"
       activeClassName="bg-primary/10 text-primary"
-      onClick={() => setIsMenuOpen(false)}
+      onClick={(e) => handleNavClick(e, item.path, item.protected)}
     >
       {({ isActive }) => (
         <>

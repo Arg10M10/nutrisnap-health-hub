@@ -1,13 +1,24 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/card';
 import PageLayout from '@/components/PageLayout';
 import { Footprints, Dumbbell, Wand2, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAILimit } from '@/hooks/useAILimit';
 
 const Exercise = () => {
   const { t } = useTranslation();
+  const { checkLimit } = useAILimit();
+  const navigate = useNavigate();
+
+  const handleAIExerciseClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const canProceed = await checkLimit('exercise_ai', 9999, 'daily');
+    if (canProceed) {
+      navigate('/exercise/write');
+    }
+  };
 
   const exercises = [
     { 
@@ -30,6 +41,7 @@ const Exercise = () => {
       name: t('exercise.btn_ai', 'Texto IA'), 
       icon: Wand2, 
       path: '/exercise/write', 
+      onClick: handleAIExerciseClick, // Intercept click
       color: "text-purple-500",
       bgColor: "bg-purple-50 dark:bg-purple-500/10",
       borderColor: "border-purple-100 dark:border-purple-500/20"
@@ -55,21 +67,39 @@ const Exercise = () => {
         </div>
         <div className="grid grid-cols-2 gap-4">
           {exercises.map((exercise) => (
-            <Link to={exercise.path} key={exercise.name} className="block group">
-              <Card className={cn(
-                "p-4 flex flex-col items-center justify-center gap-3 aspect-square transition-all duration-300 border-2",
-                "hover:scale-[1.02] active:scale-[0.98]",
-                exercise.bgColor,
-                exercise.borderColor
-              )}>
-                <div className={cn("p-4 rounded-full bg-white dark:bg-background shadow-sm", exercise.color)}>
-                  <exercise.icon className="w-8 h-8" />
-                </div>
-                <span className="font-bold text-lg text-foreground text-center leading-tight">
-                  {exercise.name}
-                </span>
-              </Card>
-            </Link>
+            exercise.onClick ? (
+              <div key={exercise.name} onClick={exercise.onClick} className="block group cursor-pointer">
+                <Card className={cn(
+                  "p-4 flex flex-col items-center justify-center gap-3 aspect-square transition-all duration-300 border-2",
+                  "hover:scale-[1.02] active:scale-[0.98]",
+                  exercise.bgColor,
+                  exercise.borderColor
+                )}>
+                  <div className={cn("p-4 rounded-full bg-white dark:bg-background shadow-sm", exercise.color)}>
+                    <exercise.icon className="w-8 h-8" />
+                  </div>
+                  <span className="font-bold text-lg text-foreground text-center leading-tight">
+                    {exercise.name}
+                  </span>
+                </Card>
+              </div>
+            ) : (
+              <Link to={exercise.path} key={exercise.name} className="block group">
+                <Card className={cn(
+                  "p-4 flex flex-col items-center justify-center gap-3 aspect-square transition-all duration-300 border-2",
+                  "hover:scale-[1.02] active:scale-[0.98]",
+                  exercise.bgColor,
+                  exercise.borderColor
+                )}>
+                  <div className={cn("p-4 rounded-full bg-white dark:bg-background shadow-sm", exercise.color)}>
+                    <exercise.icon className="w-8 h-8" />
+                  </div>
+                  <span className="font-bold text-lg text-foreground text-center leading-tight">
+                    {exercise.name}
+                  </span>
+                </Card>
+              </Link>
+            )
           ))}
         </div>
       </div>
