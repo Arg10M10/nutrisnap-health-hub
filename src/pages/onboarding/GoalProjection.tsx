@@ -50,8 +50,8 @@ const GoalProjection = () => {
   }, [profile]);
 
   const handleContinue = () => {
-    // Navigate to Home replacing the history so user can't go back to onboarding
-    navigate('/', { replace: true });
+    // AHORA REDIRIGIMOS A SUBSCRIBE EN LUGAR DE HOME
+    navigate('/subscribe', { state: { fromOnboarding: true } });
   };
 
   const isImperial = profile?.units === 'imperial';

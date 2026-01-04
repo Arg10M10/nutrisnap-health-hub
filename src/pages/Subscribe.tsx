@@ -22,9 +22,6 @@ const Subscribe = () => {
   const [selectedPlan, setSelectedPlan] = useState<'annual' | 'monthly'>('annual');
   const [enableTrial, setEnableTrial] = useState(true);
 
-  // Detectar si venimos del onboarding inicial
-  const fromOnboarding = location.state?.fromOnboarding;
-
   const subscribeMutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("No user");
@@ -77,21 +74,18 @@ const Subscribe = () => {
   });
 
   const handleSubscribe = () => {
+    // Si es un usuario invitado (creado localmente en onboarding), debe registrarse primero
     if (profile?.is_guest) {
-      navigate('/register-premium');
+      navigate('/register-premium', { state: { isStandardRegistration: false } });
     } else {
+      // Si ya está registrado (ej. inició sesión antes), aplica la suscripción
       subscribeMutation.mutate();
     }
   };
 
   const handleSkip = () => {
-    // Si venimos del onboarding, mostramos la proyección de objetivos como "gancho" final.
-    // Si NO venimos del onboarding (ej. usuario recurrente chocando con un límite), volvemos al home.
-    if (fromOnboarding) {
-      navigate('/goal-projection');
-    } else {
-      navigate('/');
-    }
+    // Siempre ir al Home si el usuario decide no suscribirse ahora
+    navigate('/');
   };
 
   // Precios
