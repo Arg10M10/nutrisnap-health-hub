@@ -13,7 +13,7 @@ import { getDeviceId } from '@/lib/device';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SignUpFormProps {
-  onSwitchToSignIn: () => void;
+  onSwitchToSignIn?: () => void;
   onSuccess?: (userId: string) => void;
 }
 
@@ -151,14 +151,16 @@ export const SignUpForm = ({ onSwitchToSignIn, onSuccess }: SignUpFormProps) => 
                   {t('common.continue')}
                 </Button>
                 
-                <Button 
-                  type="button" 
-                  variant="ghost"
-                  onClick={onSwitchToSignIn} 
-                  className="w-full text-primary hover:bg-primary/5"
-                >
-                  {t('auth.already_have_account')} {t('auth.sign_in_link')}
-                </Button>
+                {onSwitchToSignIn && (
+                  <Button 
+                    type="button" 
+                    variant="ghost"
+                    onClick={onSwitchToSignIn} 
+                    className="w-full text-primary hover:bg-primary/5"
+                  >
+                    {t('auth.already_have_account')} {t('auth.sign_in_link')}
+                  </Button>
+                )}
               </div>
             </motion.div>
           )}

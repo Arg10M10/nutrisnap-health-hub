@@ -141,7 +141,6 @@ const RegisterForPremium = () => {
         <Card className="border-none shadow-xl bg-card">
           <CardContent className="pt-6">
             <SignUpForm 
-                onSwitchToSignIn={() => navigate('/login')} 
                 onSuccess={handleRegistrationSuccess}
             />
           </CardContent>
