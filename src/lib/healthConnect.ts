@@ -8,48 +8,37 @@ export interface HealthConnectPlugin {
   openHealthConnectSetting(): Promise<void>;
 }
 
-// Intentamos registrar el plugin por si estuviera disponible en el runtime nativo
+// Registramos el plugin nativo. 
+// Si el paquete @ubie/capacitor-health-connect no está instalado en el dispositivo, esto lanzará errores al llamarse.
 const HealthConnectNative = registerPlugin<HealthConnectPlugin>('HealthConnect');
 
 export const HealthConnect = {
   async checkPermissions(options: { read: string[] }) {
-    try {
-      return await HealthConnectNative.checkPermissions(options);
-    } catch (e) {
-      console.warn('Health Connect checkPermissions failed or not implemented', e);
-      return { granted: [] };
-    }
+    // Llamada directa al plugin nativo
+    return await HealthConnectNative.checkPermissions(options);
   },
+  
   async requestPermissions(options: { read: string[] }) {
-    try {
-      return await HealthConnectNative.requestPermissions(options);
-    } catch (e) {
-      console.warn('Health Connect requestPermissions failed or not implemented', e);
-      // En web/dev simulamos éxito para probar la UI
-      return { granted: options.read }; 
-    }
+    // Llamada directa al plugin nativo
+    return await HealthConnectNative.requestPermissions(options);
   },
+  
   async getSteps(options: { startTime: string; endTime: string }) {
-    try {
-      return await HealthConnectNative.getSteps(options);
-    } catch (e) {
-      console.warn('Health Connect getSteps failed', e);
-      return { count: 0 };
-    }
+    // Llamada directa al plugin nativo
+    return await HealthConnectNative.getSteps(options);
   },
+  
   async isAvailable(): Promise<boolean> {
     try {
       const result = await HealthConnectNative.isAvailable();
       return !!result?.value;
     } catch (e) {
+      // Si el plugin no está cargado (ej. en web), retornará false
       return false;
     }
   },
+  
   async openHealthConnectSetting() {
-    try {
-      await HealthConnectNative.openHealthConnectSetting();
-    } catch (e) {
-      console.error('Error opening settings', e);
-    }
+    return await HealthConnectNative.openHealthConnectSetting();
   }
 };

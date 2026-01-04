@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { HealthConnect } from '@/lib/healthConnect'; // Importamos desde nuestro adaptador local
+import { HealthConnect } from '@/lib/healthConnect';
 import { Capacitor } from '@capacitor/core';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,6 @@ const ConnectApps = () => {
     const checkPlatform = () => {
       const native = Capacitor.isNativePlatform();
       setIsNative(native);
-      // En desarrollo web, permitimos probar la UI aunque no sea nativo
       if (native) {
         checkPermissions();
       }
@@ -31,17 +30,15 @@ const ConnectApps = () => {
 
   const checkPermissions = async () => {
     try {
+      // Verificación real de disponibilidad
       const isAvailable = await HealthConnect.isAvailable();
-      if (!isAvailable) {
-        console.log("Health Connect not available on this device.");
-        return;
-      }
+      if (!isAvailable) return;
 
       const result = await HealthConnect.checkPermissions({
         read: ['Steps']
       });
 
-      if (result.granted.includes('Steps')) {
+      if (result && result.granted && result.granted.includes('Steps')) {
         setIsHealthConnectLinked(true);
         fetchSteps();
       }
@@ -51,16 +48,8 @@ const ConnectApps = () => {
   };
 
   const handleToggle = async (checked: boolean) => {
-    // Permitir activar en web para demo visual, aunque muestre aviso
     if (!isNative) {
-      if (checked) {
-        toast.info("Modo Simulación: En un dispositivo real esto abriría Health Connect.");
-        setIsHealthConnectLinked(true);
-        setStepCount(1250); // Pasos simulados
-      } else {
-        setIsHealthConnectLinked(false);
-        setStepCount(0);
-      }
+      toast.error("Health Connect solo está disponible en dispositivos Android físicos.");
       return;
     }
 
@@ -72,7 +61,7 @@ const ConnectApps = () => {
           try {
              await HealthConnect.openHealthConnectSetting();
           } catch (e) {
-             toast.error("Google Health Connect no está instalado.");
+             toast.error("Google Health Connect no está instalado en este dispositivo.");
           }
           return;
         }
@@ -81,22 +70,24 @@ const ConnectApps = () => {
           read: ['Steps']
         });
 
-        if (permissionResult.granted.includes('Steps')) {
+        if (permissionResult && permissionResult.granted && permissionResult.granted.includes('Steps')) {
           setIsHealthConnectLinked(true);
-          toast.success("Health Connect conectado exitosamente.");
+          toast.success("Conectado con Health Connect.");
           fetchSteps();
         } else {
           setIsHealthConnectLinked(false);
-          toast.error("Permisos denegados.");
+          toast.error("Permisos denegados por el usuario.");
         }
       } catch (error) {
         console.error("Error requesting permissions:", error);
-        toast.error("Error al conectar con Health Connect.");
+        toast.error("Error al conectar con Health Connect. Verifica tu configuración.");
+        setIsHealthConnectLinked(false);
       }
     } else {
+      // Desconexión lógica de la UI
       setIsHealthConnectLinked(false);
       setStepCount(0);
-      toast.info("Desconectado de Health Connect.");
+      toast.info("Desconectado.");
     }
   };
 
@@ -116,6 +107,7 @@ const ConnectApps = () => {
 
     } catch (error) {
       console.error("Error fetching steps:", error);
+      // No mostramos toast de error aquí para no ser intrusivos si falla la lectura en segundo plano
     }
   };
 
@@ -158,7 +150,7 @@ const ConnectApps = () => {
               <div className="flex gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/30 rounded-lg text-yellow-800 dark:text-yellow-500">
                 <Smartphone className="w-5 h-5 flex-shrink-0" />
                 <p className="text-xs">
-                  Esta función requiere un dispositivo Android real. (Modo simulación activado)
+                  Esta funcionalidad requiere ejecutarse en la app Android nativa.
                 </p>
               </div>
             )}
