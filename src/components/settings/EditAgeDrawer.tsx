@@ -17,7 +17,7 @@ interface EditAgeDrawerProps {
 
 const EditAgeDrawer = ({ isOpen, onClose, currentAge }: EditAgeDrawerProps) => {
   const [newAge, setNewAge] = useState(currentAge);
-  const { user, refetchProfile } = useAuth();
+  const { user, refetchProfile, saveLocalProfile } = useAuth();
   const { t } = useTranslation();
   const ageItems = useMemo(() => Array.from({ length: 100 - 13 + 1 }, (_, i) => i + 13), []);
 
@@ -29,12 +29,18 @@ const EditAgeDrawer = ({ isOpen, onClose, currentAge }: EditAgeDrawerProps) => {
 
   const mutation = useMutation({
     mutationFn: async (age: number) => {
-      if (!user) throw new Error('User not found.');
-      const { error } = await supabase.from('profiles').update({ age }).eq('id', user.id);
-      if (error) throw error;
+      if (user) {
+        const { error } = await supabase.from('profiles').update({ age }).eq('id', user.id);
+        if (error) throw error;
+      } else {
+        // Guest mode: save locally
+        saveLocalProfile({ age });
+        // Small artificial delay for UX consistency
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
     },
     onSuccess: async () => {
-      await refetchProfile();
+      if (user) await refetchProfile();
       onClose();
     },
     onError: (error) => {

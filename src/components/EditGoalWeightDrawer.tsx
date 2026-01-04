@@ -17,12 +17,11 @@ interface EditGoalWeightDrawerProps {
 
 const EditGoalWeightDrawer = ({ isOpen, onClose, currentGoalWeight }: EditGoalWeightDrawerProps) => {
   const [newGoalWeight, setNewGoalWeight] = useState(currentGoalWeight);
-  const { user, profile, refetchProfile } = useAuth();
+  const { user, profile, refetchProfile, saveLocalProfile } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const isMetric = profile?.units !== 'imperial';
 
-  // Generar lista con decimales (e.g., 70.0, 70.1, 70.2...)
   const weightItems = useMemo(() => {
     const min = isMetric ? 30 : 66;
     const max = isMetric ? 200 : 440;
@@ -41,17 +40,22 @@ const EditGoalWeightDrawer = ({ isOpen, onClose, currentGoalWeight }: EditGoalWe
 
   const mutation = useMutation({
     mutationFn: async (weight: number) => {
-      if (!user) throw new Error('Usuario no encontrado.');
-
-      const { error } = await supabase
-        .from('profiles')
-        .update({ goal_weight: weight })
-        .eq('id', user.id);
-      if (error) throw error;
+      if (user) {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ goal_weight: weight })
+          .eq('id', user.id);
+        if (error) throw error;
+      } else {
+        saveLocalProfile({ goal_weight: weight });
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
     },
     onSuccess: async () => {
-      await refetchProfile();
-      queryClient.invalidateQueries({ queryKey: ['profiles', user?.id] });
+      if (user) {
+        await refetchProfile();
+        queryClient.invalidateQueries({ queryKey: ['profiles', user?.id] });
+      }
       onClose();
     },
     onError: (error) => {
@@ -73,8 +77,8 @@ const EditGoalWeightDrawer = ({ isOpen, onClose, currentGoalWeight }: EditGoalWe
           <div className="flex items-center justify-center">
             <WheelPicker
               items={weightItems}
-              value={newGoalWeight.toFixed(1)} // Convertir número a string para el picker
-              onValueChange={(val) => setNewGoalWeight(parseFloat(val))} // Convertir string a número al guardar
+              value={newGoalWeight.toFixed(1)}
+              onValueChange={(val) => setNewGoalWeight(parseFloat(val))}
               className="w-32"
             />
             <span className="text-2xl text-muted-foreground font-semibold ml-2">{isMetric ? t('edit_goal_weight.weight_unit') : 'lbs'}</span>

@@ -17,12 +17,11 @@ interface EditWeightDrawerProps {
 
 const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerProps) => {
   const [newWeight, setNewWeight] = useState(currentWeight);
-  const { user, profile, refetchProfile } = useAuth();
+  const { user, profile, refetchProfile, saveLocalProfile } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const isMetric = profile?.units !== 'imperial';
 
-  // Generar lista con decimales (e.g., 70.0, 70.1, 70.2...)
   const weightItems = useMemo(() => {
     const min = isMetric ? 30 : 66;
     const max = isMetric ? 200 : 440;
@@ -35,32 +34,37 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
 
   useEffect(() => {
     if (isOpen) {
-      // Asegurar que el valor inicial tenga formato decimal string para coincidir con la lista
       setNewWeight(currentWeight);
     }
   }, [isOpen, currentWeight]);
 
   const mutation = useMutation({
     mutationFn: async (weight: number) => {
-      if (!user) throw new Error('Usuario no encontrado.');
+      if (user) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ weight })
+          .eq('id', user.id);
+        if (profileError) throw profileError;
 
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ weight })
-        .eq('id', user.id);
-      if (profileError) throw profileError;
-
-      const { error: historyError } = await supabase
-        .from('weight_history')
-        .insert({ user_id: user.id, weight });
-      if (historyError) throw historyError;
+        const { error: historyError } = await supabase
+          .from('weight_history')
+          .insert({ user_id: user.id, weight });
+        if (historyError) throw historyError;
+      } else {
+        saveLocalProfile({ weight });
+        // For guests, we don't save history to DB yet, or we could save to local storage history if implemented
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
     },
     onSuccess: async () => {
-      await Promise.all([
-        refetchProfile(),
-        queryClient.invalidateQueries({ queryKey: ['weight_history_all', user?.id] }),
-        queryClient.invalidateQueries({ queryKey: ['todays_weight_updates_count', user?.id] })
-      ]);
+      if (user) {
+        await Promise.all([
+          refetchProfile(),
+          queryClient.invalidateQueries({ queryKey: ['weight_history_all', user?.id] }),
+          queryClient.invalidateQueries({ queryKey: ['todays_weight_updates_count', user?.id] })
+        ]);
+      }
       onClose();
     },
     onError: (error) => {
@@ -82,8 +86,8 @@ const EditWeightDrawer = ({ isOpen, onClose, currentWeight }: EditWeightDrawerPr
           <div className="flex items-center justify-center">
             <WheelPicker
               items={weightItems}
-              value={newWeight.toFixed(1)} // Convertir número a string para el picker
-              onValueChange={(val) => setNewWeight(parseFloat(val))} // Convertir string a número al guardar
+              value={newWeight.toFixed(1)}
+              onValueChange={(val) => setNewWeight(parseFloat(val))}
               className="w-32"
             />
             <span className="text-2xl text-muted-foreground font-semibold ml-2">{isMetric ? t('edit_weight.weight_unit') : 'lbs'}</span>

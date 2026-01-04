@@ -25,7 +25,7 @@ interface EditSelectDetailDrawerProps {
 
 const EditSelectDetailDrawer = ({ isOpen, onClose, title, currentValue, options, profileField }: EditSelectDetailDrawerProps) => {
   const [selectedValue, setSelectedValue] = useState(currentValue);
-  const { user, refetchProfile } = useAuth();
+  const { user, refetchProfile, saveLocalProfile } = useAuth();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -36,12 +36,16 @@ const EditSelectDetailDrawer = ({ isOpen, onClose, title, currentValue, options,
 
   const mutation = useMutation({
     mutationFn: async (value: string) => {
-      if (!user) throw new Error('User not found.');
-      const { error } = await supabase.from('profiles').update({ [profileField]: value }).eq('id', user.id);
-      if (error) throw error;
+      if (user) {
+        const { error } = await supabase.from('profiles').update({ [profileField]: value }).eq('id', user.id);
+        if (error) throw error;
+      } else {
+        saveLocalProfile({ [profileField]: value });
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
     },
     onSuccess: async () => {
-      await refetchProfile();
+      if (user) await refetchProfile();
       onClose();
     },
     onError: (error) => {

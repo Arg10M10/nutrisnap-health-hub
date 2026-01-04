@@ -14,7 +14,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 const NutritionalGoals = () => {
   const navigate = useNavigate();
-  const { profile, user, refetchProfile } = useAuth();
+  const { profile, user, refetchProfile, saveLocalProfile } = useAuth();
   const { t } = useTranslation();
   const [goals, setGoals] = useState({
     calories: 2000,
@@ -40,22 +40,32 @@ const NutritionalGoals = () => {
 
   const mutation = useMutation({
     mutationFn: async (updatedGoals: typeof goals) => {
-      if (!user) throw new Error('User not found');
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          goal_calories: updatedGoals.calories,
-          goal_protein: updatedGoals.protein,
-          goal_carbs: updatedGoals.carbs,
-          goal_fats: updatedGoals.fats,
-          goal_sugars: updatedGoals.sugars,
-          goal_fiber: updatedGoals.fiber,
-        })
-        .eq('id', user.id);
-      if (error) throw error;
+      if (user) {
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            goal_calories: updatedGoals.calories,
+            goal_protein: updatedGoals.protein,
+            goal_carbs: updatedGoals.carbs,
+            goal_fats: updatedGoals.fats,
+            goal_sugars: updatedGoals.sugars,
+            goal_fiber: updatedGoals.fiber,
+          })
+          .eq('id', user.id);
+        if (error) throw error;
+      } else {
+        saveLocalProfile({
+            goal_calories: updatedGoals.calories,
+            goal_protein: updatedGoals.protein,
+            goal_carbs: updatedGoals.carbs,
+            goal_fats: updatedGoals.fats,
+            goal_sugars: updatedGoals.sugars,
+            goal_fiber: updatedGoals.fiber,
+        });
+      }
     },
     onSuccess: async () => {
-      await refetchProfile();
+      if (user) await refetchProfile();
     },
     onError: (error) => {
       toast.error(t('nutritional_goals.save_error'), { description: error.message });

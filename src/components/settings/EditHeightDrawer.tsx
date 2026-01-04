@@ -18,7 +18,7 @@ interface EditHeightDrawerProps {
 
 const EditHeightDrawer = ({ isOpen, onClose, currentHeight }: EditHeightDrawerProps) => {
   const [newHeight, setNewHeight] = useState(currentHeight);
-  const { user, profile, refetchProfile } = useAuth();
+  const { user, profile, refetchProfile, saveLocalProfile } = useAuth();
   const { t } = useTranslation();
   const isMetric = profile?.units !== 'imperial';
   const heightItems = useMemo(() => Array.from({ length: 250 - 100 + 1 }, (_, i) => i + 100), []);
@@ -31,12 +31,16 @@ const EditHeightDrawer = ({ isOpen, onClose, currentHeight }: EditHeightDrawerPr
 
   const mutation = useMutation({
     mutationFn: async (height: number) => {
-      if (!user) throw new Error('User not found.');
-      const { error } = await supabase.from('profiles').update({ height }).eq('id', user.id);
-      if (error) throw error;
+      if (user) {
+        const { error } = await supabase.from('profiles').update({ height }).eq('id', user.id);
+        if (error) throw error;
+      } else {
+        saveLocalProfile({ height });
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
     },
     onSuccess: async () => {
-      await refetchProfile();
+      if (user) await refetchProfile();
       onClose();
     },
     onError: (error) => {
