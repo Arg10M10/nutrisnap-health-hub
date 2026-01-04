@@ -15,6 +15,7 @@ export interface Recipe {
   sugars: number;
   fiber: number;
   ingredients: Ingredient[];
+  category: 'lunch_dinner' | 'snack_breakfast' | 'breakfast';
 }
 
 export const recipes: Recipe[] = [
@@ -28,6 +29,7 @@ export const recipes: Recipe[] = [
     fats: 22,
     sugars: 8,
     fiber: 6,
+    category: "lunch_dinner",
     ingredients: [
       { key: "spaghetti", amount: 100, unit: "g" },
       { key: "ground_beef", amount: 120, unit: "g" },
@@ -50,6 +52,7 @@ export const recipes: Recipe[] = [
     fats: 15,
     sugars: 5,
     fiber: 4,
+    category: "lunch_dinner",
     ingredients: [
       { key: "chicken_breast", amount: 180, unit: "g" },
       { key: "white_rice", amount: 70, unit: "g" },
@@ -71,6 +74,7 @@ export const recipes: Recipe[] = [
     fats: 15,
     sugars: 22,
     fiber: 6,
+    category: "snack_breakfast",
     ingredients: [
       { key: "blueberries", amount: 120, unit: "g" },
       { key: "almond_milk", amount: 250, unit: "ml" },
@@ -89,6 +93,7 @@ export const recipes: Recipe[] = [
     fats: 20,
     sugars: 18,
     fiber: 9,
+    category: "breakfast",
     ingredients: [
       { key: "oats", amount: 60, unit: "g" },
       { key: "milk", amount: 250, unit: "ml" },

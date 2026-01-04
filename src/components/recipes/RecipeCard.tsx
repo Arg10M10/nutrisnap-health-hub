@@ -22,6 +22,12 @@ const RecipeCard = ({ recipe, onClick }: RecipeCardProps) => {
         />
         
         {/* Etiquetas flotantes */}
+        <div className="absolute top-3 left-3 z-10">
+          <span className="bg-background/90 text-foreground font-semibold text-[10px] px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wide border border-border/50 backdrop-blur-sm">
+            {t(`recipes.categories.${recipe.category}` as any)}
+          </span>
+        </div>
+
         <div className="absolute bottom-3 left-3 flex gap-2 z-10">
           <span className="bg-[#FFE8D6] text-black font-bold text-xs px-3 py-1.5 rounded-full shadow-sm">
             {recipe.time} min
