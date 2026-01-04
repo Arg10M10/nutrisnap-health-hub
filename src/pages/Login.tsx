@@ -3,18 +3,20 @@ import { useTranslation, Trans } from 'react-i18next';
 import { Card, CardContent } from "@/components/ui/card";
 import { Leaf, ArrowRight } from "lucide-react";
 import { SignInForm } from '@/components/auth/SignInForm';
-import { SignUpForm } from '@/components/auth/SignUpForm';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LanguageDrawer } from '@/components/settings/LanguageDrawer';
+import { useNavigate } from 'react-router-dom';
 
 const TERMS_URL = "https://www.calorel.online/termsandconditions";
 const PRIVACY_URL = "https://www.calorel.online/privacypolicy";
 
-type AuthView = 'welcome' | 'sign_in' | 'sign_up';
+// Eliminamos 'sign_up' del flujo inicial
+type AuthView = 'welcome' | 'sign_in';
 
 export default function Login() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [view, setView] = useState<AuthView>('welcome');
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
 
@@ -22,8 +24,9 @@ export default function Login() {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  const handleSwitchToSignIn = () => setView('sign_in');
-  const handleSwitchToSignUp = () => setView('sign_up');
+  const handleStartOnboarding = () => {
+    navigate('/onboarding');
+  };
 
   // Obtener código de idioma actual y su bandera correspondiente
   const currentLangCode = i18n.language.substring(0, 2).toUpperCase();
@@ -86,7 +89,7 @@ export default function Login() {
                   <Button 
                     size="lg" 
                     className="w-full h-14 text-lg rounded-2xl shadow-lg shadow-primary/20"
-                    onClick={() => setView('sign_up')}
+                    onClick={handleStartOnboarding}
                   >
                     {t('login.start_now')} <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
@@ -129,7 +132,7 @@ export default function Login() {
             </motion.div>
           )}
 
-          {(view === 'sign_in' || view === 'sign_up') && (
+          {view === 'sign_in' && (
             <motion.div
               key="auth-form"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -138,11 +141,8 @@ export default function Login() {
             >
               <Card className="border-none shadow-xl bg-card/80 backdrop-blur-sm min-h-[300px] flex flex-col justify-center">
                 <CardContent className="px-6 sm:px-8 py-8">
-                  {view === 'sign_in' ? (
-                    <SignInForm onSwitchToSignUp={handleSwitchToSignUp} />
-                  ) : (
-                    <SignUpForm onSwitchToSignIn={handleSwitchToSignIn} />
-                  )}
+                  {/* Pasamos una función vacía a onSwitchToSignUp ya que no usamos el registro aquí */}
+                  <SignInForm onSwitchToSignUp={() => {}} />
                 </CardContent>
               </Card>
               

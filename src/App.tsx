@@ -98,15 +98,15 @@ const AppRoutes = () => {
 
   const shellClass = "relative min-h-screen"; 
 
-  // Si no hay perfil (ni local ni remoto), ir a Onboarding
-  // EXCEPCIÓN: Si están en Login explícitamente
-  if (!profile && location.pathname !== '/login') {
+  // FLUJO DE USUARIO NO AUTENTICADO / SIN PERFIL
+  if (!profile) {
     return (
       <div className={shellClass}>
         <div className="relative z-10">
           <Routes>
-             <Route path="/login" element={<Login />} />
-             <Route path="*" element={<Onboarding />} />
+             <Route path="/onboarding" element={<Onboarding />} />
+             {/* Por defecto mostramos Login (Pantalla de Bienvenida) */}
+             <Route path="*" element={<Login />} /> 
           </Routes>
         </div>
       </div>
