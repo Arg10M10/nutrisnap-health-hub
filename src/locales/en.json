@@ -330,6 +330,31 @@
         "Taste and add honey if more sweetness is desired. Blend for a few more seconds.",
         "Serve immediately."
       ]
+    },
+    "oats_banana_peanut": {
+      "name": "Oatmeal with Banana & Peanut Butter",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "oats": "Rolled oats",
+        "milk": "Milk (or plant-based)",
+        "banana": "Banana",
+        "peanut_butter": "Peanut butter",
+        "cinnamon": "Cinnamon"
+      },
+      "instructions": [
+        "In a small pot, mix the oats with the milk.",
+        "Cook over medium heat for 5-7 minutes until thickened.",
+        "Mash half the banana and add it along with cinnamon to the oats. Mix well.",
+        "Serve in a bowl and top with the rest of the sliced banana and peanut butter."
+      ]
     }
   },
   "scanner": {

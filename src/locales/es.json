@@ -330,6 +330,31 @@
         "Probar y agregar miel si se desea más dulzor. Licuar unos segundos más.",
         "Servir inmediatamente."
       ]
+    },
+    "oats_banana_peanut": {
+      "name": "Avena con Plátano y Mantequilla de Maní",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "oats": "Avena en hojuelas",
+        "milk": "Leche (o bebida vegetal)",
+        "banana": "Plátano",
+        "peanut_butter": "Mantequilla de maní",
+        "cinnamon": "Canela"
+      },
+      "instructions": [
+        "En una olla pequeña, mezclar la avena con la leche.",
+        "Cocinar a fuego medio durante 5-7 minutos hasta que la avena absorba el líquido y espese.",
+        "Agregar la mitad del plátano machacado y la canela a la avena. Mezclar bien.",
+        "Servir en un tazón y decorar con el resto del plátano en rodajas y la mantequilla de maní por encima."
+      ]
     }
   },
   "scanner": {
@@ -921,6 +946,31 @@
         "Licuar durante 30–45 segundos hasta obtener una mezcla homogénea.",
         "Probar y agregar miel si se desea más dulzor. Licuar unos segundos más.",
         "Servir inmediatamente."
+      ]
+    },
+    "oats_banana_peanut": {
+      "name": "Avena con Plátano y Mantequilla de Maní",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "oats": "Avena en hojuelas",
+        "milk": "Leche (o bebida vegetal)",
+        "banana": "Plátano",
+        "peanut_butter": "Mantequilla de maní",
+        "cinnamon": "Canela"
+      },
+      "instructions": [
+        "En una olla pequeña, mezclar la avena con la leche.",
+        "Cocinar a fuego medio durante 5-7 minutos hasta que la avena absorba el líquido y espese.",
+        "Agregar la mitad del plátano machacado y la canela a la avena. Mezclar bien.",
+        "Servir en un tazón y decorar con el resto del plátano en rodajas y la mantequilla de maní por encima."
       ]
     }
   }
