@@ -176,6 +176,7 @@
     "best_value": "Best Value - Save 67%",
     "month_short": "mo",
     "billed_yearly": "{{price}} billed yearly",
+    "billed_yearly_simple": "billed today",
     "no_charge_text": "No charge for 3 days. Cancel anytime.",
     "immediate_charge_text": "You will be charged immediately.",
     "continue_limited": "Continue with limited version",
@@ -183,6 +184,8 @@
     "trial_started": "3-Day Trial Started!",
     "enable_trial": "Enable 3-Day Free Trial",
     "enable_trial_desc": "Try it free before you pay",
+    "plan_free": "Free",
+    "plan_premium": "Premium",
     "timeline": {
       "today_title": "Today: Start Free Trial",
       "today_desc": "Access all premium features immediately.",
@@ -196,7 +199,9 @@
       "scanner": "AI Food Scanner (Unlimited)",
       "exercise": "AI Exercise Analysis (Unlimited)",
       "diet_plans": "Personalized Weekly Diet Plans",
-      "goals": "Advanced Goal Tracking & Suggestions"
+      "goals": "Advanced Goal Tracking & Suggestions",
+      "menu_analysis": "Restaurant Menu Analysis",
+      "tracking": "Weight & Water Tracking"
     },
     "plan": {
       "title": "Select Plan",
@@ -730,7 +735,7 @@
     "full_name": "Full Name",
     "save": "Save Changes",
     "toast_error": "Failed to save profile.",
-    "age": "Age",
+    "age": "Edad",
     "height": "Height",
     "weight": "Weight",
     "years_unit": "years",
@@ -880,6 +885,7 @@
     "best_value": "Best Value - Save 67%",
     "month_short": "mo",
     "billed_yearly": "{{price}} billed yearly",
+    "billed_yearly_simple": "billed today",
     "no_charge_text": "No charge for 3 days. Cancel anytime.",
     "immediate_charge_text": "You will be charged immediately.",
     "continue_limited": "Continue with limited version",
@@ -887,6 +893,8 @@
     "trial_started": "3-Day Trial Started!",
     "enable_trial": "Enable 3-Day Free Trial",
     "enable_trial_desc": "Try it free before you pay",
+    "plan_free": "Free",
+    "plan_premium": "Premium",
     "timeline": {
       "today_title": "Today: Start Free Trial",
       "today_desc": "Access all premium features immediately.",
@@ -900,7 +908,9 @@
       "scanner": "AI Food Scanner (Unlimited)",
       "exercise": "AI Exercise Analysis (Unlimited)",
       "diet_plans": "Personalized Weekly Diet Plans",
-      "goals": "Advanced Goal Tracking & Suggestions"
+      "goals": "Advanced Goal Tracking & Suggestions",
+      "menu_analysis": "Restaurant Menu Analysis",
+      "tracking": "Weight & Water Tracking"
     },
     "plan": {
       "title": "Select Plan",

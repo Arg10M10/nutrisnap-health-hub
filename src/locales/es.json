@@ -176,6 +176,7 @@
     "best_value": "Mejor Valor - Ahorra 67%",
     "month_short": "mes",
     "billed_yearly": "{{price}} facturado anualmente",
+    "billed_yearly_simple": "facturado hoy",
     "no_charge_text": "Sin cargo por 3 días. Cancela cuando quieras.",
     "immediate_charge_text": "El cargo se realizará inmediatamente.",
     "continue_limited": "Continuar con versión limitada",
@@ -183,6 +184,8 @@
     "trial_started": "¡Prueba de 3 días iniciada!",
     "enable_trial": "Habilitar prueba de 3 días",
     "enable_trial_desc": "Pruébalo gratis antes de pagar",
+    "plan_free": "Gratis",
+    "plan_premium": "Premium",
     "timeline": {
       "today_title": "Hoy: Inicia Prueba Gratuita",
       "today_desc": "Accede a todas las funciones premium de inmediato.",
@@ -196,7 +199,9 @@
       "scanner": "Escáner de Comida con IA (Ilimitado)",
       "exercise": "Análisis de Ejercicio con IA (Ilimitado)",
       "diet_plans": "Planes de Dieta Semanales Personalizados",
-      "goals": "Seguimiento Avanzado de Metas y Sugerencias"
+      "goals": "Seguimiento Avanzado de Metas y Sugerencias",
+      "menu_analysis": "Análisis de Menús de Restaurante",
+      "tracking": "Registro de Peso y Agua"
     },
     "plan": {
       "title": "Selecciona tu Plan",
@@ -880,6 +885,7 @@
     "best_value": "Mejor Valor - Ahorra 67%",
     "month_short": "mes",
     "billed_yearly": "{{price}} facturado anualmente",
+    "billed_yearly_simple": "facturado hoy",
     "no_charge_text": "Sin cargo por 3 días. Cancela cuando quieras.",
     "immediate_charge_text": "El cargo se realizará inmediatamente.",
     "continue_limited": "Continuar con versión limitada",
@@ -887,6 +893,8 @@
     "trial_started": "¡Prueba de 3 días iniciada!",
     "enable_trial": "Habilitar prueba de 3 días",
     "enable_trial_desc": "Pruébalo gratis antes de pagar",
+    "plan_free": "Gratis",
+    "plan_premium": "Premium",
     "timeline": {
       "today_title": "Hoy: Inicia Prueba Gratuita",
       "today_desc": "Accede a todas las funciones premium de inmediato.",
@@ -900,7 +908,9 @@
       "scanner": "Escáner de Comida con IA (Ilimitado)",
       "exercise": "Análisis de Ejercicio con IA (Ilimitado)",
       "diet_plans": "Planes de Dieta Semanales Personalizados",
-      "goals": "Seguimiento Avanzado de Metas y Sugerencias"
+      "goals": "Seguimiento Avanzado de Metas y Sugerencias",
+      "menu_analysis": "Análisis de Menús de Restaurante",
+      "tracking": "Registro de Peso y Agua"
     },
     "plan": {
       "title": "Selecciona tu Plan",
