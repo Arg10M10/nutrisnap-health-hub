@@ -16,6 +16,7 @@ import { GoalWeightStep } from './steps/GoalWeightStep';
 import { WeeklyRateStep } from './steps/WeeklyRateStep';
 import { NotificationsStep } from './steps/NotificationsStep';
 import { FinalStep } from './steps/FinalStep';
+import { calculateNutritionPlan } from '@/lib/nutritionCalculator';
 
 const Onboarding = () => {
   const { saveLocalProfile } = useAuth();
@@ -42,7 +43,7 @@ const Onboarding = () => {
 
   const handleFinish = async () => {
     try {
-      // Lógica inteligente para "Mantener peso"
+      // 1. Preparar datos para el cálculo
       let finalGoalWeight = formData.goalWeight;
       let finalWeeklyRate = formData.weeklyRate;
 
@@ -51,7 +52,32 @@ const Onboarding = () => {
         finalWeeklyRate = 0;
       }
 
-      // Guardar localmente
+      const isImperial = formData.units === 'imperial';
+      const weightInKg = isImperial && formData.weight ? formData.weight * 0.453592 : (formData.weight || 70);
+      const heightInCm = isImperial && formData.height ? formData.height * 2.54 : (formData.height || 170);
+      const weeklyRateInKg = isImperial && finalWeeklyRate ? finalWeeklyRate * 0.453592 : (finalWeeklyRate || 0);
+
+      // Estimar actividad (Misma lógica que en GeneratingPlan)
+      let estimatedWorkouts = 2; 
+      if (formData.experience) {
+        const exp = formData.experience.toLowerCase();
+        if (exp.includes("first time")) estimatedWorkouts = 1;
+        else if (exp.includes("one or two")) estimatedWorkouts = 3;
+        else if (exp.includes("several")) estimatedWorkouts = 5;
+      }
+
+      // 2. EJECUTAR CÁLCULO TDEE/MACROS AHORA MISMO
+      const nutritionPlan = calculateNutritionPlan({
+        weight: weightInKg,
+        height: heightInCm,
+        age: formData.age || 30,
+        gender: formData.gender || 'male',
+        activityLevel: estimatedWorkouts,
+        goal: (formData.goal as any) || 'maintain_weight',
+        weeklyRate: weeklyRateInKg
+      });
+
+      // 3. Guardar todo en el perfil local (incluyendo los macros calculados)
       saveLocalProfile({
         gender: formData.gender,
         age: formData.age,
@@ -65,12 +91,20 @@ const Onboarding = () => {
         goal_weight: finalGoalWeight,
         weekly_rate: finalWeeklyRate,
         onboarding_completed: true,
-        full_name: 'Guest User', // Placeholder
-        is_subscribed: false, // Default to false
+        full_name: 'Guest User',
+        is_subscribed: false,
+        // Guardamos los objetivos calculados:
+        goal_calories: nutritionPlan.calories,
+        goal_protein: nutritionPlan.protein,
+        goal_carbs: nutritionPlan.carbs,
+        goal_fats: nutritionPlan.fats,
+        goal_sugars: nutritionPlan.sugars,
+        goal_fiber: nutritionPlan.fiber,
       });
 
-      // Ir a la pantalla de suscripción, indicando que venimos del onboarding
-      navigate('/subscribe', { state: { fromOnboarding: true } });
+      // 4. Navegar directamente a la proyección de objetivos (para mostrar el resultado)
+      // Saltamos la pantalla de "GeneratingPlan" ya que el cálculo fue instantáneo.
+      navigate('/generating-plan', { replace: true });
       
     } catch (error) {
       console.error("Onboarding Save Error:", error);

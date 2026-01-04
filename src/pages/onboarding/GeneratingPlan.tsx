@@ -1,21 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useMutation } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/context/AuthContext";
 import { Progress } from "@/components/ui/progress";
 import { Brain, Calculator, CheckCircle2, Utensils } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { calculateNutritionPlan } from "@/lib/nutritionCalculator";
 
 const GeneratingPlan = () => {
-  const { user, profile, refetchProfile } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState(0);
-  const hasStartedRef = useRef(false);
 
   const stages = [
     { text: t('generating_plan.step1'), icon: <Brain className="w-8 h-8 text-primary" /> },
@@ -24,24 +18,28 @@ const GeneratingPlan = () => {
     { text: t('generating_plan.step4'), icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
   ];
 
-  // Simulación de progreso visual - Reducido a ~8 segundos ya que el cálculo es local y rápido
   useEffect(() => {
-    const totalDuration = 8000; 
-    const intervalTime = 100;
+    // Animación visual de 4 segundos para dar sensación de "preparación"
+    const totalDuration = 4000; 
+    const intervalTime = 50;
     const totalSteps = totalDuration / intervalTime;
     const increment = 100 / totalSteps;
 
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 99) {
-          return 99;
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+             navigate('/goal-projection', { replace: true });
+          }, 500);
+          return 100;
         }
-        return Math.min(prev + increment, 99);
+        return Math.min(prev + increment, 100);
       });
     }, intervalTime);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (progress < 25) setStage(0);
@@ -49,87 +47,6 @@ const GeneratingPlan = () => {
     else if (progress < 85) setStage(2);
     else setStage(3);
   }, [progress]);
-
-  const generatePlanMutation = useMutation({
-    mutationFn: async () => {
-      if (!profile || !user) throw new Error("Profile not loaded");
-
-      const weightInKg = profile.weight || 70;
-      const heightInCm = profile.height || 170;
-      const isImperial = profile.units === 'imperial';
-      
-      const finalWeight = isImperial ? weightInKg * 0.453592 : weightInKg;
-      const finalHeight = isImperial ? heightInCm * 2.54 : heightInCm;
-      
-      // Estimar actividad basada en la experiencia previa seleccionada
-      let estimatedWorkouts = 2; // Default light
-      if (profile.previous_apps_experience) {
-        const exp = profile.previous_apps_experience.toLowerCase();
-        if (exp.includes("first time")) estimatedWorkouts = 1;
-        else if (exp.includes("one or two")) estimatedWorkouts = 3;
-        else if (exp.includes("several")) estimatedWorkouts = 5;
-      }
-
-      let weeklyRate = profile.weekly_rate || 0.5;
-      if (profile.goal === 'maintain_weight') {
-        weeklyRate = 0;
-      } else if (isImperial) {
-        weeklyRate = weeklyRate * 0.453592;
-      }
-
-      // CÁLCULO LOCAL (TDEE + Macros)
-      const suggestions = calculateNutritionPlan({
-        weight: finalWeight,
-        height: finalHeight,
-        age: profile.age || 30,
-        gender: profile.gender || 'male',
-        activityLevel: estimatedWorkouts,
-        goal: (profile.goal as any) || 'maintain_weight',
-        weeklyRate: weeklyRate
-      });
-
-      // Guardar resultados en la base de datos
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({
-          goal_calories: suggestions.calories,
-          goal_protein: suggestions.protein,
-          goal_carbs: suggestions.carbs,
-          goal_fats: suggestions.fats,
-          goal_sugars: suggestions.sugars,
-          goal_fiber: suggestions.fiber,
-        })
-        .eq('id', user.id);
-
-      if (updateError) throw updateError;
-
-      return suggestions;
-    },
-    onSuccess: async () => {
-      setProgress(100);
-      setStage(3);
-      await refetchProfile();
-      setTimeout(() => {
-        navigate('/goal-projection', { replace: true });
-      }, 1000);
-    },
-    onError: (error) => {
-      console.error("Error generating plan", error);
-      // Even on error, try to go home if profile exists
-      navigate('/', { replace: true });
-    }
-  });
-
-  useEffect(() => {
-    if (user && profile && !hasStartedRef.current) {
-      hasStartedRef.current = true;
-      // Pequeño delay para que la UI cargue antes de ejecutar
-      const timeout = setTimeout(() => {
-        generatePlanMutation.mutate();
-      }, 1500);
-      return () => clearTimeout(timeout);
-    }
-  }, [user, profile]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
@@ -161,13 +78,6 @@ const GeneratingPlan = () => {
             <Progress value={progress} className="h-4 rounded-full transition-all duration-300 ease-linear" />
             <p className="text-sm text-muted-foreground text-right font-mono font-medium">{Math.floor(progress)}%</p>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 opacity-40 pointer-events-none mt-8">
-          <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse" />
-          <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-75" />
-          <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-150" />
-          <div className="h-20 bg-muted/30 rounded-2xl border border-dashed border-border/50 animate-pulse delay-300" />
         </div>
       </div>
     </div>

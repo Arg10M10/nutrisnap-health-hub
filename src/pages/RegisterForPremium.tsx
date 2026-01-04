@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Crown, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { calculateNutritionPlan } from '@/lib/nutritionCalculator';
 
 const RegisterForPremium = () => {
   const navigate = useNavigate();
@@ -22,12 +23,39 @@ const RegisterForPremium = () => {
     toast.loading("Sincronizando tus datos...", { id: loadingId });
 
     try {
-      // Intentamos recuperar los datos locales directamente del localStorage para asegurar
-      // que no se pierdan si el contexto de autenticación cambia rápido.
+      // Intentamos recuperar los datos locales directamente del localStorage
       const localDataString = window.localStorage.getItem('calorel_local_profile');
       const localProfile = localDataString ? JSON.parse(localDataString) : null;
 
       if (localProfile) {
+        // Verificar si los macros ya existen, si no, calcularlos aquí como respaldo
+        let nutritionPlan = {
+          calories: localProfile.goal_calories,
+          protein: localProfile.goal_protein,
+          carbs: localProfile.goal_carbs,
+          fats: localProfile.goal_fats,
+          sugars: localProfile.goal_sugars,
+          fiber: localProfile.goal_fiber,
+        };
+
+        if (!nutritionPlan.calories) {
+            // Si faltan, recálculo de emergencia
+            const isImperial = localProfile.units === 'imperial';
+            const weightInKg = isImperial ? localProfile.weight * 0.453592 : localProfile.weight;
+            const heightInCm = isImperial ? localProfile.height * 2.54 : localProfile.height;
+            const weeklyRateInKg = isImperial ? localProfile.weekly_rate * 0.453592 : localProfile.weekly_rate;
+
+            nutritionPlan = calculateNutritionPlan({
+                weight: weightInKg || 70,
+                height: heightInCm || 170,
+                age: localProfile.age || 30,
+                gender: localProfile.gender || 'male',
+                activityLevel: 3, // Default moderate if unknown
+                goal: localProfile.goal || 'maintain_weight',
+                weeklyRate: weeklyRateInKg || 0
+            });
+        }
+
         const updateData: any = {
             gender: localProfile.gender,
             age: localProfile.age,
@@ -41,8 +69,14 @@ const RegisterForPremium = () => {
             goal_weight: localProfile.goal_weight,
             weekly_rate: localProfile.weekly_rate,
             onboarding_completed: true,
-            // IMPORTANTE: No activamos is_subscribed aquí.
-            // El usuario debe completar el pago en la siguiente pantalla.
+            // Incluir macros sincronizados
+            goal_calories: nutritionPlan.calories,
+            goal_protein: nutritionPlan.protein,
+            goal_carbs: nutritionPlan.carbs,
+            goal_fats: nutritionPlan.fats,
+            goal_sugars: nutritionPlan.sugars,
+            goal_fiber: nutritionPlan.fiber,
+            
             is_subscribed: false 
         };
 
@@ -68,8 +102,6 @@ const RegisterForPremium = () => {
         navigate('/'); 
       } else {
         // FLUJO PREMIUM:
-        // 1. Cuenta creada y datos guardados.
-        // 2. Redirigimos a /subscribe para que el usuario ahora sí realice el pago/activación.
         toast.success("Cuenta creada. Ahora selecciona tu plan.");
         navigate('/subscribe', { replace: true }); 
       }
@@ -77,7 +109,7 @@ const RegisterForPremium = () => {
     } catch (error: any) {
       console.error("Sync error:", error);
       toast.dismiss(loadingId);
-      toast.error("Error al sincronizar datos. Contacta a soporte.", { description: error.message });
+      toast.error("Error al sincronizar datos.", { description: error.message });
     }
   };
 
