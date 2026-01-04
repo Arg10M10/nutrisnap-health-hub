@@ -841,137 +841,23 @@
     "next": "Next"
   },
   "notifications": {
-    "title": "Mantén la Constancia",
-    "description": "Activa las notificaciones para recibir recordatorios de comidas, hidratación y control de peso. ¡Te ayudará a no perder el ritmo!",
-    "enable_button": "Activar Notificaciones",
-    "skip_button": "Quizás más tarde",
-    "breakfast_title": "Buenos Días",
-    "breakfast_body": "Empieza tu día registrando tu desayuno.",
-    "food_title": "Hora de Comer",
-    "food_body_1": "¿Qué hay de rico hoy? Regístralo.",
-    "dinner_title_1": "Hora de Cenar",
-    "dinner_body_1": "No olvides registrar tu última comida.",
+    "title": "Stay Consistent",
+    "description": "Turn on notifications to get reminders for meals, hydration, and weight checks. It helps you stay on track!",
+    "enable_button": "Enable Notifications",
+    "skip_button": "Maybe Later",
+    "breakfast_title": "Good Morning",
+    "breakfast_body": "Start your day by logging your breakfast.",
+    "food_title": "Lunch Time",
+    "food_body_1": "What's for lunch? Log it now.",
+    "dinner_title_1": "Dinner Time",
+    "dinner_body_1": "Don't forget to log your last meal.",
     "snack_title": "Snack Time",
-    "snack_body": "Pequeña pausa, registra tu snack.",
-    "water_title_1": "Hidratación",
-    "water_body_1": "Tu cuerpo necesita agua. ¡Bebe un vaso!",
-    "water_title_2": "Hábito Saludable",
-    "water_body_2": "Mantente hidratado para mejores resultados.",
-    "weight_title_1": "Control de Peso",
-    "weight_body_1": "Actualiza tu peso hoy para ver tu progreso."
-  },
-  "recipes": {
-    "title": "Recetas",
-    "coming_soon": "Próximamente...",
-    "recipes_disclaimer": "Nota: Todos los valores nutricionales son aproximaciones y no exactos.",
-    "spaghetti_bolognese": {
-      "name": "Espaguetis a la Boloñesa",
-      "ingredients": "Ingredientes",
-      "steps": "Pasos",
-      "nutritional_info": "Información Nutricional",
-      "per_serving": "Por porción",
-      "time_total": "Tiempo total",
-      "minutes": "minutos",
-      "to_taste": "al gusto",
-      "add_to_log": "Agregar al Diario",
-      "portions": "Porciones",
-      "list": {
-        "spaghetti": "Espaguetis",
-        "ground_beef": "Carne molida de res (10–15% grasa)",
-        "tomato_sauce": "Tomate triturado o salsa de tomate natural",
-        "onion": "Cebolla",
-        "garlic": "Diente de ajo",
-        "olive_oil": "Aceite de oliva",
-        "salt": "Sal",
-        "pepper": "Pimienta",
-        "herbs": "Orégano o albahaca"
-      },
-      "instructions": [
-        "Hervir agua con sal y cocinar los espaguetis según las instrucciones del paquete (8–10 minutos). Escurrir.",
-        "Calentar el aceite en una sartén y sofreír la cebolla picada y el ajo durante 2–3 minutos.",
-        "Agregar la carne molida y cocinar hasta que esté bien dorada.",
-        "Añadir el tomate triturado, sal, pimienta y especias. Cocinar durante 10–15 minutos.",
-        "Mezclar la pasta con la salsa o servir la salsa sobre los espaguetis."
-      ]
-    },
-    "grilled_chicken_rice": {
-      "name": "Pollo a la plancha con arroz y ensalada",
-      "ingredients": "Ingredientes",
-      "steps": "Pasos",
-      "nutritional_info": "Información Nutricional",
-      "per_serving": "Por porción",
-      "time_total": "Tiempo total",
-      "minutes": "minutos",
-      "to_taste": "al gusto",
-      "add_to_log": "Agregar al Diario",
-      "portions": "Porciones",
-      "list": {
-        "chicken_breast": "Pechuga de pollo",
-        "white_rice": "Arroz blanco crudo",
-        "lettuce": "Lechuga",
-        "tomato": "Tomate",
-        "olive_oil": "Aceite de oliva",
-        "salt": "Sal",
-        "pepper": "Pimienta",
-        "lemon_juice": "Jugo de limón"
-      },
-      "instructions": [
-        "Cocinar el arroz en agua con sal durante 15–18 minutos. Escurrir.",
-        "Sazonar la pechuga de pollo con sal y pimienta.",
-        "Calentar una sartén o plancha con 5 g de aceite y cocinar el pollo 5–6 minutos por lado hasta que esté bien cocido.",
-        "Cortar la lechuga y el tomate, mezclar y aliñar con limón y los 5 g restantes de aceite.",
-        "Servir el pollo junto al arroz y la ensalada."
-      ]
-    },
-    "blueberry_almond_smoothie": {
-      "name": "Smoothie de Blueberry y Almendras",
-      "ingredients": "Ingredientes",
-      "steps": "Pasos",
-      "nutritional_info": "Información Nutricional",
-      "per_serving": "Por porción",
-      "time_total": "Tiempo total",
-      "minutes": "minutos",
-      "to_taste": "al gusto",
-      "add_to_log": "Agregar al Diario",
-      "portions": "Porciones",
-      "list": {
-        "blueberries": "Arándanos frescos",
-        "almond_milk": "Leche de almendras sin azúcar",
-        "almonds": "Almendras naturales",
-        "yogurt": "Yogur natural descremado",
-        "honey": "Miel (opcional)"
-      },
-      "instructions": [
-        "Colocar los arándanos, la leche de almendras, las almendras y el yogur en la licuadora.",
-        "Licuar durante 30–45 segundos hasta obtener una mezcla homogénea.",
-        "Probar y agregar miel si se desea más dulzor. Licuar unos segundos más.",
-        "Servir inmediatamente."
-      ]
-    },
-    "oats_banana_peanut": {
-      "name": "Avena con Plátano y Mantequilla de Maní",
-      "ingredients": "Ingredientes",
-      "steps": "Pasos",
-      "nutritional_info": "Información Nutricional",
-      "per_serving": "Por porción",
-      "time_total": "Tiempo total",
-      "minutes": "minutos",
-      "to_taste": "al gusto",
-      "add_to_log": "Agregar al Diario",
-      "portions": "Porciones",
-      "list": {
-        "oats": "Avena en hojuelas",
-        "milk": "Leche (o bebida vegetal)",
-        "banana": "Plátano",
-        "peanut_butter": "Mantequilla de maní",
-        "cinnamon": "Canela"
-      },
-      "instructions": [
-        "En una olla pequeña, mezclar la avena con la leche.",
-        "Cocinar a fuego medio durante 5-7 minutos hasta que la avena absorba el líquido y espese.",
-        "Agregar la mitad del plátano machacado y la canela a la avena. Mezclar bien.",
-        "Servir en un tazón y decorar con el resto del plátano en rodajas y la mantequilla de maní por encima."
-      ]
-    }
+    "snack_body": "Quick break, log your snack.",
+    "water_title_1": "Hydration",
+    "water_body_1": "Your body needs water. Drink a glass!",
+    "water_title_2": "Healthy Habit",
+    "water_body_2": "Stay hydrated for better results.",
+    "weight_title_1": "Weight Control",
+    "weight_body_1": "Update your weight today to see your progress."
   }
 }
