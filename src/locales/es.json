@@ -712,7 +712,8 @@
       "title": "Objetivos y Seguimiento",
       "editNutrition": "Metas Nutricionales",
       "editWeight": "Meta de Peso",
-      "ringColors": "Colores de Anillos"
+      "ringColors": "Colores de Anillos",
+      "connectApps": "Conectar Apps"
     },
     "support": {
       "title": "Soporte y Legal",
@@ -961,5 +962,18 @@
     "subtitle_monthly": "Has activado el Plan Mensual.",
     "desc_monthly": "Gracias por confiar en Calorel. ¡Vamos a lograr esas metas juntos!",
     "button": "Comenzar Ahora"
+  },
+  "connect_apps": {
+    "title": "Conectar Apps",
+    "subtitle": "Sincroniza tus datos de salud",
+    "description": "Conecta Google Health Connect para sincronizar automáticamente tus pasos y actividad diaria.",
+    "google_health_connect": "Google Health Connect",
+    "status_connected": "Conectado",
+    "status_connect": "Conectar",
+    "permissions_title": "Permisos Requeridos",
+    "permissions_desc": "Calorel necesita permiso para leer tus pasos diarios.",
+    "read_steps": "Leer pasos diarios",
+    "data_preview": "Vista previa de datos (Hoy)",
+    "total_steps": "Pasos Totales"
   }
 }

@@ -45,6 +45,7 @@ import GoalProjection from "./pages/onboarding/GoalProjection";
 import Recipes from "./pages/Recipes";
 import RegisterForPremium from "./pages/RegisterForPremium";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
+import ConnectApps from "./pages/settings/ConnectApps";
 
 const queryClient = new QueryClient();
 
@@ -161,6 +162,7 @@ const AppRoutes = () => {
     "/settings/edit-profile",
     "/settings/personal-details",
     "/settings/reminders",
+    "/settings/connect-apps",
     "/recipes",
     "/login" // Login accesible desde settings
   ];
@@ -187,6 +189,7 @@ const AppRoutes = () => {
               <Route path="/settings/edit-profile" element={<EditProfile />} />
               <Route path="/settings/personal-details" element={<PersonalDetails />} />
               <Route path="/settings/reminders" element={<Reminders />} />
+              <Route path="/settings/connect-apps" element={<ConnectApps />} />
               <Route path="/recipes" element={<Recipes />} />
               <Route path="/login" element={<Login />} />
             </Routes>
