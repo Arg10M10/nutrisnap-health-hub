@@ -25,7 +25,12 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
     // 1. Weight log is FREE for everyone (Guest & Registered)
     if (feature === 'weight_log') return true;
 
-    // 2. BLOCK GUEST USERS IMMEDIATELY FOR AI FEATURES
+    // 2. PREMIUM USERS: Always allow AI features (Unlimited)
+    if (profile?.is_subscribed) {
+      return true;
+    }
+
+    // 3. GUEST USERS: Block AI features immediately
     if (profile?.is_guest) {
       setIsPremiumLockOpen(true);
       return false;
@@ -33,9 +38,20 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
 
     if (!user) return false;
 
-    // "manual_food_scan" uses AI, so it is now blocked for guests above, but check limit for subscribed
+    // 4. REGISTERED FREE USERS Logic:
+    
+    // "manual_food_scan" is free for registered users
     if (feature === 'manual_food_scan') return true;
 
+    // If the UI requests a "High Limit" (e.g. 9999), it implies this is a Premium-Only action
+    // Since we already passed the subscription check above, the user is NOT subscribed here.
+    // Therefore, we block them.
+    if (limit > 50) {
+      setIsPremiumLockOpen(true);
+      return false;
+    }
+
+    // 5. Standard Limit Counting for Free Users (e.g., 4 scans/day)
     const now = new Date();
     let startDate = startOfDay(now);
 
@@ -68,13 +84,16 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
   }, [user, profile]);
 
   const logUsage = useCallback(async (feature: AIFeature) => {
+    // If guest, do nothing (should be blocked by checkLimit anyway)
     if (!user || profile?.is_guest) return;
     
-    // Don't log manual food scans as usage since they are unlimited for PRO
-    if (feature === 'manual_food_scan') return;
-    
-    // Don't log weight logs as usage
-    if (feature === 'weight_log') return;
+    // Don't log manual food scans or weight logs
+    if (feature === 'manual_food_scan' || feature === 'weight_log') return;
+
+    // If user is subscribed, we technically don't NEED to log for limits, 
+    // but logging for analytics is good practice. 
+    // However, to save DB space/writes, we can skip logging for premium if analytics aren't critical.
+    // For now, we log everything for consistency.
 
     const { error } = await supabase
       .from('ai_usage_logs')
