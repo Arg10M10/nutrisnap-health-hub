@@ -44,12 +44,9 @@ const Progress = () => {
     return (todaysWeightUpdatesCount ?? 0) >= 2;
   }, [todaysWeightUpdatesCount]);
 
-  const handleOpenWeightDrawer = async () => {
-    // Check premium/guest status before opening
-    const allowed = await checkLimit('weight_log', 9999, 'daily');
-    if (allowed) {
-      setIsWeightDrawerOpen(true);
-    }
+  const handleOpenWeightDrawer = () => {
+    // Weight logging is free again
+    setIsWeightDrawerOpen(true);
   };
 
   const isImperial = profile?.units === 'imperial';

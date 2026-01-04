@@ -22,11 +22,11 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
 
   const benefits = [
     { name: "Escáner de Comida IA", free: false, premium: true },
-    { name: "Análisis de Menús", free: false, premium: true },
+    { name: "Análisis Ejercicio IA", free: false, premium: true },
     { name: "Planes de Dieta", free: false, premium: true },
-    { name: "Registro de Peso", free: false, premium: true },
+    { name: "Análisis de Menús", free: false, premium: true },
     { name: "Sugerencias Macros", free: false, premium: true },
-    { name: "Registro de Agua", free: true, premium: true },
+    { name: "Registro Peso/Agua", free: true, premium: true },
   ];
 
   return (

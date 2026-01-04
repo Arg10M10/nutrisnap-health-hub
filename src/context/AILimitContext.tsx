@@ -22,7 +22,10 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
   const [drawerInfo, setDrawerInfo] = useState<{ limit: number, timeFrame: TimeFrame }>({ limit: 0, timeFrame: 'daily' });
 
   const checkLimit = useCallback(async (feature: AIFeature, limit: number, timeFrame: TimeFrame = 'daily'): Promise<boolean> => {
-    // 1. BLOCK GUEST USERS IMMEDIATELY FOR AI FEATURES
+    // 1. Weight log is FREE for everyone (Guest & Registered)
+    if (feature === 'weight_log') return true;
+
+    // 2. BLOCK GUEST USERS IMMEDIATELY FOR AI FEATURES
     if (profile?.is_guest) {
       setIsPremiumLockOpen(true);
       return false;
@@ -32,9 +35,6 @@ export const AILimitProvider = ({ children }: { children: ReactNode }) => {
 
     // "manual_food_scan" uses AI, so it is now blocked for guests above, but check limit for subscribed
     if (feature === 'manual_food_scan') return true;
-    
-    // Weight log is gated for guests but unlimited for registered users
-    if (feature === 'weight_log') return true;
 
     const now = new Date();
     let startDate = startOfDay(now);

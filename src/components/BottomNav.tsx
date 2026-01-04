@@ -97,19 +97,12 @@ const BottomNav = () => {
     }, 150);
   };
 
-  const handleOpenWeight = async () => {
+  const handleOpenWeight = () => {
     if (hasReachedDailyWeightUpdateLimit) {
       toast.info(t('progress.weight_updated_today', 'Has alcanzado el límite diario de actualizaciones de peso.'));
       return;
     }
-
-    // Gate the weight logging feature for guests
-    const allowed = await checkLimit('weight_log', 9999, 'daily');
-    if (!allowed) {
-        setIsMenuOpen(false);
-        return;
-    }
-
+    // Weight is free now
     setIsMenuOpen(false);
     setIsWeightDrawerOpen(true);
   };
@@ -134,7 +127,7 @@ const BottomNav = () => {
       {({ isActive }) => (
         <>
           <item.icon className={cn("w-[22px] h-[22px]", isActive ? "text-primary" : "text-muted-foreground")} />
-          <span className={cn("text-[11px] leading-tight font-medium", isActive ? "text-primary" : "text-muted-foreground")}>
+          <span className="text-[11px] leading-tight font-medium", isActive ? "text-primary" : "text-muted-foreground")}>
             {item.label}
           </span>
         </>
