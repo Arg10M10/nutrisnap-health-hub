@@ -157,17 +157,16 @@ const Settings = () => {
 
         {/* Trial Status Card */}
         {isTrialActive && (
-          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between">
+          <div className="bg-gradient-to-br from-zinc-800 to-zinc-950 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between border border-zinc-700/50">
             <div className="flex items-center gap-3">
-              <div className="bg-white/20 p-2 rounded-full">
+              <div className="bg-white/10 p-2 rounded-full border border-white/10">
                 <Clock className="w-5 h-5 text-white" />
               </div>
               <div>
                 <p className="font-bold text-sm">Prueba Premium Activa</p>
-                <p className="text-xs text-white/80">{trialRemainingText} de prueba</p>
+                <p className="text-xs text-zinc-400 font-medium">{trialRemainingText} de prueba</p>
               </div>
             </div>
-            {/* Podríamos poner un botón de 'Gestionar' si hubiera integración real */}
           </div>
         )}
 
