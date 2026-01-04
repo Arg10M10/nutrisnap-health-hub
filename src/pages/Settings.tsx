@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { Settings as SettingsIcon, ChevronRight, MessageSquareText, Crown, Clock, CalendarDays, Star } from "lucide-react";
+import { Settings as SettingsIcon, ChevronRight, Crown, Clock, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import PageLayout from "@/components/PageLayout";
@@ -97,7 +97,7 @@ const Settings = () => {
   let subscriptionCard = null;
   const now = new Date();
 
-  // 1. Verificar Prueba Gratuita (Titanium/Gris Oscuro)
+  // 1. Verificar Prueba Gratuita (Estilo Oscuro/Titanium sin etiqueta)
   if (profile?.is_subscribed && profile.trial_start_date) {
     const startDate = parseISO(profile.trial_start_date);
     const endDate = addDays(startDate, 3);
@@ -108,19 +108,17 @@ const Settings = () => {
       const remainingText = daysLeft === 1 ? `${hoursLeft}h restantes` : `${daysLeft} días restantes`;
       
       subscriptionCard = (
-        <div className="bg-gradient-to-br from-zinc-800 to-zinc-950 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between border border-zinc-700/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-8 -mt-8 blur-2xl"></div>
-          <div className="flex items-center gap-3 relative z-10">
-            <div className="bg-white/10 p-2.5 rounded-full border border-white/10">
-              <Clock className="w-5 h-5 text-white" />
+        <div className="bg-gradient-to-br from-zinc-800 to-zinc-950 rounded-2xl p-5 text-white shadow-xl flex items-center justify-between border border-zinc-700/50 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-white/10 transition-colors"></div>
+          
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="bg-white/10 p-3 rounded-full border border-white/10 shadow-inner">
+              <Clock className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="font-bold text-sm text-white/90">Prueba Premium Activa</p>
-              <p className="text-xs text-zinc-400 font-medium">{remainingText} de prueba</p>
+              <p className="font-bold text-base text-white tracking-wide">Prueba Premium</p>
+              <p className="text-sm text-zinc-400 font-medium">{remainingText}</p>
             </div>
-          </div>
-          <div className="bg-white/10 px-3 py-1 rounded-full text-[10px] font-bold tracking-wide border border-white/5">
-            TITANIUM
           </div>
         </div>
       );
@@ -133,35 +131,35 @@ const Settings = () => {
     const isAnnual = profile.plan_type === 'annual';
     const planName = isAnnual ? "Plan Anual" : "Plan Mensual";
     
-    // Estilos dinámicos
-    const bgGradient = isAnnual 
-      ? "from-amber-400 to-yellow-600 shadow-yellow-500/20" // Oro
-      : "from-slate-300 to-slate-500 shadow-slate-400/20"; // Plata
+    // Configuración visual según plan
+    const cardStyle = isAnnual 
+      ? "bg-gradient-to-br from-yellow-500 via-amber-500 to-orange-600 shadow-orange-500/20" // Dorado
+      : "bg-gradient-to-br from-slate-400 via-zinc-500 to-zinc-600 shadow-zinc-500/20"; // Plateado
     
-    const iconColor = isAnnual ? "text-yellow-900" : "text-slate-900";
-    const iconBg = isAnnual ? "bg-yellow-900/20" : "bg-slate-900/10";
-    const textColor = isAnnual ? "text-yellow-50" : "text-white";
+    const icon = isAnnual ? <Crown className="w-6 h-6 text-white drop-shadow-md" /> : <CalendarDays className="w-6 h-6 text-white drop-shadow-md" />;
     
     if (daysLeft >= 0) {
       subscriptionCard = (
-        <div className={`bg-gradient-to-br ${bgGradient} rounded-2xl p-4 text-white shadow-lg flex items-center justify-between border border-white/20 relative overflow-hidden`}>
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mb-10 blur-3xl"></div>
+        <div className={`${cardStyle} rounded-2xl p-5 text-white shadow-xl flex items-center justify-between border border-white/20 relative overflow-hidden group`}>
+          {/* Brillo decorativo */}
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-3xl pointer-events-none group-hover:bg-white/30 transition-all"></div>
+          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
           
-          <div className="flex items-center gap-3 relative z-10">
-            <div className={`${iconBg} p-2.5 rounded-full backdrop-blur-sm border border-white/20`}>
-              {isAnnual ? <Crown className={`w-5 h-5 ${iconColor}`} /> : <CalendarDays className={`w-5 h-5 ${iconColor}`} />}
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm border border-white/30 shadow-inner">
+              {icon}
             </div>
             <div>
-              <p className={`font-bold text-sm drop-shadow-sm`}>{planName}</p>
-              <p className={`text-xs ${textColor} font-medium opacity-90`}>
+              <p className="font-bold text-lg text-white drop-shadow-sm leading-tight">{planName}</p>
+              <p className="text-xs text-white/90 font-medium">
                 Renueva el {format(endDate, "d MMM yyyy", { locale: i18n.language === 'es' ? es : undefined })}
               </p>
             </div>
           </div>
           
           <div className="flex flex-col items-end relative z-10">
-             <div className="text-2xl font-black leading-none drop-shadow-md">{daysLeft}</div>
-             <div className="text-[10px] font-bold uppercase tracking-wider opacity-80">Días</div>
+             <div className="text-3xl font-black leading-none drop-shadow-md">{daysLeft}</div>
+             <div className="text-[10px] font-bold uppercase tracking-wider opacity-90">Días</div>
           </div>
         </div>
       );
@@ -185,7 +183,7 @@ const Settings = () => {
                   {isGuest ? t('settings.register_button') : (profile?.full_name || t('settings.profileCard.namePlaceholder'))}
                 </h1>
                 {profile?.is_subscribed && !subscriptionCard && (
-                  // Fallback simple badge if logic fails or expired but flag true
+                  // Fallback simple si expira o error, pero sigue marcado como suscrito
                   <div className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full text-[10px] font-bold border border-yellow-200 flex items-center gap-1">
                     <Crown className="w-3 h-3 fill-current" /> Premium
                   </div>
