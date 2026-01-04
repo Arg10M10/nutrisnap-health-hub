@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Progress } from "@/components/ui/progress";
 import { Brain, Calculator, CheckCircle2, Utensils } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { calculateNutritionPlan } from "@/lib/nutritionCalculator";
 
 const GeneratingPlan = () => {
   const { user, profile, refetchProfile } = useAuth();
@@ -23,9 +24,9 @@ const GeneratingPlan = () => {
     { text: t('generating_plan.step4'), icon: <CheckCircle2 className="w-8 h-8 text-green-500" /> },
   ];
 
-  // Simulación de progreso visual - Ajustado para ~35 segundos
+  // Simulación de progreso visual - Reducido a ~8 segundos ya que el cálculo es local y rápido
   useEffect(() => {
-    const totalDuration = 35000; 
+    const totalDuration = 8000; 
     const intervalTime = 100;
     const totalSteps = totalDuration / intervalTime;
     const increment = 100 / totalSteps;
@@ -60,7 +61,8 @@ const GeneratingPlan = () => {
       const finalWeight = isImperial ? weightInKg * 0.453592 : weightInKg;
       const finalHeight = isImperial ? heightInCm * 2.54 : heightInCm;
       
-      let estimatedWorkouts = 3;
+      // Estimar actividad basada en la experiencia previa seleccionada
+      let estimatedWorkouts = 2; // Default light
       if (profile.previous_apps_experience) {
         const exp = profile.previous_apps_experience.toLowerCase();
         if (exp.includes("first time")) estimatedWorkouts = 1;
@@ -68,13 +70,6 @@ const GeneratingPlan = () => {
         else if (exp.includes("several")) estimatedWorkouts = 5;
       }
 
-      let goalWeight = profile.goal_weight;
-      if (profile.goal === 'maintain_weight' || !goalWeight) {
-        goalWeight = finalWeight;
-      } else if (isImperial) {
-        goalWeight = goalWeight * 0.453592;
-      }
-      
       let weeklyRate = profile.weekly_rate || 0.5;
       if (profile.goal === 'maintain_weight') {
         weeklyRate = 0;
@@ -82,21 +77,18 @@ const GeneratingPlan = () => {
         weeklyRate = weeklyRate * 0.453592;
       }
 
-      const { data: suggestions, error: suggestionError } = await supabase.functions.invoke('calculate-macros', {
-        body: {
-          weight: finalWeight,
-          height: finalHeight,
-          gender: profile.gender || 'male',
-          age: profile.age || 30,
-          goal: profile.goal || 'maintain_weight',
-          goalWeight: goalWeight,
-          weeklyRate: weeklyRate, 
-          workoutsPerWeek: estimatedWorkouts
-        },
+      // CÁLCULO LOCAL (TDEE + Macros)
+      const suggestions = calculateNutritionPlan({
+        weight: finalWeight,
+        height: finalHeight,
+        age: profile.age || 30,
+        gender: profile.gender || 'male',
+        activityLevel: estimatedWorkouts,
+        goal: (profile.goal as any) || 'maintain_weight',
+        weeklyRate: weeklyRate
       });
 
-      if (suggestionError) throw new Error(suggestionError.message);
-
+      // Guardar resultados en la base de datos
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -105,6 +97,7 @@ const GeneratingPlan = () => {
           goal_carbs: suggestions.carbs,
           goal_fats: suggestions.fats,
           goal_sugars: suggestions.sugars,
+          goal_fiber: suggestions.fiber,
         })
         .eq('id', user.id);
 
@@ -118,10 +111,11 @@ const GeneratingPlan = () => {
       await refetchProfile();
       setTimeout(() => {
         navigate('/goal-projection', { replace: true });
-      }, 1500);
+      }, 1000);
     },
     onError: (error) => {
       console.error("Error generating plan", error);
+      // Even on error, try to go home if profile exists
       navigate('/', { replace: true });
     }
   });
@@ -129,9 +123,10 @@ const GeneratingPlan = () => {
   useEffect(() => {
     if (user && profile && !hasStartedRef.current) {
       hasStartedRef.current = true;
+      // Pequeño delay para que la UI cargue antes de ejecutar
       const timeout = setTimeout(() => {
         generatePlanMutation.mutate();
-      }, 1000);
+      }, 1500);
       return () => clearTimeout(timeout);
     }
   }, [user, profile]);

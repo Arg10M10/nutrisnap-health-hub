@@ -15,19 +15,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useAILimit } from '@/hooks/useAILimit';
 import { OnboardingOptionCard } from '@/components/settings/OnboardingOptionCard';
 import { Card, CardContent } from '@/components/ui/card';
+import { calculateNutritionPlan } from '@/lib/nutritionCalculator';
 
-// Validaciones dinámicas (se ajustan en el componente según la unidad)
+// Validaciones dinámicas
 const step1Schema = z.object({
-  workoutsPerWeek: z.coerce.number().min(0).max(7),
+  workoutsPerWeek: z.coerce.number().min(0).max(14),
 });
 const step2Schema = z.object({
   goalWeight: z.coerce.number().min(1, "El peso objetivo es requerido."),
 });
 const step3Schema = z.object({
-  weeklyRate: z.coerce.number().min(0.1),
+  weeklyRate: z.coerce.number().min(0),
 });
 
 const fullSchema = step1Schema.merge(step2Schema).merge(step3Schema);
@@ -40,14 +40,12 @@ const AISuggestions = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
-  const { checkLimit, logUsage } = useAILimit();
 
   const isImperial = profile?.units === 'imperial';
   const weightUnit = isImperial ? 'lbs' : 'kg';
 
   // Factores de conversión
-  const toLbs = (kg: number) => Math.round(kg * 2.20462);
-  const toKg = (lbs: number) => lbs / 2.20462;
+  const toKg = (val: number) => isImperial ? val * 0.453592 : val;
 
   const form = useForm<z.infer<typeof fullSchema>>({
     resolver: zodResolver(fullSchema),
@@ -59,7 +57,7 @@ const AISuggestions = () => {
     },
   });
 
-  // Inicializar valores cuando carga el perfil
+  // Inicializar valores
   useEffect(() => {
     if (profile?.weight) {
       let initialGoalWeight = 0;
@@ -88,30 +86,24 @@ const AISuggestions = () => {
 
       let weightInKg = profile.weight || 70;
       let heightInCm = profile.height || 170;
-      let goalWeightInKg = values.goalWeight;
-      let weeklyRateInKg = values.weeklyRate;
-
+      
       if (isImperial) {
-        weightInKg = toKg(weightInKg);
-        goalWeightInKg = toKg(goalWeightInKg);
-        weeklyRateInKg = toKg(weeklyRateInKg);
+        weightInKg = weightInKg * 0.453592;
         heightInCm = heightInCm * 2.54;
       }
 
-      const { data: suggestions, error: suggestionError } = await supabase.functions.invoke('calculate-macros', {
-        body: {
-          ...values,
-          weight: weightInKg,
-          height: heightInCm,
-          goalWeight: goalWeightInKg,
-          weeklyRate: weeklyRateInKg,
-          gender: profile.gender,
-          age: profile.age,
-          goal: profile.goal,
-        },
-      });
+      const weeklyRateInKg = toKg(values.weeklyRate);
 
-      if (suggestionError) throw new Error(suggestionError.message);
+      // CÁLCULO LOCAL
+      const suggestions = calculateNutritionPlan({
+        weight: weightInKg,
+        height: heightInCm,
+        age: profile.age || 30,
+        gender: profile.gender || 'male',
+        activityLevel: values.workoutsPerWeek,
+        goal: (profile.goal as any) || 'maintain_weight',
+        weeklyRate: weeklyRateInKg
+      });
 
       const { error: updateError } = await supabase
         .from('profiles')
@@ -121,6 +113,7 @@ const AISuggestions = () => {
           goal_carbs: suggestions.carbs,
           goal_fats: suggestions.fats,
           goal_sugars: suggestions.sugars,
+          goal_fiber: suggestions.fiber,
           goal_weight: values.goalWeight,
           weekly_rate: values.weeklyRate,
         })
@@ -131,23 +124,19 @@ const AISuggestions = () => {
       return suggestions;
     },
     onSuccess: async () => {
-      logUsage('ai_suggestions');
       await refetchProfile();
       toast.success(t('ai_suggestions.toast_success'));
       navigate(-1);
     },
     onError: (error) => {
-      console.error("AI Suggestions Error:", error);
+      console.error("Suggestions Error:", error);
       toast.error(t('ai_suggestions.toast_error'), { description: t('common.error_friendly') });
     },
   });
 
   const handleGenerate = async (values: z.infer<typeof fullSchema>) => {
-    // Check limit (checks guest status)
-    const canProceed = await checkLimit('ai_suggestions', 2, 'weekly');
-    if (canProceed) {
-      mutation.mutate(values);
-    }
+    // Ya no se requiere chequeo de límite porque es cálculo local
+    mutation.mutate(values);
   };
 
   const handleNext = async () => {
@@ -306,12 +295,14 @@ const AISuggestions = () => {
                       <h2 className="text-xl font-semibold text-center block mb-6">{t('ai_suggestions.summary_title')}</h2>
                       <Card>
                         <CardContent className="p-4 divide-y">
-                          <SummaryItem label={t('ai_suggestions.workouts_label')} value={workoutOptions.find(o => o.value === form.watch('workoutsPerWeek'))?.label} />
+                          <SummaryItem label={t('ai_suggestions.workouts_label')} value={workoutOptions.find(o => o.value === form.watch('workoutsPerWeek'))?.label || form.watch('workoutsPerWeek')} />
                           <SummaryItem label={t('ai_suggestions.goal_weight_label')} value={`${form.watch('goalWeight')} ${weightUnit}`} />
                           <SummaryItem label={t('ai_suggestions.rate_label')} value={`${form.watch('weeklyRate')} ${weightUnit}/${t('ai_suggestions.week')}`} />
                         </CardContent>
                       </Card>
-                      <p className="text-center text-xs text-muted-foreground mt-4 px-4">{t('ai_suggestions.disclaimer')}</p>
+                      <p className="text-center text-xs text-muted-foreground mt-4 px-4">
+                        {t('ai_suggestions.disclaimer')}
+                      </p>
                     </div>
                   )}
                 </motion.div>
@@ -329,11 +320,6 @@ const AISuggestions = () => {
                 </Button>
               )}
             </div>
-            {mutation.isPending && (
-              <p className="text-center text-sm text-muted-foreground mt-2 animate-pulse">
-                La IA está calculando el mejor plan para ti...
-              </p>
-            )}
           </form>
         </Form>
       </main>
