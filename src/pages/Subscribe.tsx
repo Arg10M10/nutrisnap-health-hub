@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Check, Lock, Bell, Sparkles, Zap, ChefHat, Target, Loader2 } from 'lucide-react';
+import { Check, Lock, Bell, X, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
 import { useMutation } from '@tanstack/react-query';
@@ -66,62 +66,30 @@ const Subscribe = () => {
     navigate('/goal-projection');
   };
 
-  const premiumFeatures = [
-    { icon: Sparkles, text: t('subscribe.features.scanner') },
-    { icon: Zap, text: t('subscribe.features.exercise') },
-    { icon: ChefHat, text: t('subscribe.features.diet_plans') },
-    { icon: Target, text: t('subscribe.features.goals') },
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0 },
-  };
-
   // Precios
   const annualPrice = "$36.00";
   const annualMonthlyEquivalent = "$3.00";
   const monthlyPrice = "$9.00";
 
+  const benefits = [
+    { name: t('subscribe.features.scanner'), free: false, premium: true },
+    { name: t('subscribe.features.diet_plans'), free: false, premium: true },
+    { name: t('subscribe.features.exercise'), free: false, premium: true },
+    { name: t('subscribe.features.menu_analysis', 'Análisis de Menús'), free: false, premium: true },
+    { name: t('subscribe.features.tracking', 'Registro Básico'), free: true, premium: true },
+  ];
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md space-y-6"
-      >
+      <div className="w-full max-w-md space-y-6">
+        
+        {/* Header */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-foreground">{t('subscribe.title')}</h1>
           <p className="text-muted-foreground">{t('subscribe.subtitle')}</p>
         </div>
 
-        {/* Features Grid */}
-        <motion.div 
-          className="grid grid-cols-2 gap-3"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {premiumFeatures.map((feature, index) => (
-            <motion.div 
-              key={index} 
-              className="flex items-center gap-2 bg-muted/30 p-3 rounded-xl border border-border/50" 
-              variants={itemVariants}
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary flex-shrink-0">
-                <feature.icon className="h-4 w-4" />
-              </div>
-              <p className="text-xs font-medium text-foreground leading-tight">{feature.text}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Trial Toggle */}
+        {/* Trial Switch */}
         <div className="flex items-center justify-between bg-muted/40 p-4 rounded-xl border border-border/50">
           <div className="space-y-0.5">
             <Label htmlFor="trial-mode" className="text-sm font-semibold text-foreground">
@@ -148,7 +116,6 @@ const Subscribe = () => {
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden"
             >
-              {/* Ajuste de márgenes y padding para evitar solapamiento de iconos */}
               <div className="relative pl-6 space-y-6 py-2 ml-4 border-l-2 border-primary/20">
                 <div className="absolute left-[1.65rem] top-2 bottom-2 w-0.5 bg-gradient-to-b from-primary/50 to-transparent" />
                 
@@ -200,14 +167,7 @@ const Subscribe = () => {
                   <div className="p-3 text-center text-xs font-bold text-primary-foreground bg-primary/90 tracking-wider self-center uppercase">{t('subscribe.plan_premium', 'Premium')}</div>
                 </div>
 
-                {/* Los beneficios se mapean desde el objeto benefits definido anteriormente (pero no estaba en el componente, lo añado aquí dentro del render o uso una constante fuera) */}
-                {[
-                    { name: t('subscribe.features.scanner'), free: false, premium: true },
-                    { name: t('subscribe.features.diet_plans'), free: false, premium: true },
-                    { name: t('subscribe.features.exercise'), free: false, premium: true },
-                    { name: t('subscribe.features.menu_analysis'), free: false, premium: true },
-                    { name: t('subscribe.features.tracking'), free: true, premium: true },
-                ].map((benefit, index) => (
+                {benefits.map((benefit, index) => (
                   <div key={index} className="grid grid-cols-[1.5fr_0.8fr_0.8fr] border-b border-border/50 last:border-0 items-center min-h-[3rem]">
                     <div className="px-4 py-2 text-xs font-medium text-foreground leading-tight">
                       {benefit.name}
@@ -254,10 +214,7 @@ const Subscribe = () => {
                         <span className="text-xs font-medium text-muted-foreground">/{t('subscribe.month_short')}</span>
                       </div>
                       <span className="text-[10px] font-semibold text-foreground/70">
-                        {enableTrial 
-                          ? t('subscribe.billed_yearly', { price: annualPrice }) 
-                          : `${annualPrice} facturado hoy`
-                        }
+                        {annualPrice} {t('subscribe.billed_yearly_simple', 'facturado hoy')}
                       </span>
                     </div>
                   </div>
@@ -277,7 +234,6 @@ const Subscribe = () => {
                   </div>
                   <div className="flex flex-col items-end">
                       <span className="text-base font-bold text-foreground">{monthlyPrice}<span className="text-xs font-normal text-muted-foreground">/{t('subscribe.month_short')}</span></span>
-                      {!enableTrial && <span className="text-[10px] font-semibold text-foreground/70">Facturado hoy</span>}
                   </div>
                 </div>
               </div>
@@ -319,7 +275,7 @@ const Subscribe = () => {
             {t('subscribe.continue_limited')}
           </Button>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
