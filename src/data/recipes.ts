@@ -35,7 +35,7 @@ export const recipes: Recipe[] = [
       { key: "onion", amount: 50, unit: "g" },
       { key: "garlic", amount: 5, unit: "g" },
       { key: "olive_oil", amount: 10, unit: "g" },
-      { key: "salt", amount: 0, unit: "" }, // 0 amount means "to taste" logic in UI
+      { key: "salt", amount: 0, unit: "" },
       { key: "pepper", amount: 0, unit: "" },
       { key: "herbs", amount: 0, unit: "" },
     ],
@@ -77,6 +77,24 @@ export const recipes: Recipe[] = [
       { key: "almonds", amount: 15, unit: "g" },
       { key: "yogurt", amount: 100, unit: "g" },
       { key: "honey", amount: 10, unit: "g" },
+    ],
+  },
+  {
+    id: "oats_banana_peanut",
+    image: "/recipes/oat-banana-peanut.png",
+    time: 10,
+    calories: 520,
+    protein: 18,
+    carbs: 65,
+    fats: 20,
+    sugars: 18,
+    fiber: 9,
+    ingredients: [
+      { key: "oats", amount: 60, unit: "g" },
+      { key: "milk", amount: 250, unit: "ml" },
+      { key: "banana", amount: 100, unit: "g" },
+      { key: "peanut_butter", amount: 15, unit: "g" },
+      { key: "cinnamon", amount: 0, unit: "" },
     ],
   },
 ];
