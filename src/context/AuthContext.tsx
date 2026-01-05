@@ -70,8 +70,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setProfile({ ...userProfile, is_guest: false });
       } else {
         // If row doesn't exist yet but user does, we might be in a race condition with the trigger.
-        // We'll handle nulls gracefully in UI, but don't set localProfile here as it would overwrite state.
-        // If explicit fetch fails, stick to what we have or null.
       }
     } catch (e) {
       console.error("Critical profile fetch error:", e);
@@ -95,8 +93,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeAuth = async () => {
       try {
-        setLoading(true);
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        // No seteamos loading(true) aquí porque ya inicia en true
+        
+        // Timeout de seguridad: Si Supabase tarda más de 5s, forzamos el fin de la carga
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Auth timeout')), 5000)
+        );
+
+        // Intentamos obtener sesión con un race contra el timeout
+        const sessionPromise = supabase.auth.getSession();
+        
+        const { data: { session: initialSession } } = await Promise.race([
+          sessionPromise,
+          timeoutPromise
+        ]) as any;
 
         if (mounted) {
           if (initialSession?.user) {
@@ -111,7 +121,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
         }
       } catch (error) {
-        console.error("Auth initialization error:", error);
+        console.error("Auth initialization error or timeout:", error);
+        // En caso de error (timeout o red), intentamos cargar perfil local por si acaso
+        if (mounted && localProfile) {
+           setProfile(localProfile);
+        }
       } finally {
         if (mounted) {
           setLoading(false);
@@ -128,12 +142,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(newSession?.user ?? null);
 
       if (event === 'SIGNED_OUT') {
-        // On sign out, clear everything including local profile to avoid confusion
         setProfile(null);
         setLocalProfile(null); 
         setLoading(false);
       } else if (event === 'SIGNED_IN' && newSession?.user) {
-        // Fetch immediately on sign in
         await fetchProfile(newSession.user.id);
       }
     });
@@ -148,7 +160,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true); 
       await supabase.auth.signOut();
-      // Also clear local storage on manual sign out
       window.localStorage.removeItem('calorel_local_profile');
     } catch (error) {
       console.error("Error signing out:", error);
