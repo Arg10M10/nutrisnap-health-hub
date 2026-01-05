@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Pencil, Plus, Droplets, Coffee, CupSoda, Milk, Wine } from "lucide-react";
+import { ArrowLeft, Pencil, Plus, Droplets, Coffee, CupSoda } from "lucide-react";
 import { useNutrition } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import AnimatedNumber from "@/components/AnimatedNumber";
@@ -11,14 +11,12 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "
 import { toast } from "sonner";
 import WaterEntryDrawer from "@/components/WaterEntryDrawer";
 
-// Beverage types configuration with Hydration Rates
+// Beverage types configuration with Hydration Rates (Removed Milk & Soda)
 const beverages = [
   { id: 'water', labelKey: 'water.type_water', rate: 1.0, color: 'text-blue-500', icon: Droplets, bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
   { id: 'juice', labelKey: 'water.type_juice', rate: 0.9, color: 'text-orange-500', icon: CupSoda, bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
   { id: 'tea', labelKey: 'water.type_tea', rate: 0.9, color: 'text-green-600', icon: CupSoda, bgColor: 'bg-green-100', borderColor: 'border-green-200' },
   { id: 'coffee', labelKey: 'water.type_coffee', rate: 0.7, color: 'text-amber-700', icon: Coffee, bgColor: 'bg-amber-100', borderColor: 'border-amber-200' },
-  { id: 'milk', labelKey: 'water.type_milk', rate: 0.8, color: 'text-indigo-600', icon: Milk, bgColor: 'bg-indigo-100', borderColor: 'border-indigo-200' },
-  { id: 'soda', labelKey: 'water.type_soda', rate: 0.85, color: 'text-red-500', icon: Wine, bgColor: 'bg-red-100', borderColor: 'border-red-200' },
 ];
 
 const Water = () => {
@@ -50,7 +48,6 @@ const Water = () => {
     if (!selectedBeverage) return;
     
     // Calculate effective hydration based on rate
-    // Example: 10oz Coffee (0.7) = 7oz hydration
     const hydrationAmount = amount * selectedBeverage.rate;
     
     addWaterGlass(new Date(), hydrationAmount);
@@ -101,41 +98,44 @@ const Water = () => {
 
         {/* The Big Glass */}
         <div className="flex-1 w-full flex items-center justify-center py-4 relative">
-          {/* Glass Container */}
           <div className="relative w-[240px] h-[340px]">
-            {/* Glass Shape (Background) */}
+            {/* 
+               CONTENEDOR DE FORMA (MASK)
+               Aquí definimos la forma del vaso y ocultamos lo que se salga (overflow-hidden).
+               El líquido sube dentro de esto sin deformarse.
+            */}
             <div 
-              className="absolute inset-0 bg-white dark:bg-muted/30 border-4 border-white/50 dark:border-white/10 shadow-xl backdrop-blur-sm z-20 pointer-events-none"
+              className="absolute inset-0 z-10 overflow-hidden bg-white/40 dark:bg-white/5 backdrop-blur-sm border-4 border-white/60 dark:border-white/20 shadow-xl"
               style={{
                 borderRadius: '10px 10px 80px 80px',
-                clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)' // Tapered look
-              }}
-            />
-            
-            {/* Liquid Fill */}
-            <div 
-              className="absolute bottom-0 left-0 right-0 bg-blue-400 dark:bg-blue-500 transition-all duration-1000 ease-out z-10"
-              style={{
-                height: `${percentage}%`,
-                borderRadius: '0 0 80px 80px',
-                clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)', // Match glass taper
-                opacity: 0.8
+                // Usamos un clip-path ligeramente trapezoidal para dar efecto de vaso
+                clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)' 
               }}
             >
-              {/* Waves/Bubbles effect */}
-              <div className="absolute top-0 left-0 right-0 h-4 bg-white/30 skew-y-3 blur-md" />
+                {/* Liquid Fill - Sube desde abajo */}
+                <div 
+                  className="absolute bottom-0 left-0 right-0 bg-blue-400 dark:bg-blue-500 transition-all duration-1000 ease-out"
+                  style={{
+                    height: `${percentage}%`,
+                    width: '100%',
+                    opacity: 0.85
+                  }}
+                >
+                  {/* Efecto de superficie del agua */}
+                  <div className="absolute top-0 left-0 right-0 h-2 bg-white/40 skew-y-1" />
+                </div>
             </div>
 
-            {/* Glass Highlight/Reflection */}
+            {/* Glass Highlight/Reflection (Cosmético encima del vaso) */}
             <div 
-              className="absolute top-4 right-8 w-2 h-3/4 bg-gradient-to-b from-white/40 to-transparent rounded-full z-30 pointer-events-none blur-[1px]"
+              className="absolute top-4 right-8 w-3 h-3/4 bg-gradient-to-b from-white/30 to-transparent rounded-full z-20 pointer-events-none blur-[2px]"
             />
           </div>
         </div>
 
-        {/* Beverage Grid */}
+        {/* Beverage Grid (2 columnas para 4 items se ve mejor) */}
         <div className="w-full mt-auto pt-8">
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 gap-4 max-w-[300px] mx-auto">
             {beverages.map((bev) => (
               <motion.button
                 key={bev.id}
@@ -143,26 +143,23 @@ const Water = () => {
                 onClick={() => handleBeverageClick(bev)}
                 className="flex flex-col items-center gap-2 group"
               >
-                <div className={`w-full aspect-[4/5] rounded-2xl ${bev.bgColor} border ${bev.borderColor} dark:bg-muted flex flex-col items-center justify-end pb-3 relative overflow-hidden transition-shadow shadow-sm hover:shadow-md`}>
+                <div className={`w-full h-24 rounded-2xl ${bev.bgColor} border ${bev.borderColor} dark:bg-muted flex items-center justify-center relative overflow-hidden transition-all shadow-sm hover:shadow-md hover:-translate-y-1`}>
                   
                   {/* Rate Badge (Top Right) */}
                   {bev.rate < 1 && (
-                    <div className="absolute top-1 right-1 bg-black/5 px-1.5 py-0.5 rounded-full text-[9px] font-bold text-black/60">
+                    <div className="absolute top-2 right-2 bg-white/50 dark:bg-black/20 px-1.5 py-0.5 rounded-md text-[10px] font-bold text-foreground/70">
                         {Math.round(bev.rate * 100)}%
                     </div>
                   )}
 
-                  {/* Icon centered/floating */}
-                  <div className="absolute inset-0 flex items-center justify-center pb-4">
-                    <bev.icon className={`w-8 h-8 ${bev.color}`} strokeWidth={2.5} />
-                  </div>
+                  <bev.icon className={`w-10 h-10 ${bev.color}`} strokeWidth={2} />
                   
-                  {/* Plus button at bottom */}
-                  <div className={`w-6 h-6 rounded-full bg-white text-${bev.color.split('-')[1]}-500 flex items-center justify-center shadow-sm`}>
-                    <Plus className="w-3.5 h-3.5" strokeWidth={3} />
+                  {/* Plus icon subtle */}
+                  <div className={`absolute bottom-2 right-2 w-5 h-5 rounded-full bg-white text-${bev.color.split('-')[1]}-500 flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity`}>
+                    <Plus className="w-3 h-3" strokeWidth={3} />
                   </div>
                 </div>
-                <span className="text-xs font-medium text-foreground/80">{t(bev.labelKey as any)}</span>
+                <span className="text-sm font-medium text-foreground/80">{t(bev.labelKey as any)}</span>
               </motion.button>
             ))}
           </div>
