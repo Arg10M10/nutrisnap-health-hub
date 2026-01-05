@@ -40,7 +40,7 @@ interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  signOut: () => void;
+  signOut: () => Promise<void>;
   refetchProfile: (userId?: string) => Promise<void>;
   saveLocalProfile: (data: Partial<Profile>) => void;
 }
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // Local storage fallback
+  // Local storage fallback for guests
   const [localProfile, setLocalProfile] = useLocalStorage<Profile | null>('calorel_local_profile', null);
 
   // Función interna para buscar perfil con manejo de errores
@@ -73,7 +73,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userProfile = await _fetchProfileData(userId);
       
       if (userProfile) {
-        setProfile({ ...userProfile, is_guest: false });
+        const profileData = { ...userProfile, is_guest: false };
+        setProfile(profileData);
+        // GUARDAR EN CACHÉ LOCAL para evitar carga infinita en futuros inicios
+        try {
+          window.localStorage.setItem(`calorel_auth_profile_${userId}`, JSON.stringify(profileData));
+        } catch (e) {
+          console.warn("Failed to cache auth profile", e);
+        }
       }
     } catch (e) {
       console.error("Error fetching profile:", e);
@@ -108,7 +115,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setSession(initialSession);
             setUser(initialSession.user);
             
-            // Lógica de Reintento para cargar el perfil
+            // ESTRATEGIA CACHE-FIRST:
+            // 1. Intentar cargar inmediatamente desde localStorage si existe
+            try {
+              const cachedProfileStr = window.localStorage.getItem(`calorel_auth_profile_${initialSession.user.id}`);
+              if (cachedProfileStr) {
+                const cachedProfile = JSON.parse(cachedProfileStr);
+                setProfile(cachedProfile);
+                // Si cargamos de caché, podemos quitar el loading inmediatamente para mostrar UI
+                // mientras la red actualiza en segundo plano.
+              }
+            } catch (cacheErr) {
+              console.warn("Error reading cached profile", cacheErr);
+            }
+
+            // 2. Lógica de Red (Background update o Initial fetch)
             let attempts = 0;
             const maxAttempts = 3;
             let profileLoaded = false;
@@ -117,7 +138,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               try {
                 const userProfile = await _fetchProfileData(initialSession.user.id);
                 if (userProfile) {
-                  setProfile({ ...userProfile, is_guest: false });
+                  const profileData = { ...userProfile, is_guest: false };
+                  setProfile(profileData);
+                  // Actualizar caché
+                  window.localStorage.setItem(`calorel_auth_profile_${initialSession.user.id}`, JSON.stringify(profileData));
                   profileLoaded = true;
                 } else {
                   // Si no hay perfil pero hay usuario, quizás se está creando. Esperamos un poco.
@@ -126,10 +150,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               } catch (e) {
                 attempts++;
                 if (attempts < maxAttempts) {
-                  // Esperar 500ms, 1000ms... antes de reintentar
+                  // Esperar exponencialmente antes de reintentar
                   await new Promise(resolve => setTimeout(resolve, 500 * attempts));
                 } else {
-                  console.error("Failed to load profile after retries");
+                  console.error("Failed to load profile from network after retries");
                 }
               }
             }
@@ -142,7 +166,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
-        // Fallback de emergencia a perfil local
+        // Fallback de emergencia a perfil local de invitado
         if (mounted && localProfile) {
            setProfile(localProfile);
         }
@@ -163,18 +187,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(newSession?.user ?? null);
 
       if (event === 'SIGNED_IN' && newSession?.user) {
+        // Al hacer login explícito, mostramos loading mientras traemos datos frescos
         setLoading(true); 
         await fetchProfile(newSession.user.id);
         setLoading(false);
       } else if (event === 'SIGNED_OUT') {
         setProfile(null);
         setLocalProfile(null);
+        // Limpiar caché de perfil autenticado al salir
+        // No borramos todo localStorage para no afectar configuraciones globales
         setLoading(false);
       } else if (event === 'TOKEN_REFRESHED') {
         // Mantener sesión
       } else if (event === 'INITIAL_SESSION') {
-        // Manejado por initializeAuth, pero por seguridad apagamos loading si algo falló
-        // (Aunque initializeAuth tiene su propio finally, esto es doble seguridad)
+        // Manejado por initializeAuth
       }
     });
 
@@ -188,7 +214,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true); 
       await supabase.auth.signOut();
+      
+      // Limpiar datos locales específicos
+      if (user?.id) {
+        window.localStorage.removeItem(`calorel_auth_profile_${user.id}`);
+      }
       window.localStorage.removeItem('calorel_local_profile');
+      
     } catch (error) {
       console.error("Error signing out:", error);
     } finally {

@@ -48,6 +48,7 @@ import RegisterForPremium from "./pages/RegisterForPremium";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import Water from "./pages/Water"; 
 import { Loader2 } from "lucide-react";
+import { Button } from "./components/ui/button";
 
 const queryClient = new QueryClient();
 
@@ -81,7 +82,7 @@ const GlobalBadgeModal = () => {
 };
 
 const AppRoutes = () => {
-  const { profile, user, loading: authLoading } = useAuth();
+  const { profile, user, loading: authLoading, signOut } = useAuth();
   const location = useLocation();
   const [isSplashVisible, setIsSplashVisible] = useState(true);
 
@@ -107,8 +108,20 @@ const AppRoutes = () => {
   // Esto evita redirigir al login si la red está lenta al cargar el perfil
   if (user && !profile) {
     return (
-      <div className="relative min-h-screen flex flex-col items-center justify-center bg-background">
-         <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="relative min-h-screen flex flex-col items-center justify-center bg-background p-4 text-center">
+         <Loader2 className="w-10 h-10 animate-spin text-primary mb-4" />
+         <p className="text-muted-foreground animate-pulse mb-6">Sincronizando tus datos...</p>
+         
+         <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => {
+                signOut().then(() => window.location.reload());
+            }}
+            className="text-xs border-dashed text-muted-foreground hover:text-destructive"
+         >
+            ¿Tarda demasiado? Reiniciar Sesión
+         </Button>
       </div>
     );
   }
