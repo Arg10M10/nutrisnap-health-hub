@@ -21,16 +21,17 @@ const HealthScoreCard = ({ score }: HealthScoreCardProps) => {
     return t('home.health_score_improvable');
   };
 
+  // Ajustado a p-3 y w-14/h-14 para coincidir con MacroCard y ActiveCaloriesCard
   return (
-    <Card className="p-4 text-center h-full flex flex-col justify-center items-center gap-3 shadow-sm border-none bg-card rounded-[2rem]">
-      <div className="w-20 h-20 relative flex-shrink-0">
+    <Card className="p-3 text-center h-full flex flex-col justify-center items-center gap-2 shadow-sm border-none bg-card rounded-[2rem]">
+      <div className="w-14 h-14 relative flex-shrink-0">
         <MacroProgressCircle value={safeScore || 100} color={color} />
         <div className="absolute inset-0 flex items-center justify-center">
-          <ShieldCheck className="w-9 h-9" style={{ color }} />
+          <ShieldCheck className="w-6 h-6" style={{ color }} />
         </div>
       </div>
       <div className="min-w-0 w-full">
-        <p className="text-lg font-bold text-foreground leading-tight truncate">{getLabel()}</p>
+        <p className="text-lg font-bold text-foreground leading-none truncate">{getLabel()}</p>
         <p className="text-xs text-muted-foreground font-medium mt-1">{t('home.health_score')}</p>
       </div>
     </Card>
