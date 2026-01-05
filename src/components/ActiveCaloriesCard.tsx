@@ -3,14 +3,37 @@ import { Flame } from "lucide-react";
 import AnimatedNumber from "./AnimatedNumber";
 import MacroProgressCircle from "./MacroProgressCircle";
 import { useTranslation } from "react-i18next";
+import { useHealthConnect } from "@/hooks/useHealthConnect";
+import { useQuery } from "@tanstack/react-query";
+import { HealthConnectPlaceholder } from "./HealthConnectPlaceholder";
 
 interface ActiveCaloriesCardProps {
-  calories: number;
+  date?: Date;
 }
 
-const ActiveCaloriesCard = ({ calories }: ActiveCaloriesCardProps) => {
+const ActiveCaloriesCard = ({ date }: ActiveCaloriesCardProps) => {
   const { t } = useTranslation();
-  // Simulamos un progreso visual (ej. meta de 500 cal activas) para que se vea consistente con las otras MacroCards
+  const { isConnected, getDailyData } = useHealthConnect();
+  
+  const queryDate = date || new Date();
+
+  const { data } = useQuery({
+    queryKey: ['health_calories_daily', queryDate.toISOString()],
+    queryFn: () => getDailyData(queryDate),
+    enabled: isConnected,
+    staleTime: 1000 * 60 * 5, 
+  });
+
+  if (!isConnected) {
+    return (
+      <Card className="shadow-sm border-none bg-card rounded-[2rem] h-full p-0 overflow-hidden">
+         <HealthConnectPlaceholder label={t('home.active_calories')} />
+      </Card>
+    );
+  }
+
+  const calories = data?.calories || 0;
+  // Meta de ejemplo 500, o dinámica si existiera en perfil
   const percentage = Math.min((calories / 500) * 100, 100); 
 
   return (

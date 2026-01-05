@@ -34,7 +34,11 @@ const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { getDataForDate, streak, streakDays, addWaterGlass, removeWaterGlass, isWaterUpdating, deleteEntry, addAnalysis } = useNutrition();
   const { profile } = useAuth();
-  const { intake, analyses, healthScore, waterIntake, steps, activeCalories } = getDataForDate(selectedDate);
+  
+  // getDataForDate now only handles Food/Water/Manual Exercise logs
+  // Steps & Active Calories are handled inside their respective cards via HealthConnect hook
+  const { intake, analyses, healthScore, waterIntake } = getDataForDate(selectedDate);
+  
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -227,11 +231,11 @@ const Index = () => {
                 <motion.div variants={cardVariants} animate={current === 2 ? "active" : "inactive"}>
                   <div className="flex flex-col gap-4 h-[350px]">
                     <div className="flex-1 w-full min-h-0">
-                      <StepsCard steps={steps} />
+                      <StepsCard date={selectedDate} />
                     </div>
                     <div className="h-[150px] w-full flex-shrink-0">
                       <div className="grid grid-cols-2 gap-3 w-full h-full">
-                        <ActiveCaloriesCard calories={activeCalories} />
+                        <ActiveCaloriesCard date={selectedDate} />
                         <HealthScoreCard score={healthScore} />
                       </div>
                     </div>

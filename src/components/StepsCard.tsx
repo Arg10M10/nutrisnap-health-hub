@@ -2,13 +2,36 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Footprints } from "lucide-react";
 import AnimatedNumber from "./AnimatedNumber";
 import { useTranslation } from "react-i18next";
+import { useHealthConnect } from "@/hooks/useHealthConnect";
+import { useQuery } from "@tanstack/react-query";
+import { HealthConnectPlaceholder } from "./HealthConnectPlaceholder";
 
 interface StepsCardProps {
-  steps: number;
+  date?: Date; // Optional date override
 }
 
-const StepsCard = ({ steps }: StepsCardProps) => {
+const StepsCard = ({ date }: StepsCardProps) => {
   const { t } = useTranslation();
+  const { isConnected, getDailyData } = useHealthConnect();
+  
+  const queryDate = date || new Date();
+
+  const { data } = useQuery({
+    queryKey: ['health_steps_daily', queryDate.toISOString()],
+    queryFn: () => getDailyData(queryDate),
+    enabled: isConnected,
+    staleTime: 1000 * 60 * 5, // 5 minutos cache
+  });
+
+  if (!isConnected) {
+    return (
+      <Card className="shadow-sm border-none bg-card rounded-[2rem] h-full overflow-hidden p-0">
+        <HealthConnectPlaceholder label={t('home.steps')} />
+      </Card>
+    );
+  }
+
+  const steps = data?.steps || 0;
 
   return (
     <Card className="shadow-sm border-none bg-card rounded-[2rem] h-full flex flex-col justify-center">
