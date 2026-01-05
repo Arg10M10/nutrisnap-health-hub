@@ -6,7 +6,6 @@ import { NavLink } from "./NavLink";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import EditWeightDrawer from "@/components/EditWeightDrawer";
-import { WaterSelectionDrawer } from "@/components/WaterSelectionDrawer";
 import { useAuth } from "@/context/AuthContext";
 import { useNutrition } from "@/context/NutritionContext";
 import { useQuery } from "@tanstack/react-query";
@@ -19,13 +18,11 @@ import { useAILimit } from "@/hooks/useAILimit";
 const BottomNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWeightDrawerOpen, setIsWeightDrawerOpen] = useState(false);
-  const [isWaterDrawerOpen, setIsWaterDrawerOpen] = useState(false);
   const [isManualFoodDrawerOpen, setIsManualFoodDrawerOpen] = useState(false);
   
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { profile, user } = useAuth();
-  const { addWaterGlass } = useNutrition();
   const { checkLimit } = useAILimit();
 
   const { data: todaysWeightUpdatesCount } = useQuery({
@@ -120,11 +117,8 @@ const BottomNav = () => {
 
   const handleOpenWater = () => {
     setIsMenuOpen(false);
-    setIsWaterDrawerOpen(true);
-  };
-
-  const handleAddWater = (amount: number) => {
-    addWaterGlass(new Date(), amount);
+    // Navegar directamente a la nueva página de agua
+    navigate('/water');
   };
 
   const NavItem = ({ item }: { item: typeof navItems[0] }) => (
@@ -291,12 +285,6 @@ const BottomNav = () => {
         isOpen={isWeightDrawerOpen} 
         onClose={() => setIsWeightDrawerOpen(false)} 
         currentWeight={currentWeight}
-      />
-
-      <WaterSelectionDrawer 
-        isOpen={isWaterDrawerOpen}
-        onClose={() => setIsWaterDrawerOpen(false)}
-        onAdd={handleAddWater}
       />
 
       <ManualFoodDrawer

@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import AnimatedNumber from "./AnimatedNumber";
 import { useNavigate } from "react-router-dom";
@@ -13,56 +13,70 @@ interface WaterTrackerCardProps {
   isUpdating: boolean;
 }
 
-const WaterTrackerCard = ({ count, goal, onAdd, onRemove, isUpdating }: WaterTrackerCardProps) => {
+const WaterTrackerCard = ({ count, goal, onAdd, isUpdating }: WaterTrackerCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const percentage = Math.min((count / goal) * 100, 100);
 
-  const handleAddClick = () => {
+  const handleClick = () => {
     navigate('/water');
   };
 
   return (
-    <Card className="relative overflow-hidden h-full flex flex-col justify-between group bg-card shadow-sm border-none rounded-[2rem]">
-      <div 
-        className="absolute bottom-0 left-0 right-0 bg-blue-50/80 dark:bg-blue-500/15 transition-all duration-700 ease-in-out z-0"
-        style={{ height: `${percentage}%` }}
-      />
+    <Card 
+      onClick={handleClick}
+      className="relative overflow-hidden h-full flex items-center bg-card shadow-sm border-none rounded-[2rem] p-4 gap-6 cursor-pointer group hover:bg-muted/30 transition-colors"
+    >
+      {/* Columna Izquierda: Mini Vaso */}
+      <div className="relative w-20 h-28 flex-shrink-0" style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}>
+        <div 
+          className="absolute inset-0 z-10 overflow-hidden bg-blue-100/30 dark:bg-white/5 border-[3px] border-blue-200 dark:border-white/10"
+          style={{
+            borderRadius: '6px 6px 40px 40px',
+            clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)' 
+          }}
+        >
+            {/* Relleno Líquido */}
+            <div 
+              className="absolute bottom-0 left-0 right-0 bg-blue-400 dark:bg-blue-500 transition-all duration-700 ease-out"
+              style={{
+                height: `${percentage}%`,
+                width: '100%',
+                opacity: 0.9
+              }}
+            >
+              <div className="absolute top-0 left-0 right-0 h-1 bg-white/40" />
+            </div>
+        </div>
+      </div>
       
-      <div className="p-4 flex flex-col justify-between h-full z-10 relative">
-        <div className="text-center pt-2">
-          <div className="flex items-baseline justify-center gap-1">
-            <p className="text-4xl font-black text-foreground tabular-nums leading-none">
+      {/* Columna Derecha: Info y Acción */}
+      <div className="flex flex-col justify-center flex-1 gap-2">
+        <div className="space-y-0.5">
+          <div className="flex items-baseline gap-1">
+            <p className="text-3xl font-black text-foreground tabular-nums leading-none">
               <AnimatedNumber value={count} toFixed={0} />
             </p>
-            <span className="text-sm text-muted-foreground font-medium">/ {goal}</span>
+            <span className="text-sm font-medium text-muted-foreground">/ {goal} oz</span>
           </div>
-          <p className="text-xs text-muted-foreground font-medium mt-1">
-            {t('home.water_tracker_title', 'oz')}
+          <p className="text-xs text-muted-foreground font-medium">
+            {t('home.log_water_title')}
           </p>
         </div>
 
-        <div className="flex justify-center items-center gap-2 pb-1">
-          <Button 
-            variant="outline" 
-            size="icon" 
-            onClick={onRemove} 
-            disabled={count === 0 || isUpdating}
-            className="h-10 w-10 shrink-0 rounded-full border-transparent bg-background/50 hover:bg-background text-foreground shadow-sm"
-          >
-            <Minus className="w-4 h-4" />
-          </Button>
-          
-          <Button 
-            size="icon" 
-            onClick={handleAddClick} 
-            disabled={isUpdating}
-            className="h-10 w-10 shrink-0 rounded-full bg-blue-500 hover:bg-blue-600 text-white shadow-md"
-          >
-            <Plus className="w-5 h-5" />
-          </Button>
-        </div>
+        <Button 
+          size="sm" 
+          onClick={(e) => {
+            e.stopPropagation(); 
+            navigate('/water');
+          }} 
+          disabled={isUpdating}
+          className="w-full h-10 rounded-xl bg-blue-500 hover:bg-blue-600 text-white shadow-md gap-2 text-sm font-bold mt-1"
+        >
+          <Plus className="w-4 h-4" strokeWidth={3} />
+          {t('common.add')}
+        </Button>
       </div>
     </Card>
   );
