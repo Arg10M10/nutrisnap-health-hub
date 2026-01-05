@@ -146,7 +146,7 @@ const Index = () => {
         <div id="daily-summary-carousel">
           <Carousel className="w-full" opts={{ align: "start", duration: 20 }} setApi={setApi}>
             <CarouselContent>
-              {/* PAGE 1: CALORIES & MACROS */}
+              {/* PAGE 1: CALORIES & MACROS (PROTEIN, CARBS, FATS) */}
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
                   <div className="flex flex-col gap-4 h-[350px]">
@@ -185,22 +185,44 @@ const Index = () => {
                 </motion.div>
               </CarouselItem>
 
-              {/* PAGE 2: WATER */}
+              {/* PAGE 2: WATER & MICROS (SUGAR, FIBER) */}
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
-                  <div className="h-[350px] w-full">
-                    <WaterTrackerCard
-                      count={waterIntake}
-                      goal={dailyGoals.water}
-                      onAdd={(amount) => addWaterGlass(selectedDate, amount)}
-                      onRemove={() => removeWaterGlass(selectedDate)}
-                      isUpdating={isWaterUpdating}
-                    />
+                  <div className="flex flex-col gap-4 h-[350px]">
+                    <div className="flex-1 w-full min-h-0">
+                      <WaterTrackerCard
+                        count={waterIntake}
+                        goal={dailyGoals.water}
+                        onAdd={(amount) => addWaterGlass(selectedDate, amount)}
+                        onRemove={() => removeWaterGlass(selectedDate)}
+                        isUpdating={isWaterUpdating}
+                      />
+                    </div>
+                    <div className="h-[150px] w-full flex-shrink-0">
+                      <div className="grid grid-cols-2 gap-3 w-full h-full">
+                        <MacroCard
+                          value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
+                          color="#a855f7"
+                          icon={<Sparkles className="w-5 h-5 text-purple-500" />}
+                          current={intake.sugars}
+                          unit="g"
+                          label={t('home.sugars')}
+                        />
+                        <MacroCard
+                          value={getSafePercentage(intake.fiber, dailyGoals.fiber)}
+                          color="#10b981"
+                          icon={<Sprout className="w-5 h-5 text-emerald-500" />}
+                          current={intake.fiber}
+                          unit="g"
+                          label={t('home.fiber')}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               </CarouselItem>
 
-              {/* PAGE 3: STEPS & HEALTH */}
+              {/* PAGE 3: STEPS & HEALTH (STEPS, ACTIVE CALORIES, SCORE) */}
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 2 ? "active" : "inactive"}>
                   <div className="flex flex-col gap-4 h-[350px]">
