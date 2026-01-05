@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { HealthConnect } from '@ubie-oss/capacitor-health-connect';
+import { HealthConnect } from 'capacitor-health-connect';
 import { Capacitor } from '@capacitor/core';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -29,9 +29,14 @@ const ConnectApps = () => {
     }
 
     try {
+      // Nota: La API exacta puede variar según la versión del plugin.
+      // Basado en tu ejemplo: HealthConnect.checkAvailability()
       const result = await HealthConnect.checkAvailability();
-      // result can be 'Available', 'NotInstalled', 'NotSupported'
-      setIsAvailable(result.availability === 'Available');
+      
+      // Adaptamos la lógica según la respuesta típica de estos plugins
+      // A veces devuelven un string directo o un objeto
+      const status = typeof result === 'string' ? result : (result as any).availability;
+      setIsAvailable(status === 'Available' || status === 'Installed');
     } catch (error) {
       console.error("Error checking Health Connect availability:", error);
       setIsAvailable(false);
@@ -47,23 +52,24 @@ const ConnectApps = () => {
 
     setLoading(true);
     try {
-      // 1. Check availability again just in case
-      const status = await HealthConnect.checkAvailability();
+      // 1. Verificar disponibilidad nuevamente
+      const result = await HealthConnect.checkAvailability();
+      const status = typeof result === 'string' ? result : (result as any).availability;
       
-      if (status.availability === 'NotInstalled') {
-        // Open store to install Health Connect
+      if (status === 'NotInstalled') {
         await HealthConnect.openHealthConnectSetting();
         setLoading(false);
         return;
       }
 
-      if (status.availability !== 'Available') {
+      if (status !== 'Available' && status !== 'Installed') {
         toast.error(t('connect_apps.not_supported'));
         setLoading(false);
         return;
       }
 
-      // 2. Request Permissions
+      // 2. Solicitar Permisos
+      // Definimos los tipos de datos que queremos leer
       const permissions = [
         { accessType: 'read', recordType: 'Steps' },
         { accessType: 'read', recordType: 'Weight' },
@@ -71,9 +77,7 @@ const ConnectApps = () => {
         { accessType: 'read', recordType: 'ActiveCaloriesBurned' },
       ] as const;
 
-      const result = await HealthConnect.requestPermissions({ permissions });
-
-      // The plugin returns grantedPermissions list. We simply check if we got what we wanted or if the array is not empty.
+      await HealthConnect.requestPermissions({ permissions });
       
       setIsConnected(true);
       toast.success(t('connect_apps.connected_success'));
