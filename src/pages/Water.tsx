@@ -1,49 +1,65 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Pencil, Plus, Droplets, Coffee, CupSoda, Milk, Wine } from "lucide-react";
 import { useNutrition } from "@/context/NutritionContext";
 import { useAuth } from "@/context/AuthContext";
 import AnimatedNumber from "@/components/AnimatedNumber";
-import PageLayout from "@/components/PageLayout";
-import EditGoalWeightDrawer from "@/components/EditGoalWeightDrawer"; // Reusing or create a specific one? Let's use a simple drawer or input.
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer";
-import WheelPicker from "@/components/WheelPicker";
 import { toast } from "sonner";
+import WaterEntryDrawer from "@/components/WaterEntryDrawer";
 
-// Beverage types configuration
+// Beverage types configuration with Hydration Rates
 const beverages = [
-  { id: 'water', labelKey: 'water.type_water', amount: 8, color: 'bg-blue-500', icon: Droplets, lightColor: 'bg-blue-100', textColor: 'text-blue-600' },
-  { id: 'juice', labelKey: 'water.type_juice', amount: 8, color: 'bg-orange-500', icon: CupSoda, lightColor: 'bg-orange-100', textColor: 'text-orange-600' },
-  { id: 'tea', labelKey: 'water.type_tea', amount: 8, color: 'bg-green-500', icon: CupSoda, lightColor: 'bg-green-100', textColor: 'text-green-600' },
-  { id: 'coffee', labelKey: 'water.type_coffee', amount: 8, color: 'bg-amber-700', icon: Coffee, lightColor: 'bg-amber-100', textColor: 'text-amber-700' },
-  { id: 'milk', labelKey: 'water.type_milk', amount: 8, color: 'bg-indigo-400', icon: Milk, lightColor: 'bg-indigo-100', textColor: 'text-indigo-600' },
-  { id: 'soda', labelKey: 'water.type_soda', amount: 12, color: 'bg-red-500', icon: Wine, lightColor: 'bg-red-100', textColor: 'text-red-600' },
+  { id: 'water', labelKey: 'water.type_water', rate: 1.0, color: 'text-blue-500', icon: Droplets, bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
+  { id: 'juice', labelKey: 'water.type_juice', rate: 0.9, color: 'text-orange-500', icon: CupSoda, bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
+  { id: 'tea', labelKey: 'water.type_tea', rate: 0.9, color: 'text-green-600', icon: CupSoda, bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+  { id: 'coffee', labelKey: 'water.type_coffee', rate: 0.7, color: 'text-amber-700', icon: Coffee, bgColor: 'bg-amber-100', borderColor: 'border-amber-200' },
+  { id: 'milk', labelKey: 'water.type_milk', rate: 0.8, color: 'text-indigo-600', icon: Milk, bgColor: 'bg-indigo-100', borderColor: 'border-indigo-200' },
+  { id: 'soda', labelKey: 'water.type_soda', rate: 0.85, color: 'text-red-500', icon: Wine, bgColor: 'bg-red-100', borderColor: 'border-red-200' },
 ];
 
 const Water = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { getDataForDate, addWaterGlass } = useNutrition();
-  const { profile } = useAuth(); // To save goal if we edit it
   
   // State
   const [selectedDate] = useState(new Date());
   const { waterIntake } = getDataForDate(selectedDate);
   const [isGoalDrawerOpen, setIsGoalDrawerOpen] = useState(false);
+  const [selectedBeverage, setSelectedBeverage] = useState<any>(null);
   
-  // Default goal logic (could be moved to context/profile properly later)
+  // Default goal logic
   const [goal, setGoal] = useState(64); // Default 64oz
 
   // Effect to sync visual fill with actual data
   const percentage = Math.min((waterIntake / goal) * 100, 100);
   const remaining = Math.max(0, goal - waterIntake);
 
-  const handleAddBeverage = (amount: number, name: string) => {
-    addWaterGlass(new Date(), amount);
-    toast.success(t('water.added_toast', { amount, name }));
+  const handleBeverageClick = (bev: typeof beverages[0]) => {
+    setSelectedBeverage({
+        ...bev,
+        label: t(bev.labelKey as any)
+    });
+  };
+
+  const handleConfirmAdd = (amount: number) => {
+    if (!selectedBeverage) return;
+    
+    // Calculate effective hydration based on rate
+    // Example: 10oz Coffee (0.7) = 7oz hydration
+    const hydrationAmount = amount * selectedBeverage.rate;
+    
+    addWaterGlass(new Date(), hydrationAmount);
+    
+    toast.success(t('water.added_toast', { amount: amount, name: selectedBeverage.label }), {
+        description: selectedBeverage.rate < 1 ? `Hidratación efectiva: ${hydrationAmount.toFixed(1)} oz` : undefined
+    });
+    
+    setSelectedBeverage(null);
   };
 
   return (
@@ -106,7 +122,7 @@ const Water = () => {
                 opacity: 0.8
               }}
             >
-              {/* Waves/Bubbles effect could go here */}
+              {/* Waves/Bubbles effect */}
               <div className="absolute top-0 left-0 right-0 h-4 bg-white/30 skew-y-3 blur-md" />
             </div>
 
@@ -123,18 +139,26 @@ const Water = () => {
             {beverages.map((bev) => (
               <motion.button
                 key={bev.id}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handleAddBeverage(bev.amount, t(bev.labelKey as any))}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleBeverageClick(bev)}
                 className="flex flex-col items-center gap-2 group"
               >
-                <div className={`w-full aspect-[4/5] rounded-2xl ${bev.lightColor} dark:bg-muted flex flex-col items-center justify-end pb-3 relative overflow-hidden transition-shadow shadow-sm hover:shadow-md`}>
+                <div className={`w-full aspect-[4/5] rounded-2xl ${bev.bgColor} border ${bev.borderColor} dark:bg-muted flex flex-col items-center justify-end pb-3 relative overflow-hidden transition-shadow shadow-sm hover:shadow-md`}>
+                  
+                  {/* Rate Badge (Top Right) */}
+                  {bev.rate < 1 && (
+                    <div className="absolute top-1 right-1 bg-black/5 px-1.5 py-0.5 rounded-full text-[9px] font-bold text-black/60">
+                        {Math.round(bev.rate * 100)}%
+                    </div>
+                  )}
+
                   {/* Icon centered/floating */}
                   <div className="absolute inset-0 flex items-center justify-center pb-4">
-                    <bev.icon className={`w-8 h-8 ${bev.textColor}`} strokeWidth={2.5} />
+                    <bev.icon className={`w-8 h-8 ${bev.color}`} strokeWidth={2.5} />
                   </div>
                   
                   {/* Plus button at bottom */}
-                  <div className={`w-6 h-6 rounded-full ${bev.color} text-white flex items-center justify-center shadow-sm`}>
+                  <div className={`w-6 h-6 rounded-full bg-white text-${bev.color.split('-')[1]}-500 flex items-center justify-center shadow-sm`}>
                     <Plus className="w-3.5 h-3.5" strokeWidth={3} />
                   </div>
                 </div>
@@ -145,14 +169,21 @@ const Water = () => {
         </div>
       </div>
 
-      {/* Edit Goal Drawer (Simple Implementation) */}
+      {/* Entry Drawer */}
+      <WaterEntryDrawer 
+        isOpen={!!selectedBeverage}
+        onClose={() => setSelectedBeverage(null)}
+        beverage={selectedBeverage}
+        onConfirm={handleConfirmAdd}
+      />
+
+      {/* Edit Goal Drawer */}
       <Drawer open={isGoalDrawerOpen} onOpenChange={setIsGoalDrawerOpen}>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle className="text-center">{t('water.edit_goal_title')}</DrawerTitle>
           </DrawerHeader>
           <div className="p-4 pb-8 flex justify-center">
-             {/* Reusing WheelPicker logic simplified */}
              <div className="flex items-center gap-2">
                 <Button onClick={() => setGoal(Math.max(10, goal - 5))} variant="outline" size="icon"><ArrowLeft className="w-4 h-4" /></Button>
                 <span className="text-4xl font-bold w-24 text-center">{goal}</span>
