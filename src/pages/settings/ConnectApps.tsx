@@ -6,7 +6,7 @@ import { Capacitor } from '@capacitor/core';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, Activity, CheckCircle2, AlertCircle, ExternalLink } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, AlertCircle, ExternalLink } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -29,14 +29,8 @@ const ConnectApps = () => {
     }
 
     try {
-      // Nota: La API exacta puede variar según la versión del plugin.
-      // Basado en tu ejemplo: HealthConnect.checkAvailability()
       const result = await HealthConnect.checkAvailability();
-      
-      // Adaptamos la lógica según la respuesta típica de estos plugins
-      // A veces devuelven un string directo o un objeto
-      const status = typeof result === 'string' ? result : (result as any).availability;
-      setIsAvailable(status === 'Available' || status === 'Installed');
+      setIsAvailable(result.availability === 'Available' || result.availability === 'Installed');
     } catch (error) {
       console.error("Error checking Health Connect availability:", error);
       setIsAvailable(false);
@@ -52,7 +46,6 @@ const ConnectApps = () => {
 
     setLoading(true);
     try {
-      // 1. Verificar disponibilidad nuevamente
       const result = await HealthConnect.checkAvailability();
       const status = typeof result === 'string' ? result : (result as any).availability;
       
@@ -68,8 +61,6 @@ const ConnectApps = () => {
         return;
       }
 
-      // 2. Solicitar Permisos
-      // Definimos los tipos de datos que queremos leer
       const permissions = [
         { accessType: 'read', recordType: 'Steps' },
         { accessType: 'read', recordType: 'Weight' },
@@ -111,9 +102,13 @@ const ConnectApps = () => {
 
         <Card>
           <CardHeader className="pb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                <Activity className="w-6 h-6" />
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full flex-shrink-0 overflow-hidden border border-border/50 shadow-sm">
+                <img 
+                  src="/health-connect-logo.png" 
+                  alt="Health Connect Logo" 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <CardTitle className="text-lg">Health Connect</CardTitle>
@@ -149,9 +144,15 @@ const ConnectApps = () => {
                 />
               </div>
             ) : (
-              <div className="p-4 bg-yellow-50 text-yellow-800 rounded-xl border border-yellow-200 flex gap-3 text-sm">
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                <p>{t('connect_apps.platform_not_supported')}</p>
+              <div className="p-4 bg-yellow-50 text-yellow-800 rounded-xl border border-yellow-200 flex gap-3 text-sm items-start">
+                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <p>
+                  {t('connect_apps.platform_not_supported')}
+                  <br/>
+                  <span className="text-xs opacity-80 mt-1 block">
+                    (El botón de conexión solo es visible en dispositivos Android)
+                  </span>
+                </p>
               </div>
             )}
 
