@@ -64,12 +64,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .eq('id', userId)
         .maybeSingle();
       
-      if (error) console.error("Error fetching profile:", error);
+      if (error) {
+        console.error("Error fetching profile:", error);
+      }
       
       if (userProfile) {
         setProfile({ ...userProfile, is_guest: false });
       } else {
-        // If row doesn't exist yet but user does, we might be in a race condition with the trigger.
+        // If row doesn't exist yet but user does (rare race condition or DB error)
+        // We keep loading false so app doesn't hang
       }
     } catch (e) {
       console.error("Critical profile fetch error:", e);
@@ -93,36 +96,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeAuth = async () => {
       try {
-        // No seteamos loading(true) aquí porque ya inicia en true
-        
-        // Timeout de seguridad: Si Supabase tarda más de 5s, forzamos el fin de la carga
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Auth timeout')), 5000)
-        );
+        // 1. Obtener sesión localmente (rápido)
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
 
-        // Intentamos obtener sesión con un race contra el timeout
-        const sessionPromise = supabase.auth.getSession();
-        
-        const { data: { session: initialSession } } = await Promise.race([
-          sessionPromise,
-          timeoutPromise
-        ]) as any;
+        if (error) throw error;
 
         if (mounted) {
           if (initialSession?.user) {
+            // USUARIO LOGUEADO
             setSession(initialSession);
             setUser(initialSession.user);
+            
+            // Intentar cargar perfil de DB, pero no bloquear la UI indefinidamente
+            // Si falla o tarda, la UI ya tiene sesión y podría mostrar skeletons o estado parcial
             await fetchProfile(initialSession.user.id);
           } else {
-            // If no session, load local profile if exists
+            // NO HAY USUARIO (INVITADO)
+            // Cargar perfil local si existe
             if (localProfile) {
               setProfile(localProfile);
             }
           }
         }
       } catch (error) {
-        console.error("Auth initialization error or timeout:", error);
-        // En caso de error (timeout o red), intentamos cargar perfil local por si acaso
+        console.error("Auth initialization error:", error);
+        // Fallback de emergencia a perfil local
         if (mounted && localProfile) {
            setProfile(localProfile);
         }
@@ -138,15 +136,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
 
+      // Actualizar estado base
       setSession(newSession);
       setUser(newSession?.user ?? null);
 
-      if (event === 'SIGNED_OUT') {
-        setProfile(null);
-        setLocalProfile(null); 
-        setLoading(false);
-      } else if (event === 'SIGNED_IN' && newSession?.user) {
+      if (event === 'SIGNED_IN' && newSession?.user) {
+        setLoading(true); // Mostrar carga brevemente al iniciar sesión
         await fetchProfile(newSession.user.id);
+        setLoading(false);
+      } else if (event === 'SIGNED_OUT') {
+        setProfile(null);
+        setLocalProfile(null);
+        setLoading(false);
+      } else if (event === 'TOKEN_REFRESHED') {
+        // No hacer nada visual, solo mantener sesión
+      } else if (event === 'INITIAL_SESSION') {
+        // Ya manejado por initializeAuth, pero aseguramos que loading se apague
+        setLoading(false);
       }
     });
 
@@ -154,7 +160,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, []); // Dependencia vacía para correr solo al montar
 
   const signOut = async () => {
     try {
@@ -164,6 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Error signing out:", error);
     } finally {
+      // Limpiar todo el estado
       setProfile(null);
       setUser(null);
       setSession(null);
