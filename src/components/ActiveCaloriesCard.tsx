@@ -2,12 +2,14 @@ import { Card } from "@/components/ui/card";
 import { Flame } from "lucide-react";
 import AnimatedNumber from "./AnimatedNumber";
 import MacroProgressCircle from "./MacroProgressCircle";
+import { useTranslation } from "react-i18next";
 
 interface ActiveCaloriesCardProps {
   calories: number;
 }
 
 const ActiveCaloriesCard = ({ calories }: ActiveCaloriesCardProps) => {
+  const { t } = useTranslation();
   // Simulamos un progreso visual (ej. meta de 500 cal activas) para que se vea consistente con las otras MacroCards
   const percentage = Math.min((calories / 500) * 100, 100); 
 
@@ -24,7 +26,7 @@ const ActiveCaloriesCard = ({ calories }: ActiveCaloriesCardProps) => {
           <AnimatedNumber value={calories} />
           <span className="text-xs ml-0.5 font-medium text-muted-foreground">kcal</span>
         </p>
-        <p className="text-xs text-muted-foreground font-medium mt-1 capitalize">Activas</p>
+        <p className="text-xs text-muted-foreground font-medium mt-1 capitalize">{t('home.active_calories')}</p>
       </div>
     </Card>
   );

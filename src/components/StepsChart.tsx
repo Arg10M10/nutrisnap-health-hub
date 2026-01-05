@@ -42,7 +42,7 @@ const StepsChart = () => {
           <div>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Footprints className="w-5 h-5 text-blue-500" />
-              Pasos Diarios
+              {t('home.steps') || 'Pasos'}
             </CardTitle>
             <CardDescription>{t('progress.last_7_days')}</CardDescription>
           </div>

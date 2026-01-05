@@ -279,7 +279,9 @@
     "todays_analysis": "Today's Log",
     "no_data": "No entries yet.",
     "start_logging": "Tap the '+' button to log your first meal or exercise.",
-    "log_water_title": "Log Water"
+    "log_water_title": "Log Water",
+    "steps": "Steps",
+    "active_calories": "Active"
   },
   "bottom_nav": {
     "home": "Home",
