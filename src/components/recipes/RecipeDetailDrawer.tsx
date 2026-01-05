@@ -6,12 +6,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { X, Clock, Flame, Beef, Wheat, Droplets, Minus, Plus, ChevronDown } from "lucide-react";
+import { Clock, Beef, Wheat, Droplets, Minus, Plus, ChevronDown, Heart } from "lucide-react";
 import { Recipe } from "@/data/recipes";
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { useNutrition } from "@/context/NutritionContext";
 import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { cn } from '@/lib/utils';
 
 interface RecipeDetailDrawerProps {
   recipe: Recipe | null;
@@ -24,8 +26,25 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
   const [portions, setPortions] = useState(1);
   const { addAnalysis } = useNutrition();
   const navigate = useNavigate();
+  
+  // Persistencia de likes
+  const [likedRecipes, setLikedRecipes] = useLocalStorage<string[]>('calorel_liked_recipes', []);
 
   if (!recipe) return null;
+
+  const isLiked = likedRecipes.includes(recipe.id);
+  // Simular un contador base basado en el ID de la receta para que no empiece en 0
+  const baseLikes = recipe.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 100 + 50;
+  const currentLikes = baseLikes + (isLiked ? 1 : 0);
+
+  const handleToggleLike = () => {
+    if (isLiked) {
+      setLikedRecipes(likedRecipes.filter(id => id !== recipe.id));
+    } else {
+      setLikedRecipes([...likedRecipes, recipe.id]);
+      toast.success(t('recipes.feedback_thanks'));
+    }
+  };
 
   const handlePortionChange = (change: number) => {
     setPortions(prev => Math.max(1, prev + change));
@@ -124,6 +143,36 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
                   <p className="font-bold text-foreground">{currentFats}g</p>
                   <p className="text-[10px] text-muted-foreground uppercase font-bold">{t('share.fat_short')}</p>
                 </div>
+              </div>
+
+              {/* Feedback / Like Section */}
+              <div 
+                className={cn(
+                  "flex items-center justify-between p-4 rounded-xl border transition-all duration-300",
+                  isLiked 
+                    ? "bg-red-50 border-red-100 dark:bg-red-900/10 dark:border-red-900/30" 
+                    : "bg-muted/30 border-transparent hover:bg-muted/50"
+                )}
+              >
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-foreground">
+                    {isLiked ? t('recipes.liked_text') : t('recipes.like_question')}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {t('recipes.like_count', { count: currentLikes })}
+                  </span>
+                </div>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={handleToggleLike}
+                  className={cn(
+                    "rounded-full w-10 h-10 transition-all hover:bg-background/50",
+                    isLiked ? "text-red-500" : "text-muted-foreground hover:text-red-400"
+                  )}
+                >
+                  <Heart className={cn("w-6 h-6", isLiked && "fill-current")} />
+                </Button>
               </div>
 
               {/* Ingredients */}

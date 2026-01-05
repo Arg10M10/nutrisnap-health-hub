@@ -314,6 +314,10 @@
     "title": "Recetas",
     "coming_soon": "Próximamente...",
     "recipes_disclaimer": "Nota: Todos los valores nutricionales son aproximaciones y no exactos.",
+    "like_question": "¿Te funcionó esta receta?",
+    "liked_text": "¡Me alegro que te haya gustado!",
+    "like_count": "{{count}} personas la recomiendan",
+    "feedback_thanks": "¡Gracias por tu feedback!",
     "categories": {
         "lunch_dinner": "Almuerzo / Cena",
         "snack_breakfast": "Snack / Desayuno",

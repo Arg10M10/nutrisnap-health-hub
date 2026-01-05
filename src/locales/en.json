@@ -314,6 +314,10 @@
     "title": "Recipes",
     "coming_soon": "Coming soon...",
     "recipes_disclaimer": "Note: All nutritional values are approximations and not exact.",
+    "like_question": "Did you like this recipe?",
+    "liked_text": "Glad you liked it!",
+    "like_count": "{{count}} people recommend this",
+    "feedback_thanks": "Thanks for your feedback!",
     "categories": {
         "lunch_dinner": "Lunch / Dinner",
         "snack_breakfast": "Snack / Breakfast",
