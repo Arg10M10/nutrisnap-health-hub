@@ -378,6 +378,34 @@
         "Serve the chicken alongside the rice and salad."
       ]
     },
+    "grilled_chicken_tacos": {
+      "name": "Grilled Chicken Tacos",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "chicken_breast": "Chicken breast",
+        "corn_tortillas": "Corn tortillas",
+        "lettuce": "Lettuce",
+        "tomato": "Tomato",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Cook the chicken in a pan with oil, salt, and pepper for 5–6 minutes per side.",
+        "Heat the tortillas.",
+        "Chop tomato and lettuce.",
+        "Fill the tortillas with chicken and vegetables.",
+        "Serve immediately."
+      ]
+    },
     "blueberry_almond_smoothie": {
       "name": "Blueberry Almond Smoothie",
       "ingredients": "Ingredients",

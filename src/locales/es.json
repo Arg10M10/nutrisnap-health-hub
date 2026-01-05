@@ -378,6 +378,34 @@
         "Servir el pollo junto al arroz y la ensalada."
       ]
     },
+    "grilled_chicken_tacos": {
+      "name": "Tacos de Pollo a la Plancha",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "chicken_breast": "Pechuga de pollo",
+        "corn_tortillas": "Tortillas de maíz",
+        "lettuce": "Lechuga",
+        "tomato": "Tomate",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cocinar el pollo en sartén con aceite, sal y pimienta 5–6 minutos por lado.",
+        "Calentar las tortillas.",
+        "Picar tomate y lechuga.",
+        "Rellenar las tortillas con pollo y vegetales.",
+        "Servir inmediatamente."
+      ]
+    },
     "blueberry_almond_smoothie": {
       "name": "Smoothie de Blueberry y Almendras",
       "ingredients": "Ingredientes",
