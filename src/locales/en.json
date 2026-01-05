@@ -457,6 +457,34 @@
         "Add coconut milk and curry, cook for 10 minutes more.",
         "Serve the chicken over the rice."
       ]
+    },
+    "tuna_quinoa_salad": {
+      "name": "Tuna and Quinoa Salad",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "tuna_water": "Tuna in water",
+        "cooked_quinoa": "Cooked quinoa",
+        "tomato": "Tomato",
+        "cucumber": "Cucumber",
+        "olive_oil": "Olive oil",
+        "lemon_juice": "Lemon juice",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Cook quinoa according to package instructions and drain.",
+        "Mix chopped tuna, tomato, and cucumber.",
+        "Add quinoa, oil, lemon juice, salt, and pepper.",
+        "Toss and serve."
+      ]
     }
   },
   "scanner": {

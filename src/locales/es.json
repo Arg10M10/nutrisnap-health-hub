@@ -457,6 +457,34 @@
         "Añadir leche de coco y curry, cocinar 10 minutos más.",
         "Servir el pollo sobre el arroz."
       ]
+    },
+    "tuna_quinoa_salad": {
+      "name": "Ensalada de Atún y Quinoa",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "tuna_water": "Atún en agua",
+        "cooked_quinoa": "Quinoa cocida",
+        "tomato": "Tomate",
+        "cucumber": "Pepino",
+        "olive_oil": "Aceite de oliva",
+        "lemon_juice": "Jugo de limón",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cocinar la quinoa según las instrucciones del paquete y escurrir.",
+        "Mezclar el atún, tomate y pepino picados.",
+        "Añadir quinoa, aceite, limón, sal y pimienta.",
+        "Mezclar y servir."
+      ]
     }
   },
   "scanner": {
