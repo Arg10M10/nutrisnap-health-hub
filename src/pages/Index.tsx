@@ -26,12 +26,15 @@ import MenuAnalysisDrawer, { MenuAnalysisData } from "@/components/MenuAnalysisD
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { toast } from "sonner";
 import GuestBanner from "@/components/GuestBanner";
+import StepsCard from "@/components/StepsCard";
+import ActiveCaloriesCard from "@/components/ActiveCaloriesCard";
+import { ExerciseEntry } from "@/context/NutritionContext";
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { getDataForDate, streak, streakDays, addWaterGlass, removeWaterGlass, isWaterUpdating, deleteEntry, addAnalysis } = useNutrition();
   const { profile } = useAuth();
-  const { intake, analyses, healthScore, waterIntake } = getDataForDate(selectedDate);
+  const { intake, analyses, healthScore, waterIntake, steps, activeCalories } = getDataForDate(selectedDate);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -62,7 +65,7 @@ const Index = () => {
     fats: profile?.goal_fats || 65,
     water: 64, 
     sugars: profile?.goal_sugars || 25,
-    fiber: profile?.goal_fiber || 30, // Default 30g
+    fiber: profile?.goal_fiber || 30, 
   };
 
   const getSafePercentage = (current?: number | null, goal?: number | null) => {
@@ -129,7 +132,6 @@ const Index = () => {
           </button>
         </header>
 
-        {/* Mostrar banner para TODOS los que NO tengan suscripción activa */}
         {!profile?.is_subscribed && (
           <GuestBanner />
         )}
@@ -144,6 +146,7 @@ const Index = () => {
         <div id="daily-summary-carousel">
           <Carousel className="w-full" opts={{ align: "start", duration: 20 }} setApi={setApi}>
             <CarouselContent>
+              {/* PAGE 1: CALORIES & MACROS */}
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 0 ? "active" : "inactive"}>
                   <div className="flex flex-col gap-4 h-[350px]">
@@ -182,39 +185,32 @@ const Index = () => {
                 </motion.div>
               </CarouselItem>
 
+              {/* PAGE 2: WATER */}
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
+                  <div className="h-[350px] w-full">
+                    <WaterTrackerCard
+                      count={waterIntake}
+                      goal={dailyGoals.water}
+                      onAdd={(amount) => addWaterGlass(selectedDate, amount)}
+                      onRemove={() => removeWaterGlass(selectedDate)}
+                      isUpdating={isWaterUpdating}
+                    />
+                  </div>
+                </motion.div>
+              </CarouselItem>
+
+              {/* PAGE 3: STEPS & HEALTH */}
+              <CarouselItem className="pt-1 pb-1">
+                <motion.div variants={cardVariants} animate={current === 2 ? "active" : "inactive"}>
                   <div className="flex flex-col gap-4 h-[350px]">
                     <div className="flex-1 w-full min-h-0">
-                      <div className="grid grid-cols-2 gap-3 w-full h-full">
-                        <HealthScoreCard score={healthScore} />
-                        <WaterTrackerCard
-                          count={waterIntake}
-                          goal={dailyGoals.water}
-                          onAdd={(amount) => addWaterGlass(selectedDate, amount)}
-                          onRemove={() => removeWaterGlass(selectedDate)}
-                          isUpdating={isWaterUpdating}
-                        />
-                      </div>
+                      <StepsCard steps={steps} />
                     </div>
                     <div className="h-[150px] w-full flex-shrink-0">
                       <div className="grid grid-cols-2 gap-3 w-full h-full">
-                        <MacroCard
-                            value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
-                            color="#a855f7"
-                            icon={<Sparkles className="w-5 h-5 text-purple-500" />}
-                            current={intake.sugars}
-                            unit="g"
-                            label={t('home.sugars')}
-                        />
-                        <MacroCard
-                            value={getSafePercentage(intake.fiber, dailyGoals.fiber)}
-                            color="#10b981" // Verde esmeralda para fibra
-                            icon={<Sprout className="w-5 h-5 text-emerald-500" />}
-                            current={intake.fiber}
-                            unit="g"
-                            label={t('home.fiber')}
-                        />
+                        <ActiveCaloriesCard calories={activeCalories} />
+                        <HealthScoreCard score={healthScore} />
                       </div>
                     </div>
                   </div>
@@ -260,7 +256,7 @@ const Index = () => {
                         carbs={item.carbs_value}
                         fats={item.fats_value}
                         sugars={item.sugars_value}
-                        fiber={item.fiber_value} // Pasamos la fibra
+                        fiber={item.fiber_value} 
                         status={item.status}
                         reason={item.reason}
                         onClick={() => handleEntryClick(item)}

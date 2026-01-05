@@ -30,7 +30,8 @@ const ConnectApps = () => {
 
     try {
       const result = await HealthConnect.checkAvailability();
-      setIsAvailable(result.availability === 'Available' || result.availability === 'Installed');
+      const status = typeof result === 'string' ? result : (result as any).availability;
+      setIsAvailable(status === 'Available' || status === 'Installed');
     } catch (error) {
       console.error("Error checking Health Connect availability:", error);
       setIsAvailable(false);
@@ -168,25 +169,6 @@ const ConnectApps = () => {
             )}
           </CardContent>
         </Card>
-
-        <div className="px-2">
-          <h3 className="text-sm font-semibold mb-2 text-muted-foreground uppercase tracking-wider">
-            {t('connect_apps.data_synced')}
-          </h3>
-          <ul className="space-y-3">
-            {[
-              { label: t('connect_apps.data_steps'), icon: '👣' },
-              { label: t('connect_apps.data_calories'), icon: '🔥' },
-              { label: t('connect_apps.data_weight'), icon: '⚖️' }
-            ].map((item, idx) => (
-              <li key={idx} className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border/50 shadow-sm">
-                <span className="text-xl">{item.icon}</span>
-                <span className="font-medium text-foreground">{item.label}</span>
-                {isConnected && <CheckCircle2 className="w-4 h-4 text-primary ml-auto" />}
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
     </PageLayout>
   );

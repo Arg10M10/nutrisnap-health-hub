@@ -15,6 +15,7 @@ import EditWeightDrawer from "@/components/EditWeightDrawer";
 import WeightChart from "@/components/WeightChart";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import CalorieIntakeChart from "@/components/CalorieIntakeChart";
+import StepsChart from "@/components/StepsChart";
 import { useAILimit } from "@/hooks/useAILimit";
 
 const Progress = () => {
@@ -45,7 +46,6 @@ const Progress = () => {
   }, [todaysWeightUpdatesCount]);
 
   const handleOpenWeightDrawer = () => {
-    // Weight logging is free again
     setIsWeightDrawerOpen(true);
   };
 
@@ -108,6 +108,9 @@ const Progress = () => {
 
         {/* Calories Chart */}
         <CalorieIntakeChart />
+
+        {/* Steps Chart */}
+        <StepsChart />
       </div>
       <EditWeightDrawer 
         isOpen={isWeightDrawerOpen} 
