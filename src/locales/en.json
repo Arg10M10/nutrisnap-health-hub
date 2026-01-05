@@ -427,6 +427,36 @@
         "Mash half the banana and add it along with cinnamon to the oats. Mix well.",
         "Serve in a bowl and top with the rest of the sliced banana and peanut butter."
       ]
+    },
+    "chicken_curry": {
+      "name": "Chicken Curry with Rice",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "chicken_breast": "Chicken breast",
+        "white_rice": "Uncooked white rice",
+        "coconut_milk_light": "Light coconut milk",
+        "onion": "Onion",
+        "garlic": "Clove of garlic",
+        "olive_oil": "Olive oil",
+        "curry_powder": "Curry powder",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Cook the rice in salted water for 15–18 minutes. Drain.",
+        "In a pan, heat oil and sauté onion and garlic for 2–3 minutes.",
+        "Add chicken and cook until browned.",
+        "Add coconut milk and curry, cook for 10 minutes more.",
+        "Serve the chicken over the rice."
+      ]
     }
   },
   "scanner": {
