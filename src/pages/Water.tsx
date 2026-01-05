@@ -11,7 +11,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "
 import { toast } from "sonner";
 import WaterEntryDrawer from "@/components/WaterEntryDrawer";
 
-// Beverage types configuration with Hydration Rates (Removed Milk & Soda)
+// Beverage types configuration with Hydration Rates (Milk & Soda removed)
 const beverages = [
   { id: 'water', labelKey: 'water.type_water', rate: 1.0, color: 'text-blue-500', icon: Droplets, bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
   { id: 'juice', labelKey: 'water.type_juice', rate: 0.9, color: 'text-orange-500', icon: CupSoda, bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
@@ -98,20 +98,25 @@ const Water = () => {
 
         {/* The Big Glass */}
         <div className="flex-1 w-full flex items-center justify-center py-4 relative">
-          <div className="relative w-[240px] h-[340px]">
+          <div 
+            className="relative w-[240px] h-[340px]"
+            // Usamos drop-shadow en el contenedor padre para que la sombra respete la forma del clip-path hijo
+            style={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}
+          >
             {/* 
-               CONTENEDOR DE FORMA (MASK)
-               Aquí definimos la forma del vaso y ocultamos lo que se salga (overflow-hidden).
-               El líquido sube dentro de esto sin deformarse.
+               CONTENEDOR DE FORMA (MASK & GLASS)
+               Definimos la forma trapezoidal aquí.
             */}
             <div 
-              className="absolute inset-0 z-10 overflow-hidden bg-white/40 dark:bg-white/5 backdrop-blur-sm border-4 border-white/60 dark:border-white/20 shadow-xl"
+              className="absolute inset-0 z-10 overflow-hidden bg-white/20 dark:bg-white/5 border-4 border-white/60 dark:border-white/10 backdrop-blur-[2px]"
               style={{
                 borderRadius: '10px 10px 80px 80px',
-                // Usamos un clip-path ligeramente trapezoidal para dar efecto de vaso
                 clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)' 
               }}
             >
+                {/* Reflejo brillante del cristal */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent pointer-events-none" />
+
                 {/* Liquid Fill - Sube desde abajo */}
                 <div 
                   className="absolute bottom-0 left-0 right-0 bg-blue-400 dark:bg-blue-500 transition-all duration-1000 ease-out"
@@ -122,18 +127,18 @@ const Water = () => {
                   }}
                 >
                   {/* Efecto de superficie del agua */}
-                  <div className="absolute top-0 left-0 right-0 h-2 bg-white/40 skew-y-1" />
+                  <div className="absolute top-0 left-0 right-0 h-2 bg-white/30" />
                 </div>
             </div>
 
-            {/* Glass Highlight/Reflection (Cosmético encima del vaso) */}
+            {/* Brillo lateral decorativo (fuera del clip para nitidez) */}
             <div 
-              className="absolute top-4 right-8 w-3 h-3/4 bg-gradient-to-b from-white/30 to-transparent rounded-full z-20 pointer-events-none blur-[2px]"
+              className="absolute top-4 right-8 w-2 h-2/3 bg-gradient-to-b from-white/30 to-transparent rounded-full z-20 pointer-events-none blur-[1px]"
             />
           </div>
         </div>
 
-        {/* Beverage Grid (2 columnas para 4 items se ve mejor) */}
+        {/* Beverage Grid */}
         <div className="w-full mt-auto pt-8">
           <div className="grid grid-cols-2 gap-4 max-w-[300px] mx-auto">
             {beverages.map((bev) => (
