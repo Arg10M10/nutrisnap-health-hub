@@ -19,8 +19,13 @@ const Subscribe = () => {
   const { t } = useTranslation();
   const { profile, user, refetchProfile } = useAuth();
   
+  // Detectar si ya usó la prueba alguna vez (si la fecha existe)
+  const hasUsedTrial = !!profile?.trial_start_date;
+  
   const [selectedPlan, setSelectedPlan] = useState<'annual' | 'monthly'>('annual');
-  const [enableTrial, setEnableTrial] = useState(true);
+  
+  // Si ya usó el trial, forzamos enableTrial a false. Si no, true por defecto.
+  const [enableTrial, setEnableTrial] = useState(!hasUsedTrial);
 
   const subscribeMutation = useMutation({
     mutationFn: async () => {
@@ -32,13 +37,14 @@ const Subscribe = () => {
       const now = new Date();
       
       if (enableTrial) {
-        // Si es prueba: empieza hoy, no seteamos plan_type ni end_date permanente aún
+        // INICIO DE PRUEBA
         updateData.trial_start_date = now.toISOString();
         updateData.subscription_end_date = null; 
         updateData.plan_type = null;
       } else {
-        // Si paga directo (Manual): Limpiamos trial
-        updateData.trial_start_date = null;
+        // PAGO DIRECTO (O conversión post-trial)
+        // NOTA: NO borramos trial_start_date para mantener el historial de que ya se usó.
+        
         updateData.plan_type = selectedPlan;
         
         // Calcular fecha fin
@@ -72,21 +78,17 @@ const Subscribe = () => {
   });
 
   const handleSubscribe = () => {
-    // Si es un usuario invitado (creado localmente en onboarding), debe registrarse primero
     if (profile?.is_guest) {
       navigate('/register-premium', { state: { isStandardRegistration: false } });
     } else {
-      // Si ya está registrado (ej. inició sesión antes), aplica la suscripción
       subscribeMutation.mutate();
     }
   };
 
   const handleSkip = () => {
-    // Siempre ir al Home si el usuario decide no suscribirse ahora
     navigate('/');
   };
 
-  // Precios
   const annualPrice = "$36.00";
   const annualMonthlyEquivalent = "$3.00";
   const monthlyPrice = "$9.00";
@@ -112,32 +114,32 @@ const Subscribe = () => {
 
       <div className="w-full max-w-md space-y-6">
         
-        {/* Header */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-foreground">{t('subscribe.title')}</h1>
           <p className="text-muted-foreground">{t('subscribe.subtitle')}</p>
         </div>
 
-        {/* Trial Switch */}
-        <div className="flex items-center justify-between bg-muted/40 p-4 rounded-xl border border-border/50">
-          <div className="space-y-0.5">
-            <Label htmlFor="trial-mode" className="text-sm font-semibold text-foreground">
-              {t('subscribe.enable_trial', "Habilitar prueba de 3 días")}
-            </Label>
-            <p className="text-xs text-muted-foreground">
-              {t('subscribe.enable_trial_desc', "Pruébalo gratis antes de pagar")}
-            </p>
+        {/* Solo mostramos el switch si NO ha usado el trial antes */}
+        {!hasUsedTrial && (
+          <div className="flex items-center justify-between bg-muted/40 p-4 rounded-xl border border-border/50">
+            <div className="space-y-0.5">
+              <Label htmlFor="trial-mode" className="text-sm font-semibold text-foreground">
+                {t('subscribe.enable_trial', "Habilitar prueba de 3 días")}
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                {t('subscribe.enable_trial_desc', "Pruébalo gratis antes de pagar")}
+              </p>
+            </div>
+            <Switch 
+              id="trial-mode" 
+              checked={enableTrial}
+              onCheckedChange={setEnableTrial}
+            />
           </div>
-          <Switch 
-            id="trial-mode" 
-            checked={enableTrial}
-            onCheckedChange={setEnableTrial}
-          />
-        </div>
+        )}
 
         <AnimatePresence mode="wait">
           {enableTrial ? (
-            /* --- VISTA DE PRUEBA (Timeline) --- */
             <motion.div
               key="trial-view"
               initial={{ opacity: 0, height: 0 }}
@@ -146,11 +148,9 @@ const Subscribe = () => {
               className="overflow-hidden"
             >
               <div className="relative space-y-8 py-2 px-2">
-                {/* Línea conectora absoluta (detrás de los iconos) */}
                 <div className="absolute left-[28px] top-4 bottom-8 w-0.5 bg-gradient-to-b from-primary/50 to-muted/30 -z-10" />
                 
                 <div className="flex items-start gap-4">
-                  {/* Icono con espacio reservado (shrink-0) */}
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md ring-4 ring-background z-10">
                     <Lock className="h-5 w-5" />
                   </div>
@@ -182,7 +182,6 @@ const Subscribe = () => {
               </div>
             </motion.div>
           ) : (
-            /* --- VISTA DE COMPRA (Tabla + Precios) --- */
             <motion.div
               key="pay-view"
               initial={{ opacity: 0, y: 20 }}
@@ -190,7 +189,6 @@ const Subscribe = () => {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-6"
             >
-              {/* Tabla Comparativa */}
               <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
                 <div className="grid grid-cols-[1.5fr_0.8fr_0.8fr] border-b border-border bg-muted/30">
                   <div className="p-3"></div>
@@ -217,9 +215,7 @@ const Subscribe = () => {
                 ))}
               </div>
 
-              {/* Selector de Precios */}
               <div className="space-y-3">
-                {/* Anual Plan */}
                 <div 
                   className={cn(
                     "relative rounded-xl border-2 overflow-hidden cursor-pointer transition-all shadow-sm",
@@ -251,7 +247,6 @@ const Subscribe = () => {
                   </div>
                 </div>
 
-                {/* Monthly Plan */}
                 <div 
                   className={cn(
                     "relative rounded-xl border-2 bg-card p-4 flex items-center justify-between cursor-pointer transition-all",
@@ -272,7 +267,6 @@ const Subscribe = () => {
           )}
         </AnimatePresence>
 
-        {/* Actions Footer */}
         <div className="space-y-3 pt-2">
           <Button 
             onClick={handleSubscribe} 

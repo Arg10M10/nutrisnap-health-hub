@@ -101,36 +101,9 @@ const Settings = () => {
   // Estilo unificado verde lima
   const cardBaseStyle = "bg-primary rounded-2xl p-5 text-primary-foreground shadow-md flex items-center justify-between border border-primary/20 relative overflow-hidden group";
 
-  // 1. Verificar Prueba Gratuita
-  if (profile?.is_subscribed && profile.trial_start_date) {
-    const startDate = parseISO(profile.trial_start_date);
-    const endDate = addDays(startDate, 3);
-    const hoursLeft = differenceInHours(endDate, now);
-
-    if (hoursLeft > 0) {
-      const daysLeft = Math.ceil(hoursLeft / 24);
-      const remainingText = daysLeft === 1 ? `${hoursLeft}h restantes` : `${daysLeft} días restantes`;
-      
-      subscriptionCard = (
-        <div className={cardBaseStyle}>
-          {/* Decoración sutil */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-white/20 transition-colors pointer-events-none"></div>
-          
-          <div className="flex items-center gap-4 relative z-10">
-            <div className="bg-white/20 p-3 rounded-full border border-white/20 shadow-inner">
-              <Clock className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="font-bold text-lg text-white tracking-wide">Prueba Premium</p>
-              <p className="text-sm text-white/90 font-medium">{remainingText}</p>
-            </div>
-          </div>
-        </div>
-      );
-    }
-  } 
-  // 2. Verificar Suscripción Activa (Manual)
-  else if (profile?.is_subscribed && profile.subscription_end_date) {
+  // 1. PRIORIDAD ALTA: Verificar Suscripción Activa (Plan Pagado)
+  // Si tiene un plan_type (annual/monthly) y una fecha de fin, es una suscripción real.
+  if (profile?.is_subscribed && profile.plan_type && profile.subscription_end_date) {
     const endDate = parseISO(profile.subscription_end_date);
     const daysLeft = differenceInDays(endDate, now);
     const isAnnual = profile.plan_type === 'annual';
@@ -159,6 +132,35 @@ const Settings = () => {
           <div className="flex flex-col items-end relative z-10">
              <div className="text-3xl font-black leading-none drop-shadow-sm text-white">{daysLeft}</div>
              <div className="text-[10px] font-bold uppercase tracking-wider opacity-90 text-white">Días</div>
+          </div>
+        </div>
+      );
+    }
+  } 
+  // 2. PRIORIDAD SECUNDARIA: Verificar Prueba Gratuita
+  // Solo si NO tiene plan pagado (plan_type es null), pero está suscrito y tiene fecha de inicio de prueba.
+  else if (profile?.is_subscribed && !profile.plan_type && profile.trial_start_date) {
+    const startDate = parseISO(profile.trial_start_date);
+    const endDate = addDays(startDate, 3);
+    const hoursLeft = differenceInHours(endDate, now);
+
+    if (hoursLeft > 0) {
+      const daysLeft = Math.ceil(hoursLeft / 24);
+      const remainingText = daysLeft === 1 ? `${hoursLeft}h restantes` : `${daysLeft} días restantes`;
+      
+      subscriptionCard = (
+        <div className={cardBaseStyle}>
+          {/* Decoración sutil */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-white/20 transition-colors pointer-events-none"></div>
+          
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="bg-white/20 p-3 rounded-full border border-white/20 shadow-inner">
+              <Clock className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <p className="font-bold text-lg text-white tracking-wide">Prueba Premium</p>
+              <p className="text-sm text-white/90 font-medium">{remainingText}</p>
+            </div>
           </div>
         </div>
       );
