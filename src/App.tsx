@@ -46,6 +46,7 @@ import GoalProjection from "./pages/onboarding/GoalProjection";
 import Recipes from "./pages/Recipes";
 import RegisterForPremium from "./pages/RegisterForPremium";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
+import Water from "./pages/Water"; // Importar Water page
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,7 @@ const AnimatedRoutes = () => {
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/exercise" element={<Exercise />} />
+        <Route path="/water" element={<Water />} /> {/* Nueva ruta */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
@@ -107,7 +109,6 @@ const AppRoutes = () => {
         <div className="relative z-10">
           <Routes>
              <Route path="/onboarding" element={<Onboarding />} />
-             {/* Por defecto mostramos Login (Pantalla de Bienvenida) */}
              <Route path="*" element={<Login />} /> 
           </Routes>
         </div>
@@ -115,7 +116,6 @@ const AppRoutes = () => {
     );
   }
 
-  // Si hay perfil pero onboarding incompleto (raro con la lógica local, pero posible)
   if (profile && !profile.onboarding_completed) {
     return (
       <div className={shellClass}>
@@ -126,7 +126,6 @@ const AppRoutes = () => {
     );
   }
 
-  // Rutas de flujo de onboarding y suscripción
   const onboardingRoutes = ['/generating-plan', '/goal-projection', '/subscribe', '/register-premium', '/subscription-success'];
   
   if (onboardingRoutes.includes(location.pathname)) {
@@ -145,7 +144,6 @@ const AppRoutes = () => {
      );
   }
 
-  // Rutas de pantalla completa (sin BottomNav)
   const fullScreenRoutes = [
     "/scanner",
     "/exercise/running",
@@ -164,7 +162,8 @@ const AppRoutes = () => {
     "/settings/personal-details",
     "/settings/reminders",
     "/recipes",
-    "/login" // Login accesible desde settings
+    "/login",
+    "/water" // Water también es pantalla completa
   ];
 
   if (fullScreenRoutes.includes(location.pathname)) {
@@ -192,6 +191,7 @@ const AppRoutes = () => {
               <Route path="/settings/reminders" element={<Reminders />} />
               <Route path="/recipes" element={<Recipes />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/water" element={<Water />} />
             </Routes>
           </AnimatePresence>
         </div>
@@ -199,7 +199,6 @@ const AppRoutes = () => {
     );
   }
 
-  // App Principal
   return (
     <div className={shellClass}>
       <GlobalBadgeModal />

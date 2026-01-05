@@ -16,6 +16,18 @@
     "add": "Add",
     "deleted_success": "Deleted successfully"
   },
+  "water": {
+    "remaining": "Remaining",
+    "goal": "Goal",
+    "edit_goal_title": "Edit Daily Goal",
+    "added_toast": "Added {{amount}} oz of {{name}}",
+    "type_water": "Water",
+    "type_juice": "Juice",
+    "type_tea": "Tea",
+    "type_coffee": "Coffee",
+    "type_milk": "Milk",
+    "type_soda": "Soda"
+  },
   "guest_banner": {
     "unlimited_access": "Unlimited access to",
     "ai_identifier": "AI Scanner",
