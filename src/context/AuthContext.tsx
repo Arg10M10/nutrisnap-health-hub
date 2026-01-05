@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { toast } from 'sonner';
 
 export interface Profile {
   id: string;
@@ -75,82 +76,69 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Helper para construir un perfil de emergencia si la red falla
-  const buildFallbackProfile = (user: User): Profile => {
-    const meta = user.user_metadata || {};
-    return {
-      id: user.id,
-      full_name: meta.full_name || 'Usuario',
-      updated_at: new Date().toISOString(),
-      onboarding_completed: true, // Asumimos true para dejarlo entrar
-      diet_onboarding_completed: false,
-      gender: null,
-      age: null,
-      previous_apps_experience: null,
-      weight: null,
-      height: null,
-      units: 'metric',
-      motivation: null,
-      goal: 'maintain_weight',
-      goal_weight: null,
-      starting_weight: null,
-      goal_calories: 2000,
-      goal_protein: 100,
-      goal_carbs: 250,
-      goal_fats: 60,
-      goal_sugars: 30,
-      goal_fiber: 25,
-      weekly_rate: 0,
-      avatar_color: null,
-      time_format: '12h',
-      is_subscribed: true, // Asumimos suscripción si falló la carga (mejor acceso gratis que bloqueo)
-      trial_start_date: null,
-      subscription_end_date: null,
-      plan_type: null,
-      is_guest: false
-    };
-  };
-
   const fetchProfile = async (userId: string) => {
-    try {
-      // Intentamos obtener de la red con un Promise.race para timeout
-      // Si Supabase tarda más de 5 segundos, abortamos y usamos caché o fallback
-      const fetchPromise = supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
-        
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("Network timeout")), 6000)
-      );
+    let attempts = 0;
+    const MAX_RETRIES = 3;
+    
+    while (attempts < MAX_RETRIES) {
+      try {
+        // 1. Timeout de 5 segundos para no dejar la app colgada
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Timeout")), 5000)
+        );
 
-      // @ts-ignore
-      const { data: userProfile, error } = await Promise.race([fetchPromise, timeoutPromise]);
-      
-      if (error) {
-        console.error("Error fetching profile from Supabase:", error);
-        // Si hay error pero tenemos caché, nos quedamos con la caché (ya cargada en useEffect)
-        return; 
-      }
-      
-      if (userProfile) {
-        const profileData = { ...userProfile, is_guest: false };
-        setProfile(profileData);
-        cacheProfile(userId, profileData);
-      }
-    } catch (e) {
-      console.error("Profile fetch failed or timed out:", e);
-      // En caso de fallo catastrófico de red, si no hay perfil cargado, creamos uno de emergencia
-      // para que el usuario NO se quede en pantalla blanca.
-      if (!profile) {
-        // Necesitamos el objeto User para esto. Si estamos aquí, fetchProfile se llamó con un ID.
-        // Intentamos usar el estado actual o recuperar sesión básica.
-        const currentUser = user || (await supabase.auth.getUser()).data.user;
-        if (currentUser && currentUser.id === userId) {
-           const fallback = buildFallbackProfile(currentUser);
-           console.log("Using fallback profile due to network error");
-           setProfile(fallback);
+        // 2. Carga optimizada: Traemos solo lo necesario (aunque profile es pequeño)
+        const fetchPromise = supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .maybeSingle();
+
+        // @ts-ignore
+        const { data: userProfile, error } = await Promise.race([fetchPromise, timeoutPromise]);
+        
+        if (error) throw error;
+        
+        if (userProfile) {
+          // 3. Sanitización y Defaults: Evitar crashes por datos incompletos
+          const sanitizedProfile: Profile = {
+            ...userProfile,
+            is_guest: false,
+            // Defaults seguros
+            goal_calories: userProfile.goal_calories || 2000,
+            goal_protein: userProfile.goal_protein || 100,
+            goal_carbs: userProfile.goal_carbs || 250,
+            goal_fats: userProfile.goal_fats || 60,
+            goal_sugars: userProfile.goal_sugars || 30,
+            goal_fiber: userProfile.goal_fiber || 25,
+            is_subscribed: userProfile.is_subscribed || false,
+            plan_type: userProfile.plan_type || null,
+            // Mantener otros campos aunque sean null si la UI lo maneja bien
+          };
+          
+          setProfile(sanitizedProfile);
+          cacheProfile(userId, sanitizedProfile);
+          return; // Éxito: Salimos del bucle
+        } else {
+           // Perfil no encontrado en DB (raro para usuario auth, pero posible)
+           throw new Error("Perfil no encontrado");
+        }
+
+      } catch (e) {
+        attempts++;
+        console.warn(`Profile fetch attempt ${attempts} failed:`, e);
+        
+        if (attempts >= MAX_RETRIES) {
+           console.error("Max retries reached for profile fetch");
+           // Solo mostramos error si el usuario NO tiene datos cargados (está bloqueado)
+           // Si ya tiene caché, este fallo es silencioso (background update fail)
+           const hasCache = getCachedProfile(userId);
+           if (!hasCache && !profile) {
+             toast.error("No se pudo cargar tu cuenta. Por favor, revisa tu conexión.");
+           }
+        } else {
+           // Esperar 2 segundos antes de reintentar
+           await new Promise(r => setTimeout(r, 2000));
         }
       }
     }
@@ -172,56 +160,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     let mounted = true;
 
     const initializeAuth = async () => {
-      // Timeout de seguridad: Si en 7 segundos no hemos terminado, forzar loading=false
-      // Esto es el "botón de pánico" automático para el spinner infinito.
-      const safetyTimeout = setTimeout(() => {
-        if (mounted) setLoading(false);
-      }, 7000);
-
       try {
-        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
-
-        if (error) throw error;
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
 
         if (mounted) {
           if (initialSession?.user) {
+            const userId = initialSession.user.id;
+            
             setSession(initialSession);
             setUser(initialSession.user);
-            
-            const userId = initialSession.user.id;
 
-            // 1. CACHÉ: Intentar cargar inmediatamente
-            try {
-              const cachedProfileStr = window.localStorage.getItem(`calorel_auth_profile_${userId}`);
-              if (cachedProfileStr) {
-                const cachedProfile = JSON.parse(cachedProfileStr);
-                setProfile(cachedProfile);
-                setLoading(false); // ¡Desbloquear UI inmediatamente!
-              }
-            } catch (cacheErr) {
-              console.warn("Error reading cached profile", cacheErr);
+            // A. CACHE FIRST: Carga inmediata si existe
+            const cachedProfile = getCachedProfile(userId);
+            if (cachedProfile) {
+              setProfile(cachedProfile);
+              setLoading(false); // Desbloquear UI inmediatamente
+              
+              // B. BACKGROUND UPDATE: Actualizar datos frescos sin bloquear
+              fetchProfile(userId);
+            } else {
+              // C. NO CACHE: Esperar a la red (Login nuevo o limpieza de datos)
+              await fetchProfile(userId);
+              setLoading(false);
             }
-
-            // 2. RED: Actualizar en segundo plano
-            await fetchProfile(userId);
             
           } else {
+            // Usuario invitado
             if (localProfile) {
               setProfile(localProfile);
             }
+            setLoading(false);
           }
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
-        // Fallback final
-        if (mounted && localProfile && !profile) {
+        // Fallback final de emergencia
+        if (mounted && localProfile) {
            setProfile(localProfile);
         }
-      } finally {
-        if (mounted) {
-          clearTimeout(safetyTimeout);
-          setLoading(false);
-        }
+        if (mounted) setLoading(false);
       }
     };
 
@@ -230,17 +207,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
 
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
-
       if (event === 'SIGNED_IN' && newSession?.user) {
-        setLoading(true); 
+        setSession(newSession);
+        setUser(newSession.user);
+        
+        // Al iniciar sesión manualmente, mostrar loading mientras intentamos cargar
+        // Si hay caché vieja, la usamos
+        const cached = getCachedProfile(newSession.user.id);
+        if (cached) setProfile(cached);
+        
+        setLoading(true);
         await fetchProfile(newSession.user.id);
         setLoading(false);
-      } else if (event === 'SIGNED_OUT') {
+      } 
+      else if (event === 'SIGNED_OUT') {
         setProfile(null);
-        setLocalProfile(null);
+        setSession(null);
+        setUser(null);
         setLoading(false);
+      } 
+      else if (event === 'TOKEN_REFRESHED') {
+        setSession(newSession);
       }
     });
 
@@ -255,9 +242,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true); 
       await supabase.auth.signOut();
       if (user?.id) {
-        window.localStorage.removeItem(`calorel_auth_profile_${user.id}`);
+        // Opcional: Limpiar caché al cerrar sesión explícitamente
+        localStorage.removeItem(`calorel_auth_profile_${user.id}`);
       }
-      window.localStorage.removeItem('calorel_local_profile');
     } catch (error) {
       console.error("Error signing out:", error);
     } finally {
