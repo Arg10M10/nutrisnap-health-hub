@@ -46,7 +46,8 @@ import GoalProjection from "./pages/onboarding/GoalProjection";
 import Recipes from "./pages/Recipes";
 import RegisterForPremium from "./pages/RegisterForPremium";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
-import Water from "./pages/Water"; // Importar Water page
+import Water from "./pages/Water"; 
+import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
 
@@ -61,7 +62,7 @@ const AnimatedRoutes = () => {
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/exercise" element={<Exercise />} />
-        <Route path="/water" element={<Water />} /> {/* Nueva ruta */}
+        <Route path="/water" element={<Water />} /> 
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
@@ -80,7 +81,7 @@ const GlobalBadgeModal = () => {
 };
 
 const AppRoutes = () => {
-  const { profile, loading: authLoading } = useAuth();
+  const { profile, user, loading: authLoading } = useAuth();
   const location = useLocation();
   const [isSplashVisible, setIsSplashVisible] = useState(true);
 
@@ -101,6 +102,16 @@ const AppRoutes = () => {
   }
 
   const shellClass = "relative min-h-screen"; 
+
+  // ESTADO INTERMEDIO: Usuario autenticado pero perfil cargando
+  // Esto evita redirigir al login si la red está lenta al cargar el perfil
+  if (user && !profile) {
+    return (
+      <div className="relative min-h-screen flex flex-col items-center justify-center bg-background">
+         <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   // FLUJO DE USUARIO NO AUTENTICADO / SIN PERFIL
   if (!profile) {
@@ -163,7 +174,7 @@ const AppRoutes = () => {
     "/settings/reminders",
     "/recipes",
     "/login",
-    "/water" // Water también es pantalla completa
+    "/water" 
   ];
 
   if (fullScreenRoutes.includes(location.pathname)) {

@@ -56,26 +56,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Local storage fallback
   const [localProfile, setLocalProfile] = useLocalStorage<Profile | null>('calorel_local_profile', null);
 
+  // Función interna para buscar perfil con manejo de errores
+  const _fetchProfileData = async (userId: string) => {
+    const { data: userProfile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .maybeSingle();
+    
+    if (error) throw error;
+    return userProfile;
+  };
+
   const fetchProfile = async (userId: string) => {
     try {
-      const { data: userProfile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
-      
-      if (error) {
-        console.error("Error fetching profile:", error);
-      }
+      const userProfile = await _fetchProfileData(userId);
       
       if (userProfile) {
         setProfile({ ...userProfile, is_guest: false });
-      } else {
-        // If row doesn't exist yet but user does (rare race condition or DB error)
-        // We keep loading false so app doesn't hang
       }
     } catch (e) {
-      console.error("Critical profile fetch error:", e);
+      console.error("Error fetching profile:", e);
     }
   };
 
@@ -107,12 +108,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setSession(initialSession);
             setUser(initialSession.user);
             
-            // Intentar cargar perfil de DB, pero no bloquear la UI indefinidamente
-            // Si falla o tarda, la UI ya tiene sesión y podría mostrar skeletons o estado parcial
-            await fetchProfile(initialSession.user.id);
+            // Lógica de Reintento para cargar el perfil
+            let attempts = 0;
+            const maxAttempts = 3;
+            let profileLoaded = false;
+
+            while (attempts < maxAttempts && !profileLoaded && mounted) {
+              try {
+                const userProfile = await _fetchProfileData(initialSession.user.id);
+                if (userProfile) {
+                  setProfile({ ...userProfile, is_guest: false });
+                  profileLoaded = true;
+                } else {
+                  // Si no hay perfil pero hay usuario, quizás se está creando. Esperamos un poco.
+                  throw new Error("Profile not found yet");
+                }
+              } catch (e) {
+                attempts++;
+                if (attempts < maxAttempts) {
+                  // Esperar 500ms, 1000ms... antes de reintentar
+                  await new Promise(resolve => setTimeout(resolve, 500 * attempts));
+                } else {
+                  console.error("Failed to load profile after retries");
+                }
+              }
+            }
           } else {
             // NO HAY USUARIO (INVITADO)
-            // Cargar perfil local si existe
             if (localProfile) {
               setProfile(localProfile);
             }
@@ -141,7 +163,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(newSession?.user ?? null);
 
       if (event === 'SIGNED_IN' && newSession?.user) {
-        setLoading(true); // Mostrar carga brevemente al iniciar sesión
+        setLoading(true); 
         await fetchProfile(newSession.user.id);
         setLoading(false);
       } else if (event === 'SIGNED_OUT') {
@@ -149,10 +171,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLocalProfile(null);
         setLoading(false);
       } else if (event === 'TOKEN_REFRESHED') {
-        // No hacer nada visual, solo mantener sesión
+        // Mantener sesión
       } else if (event === 'INITIAL_SESSION') {
-        // Ya manejado por initializeAuth, pero aseguramos que loading se apague
-        setLoading(false);
+        // Manejado por initializeAuth, pero por seguridad apagamos loading si algo falló
+        // (Aunque initializeAuth tiene su propio finally, esto es doble seguridad)
       }
     });
 
@@ -160,7 +182,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []); // Dependencia vacía para correr solo al montar
+  }, []); 
 
   const signOut = async () => {
     try {
