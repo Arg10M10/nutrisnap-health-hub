@@ -6,14 +6,17 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { Clock, Beef, Wheat, Droplets, Minus, Plus, ChevronDown, Heart } from "lucide-react";
+import { Clock, Beef, Wheat, Droplets, Minus, Plus, ChevronDown, Heart, ThumbsUp } from "lucide-react";
 import { Recipe } from "@/data/recipes";
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { useNutrition } from "@/context/NutritionContext";
 import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import { cn } from '@/lib/utils';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/context/AuthContext';
+import AnimatedNumber from '../AnimatedNumber';
 
 interface RecipeDetailDrawerProps {
   recipe: Recipe | null;
@@ -26,21 +29,82 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
   const [portions, setPortions] = useState(1);
   const { addAnalysis } = useNutrition();
   const navigate = useNavigate();
-  
-  // Persistencia de likes
-  const [likedRecipes, setLikedRecipes] = useLocalStorage<string[]>('calorel_liked_recipes', []);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   if (!recipe) return null;
 
-  const isLiked = likedRecipes.includes(recipe.id);
+  // Obtener conteo total de likes reales
+  const { data: likeCount = 0 } = useQuery({
+    queryKey: ['recipe_likes_count', recipe.id],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from('recipe_likes')
+        .select('*', { count: 'exact', head: true })
+        .eq('recipe_id', recipe.id);
+      
+      if (error) throw error;
+      return count || 0;
+    },
+    enabled: isOpen, // Solo cargar cuando está abierto
+  });
+
+  // Verificar si el usuario actual dio like
+  const { data: isLiked = false } = useQuery({
+    queryKey: ['recipe_user_like', recipe.id, user?.id],
+    queryFn: async () => {
+      if (!user) return false;
+      const { data, error } = await supabase
+        .from('recipe_likes')
+        .select('user_id')
+        .eq('recipe_id', recipe.id)
+        .eq('user_id', user.id)
+        .maybeSingle();
+      
+      if (error) throw error;
+      return !!data;
+    },
+    enabled: isOpen && !!user,
+  });
+
+  // Mutación para alternar like
+  const toggleLikeMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("Debes iniciar sesión para dar like");
+
+      if (isLiked) {
+        const { error } = await supabase
+          .from('recipe_likes')
+          .delete()
+          .eq('recipe_id', recipe.id)
+          .eq('user_id', user.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('recipe_likes')
+          .insert({ recipe_id: recipe.id, user_id: user.id });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recipe_likes_count', recipe.id] });
+      queryClient.invalidateQueries({ queryKey: ['recipe_user_like', recipe.id] });
+      
+      if (!isLiked) {
+        toast.success(t('recipes.liked_text'));
+      }
+    },
+    onError: (error) => {
+      if (error.message === "Debes iniciar sesión para dar like") {
+        toast.error("Regístrate o inicia sesión para recomendar recetas.");
+      } else {
+        toast.error(t('common.error_friendly'));
+      }
+    }
+  });
 
   const handleToggleLike = () => {
-    if (isLiked) {
-      setLikedRecipes(likedRecipes.filter(id => id !== recipe.id));
-    } else {
-      setLikedRecipes([...likedRecipes, recipe.id]);
-      toast.success(t('recipes.feedback_thanks'));
-    }
+    toggleLikeMutation.mutate();
   };
 
   const handlePortionChange = (change: number) => {
@@ -63,7 +127,7 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
       fats: `${currentFats}g`,
       sugars: `${currentSugars}g`,
       fiber: `${currentFiber}g`,
-      healthRating: 'Saludable', // Default for homemade
+      healthRating: 'Saludable',
       reason: t('share.generated_with'),
       ingredients: recipe.ingredients.map(ing => t(`recipes.${recipe.id}.list.${ing.key}` as any)),
     };
@@ -142,7 +206,7 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
                 </div>
               </div>
 
-              {/* Feedback / Like Section */}
+              {/* Feedback / Like Section (Real Data) */}
               <div 
                 className={cn(
                   "flex items-center justify-between p-4 rounded-xl border transition-all duration-300",
@@ -152,14 +216,23 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
                 )}
               >
                 <div className="flex flex-col justify-center">
-                  <span className="text-sm font-semibold text-foreground">
-                    {isLiked ? t('recipes.liked_text') : t('recipes.like_question')}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-foreground">
+                      {isLiked ? t('recipes.liked_text') : t('recipes.like_question')}
+                    </span>
+                  </div>
+                  {likeCount > 0 && (
+                    <div className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
+                      <ThumbsUp className="w-3 h-3" />
+                      <span>{t('recipes.like_count', { count: likeCount })}</span>
+                    </div>
+                  )}
                 </div>
                 <Button
                   size="icon"
                   variant="ghost"
                   onClick={handleToggleLike}
+                  disabled={toggleLikeMutation.isPending}
                   className={cn(
                     "rounded-full w-10 h-10 transition-all hover:bg-background/50",
                     isLiked ? "text-red-500" : "text-muted-foreground hover:text-red-400"
