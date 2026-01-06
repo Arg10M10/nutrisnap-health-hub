@@ -33,9 +33,6 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
   if (!recipe) return null;
 
   const isLiked = likedRecipes.includes(recipe.id);
-  // Simular un contador base basado en el ID de la receta para que no empiece en 0
-  const baseLikes = recipe.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 100 + 50;
-  const currentLikes = baseLikes + (isLiked ? 1 : 0);
 
   const handleToggleLike = () => {
     if (isLiked) {
@@ -154,12 +151,9 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
                     : "bg-muted/30 border-transparent hover:bg-muted/50"
                 )}
               >
-                <div className="flex flex-col">
+                <div className="flex flex-col justify-center">
                   <span className="text-sm font-semibold text-foreground">
                     {isLiked ? t('recipes.liked_text') : t('recipes.like_question')}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {t('recipes.like_count', { count: currentLikes })}
                   </span>
                 </div>
                 <Button
