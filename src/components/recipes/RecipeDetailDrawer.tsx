@@ -16,7 +16,6 @@ import { cn } from '@/lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
-import AnimatedNumber from '../AnimatedNumber';
 
 interface RecipeDetailDrawerProps {
   recipe: Recipe | null;
@@ -32,63 +31,66 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  if (!recipe) return null;
+  // Extraemos el ID de forma segura para usarlo en los hooks
+  const recipeId = recipe?.id;
 
-  // Obtener conteo total de likes reales
+  // 1. Hook de Likes Totales (Siempre se ejecuta)
   const { data: likeCount = 0 } = useQuery({
-    queryKey: ['recipe_likes_count', recipe.id],
+    queryKey: ['recipe_likes_count', recipeId],
     queryFn: async () => {
+      if (!recipeId) return 0;
       const { count, error } = await supabase
         .from('recipe_likes')
         .select('*', { count: 'exact', head: true })
-        .eq('recipe_id', recipe.id);
+        .eq('recipe_id', recipeId);
       
       if (error) throw error;
       return count || 0;
     },
-    enabled: isOpen, // Solo cargar cuando está abierto
+    enabled: !!recipeId && isOpen, // Solo se activa si hay receta y está abierto
   });
 
-  // Verificar si el usuario actual dio like
+  // 2. Hook de Like del Usuario (Siempre se ejecuta)
   const { data: isLiked = false } = useQuery({
-    queryKey: ['recipe_user_like', recipe.id, user?.id],
+    queryKey: ['recipe_user_like', recipeId, user?.id],
     queryFn: async () => {
-      if (!user) return false;
+      if (!user || !recipeId) return false;
       const { data, error } = await supabase
         .from('recipe_likes')
         .select('user_id')
-        .eq('recipe_id', recipe.id)
+        .eq('recipe_id', recipeId)
         .eq('user_id', user.id)
         .maybeSingle();
       
       if (error) throw error;
       return !!data;
     },
-    enabled: isOpen && !!user,
+    enabled: !!recipeId && isOpen && !!user,
   });
 
-  // Mutación para alternar like
+  // 3. Hook de Mutación (Siempre se ejecuta)
   const toggleLikeMutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("Debes iniciar sesión para dar like");
+      if (!recipeId) throw new Error("No recipe ID");
 
       if (isLiked) {
         const { error } = await supabase
           .from('recipe_likes')
           .delete()
-          .eq('recipe_id', recipe.id)
+          .eq('recipe_id', recipeId)
           .eq('user_id', user.id);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from('recipe_likes')
-          .insert({ recipe_id: recipe.id, user_id: user.id });
+          .insert({ recipe_id: recipeId, user_id: user.id });
         if (error) throw error;
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipe_likes_count', recipe.id] });
-      queryClient.invalidateQueries({ queryKey: ['recipe_user_like', recipe.id] });
+      queryClient.invalidateQueries({ queryKey: ['recipe_likes_count', recipeId] });
+      queryClient.invalidateQueries({ queryKey: ['recipe_user_like', recipeId] });
       
       if (!isLiked) {
         toast.success(t('recipes.liked_text'));
@@ -110,6 +112,9 @@ const RecipeDetailDrawer = ({ recipe, isOpen, onClose }: RecipeDetailDrawerProps
   const handlePortionChange = (change: number) => {
     setPortions(prev => Math.max(1, prev + change));
   };
+
+  // --- AHORA ES SEGURO RETORNAR SI NO HAY RECETA ---
+  if (!recipe) return null;
 
   const currentCalories = recipe.calories * portions;
   const currentProtein = recipe.protein * portions;
