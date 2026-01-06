@@ -13,10 +13,10 @@ import WaterEntryDrawer from "@/components/WaterEntryDrawer";
 
 // Beverage types configuration with Hydration Rates
 const beverages = [
-  { id: 'water', labelKey: 'water.type_water', rate: 1.0, color: 'text-blue-500', icon: Droplets, bgColor: 'bg-blue-50', borderColor: 'border-blue-100' },
-  { id: 'juice', labelKey: 'water.type_juice', rate: 0.9, color: 'text-orange-500', icon: CupSoda, bgColor: 'bg-orange-50', borderColor: 'border-orange-100' },
-  { id: 'tea', labelKey: 'water.type_tea', rate: 0.9, color: 'text-green-600', icon: CupSoda, bgColor: 'bg-green-50', borderColor: 'border-green-100' },
-  { id: 'coffee', labelKey: 'water.type_coffee', rate: 0.7, color: 'text-amber-700', icon: Coffee, bgColor: 'bg-amber-50', borderColor: 'border-amber-100' },
+  { id: 'water', labelKey: 'water.type_water', rate: 1.0, color: 'text-blue-500', icon: Droplets, bgColor: 'bg-blue-50 dark:bg-blue-900/20', borderColor: 'border-blue-100 dark:border-blue-900/30' },
+  { id: 'juice', labelKey: 'water.type_juice', rate: 0.9, color: 'text-orange-500', icon: CupSoda, bgColor: 'bg-orange-50 dark:bg-orange-900/20', borderColor: 'border-orange-100 dark:border-orange-900/30' },
+  { id: 'tea', labelKey: 'water.type_tea', rate: 0.9, color: 'text-green-600', icon: CupSoda, bgColor: 'bg-green-50 dark:bg-green-900/20', borderColor: 'border-green-100 dark:border-green-900/30' },
+  { id: 'coffee', labelKey: 'water.type_coffee', rate: 0.7, color: 'text-amber-700', icon: Coffee, bgColor: 'bg-amber-50 dark:bg-amber-900/20', borderColor: 'border-amber-100 dark:border-amber-900/30' },
 ];
 
 const Water = () => {
@@ -270,16 +270,16 @@ const Water = () => {
 
       {/* Smart Hydration Guide Drawer */}
       <Drawer open={isGuideOpen} onOpenChange={setIsGuideOpen}>
-        <DrawerContent className="h-[92vh] flex flex-col rounded-t-[32px] bg-[#FAF9F6] outline-none">
+        <DrawerContent className="max-h-[92vh] flex flex-col rounded-t-[32px] bg-[#FAF9F6] dark:bg-background outline-none">
           <div className="absolute top-4 right-4 z-20">
-            <Button variant="ghost" size="icon" onClick={() => setIsGuideOpen(false)} className="rounded-full bg-black/5 hover:bg-black/10">
+            <Button variant="ghost" size="icon" onClick={() => setIsGuideOpen(false)} className="rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20">
               <X className="w-5 h-5 opacity-60" />
             </Button>
           </div>
           
           <div className="flex-1 flex flex-col w-full max-w-md mx-auto overflow-hidden">
             <div className="pt-8 px-6 pb-2 shrink-0 text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600">
+              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600 dark:text-blue-400">
                 <Info className="w-8 h-8" />
               </div>
               <DrawerTitle className="text-2xl font-black text-foreground">{t('water.guide.title')}</DrawerTitle>
@@ -295,14 +295,14 @@ const Water = () => {
                 {/* Beverages Grid */}
                 <div className="grid gap-4">
                   {/* Water */}
-                  <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-blue-500">
+                  <div className="bg-white dark:bg-card p-4 rounded-2xl border border-gray-100 dark:border-border shadow-sm flex gap-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0 text-blue-500">
                       <Droplets className="w-6 h-6" />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
                         <h4 className="font-bold text-foreground">{t('water.guide.water_name').split(' — ')[0]}</h4>
-                        <span className="text-xs font-black bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">100%</span>
+                        <span className="text-xs font-black bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full">100%</span>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">{t('water.guide.water_desc')}</p>
                     </div>
@@ -310,23 +310,23 @@ const Water = () => {
 
                   {/* Tea & Milk */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="bg-white dark:bg-card p-4 rounded-2xl border border-gray-100 dark:border-border shadow-sm">
                       <div className="flex justify-between items-start mb-2">
-                        <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+                        <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600 dark:text-green-400">
                           <CupSoda className="w-5 h-5" />
                         </div>
-                        <span className="text-[10px] font-black bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">90%</span>
+                        <span className="text-[10px] font-black bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-1.5 py-0.5 rounded-full">90%</span>
                       </div>
                       <h4 className="font-bold text-sm mb-1">{t('water.guide.tea_name')}</h4>
                       <p className="text-[10px] text-muted-foreground leading-snug">{t('water.guide.tea_desc')}</p>
                     </div>
 
-                    <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="bg-white dark:bg-card p-4 rounded-2xl border border-gray-100 dark:border-border shadow-sm">
                       <div className="flex justify-between items-start mb-2">
-                        <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500">
+                        <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-500 dark:text-indigo-400">
                           <CupSoda className="w-5 h-5" />
                         </div>
-                        <span className="text-[10px] font-black bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full">90%</span>
+                        <span className="text-[10px] font-black bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-1.5 py-0.5 rounded-full">90%</span>
                       </div>
                       <h4 className="font-bold text-sm mb-1">{t('water.guide.milk_name')}</h4>
                       <p className="text-[10px] text-muted-foreground leading-snug">{t('water.guide.milk_desc')}</p>
@@ -334,25 +334,25 @@ const Water = () => {
                   </div>
 
                   {/* Coffee */}
-                  <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex gap-4 items-center">
-                    <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center shrink-0 text-amber-700">
+                  <div className="bg-white dark:bg-card p-4 rounded-2xl border border-gray-100 dark:border-border shadow-sm flex gap-4 items-center">
+                    <div className="w-12 h-12 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center shrink-0 text-amber-700 dark:text-amber-500">
                       <Coffee className="w-6 h-6" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <h4 className="font-bold text-foreground">{t('water.guide.coffee_name')}</h4>
-                        <span className="text-xs font-black bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">70%</span>
+                        <span className="text-xs font-black bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full">70%</span>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">{t('water.guide.coffee_desc')}</p>
                     </div>
                   </div>
 
                   {/* Avoid Section (Juice & Soda) */}
-                  <div className="bg-red-50/50 p-4 rounded-2xl border border-red-100">
-                    <h4 className="text-xs font-bold text-red-800 uppercase tracking-wider mb-3 ml-1">Limit Intake</h4>
+                  <div className="bg-red-50/50 dark:bg-red-900/10 p-4 rounded-2xl border border-red-100 dark:border-red-900/20">
+                    <h4 className="text-xs font-bold text-red-800 dark:text-red-300 uppercase tracking-wider mb-3 ml-1">Limit Intake</h4>
                     <div className="space-y-3">
                       <div className="flex gap-3 items-start">
-                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 text-orange-500 shadow-sm">
+                        <div className="w-8 h-8 rounded-full bg-white dark:bg-card flex items-center justify-center shrink-0 text-orange-500 shadow-sm">
                           <CupSoda className="w-4 h-4" />
                         </div>
                         <div>
@@ -363,15 +363,15 @@ const Water = () => {
                           <p className="text-[10px] text-muted-foreground">{t('water.guide.juice_desc')}</p>
                         </div>
                       </div>
-                      <div className="w-full h-px bg-red-200/50" />
+                      <div className="w-full h-px bg-red-200/50 dark:bg-red-800/30" />
                       <div className="flex gap-3 items-start">
-                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 text-purple-500 shadow-sm">
+                        <div className="w-8 h-8 rounded-full bg-white dark:bg-card flex items-center justify-center shrink-0 text-purple-500 shadow-sm">
                           <CupSoda className="w-4 h-4" />
                         </div>
                         <div>
                           <div className="flex items-baseline justify-between">
                             <span className="text-sm font-bold text-foreground">{t('water.guide.soda_name')}</span>
-                            <span className="text-[10px] font-bold text-red-500">40%</span>
+                            <span className="text-[10px] font-bold text-red-500 dark:text-red-400">40%</span>
                           </div>
                           <p className="text-[10px] text-muted-foreground">{t('water.guide.soda_desc')}</p>
                         </div>
@@ -381,13 +381,13 @@ const Water = () => {
                 </div>
 
                 {/* Practical Tips */}
-                <div className="bg-emerald-50 p-5 rounded-2xl border border-emerald-100">
-                  <h3 className="font-bold text-emerald-900 mb-3 flex items-center gap-2">
+                <div className="bg-emerald-50 dark:bg-emerald-900/10 p-5 rounded-2xl border border-emerald-100 dark:border-emerald-900/20">
+                  <h3 className="font-bold text-emerald-900 dark:text-emerald-300 mb-3 flex items-center gap-2">
                     <Lightbulb className="w-5 h-5" /> {t('water.guide.tips_title')}
                   </h3>
                   <ul className="space-y-2">
                     {[1, 2, 3, 4].map((num) => (
-                      <li key={num} className="flex gap-2 items-start text-xs text-emerald-800 font-medium">
+                      <li key={num} className="flex gap-2 items-start text-xs text-emerald-800 dark:text-emerald-200 font-medium">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
                         {t(`water.guide.tip_${num}` as any)}
                       </li>

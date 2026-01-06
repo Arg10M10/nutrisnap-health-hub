@@ -59,9 +59,18 @@ const WaterEntryDrawer = ({ isOpen, onClose, beverage, onConfirm }: WaterEntryDr
 
   if (!beverage) return null;
 
+  // Helper para adaptar el color del icono en modo oscuro si es necesario
+  // La lógica original reemplaza 'text-' por 'bg-' y ajusta la intensidad.
+  // Añadimos una clase base para el modo oscuro.
+  const iconContainerClass = cn(
+    "w-20 h-20 rounded-full flex items-center justify-center shadow-lg",
+    beverage.color.replace('text-', 'bg-').replace('600', '100').replace('500', '100').replace('700', '100'),
+    "dark:bg-muted/20" // Fallback oscuro genérico si el color computado es muy claro
+  );
+
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="bg-[#FAF9F6] border-t-0 rounded-t-[32px] max-h-[95vh] flex flex-col outline-none">
+      <DrawerContent className="bg-[#FAF9F6] dark:bg-background border-t-0 rounded-t-[32px] max-h-[95vh] flex flex-col outline-none">
         <div className="flex-1 flex flex-col items-center pt-6 pb-8 px-6 relative w-full max-w-md mx-auto">
           
           {/* Botón Cerrar Absolute */}
@@ -82,7 +91,7 @@ const WaterEntryDrawer = ({ isOpen, onClose, beverage, onConfirm }: WaterEntryDr
 
           {/* Icono Visual */}
           <div className="mb-6 relative">
-             <div className={cn("w-20 h-20 rounded-full flex items-center justify-center shadow-lg", beverage.color.replace('text-', 'bg-').replace('600', '100').replace('500', '100').replace('700', '100'))}>
+             <div className={iconContainerClass}>
                 <beverage.icon className={cn("w-8 h-8", beverage.color)} />
              </div>
           </div>
@@ -93,7 +102,7 @@ const WaterEntryDrawer = ({ isOpen, onClose, beverage, onConfirm }: WaterEntryDr
               <button
                 key={size}
                 onClick={() => handlePreset(size)}
-                className="bg-white border border-gray-200 shadow-sm px-4 py-2 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-50 active:scale-95 transition-all"
+                className="bg-white dark:bg-card border border-gray-200 dark:border-border shadow-sm px-4 py-2 rounded-xl text-sm font-semibold text-foreground hover:bg-gray-50 dark:hover:bg-muted/50 active:scale-95 transition-all"
               >
                 {size} oz
               </button>
@@ -112,26 +121,26 @@ const WaterEntryDrawer = ({ isOpen, onClose, beverage, onConfirm }: WaterEntryDr
               <button
                 key={num}
                 onClick={() => handleNumClick(num.toString())}
-                className="h-14 rounded-2xl bg-white shadow-sm border border-gray-100 text-2xl font-semibold text-foreground hover:bg-gray-50 active:scale-95 transition-all"
+                className="h-14 rounded-2xl bg-white dark:bg-card shadow-sm border border-gray-100 dark:border-border text-2xl font-semibold text-foreground hover:bg-gray-50 dark:hover:bg-muted/50 active:scale-95 transition-all"
               >
                 {num}
               </button>
             ))}
             <button
               onClick={() => handleNumClick(".")}
-              className="h-14 rounded-2xl bg-white shadow-sm border border-gray-100 text-2xl font-bold text-foreground hover:bg-gray-50 active:scale-95 transition-all pb-2"
+              className="h-14 rounded-2xl bg-white dark:bg-card shadow-sm border border-gray-100 dark:border-border text-2xl font-bold text-foreground hover:bg-gray-50 dark:hover:bg-muted/50 active:scale-95 transition-all pb-2"
             >
               .
             </button>
             <button
               onClick={() => handleNumClick("0")}
-              className="h-14 rounded-2xl bg-white shadow-sm border border-gray-100 text-2xl font-semibold text-foreground hover:bg-gray-50 active:scale-95 transition-all"
+              className="h-14 rounded-2xl bg-white dark:bg-card shadow-sm border border-gray-100 dark:border-border text-2xl font-semibold text-foreground hover:bg-gray-50 dark:hover:bg-muted/50 active:scale-95 transition-all"
             >
               0
             </button>
             <button
               onClick={handleDelete}
-              className="h-14 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center text-foreground hover:bg-gray-50 active:scale-95 transition-all"
+              className="h-14 rounded-2xl bg-white dark:bg-card shadow-sm border border-gray-100 dark:border-border flex items-center justify-center text-foreground hover:bg-gray-50 dark:hover:bg-muted/50 active:scale-95 transition-all"
             >
               <Delete className="w-6 h-6 opacity-60" />
             </button>
@@ -143,8 +152,8 @@ const WaterEntryDrawer = ({ isOpen, onClose, beverage, onConfirm }: WaterEntryDr
             disabled={parseFloat(amountStr) === 0}
             className="w-full max-w-[280px] h-14 text-lg font-bold rounded-2xl shadow-lg transition-all active:scale-95"
             style={{
-               backgroundColor: parseFloat(amountStr) > 0 ? 'hsl(var(--primary))' : '#E5E7EB',
-               color: parseFloat(amountStr) > 0 ? 'white' : '#9CA3AF',
+               backgroundColor: parseFloat(amountStr) > 0 ? 'hsl(var(--primary))' : undefined,
+               color: parseFloat(amountStr) > 0 ? 'white' : undefined,
             }}
           >
             {t('common.add', 'Agregar')}
