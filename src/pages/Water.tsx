@@ -13,10 +13,10 @@ import WaterEntryDrawer from "@/components/WaterEntryDrawer";
 
 // Beverage types configuration with Hydration Rates (Milk & Soda removed)
 const beverages = [
-  { id: 'water', labelKey: 'water.type_water', rate: 1.0, color: 'text-blue-500', icon: Droplets, bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
-  { id: 'juice', labelKey: 'water.type_juice', rate: 0.9, color: 'text-orange-500', icon: CupSoda, bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
-  { id: 'tea', labelKey: 'water.type_tea', rate: 0.9, color: 'text-green-600', icon: CupSoda, bgColor: 'bg-green-100', borderColor: 'border-green-200' },
-  { id: 'coffee', labelKey: 'water.type_coffee', rate: 0.7, color: 'text-amber-700', icon: Coffee, bgColor: 'bg-amber-100', borderColor: 'border-amber-200' },
+  { id: 'water', labelKey: 'water.type_water', rate: 1.0, color: 'text-blue-500', icon: Droplets, bgColor: 'bg-blue-50', borderColor: 'border-blue-100' },
+  { id: 'juice', labelKey: 'water.type_juice', rate: 0.9, color: 'text-orange-500', icon: CupSoda, bgColor: 'bg-orange-50', borderColor: 'border-orange-100' },
+  { id: 'tea', labelKey: 'water.type_tea', rate: 0.9, color: 'text-green-600', icon: CupSoda, bgColor: 'bg-green-50', borderColor: 'border-green-100' },
+  { id: 'coffee', labelKey: 'water.type_coffee', rate: 0.7, color: 'text-amber-700', icon: Coffee, bgColor: 'bg-amber-50', borderColor: 'border-amber-100' },
 ];
 
 const Water = () => {
@@ -74,10 +74,10 @@ const Water = () => {
         <div className="w-10" /> {/* Spacer */}
       </header>
 
-      <div className="flex-1 flex flex-col items-center w-full max-w-md mx-auto px-6 pb-8">
+      <div className="flex-1 flex flex-col items-center w-full max-w-md mx-auto px-6 pb-8 overflow-hidden">
         
         {/* Main Stats */}
-        <div className="text-center mb-8 space-y-1">
+        <div className="text-center mb-6 space-y-1 shrink-0">
           <div className="flex items-end justify-center gap-1 text-blue-500 dark:text-blue-400">
             <span className="text-6xl font-bold tracking-tighter">
               <AnimatedNumber value={waterIntake} toFixed={1} />
@@ -101,8 +101,8 @@ const Water = () => {
         </div>
 
         {/* The Big Glass (SVG Implementation) */}
-        <div className="flex-1 w-full flex items-center justify-center py-4 relative">
-          <div className="relative w-[240px] h-[340px] drop-shadow-2xl">
+        <div className="flex-1 w-full flex items-center justify-center py-4 relative shrink-0 min-h-[360px]">
+          <div className="relative w-[240px] h-[340px] drop-shadow-2xl scale-95 sm:scale-100 transition-transform">
             <svg 
               width="240" 
               height="340" 
@@ -186,33 +186,33 @@ const Water = () => {
           </div>
         </div>
 
-        {/* Beverage Grid */}
-        <div className="w-full mt-auto pt-8">
-          <div className="grid grid-cols-2 gap-4 max-w-[300px] mx-auto">
+        {/* Beverage Horizontal Scroll - Redesigned Buttons */}
+        <div className="w-full mt-6 pb-2">
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 justify-center sm:justify-start px-2">
             {beverages.map((bev) => (
               <motion.button
                 key={bev.id}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleBeverageClick(bev)}
-                className="flex flex-col items-center gap-2 group"
+                className="flex flex-col items-center gap-2 group flex-shrink-0"
               >
-                <div className={`w-full h-24 rounded-2xl ${bev.bgColor} border ${bev.borderColor} dark:bg-muted flex items-center justify-center relative overflow-hidden transition-all shadow-sm hover:shadow-md hover:-translate-y-1`}>
+                <div className={`w-16 h-16 rounded-full bg-white dark:bg-muted border ${bev.borderColor} flex items-center justify-center relative shadow-sm transition-all group-hover:shadow-md group-hover:scale-105 group-active:scale-95`}>
                   
-                  {/* Rate Badge (Top Right) */}
+                  {/* Rate Badge (Top Right - Mini Dot) */}
                   {bev.rate < 1 && (
-                    <div className="absolute top-2 right-2 bg-white/50 dark:bg-black/20 px-1.5 py-0.5 rounded-md text-[10px] font-bold text-foreground/70">
-                        {Math.round(bev.rate * 100)}%
+                    <div className="absolute top-0 right-0 w-3 h-3 bg-white dark:bg-muted rounded-full flex items-center justify-center border border-muted">
+                        <div className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
                     </div>
                   )}
 
-                  <bev.icon className={`w-10 h-10 ${bev.color}`} strokeWidth={2} />
+                  <bev.icon className={`w-7 h-7 ${bev.color}`} strokeWidth={2} />
                   
-                  {/* Plus icon subtle */}
-                  <div className={`absolute bottom-2 right-2 w-5 h-5 rounded-full bg-white text-${bev.color.split('-')[1]}-500 flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity`}>
-                    <Plus className="w-3 h-3" strokeWidth={3} />
+                  {/* Plus icon subtle overlay */}
+                  <div className="absolute inset-0 bg-black/5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Plus className="w-6 h-6 text-white drop-shadow-md" strokeWidth={3} />
                   </div>
                 </div>
-                <span className="text-sm font-medium text-foreground/80">{t(bev.labelKey as any)}</span>
+                <span className="text-xs font-semibold text-foreground/70">{t(bev.labelKey as any)}</span>
               </motion.button>
             ))}
           </div>
