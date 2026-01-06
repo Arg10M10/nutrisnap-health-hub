@@ -542,6 +542,32 @@
         "Add quinoa, oil, lemon juice, salt, and pepper.",
         "Toss and serve."
       ]
+    },
+    "spinach_cheese_omelette": {
+      "name": "Spinach and Cheese Omelette",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "eggs": "Eggs (100g)",
+        "spinach": "Fresh spinach",
+        "low_fat_cheese": "Low fat grated cheese",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Beat the eggs with salt and pepper.",
+        "Heat oil in a pan and add spinach for 1–2 minutes.",
+        "Add the eggs and cook for 2–3 minutes.",
+        "Add cheese, fold the omelette and serve."
+      ]
     }
   },
   "scanner": {
