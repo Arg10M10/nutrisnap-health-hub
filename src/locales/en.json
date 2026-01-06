@@ -26,7 +26,32 @@
     "type_tea": "Tea",
     "type_coffee": "Coffee",
     "type_milk": "Milk",
-    "type_soda": "Soda"
+    "type_soda": "Soda",
+    "guide": {
+      "card_title": "Smart Hydration",
+      "card_subtitle": "The science of staying hydrated",
+      "read_more": "Read more",
+      "title": "Smart Hydration Guide",
+      "intro": "Not all drinks hydrate the same way. Here’s a simple and practical overview:",
+      "ratio": "Hydration Ratio",
+      "water_name": "Water — Best Choice",
+      "water_desc": "Zero calories. Ideal for daily hydration. Recommended as your main drink.",
+      "coffee_name": "Coffee",
+      "coffee_desc": "Contains caffeine. Still contributes to hydration in moderation. Tip: Balance with water.",
+      "tea_name": "Tea",
+      "tea_desc": "Light caffeine content. Hydrates similarly to water. Unsweetened is best.",
+      "milk_name": "Milk",
+      "milk_desc": "Contains electrolytes and protein. Keeps you hydrated longer but watch the calories.",
+      "juice_name": "Juice",
+      "juice_desc": "Provides fluids but often high in sugar. Best diluted with water.",
+      "soda_name": "Soda",
+      "soda_desc": "High sugar and additives. Not ideal. Drink occasionally.",
+      "tips_title": "Practical Tips",
+      "tip_1": "Drink water regularly, not only when thirsty",
+      "tip_2": "Start your day with a glass of water",
+      "tip_3": "Carry a water bottle during the day",
+      "tip_4": "Drink water before meals"
+    }
   },
   "guest_banner": {
     "unlimited_access": "Unlimited access to",

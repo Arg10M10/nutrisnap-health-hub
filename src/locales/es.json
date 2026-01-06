@@ -26,7 +26,32 @@
     "type_tea": "Té",
     "type_coffee": "Café",
     "type_milk": "Leche",
-    "type_soda": "Refresco"
+    "type_soda": "Refresco",
+    "guide": {
+      "card_title": "Hidratación Inteligente",
+      "card_subtitle": "La ciencia de mantenerse hidratado",
+      "read_more": "Leer más",
+      "title": "Guía de Hidratación Inteligente",
+      "intro": "No todas las bebidas hidratan igual. Aquí tienes un resumen práctico:",
+      "ratio": "Ratio de Hidratación",
+      "water_name": "Agua — La Mejor Opción",
+      "water_desc": "Cero calorías. Ideal para la hidratación diaria. Recomendada como tu bebida principal.",
+      "coffee_name": "Café",
+      "coffee_desc": "Contiene cafeína. Aún contribuye a la hidratación si se consume con moderación. Tip: Equilíbralo con agua.",
+      "tea_name": "Té",
+      "tea_desc": "Contenido ligero de cafeína. Hidrata de forma similar al agua. El té sin azúcar es mejor.",
+      "milk_name": "Leche",
+      "milk_desc": "Contiene electrolitos y proteínas. Puede mantenerte hidratado por más tiempo, pero cuidado con las calorías.",
+      "juice_name": "Jugo",
+      "juice_desc": "Provee líquidos pero suele ser alto en azúcar. Mejor diluido con agua.",
+      "soda_name": "Refresco",
+      "soda_desc": "Alto en azúcar y aditivos. No es ideal. Bébelo ocasionalmente.",
+      "tips_title": "Consejos Prácticos",
+      "tip_1": "Bebe agua regularmente, no solo cuando tengas sed",
+      "tip_2": "Empieza tu día con un vaso de agua",
+      "tip_3": "Lleva una botella de agua contigo durante el día",
+      "tip_4": "Bebe agua antes de las comidas"
+    }
   },
   "guest_banner": {
     "unlimited_access": "Acceso ilimitado a",
