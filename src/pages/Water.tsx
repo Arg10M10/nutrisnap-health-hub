@@ -270,7 +270,7 @@ const Water = () => {
 
       {/* Smart Hydration Guide Drawer */}
       <Drawer open={isGuideOpen} onOpenChange={setIsGuideOpen}>
-        <DrawerContent className="max-h-[92vh] flex flex-col rounded-t-[32px] bg-[#FAF9F6] outline-none">
+        <DrawerContent className="h-[92vh] flex flex-col rounded-t-[32px] bg-[#FAF9F6] outline-none">
           <div className="absolute top-4 right-4 z-20">
             <Button variant="ghost" size="icon" onClick={() => setIsGuideOpen(false)} className="rounded-full bg-black/5 hover:bg-black/10">
               <X className="w-5 h-5 opacity-60" />
@@ -288,7 +288,8 @@ const Water = () => {
               </p>
             </div>
 
-            <div className="flex-1 px-6 pb-8 pt-4 overflow-y-auto">
+            {/* Added data-vaul-scrollable to allow native scrolling within the drawer */}
+            <div className="flex-1 px-6 pb-8 pt-4 overflow-y-auto" data-vaul-scrollable>
               <div className="space-y-6">
                 
                 {/* Beverages Grid */}
