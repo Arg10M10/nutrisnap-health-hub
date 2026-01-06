@@ -59,6 +59,10 @@ const Water = () => {
     setSelectedBeverage(null);
   };
 
+  // SVG Path definition for the modern glass shape
+  // Top width: 240, Bottom curve tapering
+  const glassPath = "M 5 0 H 235 L 210 300 Q 205 340 160 340 H 80 Q 35 340 30 300 L 5 0 Z";
+
   return (
     <div className="min-h-screen bg-[#FDFBF7] dark:bg-background flex flex-col">
       {/* Header */}
@@ -96,45 +100,89 @@ const Water = () => {
           </div>
         </div>
 
-        {/* The Big Glass */}
+        {/* The Big Glass (SVG Implementation) */}
         <div className="flex-1 w-full flex items-center justify-center py-4 relative">
-          <div 
-            className="relative w-[240px] h-[340px]"
-            // Usamos drop-shadow en el contenedor padre para que la sombra respete la forma del clip-path hijo
-            style={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}
-          >
-            {/* 
-               CONTENEDOR DE FORMA (MASK & GLASS)
-               Definimos la forma trapezoidal aquí.
-            */}
-            <div 
-              className="absolute inset-0 z-10 overflow-hidden bg-white/20 dark:bg-white/5 border-4 border-white/60 dark:border-white/10 backdrop-blur-[2px]"
-              style={{
-                borderRadius: '10px 10px 80px 80px',
-                clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)' 
-              }}
+          <div className="relative w-[240px] h-[340px] drop-shadow-2xl">
+            <svg 
+              width="240" 
+              height="340" 
+              viewBox="0 0 240 340" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              className="overflow-visible"
             >
-                {/* Reflejo brillante del cristal */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent pointer-events-none" />
+              <defs>
+                <clipPath id="glassClip">
+                  <path d={glassPath} />
+                </clipPath>
+                <linearGradient id="glassGradient" x1="120" y1="0" x2="120" y2="340" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="white" stopOpacity="0.4" />
+                  <stop offset="1" stopColor="white" stopOpacity="0.1" />
+                </linearGradient>
+                <linearGradient id="liquidGradient" x1="120" y1="0" x2="120" y2="340" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#60A5FA" /> {/* blue-400 */}
+                  <stop offset="1" stopColor="#3B82F6" /> {/* blue-500 */}
+                </linearGradient>
+              </defs>
 
-                {/* Liquid Fill - Sube desde abajo */}
-                <div 
-                  className="absolute bottom-0 left-0 right-0 bg-blue-400 dark:bg-blue-500 transition-all duration-1000 ease-out"
-                  style={{
-                    height: `${percentage}%`,
-                    width: '100%',
-                    opacity: 0.85
-                  }}
-                >
-                  {/* Efecto de superficie del agua */}
-                  <div className="absolute top-0 left-0 right-0 h-2 bg-white/30" />
-                </div>
-            </div>
+              {/* Glass Background (Body) */}
+              <path 
+                d={glassPath} 
+                fill="url(#glassGradient)" 
+                stroke="rgba(255,255,255,0.6)" 
+                strokeWidth="4" 
+                className="drop-shadow-sm"
+              />
 
-            {/* Brillo lateral decorativo (fuera del clip para nitidez) */}
-            <div 
-              className="absolute top-4 right-8 w-2 h-2/3 bg-gradient-to-b from-white/30 to-transparent rounded-full z-20 pointer-events-none blur-[1px]"
-            />
+              {/* Liquid Content */}
+              <g clipPath="url(#glassClip)">
+                {/* Liquid Fill */}
+                <rect 
+                  x="0" 
+                  y={340 - (340 * percentage / 100)} 
+                  width="240" 
+                  height="340" 
+                  fill="url(#liquidGradient)" 
+                  className="transition-all duration-1000 ease-out"
+                  opacity="0.9"
+                />
+                
+                {/* Surface Line (Highlight) */}
+                <rect 
+                  x="0" 
+                  y={340 - (340 * percentage / 100)} 
+                  width="240" 
+                  height="4" 
+                  fill="white" 
+                  fillOpacity="0.4"
+                  className="transition-all duration-1000 ease-out"
+                />
+                
+                {/* Bubbles / Texture optional */}
+                <circle cx="60" cy={340 - (340 * percentage / 100) + 40} r="4" fill="white" fillOpacity="0.3" />
+                <circle cx="180" cy={340 - (340 * percentage / 100) + 80} r="6" fill="white" fillOpacity="0.2" />
+                <circle cx="100" cy={340 - (340 * percentage / 100) + 120} r="3" fill="white" fillOpacity="0.3" />
+              </g>
+
+              {/* Glass Glare / Reflection (Overlay) */}
+              <path 
+                d="M 20 10 Q 30 100 45 300" 
+                stroke="white" 
+                strokeWidth="4" 
+                strokeOpacity="0.3" 
+                strokeLinecap="round"
+                fill="none"
+                style={{ filter: 'blur(2px)' }}
+              />
+              <path 
+                d="M 220 10 Q 210 100 195 300" 
+                stroke="white" 
+                strokeWidth="2" 
+                strokeOpacity="0.15" 
+                strokeLinecap="round"
+                fill="none"
+              />
+            </svg>
           </div>
         </div>
 
