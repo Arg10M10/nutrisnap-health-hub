@@ -10,7 +10,6 @@ import AnimatedNumber from "@/components/AnimatedNumber";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer";
 import { toast } from "sonner";
 import WaterEntryDrawer from "@/components/WaterEntryDrawer";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Beverage types configuration with Hydration Rates
 const beverages = [
@@ -271,7 +270,7 @@ const Water = () => {
 
       {/* Smart Hydration Guide Drawer */}
       <Drawer open={isGuideOpen} onOpenChange={setIsGuideOpen}>
-        <DrawerContent className="max-h-[92vh] flex flex-col rounded-t-[32px] bg-[#FAF9F6]">
+        <DrawerContent className="max-h-[92vh] flex flex-col rounded-t-[32px] bg-[#FAF9F6] outline-none">
           <div className="absolute top-4 right-4 z-20">
             <Button variant="ghost" size="icon" onClick={() => setIsGuideOpen(false)} className="rounded-full bg-black/5 hover:bg-black/10">
               <X className="w-5 h-5 opacity-60" />
@@ -289,7 +288,7 @@ const Water = () => {
               </p>
             </div>
 
-            <ScrollArea className="flex-1 px-6 pb-8 pt-4">
+            <div className="flex-1 px-6 pb-8 pt-4 overflow-y-auto">
               <div className="space-y-6">
                 
                 {/* Beverages Grid */}
@@ -396,7 +395,7 @@ const Water = () => {
                 </div>
 
               </div>
-            </ScrollArea>
+            </div>
           </div>
         </DrawerContent>
       </Drawer>
