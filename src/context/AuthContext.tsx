@@ -3,6 +3,7 @@ import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { toast } from 'sonner';
+import { addDays, isAfter, parseISO } from 'date-fns';
 
 export interface Profile {
   id: string;
@@ -82,6 +83,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Lógica para verificar si la suscripción sigue siendo válida en tiempo real
+  const checkSubscriptionValidity = (profileData: any): boolean => {
+    // Si la DB dice que no está suscrito, entonces no lo está.
+    if (!profileData.is_subscribed) return false;
+
+    const now = new Date();
+
+    // Caso 1: Plan pagado (Anual o Mensual) con fecha de fin
+    if (profileData.plan_type && profileData.subscription_end_date) {
+      // Es válido si la fecha de fin es POSTERIOR a ahora
+      return isAfter(parseISO(profileData.subscription_end_date), now);
+    }
+
+    // Caso 2: Prueba Gratuita (sin plan_type, pero con trial_start_date)
+    if (profileData.trial_start_date && !profileData.plan_type) {
+      const trialStart = parseISO(profileData.trial_start_date);
+      const trialEnd = addDays(trialStart, 3); // 3 días de prueba
+      // Es válido si la fecha de fin de prueba es POSTERIOR a ahora
+      return isAfter(trialEnd, now);
+    }
+
+    // Caso de seguridad: Si dice is_subscribed=true pero no tiene fechas lógicas, 
+    // asumimos que es un error o expiró para proteger el contenido premium.
+    return false;
+  };
+
   // Función robusta para cargar perfil
   const fetchProfile = async (userId: string, isSilentUpdate = false) => {
     // Si es una actualización silenciosa (ya tenemos datos), no mostramos loading
@@ -94,7 +121,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!isSilentUpdate) {
         const cached = getCachedProfile(userId);
         if (cached) {
-          setProfile(cached);
+          // Recalcular validez incluso en caché
+          const isValid = checkSubscriptionValidity(cached);
+          setProfile({ ...cached, is_subscribed: isValid });
           // Si encontramos caché, ya podemos dejar de cargar visualmente mientras actualizamos en background
           setLoading(false);
         }
@@ -117,9 +146,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (error) throw error;
       
       if (userProfile && mountedRef.current) {
+        // Calculamos el estado REAL de la suscripción basado en fechas
+        const isSubscriptionValid = checkSubscriptionValidity(userProfile);
+
         const sanitizedProfile: Profile = {
           ...userProfile,
           is_guest: false,
+          is_subscribed: isSubscriptionValid, // Sobrescribimos con la validación de fecha
           // Defaults para evitar UI rota
           goal_calories: userProfile.goal_calories || 2000,
           goal_protein: userProfile.goal_protein || 100,
@@ -127,7 +160,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           goal_fats: userProfile.goal_fats || 60,
           goal_sugars: userProfile.goal_sugars || 30,
           goal_fiber: userProfile.goal_fiber || 25,
-          is_subscribed: userProfile.is_subscribed || false,
           plan_type: userProfile.plan_type || null,
         };
         
