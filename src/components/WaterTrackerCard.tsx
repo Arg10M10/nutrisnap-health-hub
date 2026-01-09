@@ -23,32 +23,82 @@ const WaterTrackerCard = ({ count, goal, onAdd, isUpdating }: WaterTrackerCardPr
     navigate('/water');
   };
 
+  // Mismo path que en Water.tsx
+  const glassPath = "M 5 0 H 235 L 210 300 Q 205 340 160 340 H 80 Q 35 340 30 300 L 5 0 Z";
+
   return (
     <Card 
       onClick={handleClick}
       className="relative overflow-hidden h-full flex items-center bg-card shadow-sm border-none rounded-[2rem] p-4 gap-6 cursor-pointer group hover:bg-muted/30 transition-colors"
     >
-      {/* Columna Izquierda: Mini Vaso */}
+      {/* Columna Izquierda: Mini Vaso SVG */}
       <div className="relative w-20 h-28 flex-shrink-0" style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}>
-        <div 
-          className="absolute inset-0 z-10 overflow-hidden bg-blue-100/30 dark:bg-white/5 border-[3px] border-blue-200 dark:border-white/10"
-          style={{
-            borderRadius: '6px 6px 40px 40px',
-            clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)' 
-          }}
+        <svg 
+          width="100%" 
+          height="100%" 
+          viewBox="0 0 240 340" 
+          fill="none" 
+          xmlns="http://www.w3.org/2000/svg"
+          className="overflow-visible"
         >
-            {/* Relleno Líquido */}
-            <div 
-              className="absolute bottom-0 left-0 right-0 bg-blue-400 dark:bg-blue-500 transition-all duration-700 ease-out"
-              style={{
-                height: `${percentage}%`,
-                width: '100%',
-                opacity: 0.9
-              }}
-            >
-              <div className="absolute top-0 left-0 right-0 h-1 bg-white/40" />
-            </div>
-        </div>
+          <defs>
+            <clipPath id="glassClipSmall">
+              <path d={glassPath} />
+            </clipPath>
+            <linearGradient id="glassGradientSmall" x1="120" y1="0" x2="120" y2="340" gradientUnits="userSpaceOnUse">
+              <stop stopColor="white" stopOpacity="0.4" />
+              <stop offset="1" stopColor="white" stopOpacity="0.1" />
+            </linearGradient>
+            <linearGradient id="liquidGradientSmall" x1="120" y1="0" x2="120" y2="340" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#60A5FA" />
+              <stop offset="1" stopColor="#3B82F6" />
+            </linearGradient>
+          </defs>
+
+          {/* Vaso (Contenedor) */}
+          <path 
+            d={glassPath} 
+            fill="url(#glassGradientSmall)" 
+            stroke="rgba(255,255,255,0.6)" 
+            strokeWidth="8" 
+            className="drop-shadow-sm"
+          />
+
+          {/* Líquido */}
+          <g clipPath="url(#glassClipSmall)">
+            <rect 
+              x="0" 
+              y={340 - (340 * percentage / 100)} 
+              width="240" 
+              height="340" 
+              fill="url(#liquidGradientSmall)" 
+              className="transition-all duration-1000 ease-out"
+              opacity="0.9"
+            />
+            
+            {/* Superficie del líquido */}
+            <rect 
+              x="0" 
+              y={340 - (340 * percentage / 100)} 
+              width="240" 
+              height="8" 
+              fill="white" 
+              fillOpacity="0.4"
+              className="transition-all duration-1000 ease-out"
+            />
+          </g>
+
+          {/* Brillo / Reflejo */}
+          <path 
+            d="M 20 10 Q 30 100 45 300" 
+            stroke="white" 
+            strokeWidth="8" 
+            strokeOpacity="0.3" 
+            strokeLinecap="round"
+            fill="none"
+            style={{ filter: 'blur(1px)' }}
+          />
+        </svg>
       </div>
       
       {/* Columna Derecha: Info y Acción */}
