@@ -348,6 +348,31 @@
         "snack_breakfast": "Snack / Breakfast",
         "breakfast": "Breakfast"
     },
+    "yogurt_fruits_granola": {
+      "name": "Yogurt with Fruit and Granola",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "yogurt": "Non-fat plain yogurt",
+        "strawberries": "Strawberries",
+        "banana": "Banana",
+        "granola": "Granola",
+        "honey": "Honey (optional)"
+      },
+      "instructions": [
+        "Cut the fruit into small pieces.",
+        "Mix the yogurt with the fruit.",
+        "Sprinkle the granola on top.",
+        "Add honey if desired and serve."
+      ]
+    },
     "spaghetti_bolognese": {
       "name": "Spaghetti Bolognese",
       "ingredients": "Ingredients",
