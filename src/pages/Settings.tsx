@@ -214,7 +214,7 @@ const Settings = () => {
               onClick={() => navigate('/configuration')} 
               className="rounded-full w-10 h-10 hover:bg-muted p-1.5"
             >
-              <img src="/settings-icon.png" alt="Configuración" className="w-full h-full object-contain dark:invert" />
+              <img src="/settings-future.png" alt="Configuración" className="w-full h-full object-contain dark:invert" />
             </Button>
           </div>
         </div>
