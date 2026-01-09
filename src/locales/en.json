@@ -485,6 +485,29 @@
         "Serve immediately."
       ]
     },
+    "mango_oat_smoothie": {
+      "name": "Mango Oat Smoothie",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "mango": "Mango",
+        "milk": "Skim or plant-based milk",
+        "oats": "Rolled oats",
+        "honey": "Honey (optional)"
+      },
+      "instructions": [
+        "Place all ingredients in the blender.",
+        "Blend for 30–45 seconds until smooth.",
+        "Serve immediately."
+      ]
+    },
     "oats_banana_peanut": {
       "name": "Oatmeal with Banana & Peanut Butter",
       "ingredients": "Ingredients",

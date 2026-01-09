@@ -485,6 +485,29 @@
         "Servir inmediatamente."
       ]
     },
+    "mango_oat_smoothie": {
+      "name": "Smoothie de mango y avena",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "mango": "Mango",
+        "milk": "Leche descremada o vegetal",
+        "oats": "Avena en hojuelas",
+        "honey": "Miel (opcional)"
+      },
+      "instructions": [
+        "Colocar todos los ingredientes en la licuadora.",
+        "Licuar 30–45 segundos hasta obtener mezcla homogénea.",
+        "Servir inmediatamente."
+      ]
+    },
     "oats_banana_peanut": {
       "name": "Avena con Plátano y Mantequilla de Maní",
       "ingredients": "Ingredientes",
