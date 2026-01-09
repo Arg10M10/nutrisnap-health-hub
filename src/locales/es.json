@@ -644,6 +644,34 @@
         "Hornear durante 20–25 minutos.",
         "Servir caliente."
       ]
+    },
+    "lentil_stew": {
+      "name": "Lentejas guisadas con verduras",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "cooked_lentils": "Lentejas cocidas",
+        "carrot": "Zanahoria",
+        "bell_pepper": "Pimiento",
+        "onion": "Cebolla",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta",
+        "cumin": "Comino"
+      },
+      "instructions": [
+        "Sofreír cebolla, zanahoria y pimiento en el aceite durante 5 minutos.",
+        "Agregar las lentejas y especias.",
+        "Cocinar a fuego medio durante 10–15 minutos.",
+        "Servir caliente."
+      ]
     }
   },
   "scanner": {
