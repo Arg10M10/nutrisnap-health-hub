@@ -268,7 +268,7 @@
       "title": "Select Plan",
       "annual": "Annual",
       "monthly": "Monthly",
-      "price_suffix": "/mes",
+      "price_suffix": "/month",
       "trial_note": "Free for 3 days."
     },
     "buttons": {
@@ -672,6 +672,83 @@
         "Cook over medium heat for 10–15 minutes.",
         "Serve hot."
       ]
+    },
+    "turkey_mashed_potatoes": {
+      "name": "Turkey Breast with Mashed Potatoes",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "turkey_breast": "Turkey breast",
+        "potato": "Potato",
+        "skim_milk": "Skim milk",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Boil the potato until soft and mash with milk.",
+        "Grill the turkey with oil, salt, and pepper.",
+        "Serve the turkey with the mashed potatoes."
+      ]
+    },
+    "brown_rice_eggs": {
+      "name": "Brown Rice with Eggs and Vegetables",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "cooked_brown_rice": "Cooked brown rice",
+        "eggs": "Eggs",
+        "spinach": "Spinach",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Sauté spinach with oil for 1-2 minutes.",
+        "Add eggs and cook to taste.",
+        "Serve with brown rice."
+      ]
+    },
+    "chicken_wrap": {
+      "name": "Whole Wheat Chicken and Vegetable Wrap",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "whole_wheat_tortilla": "Whole wheat tortilla",
+        "chicken_breast": "Chicken breast",
+        "lettuce": "Lettuce",
+        "tomato": "Tomato",
+        "yogurt": "Non-fat plain yogurt",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Grill chicken with salt and pepper.",
+        "Mix yogurt with salt for sauce.",
+        "Fill tortilla with chicken, vegetables and sauce.",
+        "Roll and serve."
+      ]
     }
   },
   "scanner": {
@@ -874,7 +951,7 @@
     "generated_with": "Generated with Calorel",
     "prot_short": "Prot.",
     "carb_short": "Carbs",
-    "fat_short": "Fats"
+    "fat_short": "Grasas"
   },
   "diets": {
     "title": "Diet Plans",

@@ -672,6 +672,83 @@
         "Cocinar a fuego medio durante 10–15 minutos.",
         "Servir caliente."
       ]
+    },
+    "turkey_mashed_potatoes": {
+      "name": "Pechuga de pavo con puré de papa",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "turkey_breast": "Pechuga de pavo",
+        "potato": "Papa",
+        "skim_milk": "Leche descremada",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Hervir la papa hasta que esté blanda y hacer puré con la leche.",
+        "Cocinar el pavo a la plancha con aceite, sal y pimienta.",
+        "Servir el pavo con el puré."
+      ]
+    },
+    "brown_rice_eggs": {
+      "name": "Arroz integral con huevo y vegetales",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "cooked_brown_rice": "Arroz integral cocido",
+        "eggs": "Huevos",
+        "spinach": "Espinaca",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Saltear la espinaca con el aceite durante 1–2 minutos.",
+        "Agregar los huevos y cocinar al gusto.",
+        "Servir junto con el arroz integral."
+      ]
+    },
+    "chicken_wrap": {
+      "name": "Wrap integral de pollo y vegetales",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "whole_wheat_tortilla": "Tortilla integral",
+        "chicken_breast": "Pechuga de pollo",
+        "lettuce": "Lechuga",
+        "tomato": "Tomate",
+        "yogurt": "Yogur natural descremado",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cocinar el pollo a la plancha con sal y pimienta.",
+        "Mezclar el yogur con sal para usar como salsa.",
+        "Rellenar la tortilla con pollo, vegetales y salsa.",
+        "Enrollar y servir."
+      ]
     }
   },
   "scanner": {
