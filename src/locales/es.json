@@ -616,6 +616,34 @@
         "Agregar los huevos y cocinar 2–3 minutos.",
         "Añadir queso, doblar el omelette y servir."
       ]
+    },
+    "baked_salmon_vegetables": {
+      "name": "Salmón al horno con verduras",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "salmon_fillet": "Filete de salmón",
+        "broccoli": "Brócoli",
+        "carrot": "Zanahoria",
+        "olive_oil": "Aceite de oliva",
+        "lemon_juice": "Jugo de limón",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Precalentar el horno a 180 °C.",
+        "Colocar el salmón y las verduras en una bandeja.",
+        "Añadir aceite, limón, sal y pimienta.",
+        "Hornear durante 20–25 minutos.",
+        "Servir caliente."
+      ]
     }
   },
   "scanner": {
