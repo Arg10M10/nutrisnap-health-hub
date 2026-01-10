@@ -34,7 +34,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import AISuggestions from "./pages/settings/AISuggestions";
 import WeightGoal from "./pages/settings/WeightGoal";
 import RingColors from "./pages/settings/RingColors";
-import ConnectApps from "./pages/settings/ConnectApps";
 import RequestFeature from "./pages/settings/RequestFeature";
 import EditProfile from "./pages/settings/EditProfile";
 import PersonalDetails from "./pages/settings/PersonalDetails";
@@ -180,7 +179,6 @@ const AppRoutes = () => {
     "/settings/ai-suggestions",
     "/settings/weight-goal",
     "/settings/ring-colors",
-    "/settings/connect-apps",
     "/settings/request-feature",
     "/settings/edit-profile",
     "/settings/personal-details",
@@ -208,7 +206,6 @@ const AppRoutes = () => {
               <Route path="/settings/ai-suggestions" element={<AISuggestions />} />
               <Route path="/settings/weight-goal" element={<WeightGoal />} />
               <Route path="/settings/ring-colors" element={<RingColors />} />
-              <Route path="/settings/connect-apps" element={<ConnectApps />} />
               <Route path="/settings/request-feature" element={<RequestFeature />} />
               <Route path="/settings/edit-profile" element={<EditProfile />} />
               <Route path="/settings/personal-details" element={<PersonalDetails />} />
