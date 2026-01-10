@@ -26,8 +26,6 @@ import MenuAnalysisDrawer, { MenuAnalysisData } from "@/components/MenuAnalysisD
 import { AnalysisResult } from "@/components/FoodAnalysisCard";
 import { toast } from "sonner";
 import GuestBanner from "@/components/GuestBanner";
-import StepsCard from "@/components/StepsCard";
-import ActiveCaloriesCard from "@/components/ActiveCaloriesCard";
 import { ExerciseEntry } from "@/context/NutritionContext";
 
 const Index = () => {
@@ -35,8 +33,6 @@ const Index = () => {
   const { getDataForDate, streak, streakDays, addWaterGlass, removeWaterGlass, isWaterUpdating, deleteEntry, addAnalysis } = useNutrition();
   const { profile } = useAuth();
   
-  // getDataForDate now only handles Food/Water/Manual Exercise logs
-  // Steps & Active Calories are handled inside their respective cards via HealthConnect hook
   const { intake, analyses, healthScore, waterIntake } = getDataForDate(selectedDate);
   
   const [api, setApi] = useState<CarouselApi>();
@@ -189,7 +185,7 @@ const Index = () => {
                 </motion.div>
               </CarouselItem>
 
-              {/* PAGE 2: WATER & MICROS (SUGAR, FIBER) */}
+              {/* PAGE 2: WATER & MICROS (SUGAR, FIBER) & HEALTH SCORE */}
               <CarouselItem className="pt-1 pb-1">
                 <motion.div variants={cardVariants} animate={current === 1 ? "active" : "inactive"}>
                   <div className="flex flex-col gap-4 h-[350px]">
@@ -203,7 +199,7 @@ const Index = () => {
                       />
                     </div>
                     <div className="h-[150px] w-full flex-shrink-0">
-                      <div className="grid grid-cols-2 gap-3 w-full h-full">
+                      <div className="grid grid-cols-3 gap-3 w-full h-full">
                         <MacroCard
                           value={getSafePercentage(intake.sugars, dailyGoals.sugars)}
                           color="#a855f7"
@@ -220,22 +216,6 @@ const Index = () => {
                           unit="g"
                           label={t('home.fiber')}
                         />
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </CarouselItem>
-
-              {/* PAGE 3: STEPS & HEALTH (STEPS, ACTIVE CALORIES, SCORE) */}
-              <CarouselItem className="pt-1 pb-1">
-                <motion.div variants={cardVariants} animate={current === 2 ? "active" : "inactive"}>
-                  <div className="flex flex-col gap-4 h-[350px]">
-                    <div className="flex-1 w-full min-h-0">
-                      <StepsCard date={selectedDate} />
-                    </div>
-                    <div className="h-[150px] w-full flex-shrink-0">
-                      <div className="grid grid-cols-2 gap-3 w-full h-full">
-                        <ActiveCaloriesCard date={selectedDate} />
                         <HealthScoreCard score={healthScore} />
                       </div>
                     </div>
