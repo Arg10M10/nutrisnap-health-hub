@@ -749,6 +749,104 @@
         "Rellenar la tortilla con pollo, vegetales y salsa.",
         "Enrollar y servir."
       ]
+    },
+    "chicken_rice_bowl": {
+      "name": "Bowl de pollo y arroz integral",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "chicken_breast": "Pechuga de pollo",
+        "cooked_brown_rice": "Arroz integral cocido",
+        "broccoli": "Brócoli",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cocinar el pollo a la plancha.",
+        "Saltear el brócoli con aceite.",
+        "Servir todo junto con el arroz."
+      ]
+    },
+    "fish_potato": {
+      "name": "Filete de pescado con papa cocida",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "white_fish": "Filete de pescado blanco",
+        "potato": "Papa",
+        "olive_oil": "Aceite de oliva",
+        "lemon_juice": "Limón",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Hervir la papa.",
+        "Cocinar el pescado a la plancha.",
+        "Servir con limón."
+      ]
+    },
+    "whole_wheat_pasta": {
+      "name": "Pasta integral con verduras",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "raw_whole_pasta": "Pasta integral cruda",
+        "zucchini": "Zucchini",
+        "bell_pepper": "Pimiento",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "herbs": "Especias"
+      },
+      "instructions": [
+        "Cocer la pasta.",
+        "Saltear las verduras.",
+        "Mezclar y servir."
+      ]
+    },
+    "beef_salad": {
+      "name": "Carne magra con ensalada mixta",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Información Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "lean_beef": "Carne magra de res",
+        "lettuce": "Lechuga",
+        "tomato": "Tomate",
+        "olive_oil": "Aceite de oliva"
+      },
+      "instructions": [
+        "Cocinar la carne a la plancha.",
+        "Preparar la ensalada.",
+        "Servir juntos."
+      ]
     }
   },
   "scanner": {
@@ -870,7 +968,7 @@
     "day_streak": "Día de Racha",
     "day_streaks": "Días de Racha",
     "update_weight": "Actualizar Peso",
-    "weight_updated_today": "Peso actualizado hoy (Máx 2/día)",
+    "weight_updated_today": "Peso actualizado hoy (Máx 2/day)",
     "weight_progress_title": "Progreso de Peso",
     "weight_progress_no_data": "No hay suficientes datos para mostrar el gráfico.",
     "weight_progress_start_logging": "Registra tu peso regularmente para ver tu progreso.",

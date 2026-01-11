@@ -749,6 +749,104 @@
         "Fill tortilla with chicken, vegetables and sauce.",
         "Roll and serve."
       ]
+    },
+    "chicken_rice_bowl": {
+      "name": "Chicken & Brown Rice Bowl",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "chicken_breast": "Chicken breast",
+        "cooked_brown_rice": "Cooked brown rice",
+        "broccoli": "Broccoli",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Grill the chicken breast.",
+        "Sauté the broccoli with olive oil.",
+        "Serve everything together with the rice."
+      ]
+    },
+    "fish_potato": {
+      "name": "Fish Fillet with Boiled Potato",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "white_fish": "White fish fillet",
+        "potato": "Potato",
+        "olive_oil": "Olive oil",
+        "lemon_juice": "Lemon",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Boil the potato.",
+        "Cook the fish on a griddle or pan.",
+        "Serve with lemon."
+      ]
+    },
+    "whole_wheat_pasta": {
+      "name": "Whole Wheat Pasta with Veggies",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "raw_whole_pasta": "Uncooked whole wheat pasta",
+        "zucchini": "Zucchini",
+        "bell_pepper": "Bell pepper",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "herbs": "Spices"
+      },
+      "instructions": [
+        "Cook the pasta.",
+        "Sauté the vegetables.",
+        "Mix and serve."
+      ]
+    },
+    "beef_salad": {
+      "name": "Lean Beef with Mixed Salad",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "lean_beef": "Lean beef",
+        "lettuce": "Lettuce",
+        "tomato": "Tomato",
+        "olive_oil": "Olive oil"
+      },
+      "instructions": [
+        "Grill the beef.",
+        "Prepare the salad.",
+        "Serve together."
+      ]
     }
   },
   "scanner": {
