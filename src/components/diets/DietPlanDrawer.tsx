@@ -1,9 +1,6 @@
 import {
   Drawer,
   DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerDescription,
   DrawerFooter,
   DrawerClose,
 } from "@/components/ui/drawer";
@@ -64,15 +61,15 @@ const DietPlanDrawer = ({ diet, isOpen, onClose }: DietPlanDrawerProps) => {
                 <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
                         <p className="text-2xl font-bold text-red-500">{diet.macros.protein}</p>
-                        <p className="text-[10px] font-bold uppercase text-muted-foreground">Proteína</p>
+                        <p className="text-[10px] font-bold uppercase text-muted-foreground">{t('home.protein')}</p>
                     </div>
                     <div className="border-l border-border/50 pl-4">
                         <p className="text-2xl font-bold text-orange-500">{diet.macros.carbs}</p>
-                        <p className="text-[10px] font-bold uppercase text-muted-foreground">Carbs</p>
+                        <p className="text-[10px] font-bold uppercase text-muted-foreground">{t('home.carbs')}</p>
                     </div>
                     <div className="border-l border-border/50 pl-4">
                         <p className="text-2xl font-bold text-blue-500">{diet.macros.fats}</p>
-                        <p className="text-[10px] font-bold uppercase text-muted-foreground">Grasas</p>
+                        <p className="text-[10px] font-bold uppercase text-muted-foreground">{t('home.fats')}</p>
                     </div>
                 </div>
             </div>
