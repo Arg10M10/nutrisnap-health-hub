@@ -333,7 +333,8 @@
     "log_exercise": "Registrar Ejercicio",
     "log_weight": "Registrar Peso",
     "log_water": "Registrar Agua",
-    "recipes": "Recetas"
+    "recipes": "Recetas",
+    "diet_library": "Dietas"
   },
   "recipes": {
     "title": "Recetas",
