@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
-  SlidersHorizontal, Languages, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette, HelpCircle, LayoutDashboard, Plus, Check
+  SlidersHorizontal, Languages, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette, HelpCircle, LayoutDashboard, Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -121,33 +121,34 @@ const Configuration = () => {
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-lg">{t('widgets.title')}</h3>
             <span className="text-xs font-medium text-muted-foreground bg-background px-2 py-1 rounded-md border">
-              Claro / Oscuro
+              Vista Previa
             </span>
           </div>
           
-          <div className="flex gap-3 overflow-x-auto pb-4 -mx-2 px-4 scrollbar-hide snap-x">
+          {/* Contenedor de Widgets */}
+          <div className="flex gap-4 overflow-x-auto pb-4 -mx-2 px-4 scrollbar-hide snap-x items-center">
             
             {/* Widget 1: Calories (Medium 2x1) */}
             <div 
-              className="snap-center shrink-0 w-[240px] bg-white dark:bg-zinc-900 rounded-[22px] p-4 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800"
+              className="snap-center shrink-0 w-[280px] h-[130px] bg-white dark:bg-zinc-900 rounded-[22px] p-4 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between"
               onClick={() => setIsWidgetHelpOpen(true)}
             >
-              <div className="flex justify-between items-start mb-3">
-                <span className="text-[10px] font-bold text-primary uppercase tracking-wider">Calorías</span>
+              <div className="flex justify-between items-start">
+                <span className="text-[12px] font-bold text-primary tracking-wide">Calorel</span>
                 <div className="flex items-center gap-1">
-                  <span className="text-sm font-bold">5</span>
+                  <span className="text-sm font-bold text-zinc-900 dark:text-white">5</span>
                   <span className="text-xs">🔥</span>
                 </div>
               </div>
               
-              <div className="flex flex-col">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-bold leading-none">1,450</span>
-                  <span className="text-xs font-semibold text-muted-foreground">kcal</span>
+              <div className="flex flex-col items-center justify-center flex-1">
+                <div className="flex items-baseline gap-1 mt-2">
+                  <span className="text-3xl font-bold leading-none text-zinc-900 dark:text-white">1,450</span>
+                  <span className="text-sm font-bold text-zinc-500 dark:text-zinc-400">kcal</span>
                 </div>
-                <span className="text-[10px] text-muted-foreground font-medium mb-2">/ 2,000</span>
+                <span className="text-[12px] text-zinc-500 dark:text-zinc-400 font-medium mt-0.5">/ 2,000</span>
                 
-                <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden mt-3">
                   <div className="h-full w-[72%] bg-primary rounded-full" />
                 </div>
               </div>
@@ -155,22 +156,22 @@ const Configuration = () => {
 
             {/* Widget 2: Streak (Small 1x1) */}
             <div 
-              className="snap-center shrink-0 w-[110px] h-[110px] bg-white dark:bg-zinc-900 rounded-[22px] p-3 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center gap-1"
+              className="snap-center shrink-0 w-[130px] h-[130px] bg-white dark:bg-zinc-900 rounded-[22px] p-3 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center gap-1"
               onClick={() => setIsWidgetHelpOpen(true)}
             >
-              <span className="text-2xl">🔥</span>
-              <span className="text-3xl font-bold leading-none">5</span>
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Días</span>
+              <span className="text-3xl mb-1">🔥</span>
+              <span className="text-2xl font-bold leading-none text-zinc-900 dark:text-white">5</span>
+              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">DÍAS</span>
             </div>
 
             {/* Widget 3: Water (Small 1x1) */}
             <div 
-              className="snap-center shrink-0 w-[110px] h-[110px] bg-white dark:bg-zinc-900 rounded-[22px] p-3 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center gap-1"
+              className="snap-center shrink-0 w-[130px] h-[130px] bg-white dark:bg-zinc-900 rounded-[22px] p-3 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center gap-1"
               onClick={() => setIsWidgetHelpOpen(true)}
             >
-              <span className="text-2xl">💧</span>
-              <span className="text-3xl font-bold leading-none">45</span>
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">OZ</span>
+              <span className="text-3xl mb-1">💧</span>
+              <span className="text-2xl font-bold leading-none text-zinc-900 dark:text-white">45</span>
+              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">OZ</span>
             </div>
 
           </div>
