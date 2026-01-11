@@ -5,6 +5,7 @@
     android:updatePeriodMillis="1800000"
     android:previewImage="@mipmap/ic_launcher"
     android:initialLayout="@layout/streak_widget"
+    android:description="@string/widget_streak_desc"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen">
 </appwidget-provider>

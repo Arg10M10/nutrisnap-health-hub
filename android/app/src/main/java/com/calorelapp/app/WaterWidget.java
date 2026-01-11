@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.RemoteViews;
+import com.calorelapp.app.R; // Explicit import
 import org.json.JSONObject;
 
 public class WaterWidget extends AppWidgetProvider {
@@ -17,8 +18,10 @@ public class WaterWidget extends AppWidgetProvider {
         
         int water = 0;
         try {
-            JSONObject data = new JSONObject(jsonStr);
-            water = data.optInt("water", 0);
+            if (jsonStr != null && !jsonStr.equals("{}")) {
+                JSONObject data = new JSONObject(jsonStr);
+                water = data.optInt("water", 0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

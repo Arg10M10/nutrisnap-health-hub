@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.RemoteViews;
+import com.calorelapp.app.R; // Explicit import
 import org.json.JSONObject;
 
 public class StreakWidget extends AppWidgetProvider {
@@ -17,8 +18,10 @@ public class StreakWidget extends AppWidgetProvider {
         
         int streak = 0;
         try {
-            JSONObject data = new JSONObject(jsonStr);
-            streak = data.optInt("streak", 0);
+            if (jsonStr != null && !jsonStr.equals("{}")) {
+                JSONObject data = new JSONObject(jsonStr);
+                streak = data.optInt("streak", 0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

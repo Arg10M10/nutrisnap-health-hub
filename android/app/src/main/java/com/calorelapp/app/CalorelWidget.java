@@ -7,16 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.RemoteViews;
+import com.calorelapp.app.R; // Explicit import
 import org.json.JSONObject;
 
 public class CalorelWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         // Read data from Capacitor Preferences
-        // Capacitor uses a specific file named "CapacitorStorage" for Preferences plugin
         SharedPreferences prefs = context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-        
-        // The key we used in React is 'WIDGET_DATA'
         String jsonStr = prefs.getString("WIDGET_DATA", "{}");
         
         int calories = 0;
@@ -24,10 +22,12 @@ public class CalorelWidget extends AppWidgetProvider {
         int streak = 0;
 
         try {
-            JSONObject data = new JSONObject(jsonStr);
-            calories = data.optInt("calories", 0);
-            goal = data.optInt("caloriesGoal", 2000);
-            streak = data.optInt("streak", 0);
+            if (jsonStr != null && !jsonStr.equals("{}")) {
+                JSONObject data = new JSONObject(jsonStr);
+                calories = data.optInt("calories", 0);
+                goal = data.optInt("caloriesGoal", 2000);
+                streak = data.optInt("streak", 0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

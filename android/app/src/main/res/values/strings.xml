@@ -4,4 +4,12 @@
     <string name="title_activity_main">Calorel</string>
     <string name="package_name">com.calorelapp.app</string>
     <string name="custom_url_scheme">com.calorelapp.app</string>
+    
+    <!-- Widget Strings -->
+    <string name="widget_calories_label">Resumen Diario</string>
+    <string name="widget_streak_label">Racha</string>
+    <string name="widget_water_label">Agua</string>
+    <string name="widget_calories_desc">Muestra tus calorías, meta y racha actual.</string>
+    <string name="widget_streak_desc">Muestra tu racha de días consecutivos.</string>
+    <string name="widget_water_desc">Acceso rápido a tu consumo de agua.</string>
 </resources>

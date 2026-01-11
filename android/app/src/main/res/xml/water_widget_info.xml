@@ -5,6 +5,7 @@
     android:updatePeriodMillis="1800000"
     android:previewImage="@mipmap/ic_launcher"
     android:initialLayout="@layout/water_widget"
+    android:description="@string/widget_water_desc"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen">
 </appwidget-provider>

@@ -37,7 +37,8 @@
 
         <!-- WIDGET 1: CALORIES (Main) -->
         <receiver android:name=".CalorelWidget"
-            android:label="Calorías"
+            android:label="@string/widget_calories_label"
+            android:description="@string/widget_calories_desc"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -49,7 +50,8 @@
 
         <!-- WIDGET 2: STREAK -->
         <receiver android:name=".StreakWidget"
-            android:label="Racha"
+            android:label="@string/widget_streak_label"
+            android:description="@string/widget_streak_desc"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -61,7 +63,8 @@
 
         <!-- WIDGET 3: WATER -->
         <receiver android:name=".WaterWidget"
-            android:label="Agua"
+            android:label="@string/widget_water_label"
+            android:description="@string/widget_water_desc"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
