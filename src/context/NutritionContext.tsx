@@ -8,6 +8,7 @@ import { format, isSameDay, subDays, parseISO } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { MenuAnalysisData } from '@/components/MenuAnalysisDrawer';
 import { v4 as uuidv4 } from 'uuid';
+import { Preferences } from '@capacitor/preferences';
 
 export interface FoodEntry {
   id: string;
@@ -64,8 +65,8 @@ interface DailyData {
   analyses: (FoodEntry | ExerciseEntry)[];
   healthScore: number;
   waterIntake: number;
-  steps: number; // New
-  activeCalories: number; // New
+  steps: number; 
+  activeCalories: number; 
 }
 
 export interface UnlockedBadgeInfo {
@@ -111,7 +112,7 @@ const healthRatingToScore = (rating: string | null): number => {
 };
 
 export const NutritionProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const queryClient = useQueryClient();
   const [newlyUnlockedBadge, setNewlyUnlockedBadge] = useState<UnlockedBadgeInfo | null>(null);
   const { t } = useTranslation();
@@ -338,10 +339,7 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
 
     const intake = {
       ...foodIntake,
-      calories: foodIntake.calories + caloriesBurned, // Note: usually burned is subtracted from intake goal, but in this implementation user asked for intake. 
-      // If we want Net Calories: intake.calories - caloriesBurned. 
-      // Current implementation sums them up which might be odd if displayed as "Consumed".
-      // Let's keep existing logic but separate "Active Calories"
+      calories: foodIntake.calories + caloriesBurned, 
     };
 
     let healthScore = 100; 
@@ -363,13 +361,10 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
       (a, b) => parseISO(b.created_at).getTime() - parseISO(a.created_at).getTime()
     );
 
-    // Mock Steps based on date to have some consistency without DB
     const dateNum = date.getDate();
     const baseSteps = 3000 + (dateNum * 150); 
-    // Add randomness consistent with the day
     const steps = baseSteps + Math.floor(Math.sin(dateNum) * 1000); 
     
-    // Active Calories = Exercise Burned + (Steps * ~0.04)
     const activeCalories = Math.round(caloriesBurned + (steps * 0.04));
 
     return { intake, analyses: combinedAnalyses, healthScore, waterIntake, steps, activeCalories };
@@ -414,6 +409,29 @@ export const NutritionProvider = ({ children }: { children: ReactNode }) => {
     const entryDays = new Set(waterEntries.map(entry => format(parseISO(entry.created_at), 'yyyy-MM-dd')));
     return { waterTotalDays: entryDays.size };
   }, [waterEntries]);
+
+  // --- WIDGET SYNC LOGIC ---
+  useEffect(() => {
+    // Calculamos los datos de HOY
+    const today = new Date();
+    const { intake, waterIntake } = getDataForDate(today);
+    
+    // Obtenemos las metas
+    const calorieGoal = profile?.goal_calories || 2000;
+    
+    const widgetData = {
+      calories: Math.round(intake.calories),
+      caloriesGoal: calorieGoal,
+      water: Math.round(waterIntake),
+      streak: streakData.streak
+    };
+
+    // Guardamos en Capacitor Preferences bajo la clave 'WIDGET_DATA'
+    // El widget nativo leerá este archivo de preferencias.
+    Preferences.set({ key: 'WIDGET_DATA', value: JSON.stringify(widgetData) });
+    
+  }, [foodEntries, waterEntries, exerciseEntries, profile, streakData]);
+  // -------------------------
 
   const triggerBadgeUnlock = (badgeInfo: UnlockedBadgeInfo) => {
     // Badges disabled
