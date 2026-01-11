@@ -274,7 +274,7 @@
     "buttons": {
       "start_trial": "Iniciar Prueba Gratuita de 3 Días",
       "unlock_now": "Desbloquear Ahora",
-      "pay_now": "Pagar {{price}} Ahora",
+      "pay_now": "Pagar {{price}} Now",
       "no_payment_note": "Sin cargo durante los primeros 3 días."
     }
   },
@@ -333,7 +333,8 @@
     "log_exercise": "Registrar Ejercicio",
     "log_weight": "Registrar Peso",
     "log_water": "Registrar Agua",
-    "recipes": "Recetas"
+    "recipes": "Recetas",
+    "diets_label": "Dietas"
   },
   "recipes": {
     "title": "Recetas",
@@ -1398,7 +1399,7 @@
     "buttons": {
       "start_trial": "Iniciar Prueba Gratuita de 3 Días",
       "unlock_now": "Desbloquear Ahora",
-      "pay_now": "Pagar {{price}} Ahora",
+      "pay_now": "Pagar {{price}} Now",
       "no_payment_note": "Sin cargo durante los primeros 3 días."
     }
   },
@@ -1423,5 +1424,21 @@
     "step_2": "Mantén presionado en un espacio vacío.",
     "step_3": "Selecciona 'Widgets'.",
     "step_4": "Busca 'Calorel' y arrastra el widget."
+  },
+  "bottom_nav": {
+    "home": "Inicio",
+    "settings": "Perfil",
+    "profile": "Perfil",
+    "progress": "Progreso",
+    "diets": "Plan Semanal",
+    "log_title": "Registrar Actividad",
+    "scan_food": "Escanear Comida",
+    "scan_menu": "Escanear Menú",
+    "describe_food": "Describir Comida",
+    "log_exercise": "Registrar Ejercicio",
+    "log_weight": "Registrar Peso",
+    "log_water": "Registrar Agua",
+    "recipes": "Recetas",
+    "diets_label": "Dietas"
   }
 }

@@ -52,10 +52,14 @@ const BottomNav = () => {
     { icon: Book, label: t('bottom_nav.diets'), path: "/diets", protected: true },
   ];
 
-  // Helper to check limit before action
-  const handleProtectedAction = async (feature: 'food_scan' | 'manual_food_scan' | 'diet_plan', action: () => void) => {
+  // Modified helper to check limit before action, now supports timeframe
+  const handleProtectedAction = async (
+    feature: 'food_scan' | 'manual_food_scan' | 'diet_plan', 
+    action: () => void,
+    timeFrame: 'daily' | 'weekly' = 'daily'
+  ) => {
     // Check limit (which checks guest status)
-    const allowed = await checkLimit(feature, 9999, 'daily');
+    const allowed = await checkLimit(feature, 9999, timeFrame);
     if (allowed) {
       handleMenuAction(action);
     } else {
@@ -95,6 +99,11 @@ const BottomNav = () => {
       label: t('bottom_nav.recipes', 'Recetas'), 
       icon: ChefHat, 
       action: () => handleMenuAction(() => navigate("/recipes")) // Recipes are allowed
+    },
+    { 
+      label: t('bottom_nav.diets_label', 'Dietas'), 
+      icon: Book, 
+      action: () => handleProtectedAction('diet_plan', () => navigate("/diets"), 'weekly')
     },
   ];
 
@@ -174,7 +183,7 @@ const BottomNav = () => {
 
               {/* Top Row: Circular Buttons (Main Actions) */}
               <div className="grid grid-cols-2 gap-x-10 gap-y-5 justify-items-center mb-6 px-4">
-                {circularButtons.map((btn, idx) => (
+                {circularButtons.slice(0, 4).map((btn, idx) => (
                   <div key={idx} className="flex flex-col items-center gap-2">
                     <button
                       onClick={btn.action}
@@ -188,6 +197,25 @@ const BottomNav = () => {
                   </div>
                 ))}
               </div>
+
+              {/* Extra Items (Centered) if any */}
+              {circularButtons.length > 4 && (
+                <div className="flex justify-center mb-6">
+                   {circularButtons.slice(4).map((btn, idx) => (
+                    <div key={idx} className="flex flex-col items-center gap-2">
+                        <button
+                        onClick={btn.action}
+                        className="w-16 h-16 rounded-full bg-white dark:bg-muted shadow-lg border-4 border-primary/5 flex items-center justify-center text-primary active:scale-95 transition-transform"
+                        >
+                        <btn.icon className="w-7 h-7" strokeWidth={2} />
+                        </button>
+                        <span className="text-xs font-bold text-foreground/80 text-center leading-tight max-w-[90px]">
+                        {btn.label}
+                        </span>
+                    </div>
+                   ))}
+                </div>
+              )}
 
               {/* Divider */}
               <div className="h-px w-full bg-border/60 mb-6" />
