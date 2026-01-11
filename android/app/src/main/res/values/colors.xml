@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#65a30d</color>
+    <color name="colorPrimaryDark">#365314</color>
+    <color name="colorAccent">#84cc16</color>
+    
+    <!-- Widget Light Mode -->
+    <color name="widget_background">#FFFFFF</color>
+    <color name="widget_text_primary">#09090b</color> <!-- Zinc 950 -->
+    <color name="widget_text_secondary">#71717a</color> <!-- Zinc 500 -->
+    <color name="widget_accent">#65a30d</color> <!-- Primary Green -->
+    <color name="widget_progress_bg">#e4e4e7</color> <!-- Zinc 200 -->
+</resources>

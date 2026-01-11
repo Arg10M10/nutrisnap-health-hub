@@ -5,77 +5,97 @@
     android:background="@drawable/widget_background"
     android:padding="16dp">
 
+    <!-- Logo / Title -->
     <TextView
         android:id="@+id/app_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Calorel"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/widget_accent"
         android:textStyle="bold"
-        android:textSize="14sp"
-        android:alpha="0.8" />
+        android:textSize="12sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/calories_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0 kcal"
-            android:textColor="#FFFFFF"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/calories_goal_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="/ 2000"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:alpha="0.8"
-            android:layout_marginTop="2dp" />
-
-        <ProgressBar
-            android:id="@+id/calories_progress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:layout_marginTop="12dp"
-            android:max="100"
-            android:progress="0"
-            android:progressTint="#FFFFFF"
-            android:progressBackgroundTint="#50FFFFFF" />
-
-    </LinearLayout>
-
+    <!-- Streak (Top Right) -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/streak_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/widget_text_primary"
             android:textStyle="bold"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" 🔥"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Main Content (Centered) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+            
+            <TextView
+                android:id="@+id/calories_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/widget_text_primary"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+                
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" kcal"
+                android:textColor="@color/widget_text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="2dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/calories_goal_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/ 2000"
+            android:textColor="@color/widget_text_secondary"
+            android:textSize="12sp"
+            android:layout_marginTop="0dp" />
+
+        <ProgressBar
+            android:id="@+id/calories_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_marginTop="8dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="@color/widget_accent"
+            android:progressBackgroundTint="@color/widget_progress_bg" />
+
     </LinearLayout>
 
 </RelativeLayout>

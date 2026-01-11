@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
-  SlidersHorizontal, Languages, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette, HelpCircle, LayoutDashboard
+  SlidersHorizontal, Languages, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette, HelpCircle, LayoutDashboard, Plus, Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -117,35 +117,67 @@ const Configuration = () => {
         </SettingsCategory>
 
         {/* WIDGET PREVIEW SECTION */}
-        <div className="bg-card rounded-xl p-4 border shadow-sm">
-          <h3 className="font-semibold mb-3 text-lg">{t('widgets.title')}</h3>
-          <div 
-            className="bg-[#4D7C0F] rounded-[24px] p-4 text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform"
-            onClick={() => setIsWidgetHelpOpen(true)}
-          >
-            <div className="flex justify-between items-start mb-2 opacity-80">
-              <span className="text-xs font-bold">Calorel</span>
-            </div>
+        <div className="bg-muted/30 rounded-2xl p-5 border border-border/50 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-lg">{t('widgets.title')}</h3>
+            <span className="text-xs font-medium text-muted-foreground bg-background px-2 py-1 rounded-md border">
+              Claro / Oscuro
+            </span>
+          </div>
+          
+          <div className="flex gap-3 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-hide snap-x">
             
-            <div className="flex flex-col items-center justify-center py-2">
-              <span className="text-3xl font-bold leading-none">1450 <span className="text-lg">kcal</span></span>
-              <span className="text-xs opacity-80 mt-1 font-medium">/ 2000</span>
-              <div className="w-full h-1.5 bg-white/30 rounded-full mt-3 overflow-hidden">
-                <div className="h-full w-[70%] bg-white rounded-full" />
+            {/* Widget 1: Medium (2x1) */}
+            <div 
+              className="snap-center shrink-0 w-[240px] bg-white dark:bg-zinc-900 rounded-[22px] p-4 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800"
+              onClick={() => setIsWidgetHelpOpen(true)}
+            >
+              <div className="flex justify-between items-start mb-3">
+                <span className="text-[10px] font-bold text-primary uppercase tracking-wider">Calorel</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-sm font-bold">5</span>
+                  <span className="text-xs">🔥</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-col">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl font-bold leading-none">1,450</span>
+                  <span className="text-xs font-semibold text-muted-foreground">kcal</span>
+                </div>
+                <span className="text-[10px] text-muted-foreground font-medium mb-2">/ 2,000</span>
+                
+                <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                  <div className="h-full w-[72%] bg-primary rounded-full" />
+                </div>
               </div>
             </div>
 
-            <div className="flex justify-between items-end mt-2">
-              <div className="flex items-center gap-1">
-                <span className="text-xl font-bold">5</span>
-                <span className="text-lg">🔥</span>
+            {/* Widget 2: Small (1x1) */}
+            <div 
+              className="snap-center shrink-0 w-[110px] h-[110px] bg-white dark:bg-zinc-900 rounded-[22px] p-3 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between"
+              onClick={() => setIsWidgetHelpOpen(true)}
+            >
+              <div className="flex justify-center pt-1">
+                 {/* Circular Progress Mock */}
+                 <div className="relative w-12 h-12 flex items-center justify-center">
+                    <svg className="w-full h-full -rotate-90" viewBox="0 0 32 32">
+                        <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="4" className="text-zinc-100 dark:text-zinc-800" />
+                        <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="4" strokeDasharray="88" strokeDashoffset="22" className="text-primary" strokeLinecap="round" />
+                    </svg>
+                    <Plus className="w-5 h-5 text-zinc-900 dark:text-white absolute" strokeWidth={3} />
+                 </div>
+              </div>
+              <div className="text-center pb-1">
+                 <span className="text-[10px] font-bold text-muted-foreground block">Rápido</span>
               </div>
             </div>
+
           </div>
           
           <button 
             onClick={() => setIsWidgetHelpOpen(true)}
-            className="w-full mt-3 flex items-center justify-center gap-2 text-sm text-primary font-semibold hover:bg-primary/5 p-2 rounded-lg transition-colors"
+            className="w-full mt-2 flex items-center justify-center gap-2 text-sm text-primary font-bold hover:bg-primary/5 p-3 rounded-xl transition-colors"
           >
             <HelpCircle className="w-4 h-4" />
             {t('widgets.how_to_add')}
@@ -201,8 +233,8 @@ const Configuration = () => {
         <DrawerContent>
           <div className="mx-auto w-full max-w-sm">
             <DrawerHeader className="text-center pt-6">
-              <div className="mx-auto w-16 h-16 bg-[#4D7C0F]/10 rounded-full flex items-center justify-center mb-4">
-                <LayoutDashboard className="w-8 h-8 text-[#4D7C0F]" />
+              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                <LayoutDashboard className="w-8 h-8 text-primary" />
               </div>
               <DrawerTitle className="text-2xl font-bold text-foreground">{t('widgets.instructions_title')}</DrawerTitle>
             </DrawerHeader>
@@ -214,15 +246,20 @@ const Configuration = () => {
                     <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
                       {step}
                     </div>
-                    <p className="text-sm font-medium leading-relaxed pt-0.5">
+                    <p className="text-sm font-medium leading-relaxed pt-0.5 text-muted-foreground">
                       {t(`widgets.step_${step}` as any)}
                     </p>
                   </div>
                 ))}
               </div>
               
+              <div className="bg-muted/50 p-3 rounded-xl flex items-center gap-3 border border-border/50">
+                 <Check className="w-5 h-5 text-green-500" />
+                 <p className="text-xs text-muted-foreground">El widget se adapta automáticamente al modo claro u oscuro de tu teléfono.</p>
+              </div>
+
               <DrawerClose asChild>
-                <Button variant="outline" size="lg" className="w-full mt-4 h-12 text-lg font-semibold rounded-2xl">
+                <Button size="lg" className="w-full mt-2 h-12 text-lg font-bold rounded-2xl shadow-lg shadow-primary/20">
                   {t('common.understood')}
                 </Button>
               </DrawerClose>
