@@ -57,7 +57,7 @@
     "unlimited_access": "Unlimited access to",
     "ai_identifier": "AI Scanner",
     "claim": "CLAIM",
-    "calories": "CALORIES",
+    "calories": "CALORÍAS",
     "nutrition": "NUTRITION"
   },
   "connect_apps": {
@@ -325,7 +325,7 @@
     "settings": "Profile",
     "profile": "Profile",
     "progress": "Progress",
-    "diets": "Meal Plan",
+    "diets": "Diets",
     "log_title": "Log Activity",
     "scan_food": "Scan Food",
     "scan_menu": "Scan Menu",
@@ -333,8 +333,7 @@
     "log_exercise": "Log Exercise",
     "log_weight": "Log Weight",
     "log_water": "Log Water",
-    "recipes": "Recipes",
-    "diet_library": "Diets"
+    "recipes": "Recipes"
   },
   "recipes": {
     "title": "Recipes",
@@ -577,7 +576,7 @@
       "portions": "Portions",
       "list": {
         "tuna_water": "Tuna in water",
-        "cooked_quinoa": "Quinoa cocida",
+        "cooked_quinoa": "Cooked quinoa",
         "tomato": "Tomato",
         "cucumber": "Cucumber",
         "olive_oil": "Olive oil",
