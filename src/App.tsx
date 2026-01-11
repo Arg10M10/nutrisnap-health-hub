@@ -16,6 +16,7 @@ import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
 import Progress from "./pages/Progress";
 import Diets from "./pages/Diets";
+import DietLibrary from "./pages/DietLibrary";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import Configuration from "./pages/Configuration";
@@ -59,6 +60,7 @@ const AnimatedRoutes = () => {
         <Route path="/" element={<Index />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/diets" element={<Diets />} />
+        <Route path="/diet-library" element={<DietLibrary />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/exercise" element={<Exercise />} />
@@ -184,6 +186,7 @@ const AppRoutes = () => {
     "/settings/personal-details",
     "/settings/reminders",
     "/recipes",
+    "/diet-library",
     "/login",
     "/water" 
   ];
@@ -211,6 +214,7 @@ const AppRoutes = () => {
               <Route path="/settings/personal-details" element={<PersonalDetails />} />
               <Route path="/settings/reminders" element={<Reminders />} />
               <Route path="/recipes" element={<Recipes />} />
+              <Route path="/diet-library" element={<DietLibrary />} />
               <Route path="/login" element={<Login />} />
               <Route path="/water" element={<Water />} />
             </Routes>

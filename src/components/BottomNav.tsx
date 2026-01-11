@@ -94,8 +94,13 @@ const BottomNav = () => {
     { 
       label: t('bottom_nav.recipes', 'Recetas'), 
       icon: ChefHat, 
-      action: () => handleMenuAction(() => navigate("/recipes")) // Recipes are allowed
+      action: () => handleMenuAction(() => navigate("/recipes")) 
     },
+    {
+      label: t('bottom_nav.diet_library', 'Dietas'),
+      icon: Book,
+      action: () => handleMenuAction(() => navigate("/diet-library"))
+    }
   ];
 
   const handleMenuAction = (action: () => void) => {
@@ -132,7 +137,7 @@ const BottomNav = () => {
       {({ isActive }) => (
         <>
           <item.icon className={cn("w-[22px] h-[22px]", isActive ? "text-primary" : "text-muted-foreground")} />
-          <span className={cn("text-[11px] leading-tight font-medium", isActive ? "text-primary" : "text-muted-foreground")}>
+          <span className={cn("text-[11px] leading-tight font-medium text-center", isActive ? "text-primary" : "text-muted-foreground")}>
             {item.label}
           </span>
         </>
@@ -167,13 +172,13 @@ const BottomNav = () => {
               onDragEnd={(_, info) => {
                 if (info.offset.y > 100) setIsMenuOpen(false);
               }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F6] dark:bg-card rounded-t-[32px] p-6 pb-8 shadow-2xl border-t border-border/10"
+              className="fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F6] dark:bg-card rounded-t-[32px] p-6 pb-8 shadow-2xl border-t border-border/10 max-h-[85vh] overflow-y-auto"
             >
               {/* Drag Handle */}
-              <div className="w-12 h-1.5 bg-muted-foreground/20 rounded-full mx-auto mb-6" />
+              <div className="w-12 h-1.5 bg-muted-foreground/20 rounded-full mx-auto mb-6 shrink-0" />
 
               {/* Top Row: Circular Buttons (Main Actions) */}
-              <div className="grid grid-cols-2 gap-x-10 gap-y-5 justify-items-center mb-6 px-4">
+              <div className="grid grid-cols-3 gap-x-6 gap-y-6 justify-items-center mb-6 px-2">
                 {circularButtons.map((btn, idx) => (
                   <div key={idx} className="flex flex-col items-center gap-2">
                     <button
@@ -190,7 +195,7 @@ const BottomNav = () => {
               </div>
 
               {/* Divider */}
-              <div className="h-px w-full bg-border/60 mb-6" />
+              <div className="h-px w-full bg-border/60 mb-6 shrink-0" />
 
               {/* Middle Row: Small Secondary Buttons (Centered) */}
               <div className="grid grid-cols-3 gap-3 mb-8 px-4">
@@ -236,7 +241,7 @@ const BottomNav = () => {
               </div>
 
               {/* Bottom: Close Button */}
-              <div className="flex justify-center">
+              <div className="flex justify-center shrink-0">
                 <button
                   onClick={() => setIsMenuOpen(false)}
                   className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-muted/30 hover:bg-muted/50 text-muted-foreground font-medium transition-all active:scale-95 text-sm"
