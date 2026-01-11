@@ -1,16 +1,13 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Book, ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { dietPlans, DietPlan } from "@/data/dietPlans";
-import DietPlanDrawer from "@/components/diets/DietPlanDrawer";
+import { dietPlans } from "@/data/dietPlans";
 
 const DietLibrary = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [selectedDiet, setSelectedDiet] = useState<DietPlan | null>(null);
 
   return (
     <PageLayout>
@@ -29,7 +26,7 @@ const DietLibrary = () => {
           {dietPlans.map((diet) => (
             <div 
               key={diet.id}
-              onClick={() => setSelectedDiet(diet)}
+              onClick={() => navigate(`/diet/${diet.id}`)}
               className="relative w-full aspect-[4/5] sm:aspect-[16/10] rounded-[2.5rem] overflow-hidden shadow-xl cursor-pointer group transition-all active:scale-[0.98]"
             >
               <img 
@@ -46,8 +43,13 @@ const DietLibrary = () => {
                   <h3 className="text-4xl font-black text-white leading-none tracking-tight mb-3 drop-shadow-lg">
                     {t(diet.nameKey as any)}
                   </h3>
-                  <div className="flex items-center gap-1 text-orange-400 font-bold text-lg group-hover:translate-x-2 transition-transform duration-300">
-                    {t('common.view_diet', 'Ver Dieta')} <ChevronRight className="w-5 h-5 stroke-[3px]" />
+                  
+                  {/* Botón visual integrado en la tarjeta */}
+                  <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/20 rounded-full pl-4 pr-3 py-2 text-white font-bold text-sm group-hover:bg-white/30 transition-colors">
+                    {t('common.view_diet', 'Ver Dieta')} 
+                    <div className="bg-white text-black rounded-full p-1">
+                        <ChevronRight className="w-3 h-3 stroke-[4px]" />
+                    </div>
                   </div>
                 </div>
 
@@ -61,12 +63,6 @@ const DietLibrary = () => {
           ))}
         </div>
       </div>
-
-      <DietPlanDrawer 
-        diet={selectedDiet}
-        isOpen={!!selectedDiet}
-        onClose={() => setSelectedDiet(null)}
-      />
     </PageLayout>
   );
 };
