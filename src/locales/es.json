@@ -921,24 +921,24 @@
     },
     "diet_plans": {
       "high_protein": {
-        "name": "High Protein",
-        "description": "Nutritional plan focused on increasing the proportion of proteins in daily intake to favor muscle mass preservation, improve satiety, and support body fat reduction, while maintaining an adequate caloric balance.",
-        "objective": "Prioritize protein consumption within a balanced diet, without completely eliminating carbohydrates or fats.",
+        "name": "Alta en Proteína",
+        "description": "Plan nutricional enfocado en aumentar la proporción de proteínas dentro de la ingesta diaria para favorecer la preservación de masa muscular, mejorar la saciedad y apoyar la reducción de grasa corporal, manteniendo un balance calórico adecuado.",
+        "objective": "Priorizar el consumo de proteínas dentro de una alimentación equilibrada, sin eliminar completamente carbohidratos ni grasas.",
         "ideal_for": [
-          "People looking to lose fat without losing muscle mass.",
-          "Users who perform physical activity or strength training.",
-          "People who want better appetite control."
+          "Personas que buscan perder grasa sin perder masa muscular.",
+          "Usuarios que realizan actividad física o entrenamiento de fuerza.",
+          "Personas que desean mayor control del apetito."
         ],
         "not_recommended_for": [
-          "People with medical restrictions related to high protein diets.",
-          "People who follow a strictly vegan diet."
+          "Personas con restricciones médicas relacionadas con dietas altas en proteína.",
+          "Personas que siguen una alimentación estrictamente vegana."
         ]
       },
       "labels": {
-        "objective": "Objective",
-        "ideal_for": "Ideal For",
-        "not_recommended": "Not Recommended For",
-        "macros": "Target Macros"
+        "objective": "Objetivo",
+        "ideal_for": "Ideal Para",
+        "not_recommended": "No Recomendada Para",
+        "macros": "Macros Objetivo"
       }
     }
   }
