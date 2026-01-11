@@ -125,15 +125,15 @@ const Configuration = () => {
             </span>
           </div>
           
-          <div className="flex gap-3 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-hide snap-x">
+          <div className="flex gap-3 overflow-x-auto pb-4 -mx-2 px-4 scrollbar-hide snap-x">
             
-            {/* Widget 1: Medium (2x1) */}
+            {/* Widget 1: Calories (Medium 2x1) */}
             <div 
               className="snap-center shrink-0 w-[240px] bg-white dark:bg-zinc-900 rounded-[22px] p-4 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800"
               onClick={() => setIsWidgetHelpOpen(true)}
             >
               <div className="flex justify-between items-start mb-3">
-                <span className="text-[10px] font-bold text-primary uppercase tracking-wider">Calorel</span>
+                <span className="text-[10px] font-bold text-primary uppercase tracking-wider">Calorías</span>
                 <div className="flex items-center gap-1">
                   <span className="text-sm font-bold">5</span>
                   <span className="text-xs">🔥</span>
@@ -153,24 +153,24 @@ const Configuration = () => {
               </div>
             </div>
 
-            {/* Widget 2: Small (1x1) */}
+            {/* Widget 2: Streak (Small 1x1) */}
             <div 
-              className="snap-center shrink-0 w-[110px] h-[110px] bg-white dark:bg-zinc-900 rounded-[22px] p-3 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between"
+              className="snap-center shrink-0 w-[110px] h-[110px] bg-white dark:bg-zinc-900 rounded-[22px] p-3 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center gap-1"
               onClick={() => setIsWidgetHelpOpen(true)}
             >
-              <div className="flex justify-center pt-1">
-                 {/* Circular Progress Mock */}
-                 <div className="relative w-12 h-12 flex items-center justify-center">
-                    <svg className="w-full h-full -rotate-90" viewBox="0 0 32 32">
-                        <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="4" className="text-zinc-100 dark:text-zinc-800" />
-                        <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="4" strokeDasharray="88" strokeDashoffset="22" className="text-primary" strokeLinecap="round" />
-                    </svg>
-                    <Plus className="w-5 h-5 text-zinc-900 dark:text-white absolute" strokeWidth={3} />
-                 </div>
-              </div>
-              <div className="text-center pb-1">
-                 <span className="text-[10px] font-bold text-muted-foreground block">Rápido</span>
-              </div>
+              <span className="text-2xl">🔥</span>
+              <span className="text-3xl font-bold leading-none">5</span>
+              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Días</span>
+            </div>
+
+            {/* Widget 3: Water (Small 1x1) */}
+            <div 
+              className="snap-center shrink-0 w-[110px] h-[110px] bg-white dark:bg-zinc-900 rounded-[22px] p-3 text-zinc-900 dark:text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center gap-1"
+              onClick={() => setIsWidgetHelpOpen(true)}
+            >
+              <span className="text-2xl">💧</span>
+              <span className="text-3xl font-bold leading-none">45</span>
+              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">OZ</span>
             </div>
 
           </div>

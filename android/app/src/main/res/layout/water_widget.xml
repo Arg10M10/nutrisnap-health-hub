@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💧"
+            android:textSize="24sp"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/water_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="45"
+            android:textColor="@color/widget_text_primary"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+            
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="oz"
+            android:textColor="@color/widget_text_secondary"
+            android:textSize="10sp"
+            android:textAllCaps="true"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</RelativeLayout>

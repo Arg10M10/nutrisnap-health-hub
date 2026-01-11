@@ -5,9 +5,13 @@
     <color name="colorAccent">#84cc16</color>
 
     <!-- Widget Dark Mode -->
-    <color name="widget_background">#18181b</color> <!-- Zinc 900 -->
+    <color name="widget_background">#18181b</color>
     <color name="widget_text_primary">#FFFFFF</color>
-    <color name="widget_text_secondary">#a1a1aa</color> <!-- Zinc 400 -->
-    <color name="widget_accent">#84cc16</color> <!-- Lighter Green -->
-    <color name="widget_progress_bg">#27272a</color> <!-- Zinc 800 -->
+    <color name="widget_text_secondary">#a1a1aa</color>
+    <color name="widget_progress_bg">#27272a</color>
+
+    <!-- Accents (Lighter for dark mode) -->
+    <color name="widget_accent">#84cc16</color> <!-- Light Green -->
+    <color name="widget_accent_streak">#fb923c</color> <!-- Light Orange -->
+    <color name="widget_accent_water">#60a5fa</color> <!-- Light Blue -->
 </resources>

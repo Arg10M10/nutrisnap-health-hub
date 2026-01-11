@@ -6,8 +6,12 @@
     
     <!-- Widget Light Mode -->
     <color name="widget_background">#FFFFFF</color>
-    <color name="widget_text_primary">#09090b</color> <!-- Zinc 950 -->
-    <color name="widget_text_secondary">#71717a</color> <!-- Zinc 500 -->
-    <color name="widget_accent">#65a30d</color> <!-- Primary Green -->
-    <color name="widget_progress_bg">#e4e4e7</color> <!-- Zinc 200 -->
+    <color name="widget_text_primary">#09090b</color>
+    <color name="widget_text_secondary">#71717a</color>
+    <color name="widget_progress_bg">#e4e4e7</color>
+    
+    <!-- Accents -->
+    <color name="widget_accent">#65a30d</color> <!-- Green -->
+    <color name="widget_accent_streak">#f97316</color> <!-- Orange -->
+    <color name="widget_accent_water">#3b82f6</color> <!-- Blue -->
 </resources>

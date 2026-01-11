@@ -35,8 +35,9 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
-        <!-- WIDGET RECEIVER -->
+        <!-- WIDGET 1: CALORIES (Main) -->
         <receiver android:name=".CalorelWidget"
+            android:label="Calorías"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -46,13 +47,34 @@
                 android:resource="@xml/calorel_widget_info" />
         </receiver>
 
+        <!-- WIDGET 2: STREAK -->
+        <receiver android:name=".StreakWidget"
+            android:label="Racha"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/streak_widget_info" />
+        </receiver>
+
+        <!-- WIDGET 3: WATER -->
+        <receiver android:name=".WaterWidget"
+            android:label="Agua"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/water_widget_info" />
+        </receiver>
+
     </application>
 
-    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    
-    <!-- Notification Permissions -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
