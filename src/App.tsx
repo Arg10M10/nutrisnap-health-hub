@@ -16,6 +16,7 @@ import Index from "./pages/Index";
 import Scanner from "./pages/Scanner";
 import Progress from "./pages/Progress";
 import Diets from "./pages/Diets";
+import DietTypes from "./pages/DietTypes";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import Configuration from "./pages/Configuration";
@@ -59,6 +60,7 @@ const AnimatedRoutes = () => {
         <Route path="/" element={<Index />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/diets" element={<Diets />} />
+        <Route path="/diet-types" element={<DietTypes />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/exercise" element={<Exercise />} />
@@ -104,7 +106,6 @@ const AppRoutes = () => {
   const shellClass = "relative min-h-screen"; 
 
   // ESTADO INTERMEDIO: Usuario autenticado pero perfil cargando
-  // Esto evita redirigir al login si la red está lenta al cargar el perfil
   if (user && !profile) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-background p-4 text-center">
@@ -184,6 +185,7 @@ const AppRoutes = () => {
     "/settings/personal-details",
     "/settings/reminders",
     "/recipes",
+    "/diet-types",
     "/login",
     "/water" 
   ];
@@ -211,6 +213,7 @@ const AppRoutes = () => {
               <Route path="/settings/personal-details" element={<PersonalDetails />} />
               <Route path="/settings/reminders" element={<Reminders />} />
               <Route path="/recipes" element={<Recipes />} />
+              <Route path="/diet-types" element={<DietTypes />} />
               <Route path="/login" element={<Login />} />
               <Route path="/water" element={<Water />} />
             </Routes>

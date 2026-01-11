@@ -49,7 +49,7 @@ const BottomNav = () => {
     { icon: Home, label: t('bottom_nav.home'), path: "/" },
     { icon: User, label: t('bottom_nav.profile'), path: "/settings" },
     { icon: LineChart, label: t('bottom_nav.progress'), path: "/progress" },
-    { icon: Book, label: t('bottom_nav.diets'), path: "/diets", protected: true },
+    { icon: Book, label: t('bottom_nav.diets_label'), path: "/diets", protected: true },
   ];
 
   // Modified helper to check limit before action, now supports timeframe
@@ -70,7 +70,7 @@ const BottomNav = () => {
   const handleNavClick = async (e: React.MouseEvent, path: string, isProtected?: boolean) => {
     if (isProtected) {
       e.preventDefault();
-      // Use diet_plan check for the Diets tab
+      // Use diet_plan check for the Diets tab (Weekly Plan)
       const allowed = await checkLimit('diet_plan', 9999, 'weekly');
       if (allowed) {
         navigate(path);
@@ -98,12 +98,13 @@ const BottomNav = () => {
     { 
       label: t('bottom_nav.recipes', 'Recetas'), 
       icon: ChefHat, 
-      action: () => handleMenuAction(() => navigate("/recipes")) // Recipes are allowed
+      action: () => handleMenuAction(() => navigate("/recipes")) 
     },
     { 
-      label: t('bottom_nav.diets_label', 'Dietas'), 
+      label: t('bottom_nav.diet_types', 'Dietas'), 
       icon: Book, 
-      action: () => handleProtectedAction('diet_plan', () => navigate("/diets"), 'weekly')
+      // This is the new button for the Diet Catalog page
+      action: () => handleMenuAction(() => navigate("/diet-types"))
     },
   ];
 
@@ -126,7 +127,6 @@ const BottomNav = () => {
 
   const handleOpenWater = () => {
     setIsMenuOpen(false);
-    // Navegar directamente a la nueva página de agua
     navigate('/water');
   };
 

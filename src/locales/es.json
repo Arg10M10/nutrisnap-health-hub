@@ -334,7 +334,8 @@
     "log_weight": "Registrar Peso",
     "log_water": "Registrar Agua",
     "recipes": "Recetas",
-    "diets_label": "Dietas"
+    "diets_label": "Plan Semanal",
+    "diet_types": "Dietas"
   },
   "recipes": {
     "title": "Recetas",
@@ -1439,6 +1440,11 @@
     "log_weight": "Registrar Peso",
     "log_water": "Registrar Agua",
     "recipes": "Recetas",
-    "diets_label": "Dietas"
+    "diets_label": "Plan Semanal",
+    "diet_types": "Dietas"
+  },
+  "diet_list": {
+    "title": "Tipos de Dieta",
+    "subtitle": "Explora diferentes estilos de alimentación para encontrar el mejor para ti."
   }
 }
