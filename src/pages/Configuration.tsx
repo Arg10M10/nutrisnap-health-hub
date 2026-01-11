@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
-  SlidersHorizontal, Languages, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette
+  SlidersHorizontal, Languages, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette, HelpCircle, LayoutDashboard
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -33,6 +33,7 @@ const Configuration = () => {
   const { signOut, profile } = useAuth();
   const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
+  const [isWidgetHelpOpen, setIsWidgetHelpOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -115,6 +116,42 @@ const Configuration = () => {
           <SettingsItem icon={<Languages size={20} />} label={t('settings.language')} onClick={() => setIsLanguageDrawerOpen(true)} />
         </SettingsCategory>
 
+        {/* WIDGET PREVIEW SECTION */}
+        <div className="bg-card rounded-xl p-4 border shadow-sm">
+          <h3 className="font-semibold mb-3 text-lg">{t('widgets.title')}</h3>
+          <div 
+            className="bg-[#4D7C0F] rounded-[24px] p-4 text-white shadow-md relative overflow-hidden cursor-pointer active:scale-95 transition-transform"
+            onClick={() => setIsWidgetHelpOpen(true)}
+          >
+            <div className="flex justify-between items-start mb-2 opacity-80">
+              <span className="text-xs font-bold">Calorel</span>
+            </div>
+            
+            <div className="flex flex-col items-center justify-center py-2">
+              <span className="text-3xl font-bold leading-none">1450 <span className="text-lg">kcal</span></span>
+              <span className="text-xs opacity-80 mt-1 font-medium">/ 2000</span>
+              <div className="w-full h-1.5 bg-white/30 rounded-full mt-3 overflow-hidden">
+                <div className="h-full w-[70%] bg-white rounded-full" />
+              </div>
+            </div>
+
+            <div className="flex justify-between items-end mt-2">
+              <div className="flex items-center gap-1">
+                <span className="text-xl font-bold">5</span>
+                <span className="text-lg">🔥</span>
+              </div>
+            </div>
+          </div>
+          
+          <button 
+            onClick={() => setIsWidgetHelpOpen(true)}
+            className="w-full mt-3 flex items-center justify-center gap-2 text-sm text-primary font-semibold hover:bg-primary/5 p-2 rounded-lg transition-colors"
+          >
+            <HelpCircle className="w-4 h-4" />
+            {t('widgets.how_to_add')}
+          </button>
+        </div>
+
         {/* Goals and Tracking Category */}
         <SettingsCategory title={t('settings.goals.title')}>
           <SettingsItem icon={<Target size={20} />} label={t('settings.goals.editNutrition')} onClick={() => navigate('/settings/nutritional-goals')} />
@@ -159,6 +196,41 @@ const Configuration = () => {
       </div>
       <LanguageDrawer isOpen={isLanguageDrawerOpen} onClose={() => setIsLanguageDrawerOpen(false)} />
       
+      {/* Widget Instructions Drawer */}
+      <Drawer open={isWidgetHelpOpen} onOpenChange={setIsWidgetHelpOpen}>
+        <DrawerContent>
+          <div className="mx-auto w-full max-w-sm">
+            <DrawerHeader className="text-center pt-6">
+              <div className="mx-auto w-16 h-16 bg-[#4D7C0F]/10 rounded-full flex items-center justify-center mb-4">
+                <LayoutDashboard className="w-8 h-8 text-[#4D7C0F]" />
+              </div>
+              <DrawerTitle className="text-2xl font-bold text-foreground">{t('widgets.instructions_title')}</DrawerTitle>
+            </DrawerHeader>
+            
+            <div className="px-6 pb-8 space-y-4">
+              <div className="space-y-4">
+                {[1, 2, 3, 4].map((step) => (
+                  <div key={step} className="flex gap-4 items-start">
+                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                      {step}
+                    </div>
+                    <p className="text-sm font-medium leading-relaxed pt-0.5">
+                      {t(`widgets.step_${step}` as any)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              
+              <DrawerClose asChild>
+                <Button variant="outline" size="lg" className="w-full mt-4 h-12 text-lg font-semibold rounded-2xl">
+                  {t('common.understood')}
+                </Button>
+              </DrawerClose>
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
+
       <Drawer open={isDeleteDrawerOpen} onOpenChange={setIsDeleteDrawerOpen}>
         <DrawerContent>
           <div className="mx-auto w-full max-w-sm">

@@ -1294,11 +1294,11 @@
       "title": "Select Plan",
       "annual": "Annual",
       "monthly": "Monthly",
-      "price_suffix": "/mes",
+      "price_suffix": "/month",
       "trial_note": "Free for 3 days."
     },
     "buttons": {
-      "start_trial": "Iniciar Prueba Gratuita de 3 Días",
+      "start_trial": "Start 3-Day Free Trial",
       "unlock_now": "Unlock Now",
       "pay_now": "Pay {{price}} Now",
       "no_payment_note": "No charge for the first 3 days."
@@ -1315,5 +1315,15 @@
     "subtitle_monthly": "You have activated the Monthly Plan.",
     "desc_monthly": "Thank you for trusting Calorel. Let's reach those goals together!",
     "button": "Start Now"
+  },
+  "widgets": {
+    "title": "Widgets",
+    "preview_title": "Your progress at home",
+    "how_to_add": "How to add?",
+    "instructions_title": "Add Widget to Home",
+    "step_1": "Go to your phone's home screen.",
+    "step_2": "Long press on an empty space.",
+    "step_3": "Select 'Widgets'.",
+    "step_4": "Search for 'Calorel' and drag the widget."
   }
 }

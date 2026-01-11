@@ -1315,5 +1315,15 @@
     "subtitle_monthly": "Has activado el Plan Mensual.",
     "desc_monthly": "Gracias por confiar en Calorel. ¡Vamos a lograr esas metas juntos!",
     "button": "Comenzar Ahora"
+  },
+  "widgets": {
+    "title": "Widgets",
+    "preview_title": "Tu progreso en inicio",
+    "how_to_add": "¿Cómo agregar?",
+    "instructions_title": "Agregar Widget a Inicio",
+    "step_1": "Ve a la pantalla de inicio de tu teléfono.",
+    "step_2": "Mantén presionado en un espacio vacío.",
+    "step_3": "Selecciona 'Widgets'.",
+    "step_4": "Busca 'Calorel' y arrastra el widget."
   }
 }
