@@ -23,8 +23,11 @@ const DietPlanDrawer = ({ diet, isOpen, onClose }: DietPlanDrawerProps) => {
 
   if (!diet) return null;
 
-  const idealFor = t(diet.idealForKey as any, { returnObjects: true }) as string[];
-  const notRecommended = t(diet.notRecommendedKey as any, { returnObjects: true }) as string[];
+  const rawIdealFor = t(diet.idealForKey as any, { returnObjects: true });
+  const idealFor = Array.isArray(rawIdealFor) ? rawIdealFor : [];
+
+  const rawNotRecommended = t(diet.notRecommendedKey as any, { returnObjects: true });
+  const notRecommended = Array.isArray(rawNotRecommended) ? rawNotRecommended : [];
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -92,10 +95,10 @@ const DietPlanDrawer = ({ diet, isOpen, onClose }: DietPlanDrawerProps) => {
                     {t('diet_plans.labels.ideal_for')}
                 </h3>
                 <ul className="space-y-2">
-                    {idealFor.map((item, idx) => (
+                    {idealFor.map((item: any, idx: number) => (
                         <li key={idx} className="flex gap-3 text-sm text-muted-foreground">
                             <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 flex-shrink-0" />
-                            {item}
+                            {typeof item === 'string' ? item : JSON.stringify(item)}
                         </li>
                     ))}
                 </ul>
@@ -109,10 +112,10 @@ const DietPlanDrawer = ({ diet, isOpen, onClose }: DietPlanDrawerProps) => {
                         {t('diet_plans.labels.not_recommended')}
                     </h3>
                     <ul className="space-y-2">
-                        {notRecommended.map((item, idx) => (
+                        {notRecommended.map((item: any, idx: number) => (
                             <li key={idx} className="flex gap-3 text-sm text-red-600/80 dark:text-red-300/80">
                                 <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 flex-shrink-0" />
-                                {item}
+                                {typeof item === 'string' ? item : JSON.stringify(item)}
                             </li>
                         ))}
                     </ul>
