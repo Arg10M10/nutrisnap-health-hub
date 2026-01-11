@@ -345,9 +345,9 @@
     "like_count": "{{count}} people recommend this",
     "feedback_thanks": "Thanks for your feedback!",
     "categories": {
-        "lunch_dinner": "Lunch / Dinner",
-        "snack_breakfast": "Snack / Breakfast",
-        "breakfast": "Breakfast"
+      "lunch_dinner": "Lunch / Dinner",
+      "snack_breakfast": "Snack / Breakfast",
+      "breakfast": "Breakfast"
     },
     "yogurt_fruits_granola": {
       "name": "Yogurt with Fruit and Granola",
