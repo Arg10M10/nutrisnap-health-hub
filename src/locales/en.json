@@ -919,28 +919,28 @@
         "Saltear el tomate y la espinaca por unos minutos.",
         "Agregar los huevos y cocinar revolviendo hasta que estén listos."
       ]
+    }
+  },
+  "diet_plans": {
+    "high_protein": {
+      "name": "High Protein",
+      "description": "Nutritional plan focused on increasing the proportion of proteins in daily intake to favor muscle mass preservation, improve satiety, and support body fat reduction, while maintaining an adequate caloric balance.",
+      "objective": "Prioritize protein consumption within a balanced diet, without completely eliminating carbohydrates or fats.",
+      "ideal_for": [
+        "People looking to lose fat without losing muscle mass.",
+        "Users who perform physical activity or strength training.",
+        "People who want better appetite control."
+      ],
+      "not_recommended_for": [
+        "People with medical restrictions related to high protein diets.",
+        "People who follow a strictly vegan diet."
+      ]
     },
-    "diet_plans": {
-      "high_protein": {
-        "name": "High Protein",
-        "description": "Nutritional plan focused on increasing the proportion of proteins in daily intake to favor muscle mass preservation, improve satiety, and support body fat reduction, while maintaining an adequate caloric balance.",
-        "objective": "Prioritize protein consumption within a balanced diet, without completely eliminating carbohydrates or fats.",
-        "ideal_for": [
-          "People looking to lose fat without losing muscle mass.",
-          "Users who perform physical activity or strength training.",
-          "People who want better appetite control."
-        ],
-        "not_recommended_for": [
-          "People with medical restrictions related to high protein diets.",
-          "People who follow a strictly vegan diet."
-        ]
-      },
-      "labels": {
-        "objective": "Objective",
-        "ideal_for": "Ideal For",
-        "not_recommended": "Not Recommended For",
-        "macros": "Target Macros"
-      }
+    "labels": {
+      "objective": "Objective",
+      "ideal_for": "Ideal For",
+      "not_recommended": "Not Recommended For",
+      "macros": "Target Macros"
     }
   }
 }
