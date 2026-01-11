@@ -17,7 +17,6 @@ import Scanner from "./pages/Scanner";
 import Progress from "./pages/Progress";
 import Diets from "./pages/Diets";
 import DietLibrary from "./pages/DietLibrary";
-import DietDetails from "./pages/DietDetails";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import Configuration from "./pages/Configuration";
@@ -62,7 +61,6 @@ const AnimatedRoutes = () => {
         <Route path="/progress" element={<Progress />} />
         <Route path="/diets" element={<Diets />} />
         <Route path="/diet-library" element={<DietLibrary />} />
-        <Route path="/diet/:id" element={<DietDetails />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/exercise" element={<Exercise />} />
@@ -108,6 +106,7 @@ const AppRoutes = () => {
   const shellClass = "relative min-h-screen"; 
 
   // ESTADO INTERMEDIO: Usuario autenticado pero perfil cargando
+  // Esto evita redirigir al login si la red está lenta al cargar el perfil
   if (user && !profile) {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-background p-4 text-center">
@@ -170,9 +169,6 @@ const AppRoutes = () => {
      );
   }
 
-  // Check if current route starts with /diet/ to hide bottom nav for dynamic diet pages
-  const isDietDetail = location.pathname.startsWith('/diet/');
-
   const fullScreenRoutes = [
     "/scanner",
     "/exercise/running",
@@ -195,7 +191,7 @@ const AppRoutes = () => {
     "/water" 
   ];
 
-  if (fullScreenRoutes.includes(location.pathname) || isDietDetail) {
+  if (fullScreenRoutes.includes(location.pathname)) {
     return (
       <div className={shellClass}>
         <GlobalBadgeModal />
@@ -219,7 +215,6 @@ const AppRoutes = () => {
               <Route path="/settings/reminders" element={<Reminders />} />
               <Route path="/recipes" element={<Recipes />} />
               <Route path="/diet-library" element={<DietLibrary />} />
-              <Route path="/diet/:id" element={<DietDetails />} />
               <Route path="/login" element={<Login />} />
               <Route path="/water" element={<Water />} />
             </Routes>

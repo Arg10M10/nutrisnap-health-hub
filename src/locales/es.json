@@ -14,8 +14,7 @@
     "ai_limit_daily_desc": "Has alcanzado el límite de {{limit}} usos diarios para esta función. Vuelve mañana para continuar.",
     "ai_limit_weekly_desc": "Has alcanzado el límite de {{limit}} usos semanales para esta función. Vuelve la próxima semana para continuar.",
     "add": "Añadir",
-    "deleted_success": "Eliminado correctamente",
-    "view_diet": "Ver Dieta"
+    "deleted_success": "Eliminado correctamente"
   },
   "water": {
     "remaining": "Restante",
@@ -346,9 +345,9 @@
     "like_count": "{{count}} personas la recomiendan",
     "feedback_thanks": "¡Gracias por tu feedback!",
     "categories": {
-      "lunch_dinner": "Almuerzo / Cena",
-      "snack_breakfast": "Snack / Desayuno",
-      "breakfast": "Desayuno"
+        "lunch_dinner": "Almuerzo / Cena",
+        "snack_breakfast": "Snack / Desayuno",
+        "breakfast": "Desayuno"
     },
     "yogurt_fruits_granola": {
       "name": "Yogur con frutas y granola",
@@ -919,28 +918,6 @@
         "Saltear el tomate y la espinaca por unos minutos.",
         "Agregar los huevos y cocinar revolviendo hasta que estén listos."
       ]
-    }
-  },
-  "diet_plans": {
-    "high_protein": {
-      "name": "Alta en Proteína",
-      "description": "Plan nutricional enfocado en aumentar la proporción de proteínas dentro de la ingesta diaria para favorecer la preservación de masa muscular, mejorar la saciedad y apoyar la reducción de grasa corporal, manteniendo un balance calórico adecuado.",
-      "objective": "Priorizar el consumo de proteínas dentro de una alimentación equilibrada, sin eliminar completamente carbohidratos ni grasas.",
-      "ideal_for": [
-        "Personas que buscan perder grasa sin perder masa muscular.",
-        "Usuarios que realizan actividad física o entrenamiento de fuerza.",
-        "Personas que desean mayor control del apetito."
-      ],
-      "not_recommended_for": [
-        "Personas con restricciones médicas relacionadas con dietas altas en proteína.",
-        "Personas que siguen una alimentación estrictamente vegana."
-      ]
-    },
-    "labels": {
-      "objective": "Objetivo",
-      "ideal_for": "Ideal Para",
-      "not_recommended": "No Recomendada Para",
-      "macros": "Macros Objetivo"
     }
   }
 }

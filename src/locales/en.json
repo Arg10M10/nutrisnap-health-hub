@@ -14,8 +14,7 @@
     "ai_limit_daily_desc": "You have reached the daily limit of {{limit}} uses for this feature. Please come back tomorrow to continue.",
     "ai_limit_weekly_desc": "You have reached the weekly limit of {{limit}} uses for this feature. Please come back next week to continue.",
     "add": "Add",
-    "deleted_success": "Deleted successfully",
-    "view_diet": "View Diet"
+    "deleted_success": "Deleted successfully"
   },
   "water": {
     "remaining": "Remaining",
@@ -269,7 +268,7 @@
       "title": "Select Plan",
       "annual": "Annual",
       "monthly": "Monthly",
-      "price_suffix": "/mes",
+      "price_suffix": "/month",
       "trial_note": "Free for 3 days."
     },
     "buttons": {
@@ -346,9 +345,9 @@
     "like_count": "{{count}} people recommend this",
     "feedback_thanks": "Thanks for your feedback!",
     "categories": {
-      "lunch_dinner": "Lunch / Dinner",
-      "snack_breakfast": "Snack / Breakfast",
-      "breakfast": "Breakfast"
+        "lunch_dinner": "Lunch / Dinner",
+        "snack_breakfast": "Snack / Breakfast",
+        "breakfast": "Breakfast"
     },
     "yogurt_fruits_granola": {
       "name": "Yogurt with Fruit and Granola",
@@ -578,7 +577,7 @@
       "portions": "Portions",
       "list": {
         "tuna_water": "Tuna in water",
-        "cooked_quinoa": "Cooked quinoa",
+        "cooked_quinoa": "Quinoa cocida",
         "tomato": "Tomato",
         "cucumber": "Cucumber",
         "olive_oil": "Olive oil",
@@ -842,7 +841,7 @@
         "lean_beef": "Lean beef",
         "lettuce": "Lettuce",
         "tomato": "Tomato",
-        "olive_oil": "Aceite de oliva"
+        "olive_oil": "Olive oil"
       },
       "instructions": [
         "Grill the beef.",
@@ -911,36 +910,14 @@
         "eggs": "Eggs",
         "spinach": "Spinach",
         "tomato": "Tomato",
-        "olive_oil": "Aceite de oliva"
+        "olive_oil": "Olive oil"
       },
       "instructions": [
-        "Batir los huevos.",
-        "Calentar el aceite en una sartén.",
-        "Saltear el tomate y la espinaca por unos minutos.",
-        "Agregar los huevos y cocinar revolviendo hasta que estén listos."
+        "Beat the eggs.",
+        "Heat oil in a pan.",
+        "Sauté tomato and spinach for a few minutes.",
+        "Add eggs and cook, stirring until done."
       ]
-    }
-  },
-  "diet_plans": {
-    "high_protein": {
-      "name": "High Protein",
-      "description": "Nutritional plan focused on increasing the proportion of proteins in daily intake to favor muscle mass preservation, improve satiety, and support body fat reduction, while maintaining an adequate caloric balance.",
-      "objective": "Prioritize protein consumption within a balanced diet, without completely eliminating carbohydrates or fats.",
-      "ideal_for": [
-        "People looking to lose fat without losing muscle mass.",
-        "Users who perform physical activity or strength training.",
-        "People who want better appetite control."
-      ],
-      "not_recommended_for": [
-        "People with medical restrictions related to high protein diets.",
-        "People who follow a strictly vegan diet."
-      ]
-    },
-    "labels": {
-      "objective": "Objective",
-      "ideal_for": "Ideal For",
-      "not_recommended": "Not Recommended For",
-      "macros": "Target Macros"
     }
   }
 }
