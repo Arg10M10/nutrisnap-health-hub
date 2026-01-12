@@ -337,16 +337,6 @@
       "ideal_for_3": "Personas que desean mayor control del apetito.",
       "not_recommended_for_1": "Personas con restricciones médicas relacionadas con dietas altas en proteína.",
       "not_recommended_for_2": "Personas que siguen una alimentación estrictamente vegana."
-    },
-    "balanced": {
-      "name": "Balanceada",
-      "short_desc": "Equilibrio nutricional para salud general y peso sostenible.",
-      "description": "Plan nutricional equilibrado que distribuye de forma adecuada proteínas, carbohidratos y grasas para mantener la salud general y un control sostenible del peso.",
-      "objective": "Mantener un equilibrio nutricional estable y fácil de sostener a largo plazo.",
-      "ideal_for_1": "Usuarios principiantes.",
-      "ideal_for_2": "Personas que buscan salud general sin restricciones extremas.",
-      "ideal_for_3": "Uso diario a largo plazo.",
-      "not_recommended_for_1": "Usuarios con objetivos nutricionales muy específicos."
     }
   }
 }

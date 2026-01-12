@@ -42,27 +42,6 @@ export const diets: Diet[] = [
     },
     image: "/diets/high-protein.jpg",
     icon: "💪"
-  },
-  {
-    id: "balanced",
-    nameKey: "diet_types_data.balanced.name",
-    shortDescKey: "diet_types_data.balanced.short_desc",
-    descriptionKey: "diet_types_data.balanced.description",
-    objectiveKey: "diet_types_data.balanced.objective",
-    idealForKeys: [
-      "diet_types_data.balanced.ideal_for_1",
-      "diet_types_data.balanced.ideal_for_2",
-      "diet_types_data.balanced.ideal_for_3"
-    ],
-    notRecommendedForKeys: [
-      "diet_types_data.balanced.not_recommended_for_1"
-    ],
-    macros: {
-      protein: "20–25 %",
-      carbs: "45–55 %",
-      fats: "25–30 %"
-    },
-    image: "/diets/balanced-diet.jpg",
-    icon: "⚖️"
   }
+  // Future diets can be added here
 ];
