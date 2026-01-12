@@ -103,7 +103,6 @@ const BottomNav = () => {
     { 
       label: t('bottom_nav.diet_types', 'Dietas'), 
       icon: Book, 
-      // This is the new button for the Diet Catalog page
       action: () => handleMenuAction(() => navigate("/diet-types"))
     },
   ];
@@ -181,9 +180,9 @@ const BottomNav = () => {
               {/* Drag Handle */}
               <div className="w-12 h-1.5 bg-muted-foreground/20 rounded-full mx-auto mb-6" />
 
-              {/* Top Row: Circular Buttons (Main Actions) */}
-              <div className="grid grid-cols-2 gap-x-10 gap-y-5 justify-items-center mb-6 px-4">
-                {circularButtons.slice(0, 4).map((btn, idx) => (
+              {/* Main Actions Grid (3 Columns) */}
+              <div className="grid grid-cols-3 gap-y-6 gap-x-4 justify-items-center mb-8 px-2">
+                {circularButtons.map((btn, idx) => (
                   <div key={idx} className="flex flex-col items-center gap-2">
                     <button
                       onClick={btn.action}
@@ -198,29 +197,10 @@ const BottomNav = () => {
                 ))}
               </div>
 
-              {/* Extra Items (Centered) if any */}
-              {circularButtons.length > 4 && (
-                <div className="flex justify-center mb-6">
-                   {circularButtons.slice(4).map((btn, idx) => (
-                    <div key={idx} className="flex flex-col items-center gap-2">
-                        <button
-                        onClick={btn.action}
-                        className="w-16 h-16 rounded-full bg-white dark:bg-muted shadow-lg border-4 border-primary/5 flex items-center justify-center text-primary active:scale-95 transition-transform"
-                        >
-                        <btn.icon className="w-7 h-7" strokeWidth={2} />
-                        </button>
-                        <span className="text-xs font-bold text-foreground/80 text-center leading-tight max-w-[90px]">
-                        {btn.label}
-                        </span>
-                    </div>
-                   ))}
-                </div>
-              )}
-
               {/* Divider */}
               <div className="h-px w-full bg-border/60 mb-6" />
 
-              {/* Middle Row: Small Secondary Buttons (Centered) */}
+              {/* Secondary Buttons Row */}
               <div className="grid grid-cols-3 gap-3 mb-8 px-4">
                 <button
                   onClick={handleOpenWeight}
