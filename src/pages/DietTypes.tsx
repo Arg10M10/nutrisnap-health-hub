@@ -4,8 +4,7 @@ import { useTranslation } from "react-i18next";
 import { diets, Diet } from "@/data/diets";
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 import DietDetailDrawer from "@/components/DietDetailDrawer";
 
 const DietTypes = () => {
@@ -15,40 +14,58 @@ const DietTypes = () => {
 
   return (
     <PageLayout>
-      <div className="space-y-6">
-        <header className="flex items-center gap-4">
+      <div className="space-y-6 pb-20">
+        <header className="flex items-center gap-4 sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-4">
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
             <ArrowLeft className="w-6 h-6" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-primary">{t('diet_list.title', 'Tipos de Dieta')}</h1>
+            <h1 className="text-2xl font-bold text-foreground">{t('diet_list.title', 'Dietas Premium')}</h1>
           </div>
         </header>
 
-        <p className="text-muted-foreground px-1">
+        <p className="text-muted-foreground px-1 -mt-2">
           {t('diet_list.subtitle', 'Explora diferentes estilos de alimentación para encontrar el mejor para ti.')}
         </p>
         
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-6">
           {diets.map((diet) => (
-            <Card 
+            <div 
               key={diet.id} 
-              className="cursor-pointer hover:border-primary/50 transition-all active:scale-[0.98]"
+              className="relative w-full aspect-[4/5] sm:aspect-[16/10] rounded-3xl overflow-hidden cursor-pointer shadow-lg group transition-transform active:scale-[0.98]"
               onClick={() => setSelectedDiet(diet)}
             >
-              <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                <div className="text-4xl bg-muted/30 p-2 rounded-xl">{diet.icon}</div>
+              {/* Background Image */}
+              <img 
+                src={diet.image} 
+                alt={t(diet.nameKey as any)} 
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30 pointer-events-none" />
+
+              {/* Content Container */}
+              <div className="absolute inset-0 p-6 flex flex-col justify-between">
+                
+                {/* Top Section */}
                 <div>
-                  <CardTitle className="text-lg">{diet.name}</CardTitle>
-                  <CardDescription className="line-clamp-1">{diet.category}</CardDescription>
+                  <h2 className="text-4xl font-bold text-white mb-1 drop-shadow-md">
+                    {t(diet.nameKey as any)}
+                  </h2>
+                  <div className="flex items-center text-orange-400 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+                    {t('diet_list.view_diet', 'Ver Dieta')} <ChevronRight className="w-4 h-4 ml-1" />
+                  </div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {diet.description}
-                </p>
-              </CardContent>
-            </Card>
+
+                {/* Bottom Description */}
+                <div className="max-w-[90%]">
+                  <p className="text-white/90 text-lg font-medium leading-snug drop-shadow-md">
+                    {t(diet.shortDescKey as any)}
+                  </p>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>

@@ -337,6 +337,28 @@
     "diets_label": "Plan Semanal",
     "diet_types": "Dietas"
   },
+  "diet_list": {
+    "title": "Dietas Premium",
+    "subtitle": "Encuentra el estilo de alimentación perfecto para tus objetivos.",
+    "view_diet": "Ver Dieta",
+    "objective": "OBJETIVO",
+    "ideal_for": "IDEAL PARA",
+    "not_recommended_for": "NO RECOMENDADA PARA",
+    "target_macros": "MACROS OBJETIVO"
+  },
+  "diet_types_data": {
+    "high_protein": {
+      "name": "Alta en Proteína",
+      "short_desc": "Aumenta proteína para ganar músculo y perder grasa.",
+      "description": "Plan nutricional enfocado en aumentar la proporción de proteínas dentro de la ingesta diaria para favorecer la preservación de masa muscular, mejorar la saciedad y apoyar la reducción de grasa corporal, manteniendo un balance calórico adecuado.",
+      "objective": "Priorizar el consumo de proteínas dentro de una alimentación equilibrada, sin eliminar completamente carbohidratos ni grasas.",
+      "ideal_for_1": "Personas que buscan perder grasa sin perder masa muscular.",
+      "ideal_for_2": "Usuarios que realizan actividad física o entrenamiento de fuerza.",
+      "ideal_for_3": "Personas que desean mayor control del apetito.",
+      "not_recommended_for_1": "Personas con restricciones médicas relacionadas con dietas altas en proteína.",
+      "not_recommended_for_2": "Personas que siguen una alimentación estrictamente vegana."
+    }
+  },
   "recipes": {
     "title": "Recetas",
     "coming_soon": "Próximamente...",
@@ -1400,7 +1422,7 @@
     "buttons": {
       "start_trial": "Iniciar Prueba Gratuita de 3 Días",
       "unlock_now": "Desbloquear Ahora",
-      "pay_now": "Pagar {{price}} Now",
+      "pay_now": "Pagar {{price}} Ahora",
       "no_payment_note": "Sin cargo durante los primeros 3 días."
     }
   },
@@ -1444,7 +1466,25 @@
     "diet_types": "Dietas"
   },
   "diet_list": {
-    "title": "Tipos de Dieta",
-    "subtitle": "Explora diferentes estilos de alimentación para encontrar el mejor para ti."
+    "title": "Dietas Premium",
+    "subtitle": "Encuentra el estilo de alimentación perfecto para tus objetivos.",
+    "view_diet": "Ver Dieta",
+    "objective": "OBJETIVO",
+    "ideal_for": "IDEAL PARA",
+    "not_recommended_for": "NO RECOMENDADA PARA",
+    "target_macros": "MACROS OBJETIVO"
+  },
+  "diet_types_data": {
+    "high_protein": {
+      "name": "Alta en Proteína",
+      "short_desc": "Aumenta proteína para ganar músculo y perder grasa.",
+      "description": "Plan nutricional enfocado en aumentar la proporción de proteínas dentro de la ingesta diaria para favorecer la preservación de masa muscular, mejorar la saciedad y apoyar la reducción de grasa corporal, manteniendo un balance calórico adecuado.",
+      "objective": "Priorizar el consumo de proteínas dentro de una alimentación equilibrada, sin eliminar completamente carbohidratos ni grasas.",
+      "ideal_for_1": "Personas que buscan perder grasa sin perder masa muscular.",
+      "ideal_for_2": "Usuarios que realizan actividad física o entrenamiento de fuerza.",
+      "ideal_for_3": "Personas que desean mayor control del apetito.",
+      "not_recommended_for_1": "Personas con restricciones médicas relacionadas con dietas altas en proteína.",
+      "not_recommended_for_2": "Personas que siguen una alimentación estrictamente vegana."
+    }
   }
 }
