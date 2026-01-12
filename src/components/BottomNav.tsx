@@ -86,14 +86,14 @@ const BottomNav = () => {
       action: () => handleProtectedAction('food_scan', () => navigate("/scanner", { state: { mode: 'food' } }))
     },
     { 
-      label: t('bottom_nav.describe_food'), 
-      icon: Utensils, 
-      action: () => handleProtectedAction('manual_food_scan', () => setIsManualFoodDrawerOpen(true)) 
-    },
-    { 
       label: t('bottom_nav.scan_menu'), 
       icon: FileText, 
       action: () => handleProtectedAction('food_scan', () => navigate("/scanner", { state: { mode: 'menu' } })) 
+    },
+    { 
+      label: t('bottom_nav.describe_food'), 
+      icon: Utensils, 
+      action: () => handleProtectedAction('manual_food_scan', () => setIsManualFoodDrawerOpen(true)) 
     },
     { 
       label: t('bottom_nav.recipes', 'Recetas'), 
