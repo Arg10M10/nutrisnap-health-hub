@@ -17,6 +17,7 @@ import Scanner from "./pages/Scanner";
 import Progress from "./pages/Progress";
 import Diets from "./pages/Diets";
 import DietTypes from "./pages/DietTypes";
+import DietDetail from "./pages/DietDetail";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import Configuration from "./pages/Configuration";
@@ -61,6 +62,7 @@ const AnimatedRoutes = () => {
         <Route path="/progress" element={<Progress />} />
         <Route path="/diets" element={<Diets />} />
         <Route path="/diet-types" element={<DietTypes />} />
+        <Route path="/diet-types/:id" element={<DietDetail />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/exercise" element={<Exercise />} />
@@ -190,7 +192,10 @@ const AppRoutes = () => {
     "/water" 
   ];
 
-  if (fullScreenRoutes.includes(location.pathname)) {
+  // Chequeo dinámico para rutas de detalle (ej: /diet-types/high_protein)
+  const isFullScreen = fullScreenRoutes.includes(location.pathname) || location.pathname.startsWith("/diet-types/");
+
+  if (isFullScreen) {
     return (
       <div className={shellClass}>
         <GlobalBadgeModal />
@@ -214,6 +219,7 @@ const AppRoutes = () => {
               <Route path="/settings/reminders" element={<Reminders />} />
               <Route path="/recipes" element={<Recipes />} />
               <Route path="/diet-types" element={<DietTypes />} />
+              <Route path="/diet-types/:id" element={<DietDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/water" element={<Water />} />
             </Routes>

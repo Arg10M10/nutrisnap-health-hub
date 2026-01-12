@@ -1,16 +1,13 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { diets, Diet } from "@/data/diets";
+import { diets } from "@/data/diets";
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronRight } from "lucide-react";
-import DietDetailDrawer from "@/components/DietDetailDrawer";
 
 const DietTypes = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [selectedDiet, setSelectedDiet] = useState<Diet | null>(null);
 
   return (
     <PageLayout>
@@ -33,7 +30,7 @@ const DietTypes = () => {
             <div 
               key={diet.id} 
               className="relative w-full aspect-[4/5] sm:aspect-[16/10] rounded-3xl overflow-hidden cursor-pointer shadow-lg group transition-transform active:scale-[0.98]"
-              onClick={() => setSelectedDiet(diet)}
+              onClick={() => navigate(`/diet-types/${diet.id}`)}
             >
               {/* Background Image */}
               <img 
@@ -69,12 +66,6 @@ const DietTypes = () => {
           ))}
         </div>
       </div>
-
-      <DietDetailDrawer 
-        diet={selectedDiet}
-        isOpen={!!selectedDiet}
-        onClose={() => setSelectedDiet(null)}
-      />
     </PageLayout>
   );
 };

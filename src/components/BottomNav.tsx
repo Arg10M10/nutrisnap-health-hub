@@ -49,7 +49,7 @@ const BottomNav = () => {
     { icon: Home, label: t('bottom_nav.home'), path: "/" },
     { icon: User, label: t('bottom_nav.profile'), path: "/settings" },
     { icon: LineChart, label: t('bottom_nav.progress'), path: "/progress" },
-    { icon: Book, label: t('bottom_nav.diets_label'), path: "/diets", protected: true },
+    { icon: Book, label: t('bottom_nav.diets'), path: "/diets", protected: true },
   ];
 
   // Modified helper to check limit before action, now supports timeframe
