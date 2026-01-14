@@ -314,35 +314,17 @@
     "desc_monthly": "Gracias por confiar en Calorel. ¡Vamos a lograr esas metas juntos!",
     "button": "Comenzar Ahora"
   },
-  "generating_plan": {
-    "step1": "Analizando tu perfil y objetivos...",
-    "step2": "Calculando tus macros personalizados...",
-    "step3": "Generando tu primer plan de comidas...",
-    "step4": "¡Plan listo!"
-  },
-  "home": {
-    "title": "Calorel",
-    "goal_achieved_toast": "¡Genial! Basado en tu ritmo, deberías alcanzar tu peso objetivo alrededor del {{date}}.",
-    "kcal_remaining": "{{count}} kcal restantes",
-    "kcal_over": "{{count}} kcal por encima",
-    "protein": "Proteína",
-    "carbs": "Carbs",
-    "fats": "Grasas",
-    "sugars": "Azúcares",
-    "fiber": "Fibra",
-    "health_score": "Puntaje Salud",
-    "health_score_excellent": "Excelente",
-    "health_score_good": "Bueno",
-    "health_score_fair": "Regular",
-    "health_score_improvable": "Mejorable",
-    "water_tracker_glasses": "Meta {{goal}} oz",
-    "water_tracker_title": "oz",
-    "todays_analysis": "Registro de Hoy",
-    "no_data": "Aún no hay registros.",
-    "start_logging": "Toca el botón '+' para registrar tu primera comida o ejercicio.",
-    "log_water_title": "Registrar Agua",
-    "steps": "Pasos",
-    "active_calories": "Activas"
+  "widgets": {
+    "title": "Widgets",
+    "preview_title": "Tu progreso en inicio",
+    "how_to_add": "¿Cómo agregar?",
+    "instructions_title": "Agregar Widget a Inicio",
+    "step_1": "Ve a la pantalla de inicio de tu teléfono.",
+    "step_2": "Mantén presionado en un espacio vacío.",
+    "step_3": "Selecciona 'Widgets'.",
+    "step_4": "Busca 'Calorel' y arrastra el widget.",
+    "preview": "Vista Previa",
+    "adaptive_note": "El widget se adapta automáticamente al modo claro u oscuro de tu teléfono."
   },
   "bottom_nav": {
     "home": "Inicio",
@@ -407,14 +389,6 @@
       "objective": "Mejorar la salud cardiovascular y el bienestar general a largo plazo.",
       "ideal_for_1": "Personas que buscan una dieta saludable y sostenible.",
       "ideal_for_2": "Usuarios enfocados en prevención y salud general."
-    },
-    "dash": {
-      "name": "DIETA: DASH",
-      "short_desc": "Equilibrio nutricional para la salud del corazón.",
-      "description": "Prioriza el equilibrio nutricional y el control del sodio para apoyar la salud cardiovascular.",
-      "objective": "Mejorar la presión arterial y la salud del corazón.",
-      "ideal_for_1": "Personas con enfoque en salud cardiovascular.",
-      "ideal_for_2": "Usuarios que buscan una dieta preventiva y controlada."
     }
   },
   "recipes": {
