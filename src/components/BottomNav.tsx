@@ -1,13 +1,11 @@
 import { useState, useMemo } from "react";
 import { Home, User, LineChart, Book, Plus, Scan, Dumbbell, FileText, Scale, Droplets, ChevronDown, Utensils, ChefHat } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { NavLink } from "./NavLink";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import EditWeightDrawer from "@/components/EditWeightDrawer";
 import { useAuth } from "@/context/AuthContext";
-import { useNutrition } from "@/context/NutritionContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { startOfDay } from "date-fns";
@@ -21,7 +19,6 @@ const BottomNav = () => {
   const [isManualFoodDrawerOpen, setIsManualFoodDrawerOpen] = useState(false);
   
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const { profile, user } = useAuth();
   const { checkLimit } = useAILimit();
 
@@ -46,19 +43,17 @@ const BottomNav = () => {
   }, [todaysWeightUpdatesCount]);
 
   const navItems = [
-    { icon: Home, label: t('bottom_nav.home'), path: "/" },
-    { icon: User, label: t('bottom_nav.profile'), path: "/settings" },
-    { icon: LineChart, label: t('bottom_nav.progress'), path: "/progress" },
-    { icon: Book, label: t('bottom_nav.diets'), path: "/diets", protected: true },
+    { icon: Home, label: "Home", path: "/" },
+    { icon: User, label: "Profile", path: "/settings" },
+    { icon: LineChart, label: "Progress", path: "/progress" },
+    { icon: Book, label: "Weekly Plan", path: "/diets", protected: true },
   ];
 
-  // Modified helper to check limit before action, now supports timeframe
   const handleProtectedAction = async (
     feature: 'food_scan' | 'manual_food_scan' | 'diet_plan', 
     action: () => void,
     timeFrame: 'daily' | 'weekly' = 'daily'
   ) => {
-    // Check limit (which checks guest status)
     const allowed = await checkLimit(feature, 9999, timeFrame);
     if (allowed) {
       handleMenuAction(action);
@@ -70,7 +65,6 @@ const BottomNav = () => {
   const handleNavClick = async (e: React.MouseEvent, path: string, isProtected?: boolean) => {
     if (isProtected) {
       e.preventDefault();
-      // Use diet_plan check for the Diets tab (Weekly Plan)
       const allowed = await checkLimit('diet_plan', 9999, 'weekly');
       if (allowed) {
         navigate(path);
@@ -81,27 +75,27 @@ const BottomNav = () => {
 
   const circularButtons = [
     { 
-      label: t('bottom_nav.scan_food'), 
+      label: "Scan Food", 
       icon: Scan, 
       action: () => handleProtectedAction('food_scan', () => navigate("/scanner", { state: { mode: 'food' } }))
     },
     { 
-      label: t('bottom_nav.scan_menu'), 
+      label: "Scan Menu", 
       icon: FileText, 
       action: () => handleProtectedAction('food_scan', () => navigate("/scanner", { state: { mode: 'menu' } })) 
     },
     { 
-      label: t('bottom_nav.describe_food'), 
+      label: "Describe Food", 
       icon: Utensils, 
       action: () => handleProtectedAction('manual_food_scan', () => setIsManualFoodDrawerOpen(true)) 
     },
     { 
-      label: t('bottom_nav.recipes', 'Recetas'), 
+      label: "Recipes", 
       icon: ChefHat, 
       action: () => handleMenuAction(() => navigate("/recipes")) 
     },
     { 
-      label: t('bottom_nav.diet_types', 'Dietas'), 
+      label: "Diet Types", 
       icon: Book, 
       action: () => handleMenuAction(() => navigate("/diet-types"))
     },
@@ -116,10 +110,9 @@ const BottomNav = () => {
 
   const handleOpenWeight = () => {
     if (hasReachedDailyWeightUpdateLimit) {
-      toast.info(t('progress.weight_updated_today', 'Has alcanzado el límite diario de actualizaciones de peso.'));
+      toast.info("Weight updated today (Max 2/day)");
       return;
     }
-    // Weight is free now
     setIsMenuOpen(false);
     setIsWeightDrawerOpen(true);
   };
@@ -214,7 +207,7 @@ const BottomNav = () => {
                     <Scale className="w-4 h-4" />
                   </div>
                   <span className="text-[10px] font-semibold text-foreground text-center leading-tight">
-                    {hasReachedDailyWeightUpdateLimit ? t('progress.updated_today', 'Hoy OK') : t('bottom_nav.log_weight', 'Peso')}
+                    {hasReachedDailyWeightUpdateLimit ? "Today OK" : "Log Weight"}
                   </span>
                 </button>
 
@@ -226,7 +219,7 @@ const BottomNav = () => {
                     <Dumbbell className="w-4 h-4" />
                   </div>
                   <span className="text-[10px] font-semibold text-foreground text-center leading-tight">
-                    {t('bottom_nav.log_exercise', 'Ejercicio')}
+                    Log Exercise
                   </span>
                 </button>
 
@@ -238,7 +231,7 @@ const BottomNav = () => {
                     <Droplets className="w-4 h-4" />
                   </div>
                   <span className="text-[10px] font-semibold text-foreground text-center leading-tight">
-                    {t('bottom_nav.log_water', 'Agua')}
+                    Log Water
                   </span>
                 </button>
               </div>
@@ -250,7 +243,7 @@ const BottomNav = () => {
                   className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-muted/30 hover:bg-muted/50 text-muted-foreground font-medium transition-all active:scale-95 text-sm"
                 >
                   <ChevronDown className="w-4 h-4" />
-                  {t('analysis.close', 'Cerrar')}
+                  Close
                 </button>
               </div>
             </motion.div>
@@ -269,7 +262,7 @@ const BottomNav = () => {
                 "flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
                 isMenuOpen ? "bg-background text-foreground border-2 border-muted rotate-45" : "bg-primary text-primary-foreground"
               )}
-              aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú de acciones"}
+              aria-label={isMenuOpen ? "Close menu" : "Open actions menu"}
             >
               <Plus className="w-7 h-7" />
             </motion.button>
