@@ -29,11 +29,13 @@ serve(async (req) => {
   }
 
   try {
-    const { imageData, goal } = await req.json();
+    const { imageData, goal, language } = await req.json();
 
     if (!imageData) {
       throw new Error("Image data is required");
     }
+
+    const userLang = language && language.startsWith('es') ? 'Spanish' : 'English';
     
     let goalContext = "maintain a healthy weight";
     if (goal === 'lose_weight') goalContext = `lose weight`;
@@ -49,7 +51,7 @@ serve(async (req) => {
       3. Identify 1-2 options to AVOID.
       4. For each choice, provide a brief explanation. DO NOT calculate nutritional values.
       
-      Output Language: English.
+      Output Language: ${userLang}.
       Format: Return ONLY a valid JSON object. No markdown, no extra text.
       
       JSON Structure:

@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { entry_id, description, weight } = await req.json();
+    const { entry_id, description, weight, language } = await req.json();
     if (!entry_id || !description) {
       return new Response(JSON.stringify({ error: "entry_id and description are required" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -24,23 +24,25 @@ serve(async (req) => {
       });
     }
 
+    const userLang = language && language.startsWith('es') ? 'Español' : 'Inglés';
+
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
     const prompt = `
-      You are a fitness expert AI. Analyze the description of an exercise.
-      - Description: "${description}"
-      - Weight: ${weight ?? '70'} kg
+      Eres una IA experta en fitness. Analiza la descripción de un ejercicio.
+      - Descripción: "${description}"
+      - Peso: ${weight ?? '70'} kg
       
-      Rules:
-      1. Extract the name of the exercise (in English).
-      2. Extract the duration in minutes.
-      3. Estimate the calories burned.
-      4. Respond ONLY with valid JSON:
+      Reglas:
+      1. Extrae el nombre del ejercicio (en ${userLang}).
+      2. Extrae la duración en minutos.
+      3. Estima las calorías quemadas.
+      4. Responde SOLO JSON válido:
       {
-        "name": "Name in English",
+        "name": "Nombre en ${userLang}",
         "duration": number,
         "calories": number
       }

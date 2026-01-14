@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { Card, CardContent } from "@/components/ui/card";
 import { Leaf, ArrowRight } from "lucide-react";
 import { SignInForm } from '@/components/auth/SignInForm';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LanguageDrawer } from '@/components/settings/LanguageDrawer';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 
@@ -13,11 +15,13 @@ const PRIVACY_URL = "https://www.calorel.online/privacypolicy";
 type AuthView = 'welcome' | 'sign_in';
 
 export default function Login() {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [view, setView] = useState<AuthView>('welcome');
+  const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
 
-  // Redirect if already authenticated
+  // Redirigir si ya está autenticado
   useEffect(() => {
     if (user) {
       navigate('/', { replace: true });
@@ -32,9 +36,29 @@ export default function Login() {
     navigate('/onboarding');
   };
 
+  const currentLangCode = i18n.language.substring(0, 2).toUpperCase();
+  const currentFlag = i18n.language.startsWith('es') ? '/es-flag.png' : '/us-flag.png';
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-background p-4 relative overflow-hidden">
-      {/* Decorative background */}
+      {/* Botón de idioma flotante */}
+      <div className="absolute top-4 right-4 z-50">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => setIsLanguageDrawerOpen(true)} 
+          className="rounded-full shrink-0 gap-2 px-3 pl-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors border border-transparent hover:border-border"
+        >
+          <img 
+            src={currentFlag} 
+            alt={currentLangCode} 
+            className="w-5 h-5 rounded-full object-cover shadow-sm"
+          />
+          <span className="text-xs font-bold tracking-wide">{currentLangCode}</span>
+        </Button>
+      </div>
+
+      {/* Fondo decorativo sutil */}
       <div className="absolute top-[-20%] right-[-20%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-[-20%] left-[-20%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -57,10 +81,12 @@ export default function Login() {
                 
                 <div className="space-y-4">
                   <h1 className="text-4xl font-bold tracking-tight text-foreground">
-                    Welcome to <span className="text-primary font-black">Calorel</span>
+                    <Trans i18nKey="login.hello_calorel">
+                      Welcome to <span className="text-primary font-black">Calorel</span>
+                    </Trans>
                   </h1>
                   <p className="text-lg text-muted-foreground max-w-xs mx-auto leading-relaxed">
-                    Your health companion in one app.
+                    {t('login.tagline')}
                   </p>
                 </div>
               </div>
@@ -72,7 +98,7 @@ export default function Login() {
                     className="w-full h-14 text-lg rounded-2xl shadow-lg shadow-primary/20"
                     onClick={handleStartOnboarding}
                   >
-                    Start Now <ArrowRight className="ml-2 w-5 h-5" />
+                    {t('login.start_now')} <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                   <Button 
                     variant="ghost" 
@@ -80,32 +106,34 @@ export default function Login() {
                     className="w-full h-14 text-lg rounded-2xl hover:bg-transparent hover:text-primary"
                     onClick={() => setView('sign_in')}
                   >
-                    I already have an account
+                    {t('login.have_account')}
                   </Button>
                 </div>
 
                 <p className="text-center text-[10px] text-muted-foreground px-8 leading-tight opacity-70">
-                  By continuing, you agree to our{' '}
-                  <a
-                    href={TERMS_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary font-medium hover:underline cursor-pointer"
-                    onClick={(e) => { e.preventDefault(); openLink(TERMS_URL); }}
-                  >
-                    Terms of Service
-                  </a>
-                  {' '}and{' '}
-                  <a
-                    href={PRIVACY_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary font-medium hover:underline cursor-pointer"
-                    onClick={(e) => { e.preventDefault(); openLink(PRIVACY_URL); }}
-                  >
-                    Privacy Policy
-                  </a>
-                  .
+                  <Trans
+                    i18nKey="login.terms_privacy"
+                    components={{
+                      1: (
+                        <a
+                          href={TERMS_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary font-medium hover:underline cursor-pointer"
+                          onClick={(e) => { e.preventDefault(); openLink(TERMS_URL); }}
+                        />
+                      ),
+                      3: (
+                        <a
+                          href={PRIVACY_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary font-medium hover:underline cursor-pointer"
+                          onClick={(e) => { e.preventDefault(); openLink(PRIVACY_URL); }}
+                        />
+                      ),
+                    }}
+                  />
                 </p>
               </div>
             </motion.div>
@@ -131,13 +159,15 @@ export default function Login() {
                   onClick={() => setView('welcome')}
                   className="text-muted-foreground hover:text-foreground"
                 >
-                  Back to home
+                  {t('login.back_to_home')}
                 </Button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+      
+      <LanguageDrawer isOpen={isLanguageDrawerOpen} onClose={() => setIsLanguageDrawerOpen(false)} />
     </div>
   );
 }

@@ -1,7 +1,9 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { useTranslation } from 'react-i18next';
+import { LanguageDrawer } from '@/components/settings/LanguageDrawer';
 
 interface OnboardingLayoutProps {
   step: number;
@@ -30,7 +32,13 @@ export const OnboardingLayout = ({
   continueText,
   hideContinueButton = false,
 }: OnboardingLayoutProps) => {
+  const { t, i18n } = useTranslation();
+  const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const progressValue = (step / totalSteps) * 100;
+
+  // Obtener código de idioma actual y su bandera correspondiente
+  const currentLangCode = i18n.language.substring(0, 2).toUpperCase();
+  const currentFlag = i18n.language.startsWith('es') ? '/es-flag.png' : '/us-flag.png';
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -45,13 +53,25 @@ export const OnboardingLayout = ({
           )}
           <div className="flex-1">
             <p className="text-sm font-semibold text-primary">
-              Step {step} of {totalSteps}
+              {t('onboarding.step', { step, totalSteps })}
             </p>
             <Progress value={progressValue} className="mt-1 h-2" />
           </div>
           
-          {/* Placeholder for the language button to maintain layout */}
-          <div className="w-10 shrink-0" />
+          {/* Botón de idioma moderno con bandera PNG */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setIsLanguageDrawerOpen(true)} 
+            className="rounded-full shrink-0 gap-2 px-3 pl-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors border border-transparent hover:border-border"
+          >
+            <img 
+              src={currentFlag} 
+              alt={currentLangCode} 
+              className="w-5 h-5 rounded-full object-cover shadow-sm"
+            />
+            <span className="text-xs font-bold tracking-wide">{currentLangCode}</span>
+          </Button>
         </div>
       </header>
       <main className="flex flex-1 flex-col items-center justify-center p-4">
@@ -68,11 +88,13 @@ export const OnboardingLayout = ({
               onClick={onContinue}
               disabled={!canContinue || isPending}
             >
-              {continueText || 'Continue'}
+              {continueText || t('onboarding.continue')}
             </Button>
           )}
         </div>
       </main>
+      
+      <LanguageDrawer isOpen={isLanguageDrawerOpen} onClose={() => setIsLanguageDrawerOpen(false)} />
     </div>
   );
 };

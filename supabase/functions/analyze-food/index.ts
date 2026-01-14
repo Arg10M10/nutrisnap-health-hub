@@ -38,13 +38,15 @@ serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  const { entry_id, imageData } = await req.json();
+  const { entry_id, imageData, language } = await req.json();
   if (!entry_id || !imageData) {
     return new Response(JSON.stringify({ error: "entry_id and imageData are required." }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 400,
     });
   }
+
+  const userLang = language && language.startsWith('es') ? 'Español' : 'Inglés';
 
   const supabaseAdmin = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
@@ -54,22 +56,22 @@ serve(async (req) => {
   try {
     const base64Image = imageData.split(",")[1];
     const prompt = `
-      Analyze the image of this food dish and provide a complete nutritional estimate.
-      Respond ONLY with a JSON object.
-      IMPORTANT: All text must be in English.
+      Analiza la imagen de este plato de comida y proporciona una estimación nutricional completa.
+      Responde ÚNICA y EXCLUSIVAMENTE con un objeto JSON.
+      IMPORTANTE: Todos los textos deben estar en ${userLang}.
 
-      Required JSON structure:
+      Estructura JSON requerida:
       {
-        "foodName": "Name of the dish (in English)",
-        "calories": "Calorie estimate (e.g., '350-450 kcal')",
-        "protein": "Protein estimate (e.g., '20-25g')",
-        "carbs": "Carbohydrate estimate (e.g., '30-40g')",
-        "fats": "Fat estimate (e.g., '15-20g')",
-        "sugars": "Sugar estimate (e.g., '5-10g')",
-        "fiber": "Fiber estimate (e.g., '8-12g')",
-        "healthRating": "Classification ('Healthy', 'Moderate', 'Avoid')",
-        "reason": "Brief explanation (max 20 words, in English).",
-        "ingredients": ["Ingredient 1", "Ingredient 2"]
+        "foodName": "Nombre del plato (en ${userLang})",
+        "calories": "Estimación de calorías (ej. '350-450 kcal')",
+        "protein": "Estimación de proteínas (ej. '20-25g')",
+        "carbs": "Estimación de carbohidratos (ej. '30-40g')",
+        "fats": "Estimación de grasas (ej. '15-20g')",
+        "sugars": "Estimación de azúcares (ej. '5-10g')",
+        "fiber": "Estimación de fibra (ej. '8-12g')",
+        "healthRating": "Clasificación ('Saludable', 'Moderado', 'Evitar' - Traducido al ${userLang})",
+        "reason": "Breve explicación (máx 20 palabras, en ${userLang}).",
+        "ingredients": ["Ingrediente 1", "Ingrediente 2"]
       }
     `;
 
@@ -95,7 +97,7 @@ serve(async (req) => {
 
     if (!aiRes.ok) {
       const errorBody = await aiRes.text();
-      throw new Error(`Error in AI API: ${errorBody}`);
+      throw new Error(`Error en la API de IA: ${errorBody}`);
     }
 
     const aiData = await aiRes.json();
@@ -103,7 +105,7 @@ serve(async (req) => {
     const analysisResult = safeParseJson(jsonText);
 
     if (!analysisResult) {
-      throw new Error("The AI returned a response in an unexpected format.");
+      throw new Error("La IA devolvió una respuesta en un formato inesperado.");
     }
 
     const { error: updateError } = await supabaseAdmin
@@ -136,7 +138,7 @@ serve(async (req) => {
       status: 200,
     });
   } catch (error) {
-    console.error("Error in Edge function:", error);
+    console.error("Error en la función Edge:", error);
     await supabaseAdmin
       .from('food_entries')
       .update({ status: 'failed', reason: (error as Error).message })

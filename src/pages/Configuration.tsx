@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
 import {
-  SlidersHorizontal, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette, HelpCircle, LayoutDashboard, Check
+  SlidersHorizontal, Languages, Lightbulb, Mail, FileText, Shield, LogOut, Trash2, Loader2, Bell, AlertTriangle, ArrowLeft, HeartPulse, Target, Goal, Palette, HelpCircle, LayoutDashboard, Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import PageLayout from "@/components/PageLayout";
 import { SettingsCategory } from "@/components/settings/SettingsCategory";
 import { SettingsItem } from "@/components/settings/SettingsItem";
+import { LanguageDrawer } from "@/components/settings/LanguageDrawer";
 import {
   Drawer,
   DrawerContent,
@@ -30,6 +31,7 @@ const TIKTOK_URL = "https://www.tiktok.com/@calorel.app?_r=1&_t=ZS-920XYSQSag5";
 
 const Configuration = () => {
   const { signOut, profile } = useAuth();
+  const [isLanguageDrawerOpen, setIsLanguageDrawerOpen] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
   const [isWidgetHelpOpen, setIsWidgetHelpOpen] = useState(false);
   const navigate = useNavigate();
@@ -111,6 +113,7 @@ const Configuration = () => {
           <SettingsItem icon={<HeartPulse size={20} />} label={t('settings.account.personalDetails')} onClick={() => navigate('/settings/personal-details')} />
           <SettingsItem icon={<SlidersHorizontal size={20} />} label={t('settings.account.preferences')} onClick={() => navigate('/settings/preferences')} />
           <SettingsItem icon={<Bell size={20} />} label={t('settings.account.reminders')} onClick={() => navigate('/settings/reminders')} />
+          <SettingsItem icon={<Languages size={20} />} label={t('settings.language')} onClick={() => setIsLanguageDrawerOpen(true)} />
         </SettingsCategory>
 
         {/* WIDGET PREVIEW SECTION */}
@@ -224,6 +227,7 @@ const Configuration = () => {
         </SettingsCategory>
 
       </div>
+      <LanguageDrawer isOpen={isLanguageDrawerOpen} onClose={() => setIsLanguageDrawerOpen(false)} />
       
       {/* Widget Instructions Drawer */}
       <Drawer open={isWidgetHelpOpen} onOpenChange={setIsWidgetHelpOpen}>
