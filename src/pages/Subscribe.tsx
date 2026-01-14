@@ -106,7 +106,7 @@ const Subscribe = () => {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="absolute top-4 left-4 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors z-50"
+        className="absolute top-12 left-4 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors z-50"
         onClick={handleSkip}
       >
         <X className="w-6 h-6" />
