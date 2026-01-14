@@ -14,7 +14,8 @@
     "ai_limit_daily_desc": "You have reached the daily limit of {{limit}} uses for this feature. Please come back tomorrow to continue.",
     "ai_limit_weekly_desc": "You have reached the weekly limit of {{limit}} uses for this feature. Please come back next week to continue.",
     "add": "Add",
-    "deleted_success": "Deleted successfully"
+    "deleted_success": "Deleted successfully",
+    "saved": "Saved successfully"
   },
   "water": {
     "remaining": "Remaining",
@@ -383,6 +384,14 @@
       "objective": "Improve cardiovascular health and long-term general well-being.",
       "ideal_for_1": "People looking for a healthy and sustainable diet.",
       "ideal_for_2": "Users focused on prevention and general health."
+    },
+    "dash": {
+      "name": "DASH Diet",
+      "short_desc": "Balanced nutrition to stop hypertension.",
+      "description": "Prioritizes nutritional balance and sodium control to support cardiovascular health.",
+      "objective": "Improve blood pressure and heart health.",
+      "ideal_for_1": "People focusing on cardiovascular health.",
+      "ideal_for_2": "Users looking for a preventive and controlled diet."
     }
   },
   "recipes": {
@@ -1023,8 +1032,8 @@
     "weight_progress_no_data": "Not enough data to display the chart.",
     "weight_progress_start_logging": "Log your weight regularly to see your progress.",
     "chart_all": "ALL",
-    "1y": "1A",
-    "calorie_intake": "Ingesta Calórica",
+    "1y": "1Y",
+    "calorie_intake": "Calorie Intake",
     "last_7_days": "Last 7 days",
     "weight_goal": "Weight Goal",
     "current_weight": "Current Weight",
@@ -1039,7 +1048,7 @@
     "healthy": "Healthy",
     "overweight": "Overweight",
     "obesity": "Obesity",
-    "incomplete_data": "Complete tu altura y peso en ajustes para calcular tu IMC.",
+    "incomplete_data": "Complete your height and weight in settings to calculate BMI.",
     "tooltip": "The Body Mass Index (BMI) is a measure used to screen for weight categories that may lead to health problems. It is calculated by dividing weight by the square of the height. It is an estimate and should not be used as the sole indicator of health."
   },
   "edit_weight": {
@@ -1099,7 +1108,7 @@
     "generated_with": "Generated with Calorel",
     "prot_short": "Prot.",
     "carb_short": "Carbs",
-    "fat_short": "Grasas"
+    "fat_short": "Fats"
   },
   "diets": {
     "title": "Weekly Plan",
@@ -1276,7 +1285,8 @@
     "goal_gain": "Gain Weight",
     "experience_several": "Used several apps",
     "experience_one_or_two": "Used one or two apps",
-    "experience_first_time": "First time using an app"
+    "experience_first_time": "First time using an app",
+    "save_success": "{{field}} saved successfully"
   },
   "preferences": {
     "title": "Preferences",
@@ -1361,9 +1371,6 @@
     "toast_success": "Feature request submitted successfully!",
     "toast_error": "Failed to submit request."
   },
-  "language_drawer": {
-    "title": "Select Language"
-  },
   "toasts": {
     "coming_soon_title": "Coming Soon",
     "coming_soon_desc": "This feature is currently in development.",
@@ -1383,676 +1390,15 @@
     "profile_title": "Your Profile",
     "profile_content": "The Profile tab is your personal space. Here you can edit your details, manage goals, and configure app settings.",
     "finish": "Finish",
-    "next": "Siguiente"
-  },
-  "notifications": {
-    "title": "Stay Consistent",
-    "description": "Turn on notifications to get reminders for meals, hydration, and weight checks. It helps you stay on track!",
-    "enable_button": "Enable Notifications",
-    "skip_button": "Maybe Later",
-    "breakfast_title": "Good Morning",
-    "breakfast_body": "Start your day by logging your breakfast.",
-    "food_title": "Lunch Time",
-    "food_body_1": "What's for lunch? Log it now.",
-    "dinner_title_1": "Dinner Time",
-    "dinner_body_1": "Don't forget to log your last meal.",
-    "snack_title": "Snack Time",
-    "snack_body": "Quick break, log your snack.",
-    "water_title_1": "Hydration",
-    "water_body_1": "Your body needs water. Drink a glass!",
-    "water_title_2": "Healthy Habit",
-    "water_body_2": "Stay hydrated for better results.",
-    "weight_title_1": "Weight Control",
-    "weight_body_1": "Update your weight today to see your progress."
-  },
-  "subscribe": {
-    "title": "Unlock Your Full Potential",
-    "subtitle": "Get all premium features to reach your goals faster.",
-    "best_value": "Best Value - Save 67%",
-    "month_short": "mo",
-    "billed_yearly": "{{price}} billed yearly",
-    "billed_yearly_simple": "billed today",
-    "no_charge_text": "No charge for 3 days. Cancel anytime.",
-    "immediate_charge_text": "You will be charged immediately.",
-    "continue_limited": "Continue with limited version",
-    "success_toast": "Premium plan activated!",
-    "trial_started": "3-Day Trial Started!",
-    "enable_trial": "Enable 3-Day Free Trial",
-    "enable_trial_desc": "Try it free before you pay",
-    "plan_free": "Free",
-    "plan_premium": "Premium",
-    "timeline": {
-      "today_title": "Today: Start Free Trial",
-      "today_desc": "Access all premium features immediately.",
-      "reminder_title": "Day 2: Reminder",
-      "reminder_desc": "We will send you a reminder before the trial ends.",
-      "billing_title": "Day 3: Billing Starts",
-      "billing_desc": "If you don't cancel, the subscription will begin."
-    },
-    "features_title": "Premium Features Included:",
-    "features": {
-      "scanner": "AI Food Scanner (Unlimited)",
-      "exercise": "AI Exercise Analysis (Unlimited)",
-      "diet_plans": "Personalized Weekly Diet Plans",
-      "goals": "Advanced Goal Tracking & Suggestions",
-      "menu_analysis": "Restaurant Menu Analysis",
-      "tracking": "Weight & Water Tracking"
-    },
-    "plan": {
-      "title": "Select Plan",
-      "annual": "Annual",
-      "monthly": "Monthly",
-      "price_suffix": "/month",
-      "trial_note": "Free for 3 days."
-    },
-    "buttons": {
-      "start_trial": "Start 3-Day Free Trial",
-      "unlock_now": "Unlock Now",
-      "pay_now": "Pay {{price}} Now",
-      "no_payment_note": "No charge for the first 3 days."
-    }
-  },
-  "subscription_success": {
-    "title_trial": "Congratulations!",
-    "subtitle_trial": "Your 3-Day Free Trial has started.",
-    "desc_trial": "You have unlimited access to all Premium features. Make the most of it!",
-    "title_annual": "Great Choice!",
-    "subtitle_annual": "You have activated the Annual Plan.",
-    "desc_annual": "Thank you for committing to your long-term health. We are here to support you.",
-    "title_monthly": "You're All Set!",
-    "subtitle_monthly": "You have activated the Monthly Plan.",
-    "desc_monthly": "Thank you for trusting Calorel. Let's reach those goals together!",
-    "button": "Start Now"
+    "next": "Next"
   },
   "widgets": {
     "title": "Widgets",
-    "preview_title": "Your progress at home",
     "how_to_add": "How to add?",
     "instructions_title": "Add Widget to Home",
     "step_1": "Go to your phone's home screen.",
     "step_2": "Long press on an empty space.",
     "step_3": "Select 'Widgets'.",
-    "step_4": "Search for 'Calorel' and drag the widget.",
-    "preview": "Vista Previa",
-    "adaptive_note": "El widget se adapta automáticamente al modo claro u oscuro de tu teléfono."
-  },
-  "bottom_nav": {
-    "home": "Home",
-    "settings": "Profile",
-    "profile": "Profile",
-    "progress": "Progress",
-    "diets": "Weekly Plan",
-    "log_title": "Log Activity",
-    "scan_food": "Scan Food",
-    "scan_menu": "Scan Menu",
-    "describe_food": "Describe Food",
-    "log_exercise": "Log Exercise",
-    "log_weight": "Log Weight",
-    "log_water": "Log Water",
-    "recipes": "Recipes",
-    "diets_label": "Weekly Plan",
-    "diet_types": "Diet Types"
-  },
-  "diet_list": {
-    "title": "Premium Diets",
-    "subtitle": "Find the perfect eating style for your goals.",
-    "view_diet": "View Diet",
-    "objective": "OBJECTIVE",
-    "ideal_for": "IDEAL FOR",
-    "not_recommended_for": "NOT RECOMMENDED FOR",
-    "target_macros": "TARGET MACROS"
-  },
-  "diet_types_data": {
-    "high_protein": {
-      "name": "High Protein",
-      "short_desc": "Boost protein intake to gain muscle and lose fat.",
-      "description": "A nutritional plan focused on increasing the proportion of protein within daily intake to promote muscle mass preservation, improve satiety, and support body fat reduction while maintaining an adequate caloric balance.",
-      "objective": "Prioritize protein consumption within a balanced diet without completely eliminating carbohydrates or fats.",
-      "ideal_for_1": "People looking to lose fat without losing muscle mass.",
-      "ideal_for_2": "Users who perform physical activity or strength training.",
-      "ideal_for_3": "People who want better appetite control.",
-      "not_recommended_for_1": "People with medical restrictions related to high protein diets.",
-      "not_recommended_for_2": "People following a strictly vegan diet."
-    },
-    "keto": {
-      "name": "Keto Diet",
-      "short_desc": "High fat, low carb.",
-      "description": "Drastically reduces carbohydrates and increases fat consumption so the body uses fat as the main energy source.",
-      "objective": "Induce a metabolic state that favors fat burning.",
-      "ideal_for_1": "Users experienced in nutritional control.",
-      "ideal_for_2": "People looking for quick results under control.",
-      "not_recommended_for_1": "People with liver or kidney issues.",
-      "not_recommended_for_2": "Pregnant or breastfeeding women."
-    },
-    "vegetarian": {
-      "name": "Vegetarian",
-      "short_desc": "Eliminates meat, includes eggs and dairy.",
-      "description": "Eliminates meat consumption but allows foods like eggs and dairy, basing the diet mainly on plant sources.",
-      "objective": "Reduce meat consumption while maintaining balanced nutrition.",
-      "ideal_for_1": "People who do not consume meat.",
-      "ideal_for_2": "Users looking for a lighter and more sustainable diet."
-    },
-    "mediterranean": {
-      "name": "Mediterranean",
-      "short_desc": "Fresh foods and healthy fats.",
-      "description": "Based on fresh foods, healthy fats, and low consumption of ultra-processed foods, emphasizing nutritional quality.",
-      "objective": "Improve cardiovascular health and long-term general well-being.",
-      "ideal_for_1": "People looking for a healthy and sustainable diet.",
-      "ideal_for_2": "Users focused on prevention and general health."
-    }
-  },
-  "recipes": {
-    "title": "Recipes",
-    "coming_soon": "Coming soon...",
-    "recipes_disclaimer": "Note: All nutritional values are approximations and not exact.",
-    "like_question": "Did you like this recipe?",
-    "liked_text": "Glad you liked it!",
-    "like_count": "{{count}} people recommend this",
-    "feedback_thanks": "Thanks for your feedback!",
-    "categories": {
-        "lunch_dinner": "Lunch / Dinner",
-        "snack_breakfast": "Snack / Breakfast",
-        "breakfast": "Breakfast"
-    },
-    "yogurt_fruits_granola": {
-      "name": "Yogurt with Fruit and Granola",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "yogurt": "Non-fat plain yogurt",
-        "strawberries": "Strawberries",
-        "banana": "Banana",
-        "granola": "Granola",
-        "honey": "Honey (optional)"
-      },
-      "instructions": [
-        "Cut the fruit into small pieces.",
-        "Mix the yogurt with the fruit.",
-        "Sprinkle the granola on top.",
-        "Add honey if desired and serve."
-      ]
-    },
-    "spaghetti_bolognese": {
-      "name": "Spaghetti Bolognese",
-      "ingredients": "Ingredients",
-      "steps": "Instructions",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "spaghetti": "Spaghetti",
-        "ground_beef": "Ground Beef (10–15% fat)",
-        "tomato_sauce": "Crushed tomatoes or natural tomato sauce",
-        "onion": "Onion",
-        "garlic": "Clove of garlic",
-        "olive_oil": "Olive oil",
-        "salt": "Salt",
-        "pepper": "Pepper",
-        "herbs": "Oregano or basil"
-      },
-      "instructions": [
-        "Boil salted water and cook spaghetti according to package instructions (8–10 minutes). Drain.",
-        "Heat oil in a pan and sauté chopped onion and garlic for 2–3 minutes.",
-        "Add ground beef and cook until browned.",
-        "Add crushed tomatoes, salt, pepper, and herbs. Simmer for 10–15 minutes.",
-        "Mix pasta with sauce or serve sauce over spaghetti."
-      ]
-    },
-    "grilled_chicken_rice": {
-      "name": "Grilled Chicken with Rice and Salad",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "chicken_breast": "Chicken breast",
-        "white_rice": "Uncooked white rice",
-        "lettuce": "Lettuce",
-        "tomato": "Tomato",
-        "olive_oil": "Olive oil",
-        "salt": "Salt",
-        "pepper": "Pepper",
-        "lemon_juice": "Lemon juice"
-      },
-      "instructions": [
-        "Cook the rice in salted water for 15–18 minutes. Drain.",
-        "Season the chicken breast with salt and pepper.",
-        "Heat a pan or griddle with 5 g of oil and cook the chicken for 5–6 minutes per side until well cooked.",
-        "Chop the lettuce and tomato, mix and dress with lemon juice and the remaining 5 g of oil.",
-        "Serve the chicken alongside the rice and salad."
-      ]
-    },
-    "grilled_chicken_tacos": {
-      "name": "Grilled Chicken Tacos",
-      "ingredients": "Ingredients",
-      "steps": "Instructions",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "chicken_breast": "Chicken breast",
-        "corn_tortillas": "Corn tortillas",
-        "lettuce": "Lettuce",
-        "tomato": "Tomato",
-        "olive_oil": "Olive oil",
-        "salt": "Salt",
-        "pepper": "Pepper"
-      },
-      "instructions": [
-        "Cook the chicken in a pan with oil, salt, and pepper for 5–6 minutes per side.",
-        "Heat the tortillas.",
-        "Chop tomato and lettuce.",
-        "Fill the tortillas with chicken and vegetables.",
-        "Serve immediately."
-      ]
-    },
-    "blueberry_almond_smoothie": {
-      "name": "Blueberry Almond Smoothie",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "blueberries": "Fresh blueberries",
-        "almond_milk": "Unsweetened almond milk",
-        "almonds": "Raw almonds",
-        "yogurt": "Non-fat plain yogurt",
-        "honey": "Honey (optional)"
-      },
-      "instructions": [
-        "Place blueberries, almond milk, almonds, and yogurt in a blender.",
-        "Blend for 30–45 seconds until smooth.",
-        "Taste and add honey if more sweetness is desired. Blend for a few more seconds.",
-        "Serve immediately."
-      ]
-    },
-    "mango_oat_smoothie": {
-      "name": "Mango Oat Smoothie",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "mango": "Mango",
-        "milk": "Skim or plant-based milk",
-        "oats": "Rolled oats",
-        "honey": "Honey (optional)"
-      },
-      "instructions": [
-        "Place all ingredients in the blender.",
-        "Blend for 30–45 seconds until smooth.",
-        "Serve immediately."
-      ]
-    },
-    "oats_banana_peanut": {
-      "name": "Oatmeal with Banana & Peanut Butter",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "oats": "Rolled oats",
-        "milk": "Milk (or plant-based)",
-        "banana": "Banana",
-        "peanut_butter": "Peanut butter",
-        "cinnamon": "Cinnamon"
-      },
-      "instructions": [
-        "In a small pot, mix the oats with the milk.",
-        "Cook over medium heat for 5-7 minutes until thickened.",
-        "Mash half the banana and add it along with cinnamon to the oats. Mix well.",
-        "Serve in a bowl and top with the rest of the sliced banana and peanut butter."
-      ]
-    },
-    "chicken_curry": {
-      "name": "Chicken Curry with Rice",
-      "ingredients": "Ingredients",
-      "steps": "Instructions",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "chicken_breast": "Chicken breast",
-        "white_rice": "Uncooked white rice",
-        "coconut_milk_light": "Light coconut milk",
-        "onion": "Onion",
-        "garlic": "Clove of garlic",
-        "olive_oil": "Olive oil",
-        "curry_powder": "Curry powder",
-        "salt": "Salt",
-        "pepper": "Pepper"
-      },
-      "instructions": [
-        "Cook the rice in salted water for 15–18 minutes. Drain.",
-        "In a pan, heat oil and sauté onion and garlic for 2–3 minutes.",
-        "Add chicken and cook until browned.",
-        "Add coconut milk and curry, cook for 10 minutes more.",
-        "Serve the chicken over the rice."
-      ]
-    },
-    "tuna_quinoa_salad": {
-      "name": "Tuna and Quinoa Salad",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "tuna_water": "Tuna in water",
-        "cooked_quinoa": "Cooked quinoa",
-        "tomato": "Tomato",
-        "cucumber": "Cucumber",
-        "olive_oil": "Olive oil",
-        "lemon_juice": "Lemon juice",
-        "salt": "Salt",
-        "pepper": "Pimienta"
-      },
-      "instructions": [
-        "Cook quinoa according to package instructions and drain.",
-        "Mix chopped tuna, tomato, and cucumber.",
-        "Add quinoa, oil, lemon juice, salt, and pepper.",
-        "Toss and serve."
-      ]
-    },
-    "spinach_cheese_omelette": {
-      "name": "Spinach and Cheese Omelette",
-      "ingredients": "Ingredients",
-      "steps": "Instructions",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "eggs": "Eggs (100g)",
-        "spinach": "Fresh spinach",
-        "low_fat_cheese": "Low fat grated cheese",
-        "olive_oil": "Olive oil",
-        "salt": "Salt",
-        "pepper": "Pimienta"
-      },
-      "instructions": [
-        "Beat the eggs with salt and pepper.",
-        "Heat oil in a pan and add spinach for 1–2 minutes.",
-        "Add the eggs and cook for 2–3 minutes.",
-        "Add cheese, fold the omelette and serve."
-      ]
-    },
-    "baked_salmon_vegetables": {
-      "name": "Baked Salmon with Vegetables",
-      "ingredients": "Ingredients",
-      "steps": "Instructions",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "salmon_fillet": "Salmon fillet",
-        "broccoli": "Broccoli",
-        "carrot": "Carrot",
-        "olive_oil": "Olive oil",
-        "lemon_juice": "Lemon juice",
-        "salt": "Salt",
-        "pepper": "Pepper"
-      },
-      "instructions": [
-        "Preheat the oven to 180 °C (350 °F).",
-        "Place the salmon and vegetables on a baking tray.",
-        "Add olive oil, lemon juice, salt, and pepper.",
-        "Bake for 20–25 minutes.",
-        "Serve hot."
-      ]
-    },
-    "lentil_stew": {
-      "name": "Stewed Lentils with Vegetables",
-      "ingredients": "Ingredients",
-      "steps": "Instructions",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "cooked_lentils": "Cooked lentils",
-        "carrot": "Carrot",
-        "bell_pepper": "Bell pepper",
-        "onion": "Onion",
-        "olive_oil": "Olive oil",
-        "salt": "Salt",
-        "pepper": "Pepper",
-        "cumin": "Cumin"
-      },
-      "instructions": [
-        "Sauté onion, carrot, and pepper in oil for 5 minutes.",
-        "Add the lentils and spices.",
-        "Cook over medium heat for 10–15 minutes.",
-        "Serve hot."
-      ]
-    },
-    "turkey_mashed_potatoes": {
-      "name": "Turkey Breast with Mashed Potatoes",
-      "ingredients": "Ingredients",
-      "steps": "Instructions",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "turkey_breast": "Turkey breast",
-        "potato": "Potato",
-        "skim_milk": "Skim milk",
-        "olive_oil": "Olive oil",
-        "salt": "Salt",
-        "pepper": "Pepper"
-      },
-      "instructions": [
-        "Boil the potato until soft and mash with milk.",
-        "Grill the turkey with oil, salt, and pepper.",
-        "Serve the turkey with the mashed potatoes."
-      ]
-    },
-    "brown_rice_eggs": {
-      "name": "Brown Rice with Eggs and Vegetables",
-      "ingredients": "Ingredients",
-      "steps": "Instructions",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "cooked_brown_rice": "Cooked brown rice",
-        "eggs": "Eggs",
-        "spinach": "Spinach",
-        "olive_oil": "Olive oil",
-        "salt": "Salt",
-        "pepper": "Pepper"
-      },
-      "instructions": [
-        "Sauté spinach with oil for 1-2 minutes.",
-        "Add eggs and cook to taste.",
-        "Serve with brown rice."
-      ]
-    },
-    "chicken_wrap": {
-      "name": "Whole Wheat Chicken and Vegetable Wrap",
-      "ingredients": "Ingredients",
-      "steps": "Instructions",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "whole_wheat_tortilla": "Whole wheat tortilla",
-        "chicken_breast": "Chicken breast",
-        "lettuce": "Lettuce",
-        "tomato": "Tomato",
-        "yogurt": "Non-fat plain yogurt",
-        "salt": "Salt",
-        "pepper": "Pepper"
-      },
-      "instructions": [
-        "Grill chicken with salt and pepper.",
-        "Mix yogurt with salt for sauce.",
-        "Fill tortilla with chicken, vegetables and sauce.",
-        "Roll and serve."
-      ]
-    },
-    "chicken_rice_bowl": {
-      "name": "Chicken & Brown Rice Bowl",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "chicken_breast": "Chicken breast",
-        "cooked_brown_rice": "Cooked brown rice",
-        "broccoli": "Broccoli",
-        "olive_oil": "Olive oil",
-        "salt": "Salt",
-        "pepper": "Pepper"
-      },
-      "instructions": [
-        "Grill the chicken breast.",
-        "Sauté the broccoli with olive oil.",
-        "Serve everything together with the rice."
-      ]
-    },
-    "fish_potato": {
-      "name": "Fish Fillet with Boiled Potato",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "white_fish": "White fish fillet",
-        "potato": "Potato",
-        "olive_oil": "Olive oil",
-        "lemon_juice": "Lemon",
-        "salt": "Salt",
-        "pepper": "Pepper"
-      },
-      "instructions": [
-        "Boil the potato.",
-        "Cook the fish on a griddle or pan.",
-        "Serve with lemon."
-      ]
-    },
-    "whole_wheat_pasta": {
-      "name": "Whole Wheat Pasta with Veggies",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "raw_whole_pasta": "Uncooked whole wheat pasta",
-        "zucchini": "Zucchini",
-        "bell_pepper": "Bell pepper",
-        "olive_oil": "Olive oil",
-        "salt": "Salt",
-        "herbs": "Spices"
-      },
-      "instructions": [
-        "Cook the pasta.",
-        "Sauté the vegetables.",
-        "Mix and serve."
-      ]
-    },
-    "beef_salad": {
-      "name": "Lean Beef with Mixed Salad",
-      "ingredients": "Ingredients",
-      "steps": "Steps",
-      "nutritional_info": "Nutritional Info",
-      "per_serving": "Per serving",
-      "time_total": "Total time",
-      "minutes": "minutes",
-      "to_taste": "to taste",
-      "add_to_log": "Add to Diary",
-      "portions": "Portions",
-      "list": {
-        "lean_beef": "Lean beef",
-        "lettuce": "Lettuce",
-        "tomato": "Tomato",
-        "olive_oil": "Olive oil"
-      },
-      "instructions": [
-        "Grill the beef.",
-        "Prepare the salad.",
-        "Serve together."
-      ]
-    }
+    "step_4": "Search for 'Calorel' and drag the widget."
   }
 }

@@ -107,5 +107,25 @@ export const diets: Diet[] = [
     image: "/diets/mediterranean.jpg",
     icon: "🫒",
     textColor: 'light'
+  },
+  {
+    id: "dash",
+    nameKey: "diet_types_data.dash.name",
+    shortDescKey: "diet_types_data.dash.short_desc",
+    descriptionKey: "diet_types_data.dash.description",
+    objectiveKey: "diet_types_data.dash.objective",
+    idealForKeys: [
+      "diet_types_data.dash.ideal_for_1",
+      "diet_types_data.dash.ideal_for_2"
+    ],
+    notRecommendedForKeys: [],
+    macros: {
+      protein: "18–22 %",
+      carbs: "50–55 %",
+      fats: "25–30 %"
+    },
+    image: "/diets/dash.webp",
+    icon: "❤️",
+    textColor: 'light'
   }
 ];
