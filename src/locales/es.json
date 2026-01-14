@@ -389,14 +389,6 @@
       "objective": "Mejorar la salud cardiovascular y el bienestar general a largo plazo.",
       "ideal_for_1": "Personas que buscan una dieta saludable y sostenible.",
       "ideal_for_2": "Usuarios enfocados en prevención y salud general."
-    },
-    "dash": {
-      "name": "DIETA: DASH",
-      "short_desc": "Equilibrio nutricional para la salud del corazón.",
-      "description": "Prioriza el equilibrio nutricional y el control del sodio para apoyar la salud cardiovascular.",
-      "objective": "Mejorar la presión arterial y la salud del corazón.",
-      "ideal_for_1": "Personas con enfoque en salud cardiovascular.",
-      "ideal_for_2": "Usuarios que buscan una dieta preventiva y controlada."
     }
   },
   "recipes": {
@@ -802,7 +794,7 @@
         "whole_wheat_tortilla": "Tortilla de trigo integral",
         "chicken_breast": "Pechuga de pollo",
         "lettuce": "Lechuga",
-        "tomato": "Tomato",
+        "tomato": "Tomate",
         "yogurt": "Yogur natural descremado",
         "salt": "Sal",
         "pepper": "Pimienta"
