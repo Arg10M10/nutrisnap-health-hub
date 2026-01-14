@@ -347,22 +347,6 @@
       "ideal_for_2": "Personas que buscan resultados rápidos bajo control.",
       "not_recommended_for_1": "Personas con problemas hepáticos o renales.",
       "not_recommended_for_2": "Mujeres embarazadas o en lactancia."
-    },
-    "vegetarian": {
-      "name": "Dieta Vegetariana",
-      "short_desc": "Sin carne, rica en vegetales y lácteos.",
-      "description": "Elimina el consumo de carne, pero permite alimentos como huevos y lácteos, basando la alimentación principalmente en fuentes vegetales.",
-      "objective": "Reducir el consumo de carne manteniendo una nutrición equilibrada.",
-      "ideal_for_1": "Personas que no consumen carne.",
-      "ideal_for_2": "Usuarios que buscan una alimentación más ligera y sostenible."
-    },
-    "mediterranean": {
-      "name": "Dieta Mediterránea",
-      "short_desc": "Alimentos frescos y grasas saludables.",
-      "description": "Se basa en alimentos frescos, grasas saludables y bajo consumo de ultraprocesados, con énfasis en la calidad nutricional.",
-      "objective": "Mejorar la salud cardiovascular y el bienestar general a largo plazo.",
-      "ideal_for_1": "Personas que buscan una dieta saludable y sostenible.",
-      "ideal_for_2": "Usuarios enfocados en prevención y salud general."
     }
   }
 }

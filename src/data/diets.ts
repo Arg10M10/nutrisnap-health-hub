@@ -67,45 +67,5 @@ export const diets: Diet[] = [
     image: "/diets/keto.webp",
     icon: "🥑",
     textColor: 'light'
-  },
-  {
-    id: "vegetarian",
-    nameKey: "diet_types_data.vegetarian.name",
-    shortDescKey: "diet_types_data.vegetarian.short_desc",
-    descriptionKey: "diet_types_data.vegetarian.description",
-    objectiveKey: "diet_types_data.vegetarian.objective",
-    idealForKeys: [
-      "diet_types_data.vegetarian.ideal_for_1",
-      "diet_types_data.vegetarian.ideal_for_2"
-    ],
-    notRecommendedForKeys: [],
-    macros: {
-      protein: "15–20 %",
-      carbs: "50–55 %",
-      fats: "25–30 %"
-    },
-    image: "/diets/vegetarian.jpg",
-    icon: "🥗",
-    textColor: 'light'
-  },
-  {
-    id: "mediterranean",
-    nameKey: "diet_types_data.mediterranean.name",
-    shortDescKey: "diet_types_data.mediterranean.short_desc",
-    descriptionKey: "diet_types_data.mediterranean.description",
-    objectiveKey: "diet_types_data.mediterranean.objective",
-    idealForKeys: [
-      "diet_types_data.mediterranean.ideal_for_1",
-      "diet_types_data.mediterranean.ideal_for_2"
-    ],
-    notRecommendedForKeys: [],
-    macros: {
-      protein: "15–20 %",
-      carbs: "45–50 %",
-      fats: "35–40 %"
-    },
-    image: "/diets/mediterranean.jpg",
-    icon: "🌊",
-    textColor: 'light'
   }
 ];
