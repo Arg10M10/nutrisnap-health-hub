@@ -44,6 +44,28 @@ export const diets: Diet[] = [
     image: "/diets/high-protein.jpg",
     icon: "💪",
     textColor: 'light'
+  },
+  {
+    id: "keto",
+    nameKey: "diet_types_data.keto.name",
+    shortDescKey: "diet_types_data.keto.short_desc",
+    descriptionKey: "diet_types_data.keto.description",
+    objectiveKey: "diet_types_data.keto.objective",
+    idealForKeys: [
+      "diet_types_data.keto.ideal_for_1",
+      "diet_types_data.keto.ideal_for_2"
+    ],
+    notRecommendedForKeys: [
+      "diet_types_data.keto.not_recommended_for_1",
+      "diet_types_data.keto.not_recommended_for_2"
+    ],
+    macros: {
+      protein: "20–25 %",
+      carbs: "5–10 %",
+      fats: "70–75 %"
+    },
+    image: "/diets/keto.webp",
+    icon: "🥑",
+    textColor: 'light'
   }
-  // Future diets can be added here
 ];

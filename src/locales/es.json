@@ -337,6 +337,16 @@
       "ideal_for_3": "Personas que desean mayor control del apetito.",
       "not_recommended_for_1": "Personas con restricciones médicas relacionadas con dietas altas en proteína.",
       "not_recommended_for_2": "Personas que siguen una alimentación estrictamente vegana."
+    },
+    "keto": {
+      "name": "Dieta Keto",
+      "short_desc": "Alta en grasas, baja en carbohidratos.",
+      "description": "Reduce de forma drástica los carbohidratos y aumenta el consumo de grasas para que el cuerpo utilice la grasa como principal fuente de energía.",
+      "objective": "Inducir un estado metabólico que favorezca la quema de grasa.",
+      "ideal_for_1": "Usuarios con experiencia en control nutricional.",
+      "ideal_for_2": "Personas que buscan resultados rápidos bajo control.",
+      "not_recommended_for_1": "Personas con problemas hepáticos o renales.",
+      "not_recommended_for_2": "Mujeres embarazadas o en lactancia."
     }
   }
 }

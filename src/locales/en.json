@@ -357,6 +357,16 @@
       "ideal_for_3": "People who want better appetite control.",
       "not_recommended_for_1": "People with medical restrictions related to high protein diets.",
       "not_recommended_for_2": "People following a strictly vegan diet."
+    },
+    "keto": {
+      "name": "Keto Diet",
+      "short_desc": "High fat, low carb.",
+      "description": "Drastically reduces carbohydrates and increases fat consumption so the body uses fat as the main energy source.",
+      "objective": "Induce a metabolic state that favors fat burning.",
+      "ideal_for_1": "Users experienced in nutritional control.",
+      "ideal_for_2": "People looking for quick results under control.",
+      "not_recommended_for_1": "People with liver or kidney issues.",
+      "not_recommended_for_2": "Pregnant or breastfeeding women."
     }
   },
   "recipes": {
@@ -1484,6 +1494,16 @@
       "ideal_for_3": "People who want better appetite control.",
       "not_recommended_for_1": "People with medical restrictions related to high protein diets.",
       "not_recommended_for_2": "People following a strictly vegan diet."
+    },
+    "keto": {
+      "name": "Keto Diet",
+      "short_desc": "High fat, low carb.",
+      "description": "Drastically reduces carbohydrates and increases fat consumption so the body uses fat as the main energy source.",
+      "objective": "Induce a metabolic state that favors fat burning.",
+      "ideal_for_1": "Users experienced in nutritional control.",
+      "ideal_for_2": "People looking for quick results under control.",
+      "not_recommended_for_1": "People with liver or kidney issues.",
+      "not_recommended_for_2": "Pregnant or breastfeeding women."
     }
   }
 }
