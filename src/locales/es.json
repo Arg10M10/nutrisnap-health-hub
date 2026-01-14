@@ -14,7 +14,31 @@
     "ai_limit_daily_desc": "Has alcanzado el límite de {{limit}} usos diarios para esta función. Vuelve mañana para continuar.",
     "ai_limit_weekly_desc": "Has alcanzado el límite de {{limit}} usos semanales para esta función. Vuelve la próxima semana para continuar.",
     "add": "Añadir",
-    "deleted_success": "Eliminado correctamente"
+    "deleted_success": "Eliminado correctamente",
+    "saved": "Guardado correctamente"
+  },
+  "premium_drawer": {
+    "title": "Calorel Premium",
+    "header_title": "Mejora tu versión con <1>Calorel Premium</1>",
+    "header_subtitle": "Logra tu objetivo 3x más rápido.",
+    "table_free": "GRATIS",
+    "table_premium": "PREMIUM",
+    "benefit_scanner": "Escáner de Comida IA",
+    "benefit_exercise": "Análisis Ejercicio IA",
+    "benefit_diets": "Planes de Dieta",
+    "benefit_menus": "Análisis de Menús",
+    "benefit_macros": "Sugerencias Macros",
+    "benefit_tracking": "Registro Peso/Agua",
+    "save_percent": "Ahorra 67%",
+    "plan_annual": "Anual",
+    "plan_monthly": "Mensual",
+    "month_suffix": "/mes",
+    "billed_today": "{{amount}} facturado hoy",
+    "continue_button": "Continuar",
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "restore": "Restaurar",
+    "no_thanks": "No gracias, continuaré limitado"
   },
   "water": {
     "remaining": "Restante",
@@ -298,7 +322,9 @@
     "step_1": "Ve a la pantalla de inicio de tu teléfono.",
     "step_2": "Mantén presionado en un espacio vacío.",
     "step_3": "Selecciona 'Widgets'.",
-    "step_4": "Busca 'Calorel' y arrastra el widget."
+    "step_4": "Busca 'Calorel' y arrastra el widget.",
+    "preview": "Vista Previa",
+    "adaptive_note": "El widget se adapta automáticamente al modo claro u oscuro de tu teléfono."
   },
   "bottom_nav": {
     "home": "Inicio",
@@ -347,6 +373,536 @@
       "ideal_for_2": "Personas que buscan resultados rápidos bajo control.",
       "not_recommended_for_1": "Personas con problemas hepáticos o renales.",
       "not_recommended_for_2": "Mujeres embarazadas o en lactancia."
+    },
+    "vegetarian": {
+      "name": "Vegetariana",
+      "short_desc": "Sin carne, incluye huevos y lácteos.",
+      "description": "Elimina el consumo de carne, pero permite alimentos como huevos y lácteos, basando la alimentación principalmente en fuentes vegetales.",
+      "objective": "Reducir el consumo de carne manteniendo una nutrición equilibrada.",
+      "ideal_for_1": "Personas que no consumen carne.",
+      "ideal_for_2": "Usuarios que buscan una alimentación más ligera y sostenible."
+    },
+    "mediterranean": {
+      "name": "Mediterránea",
+      "short_desc": "Fresca, grasas saludables, equilibrada.",
+      "description": "Se basa en alimentos frescos, grasas saludables y bajo consumo de ultraprocesados, con énfasis en la calidad nutricional.",
+      "objective": "Mejorar la salud cardiovascular y el bienestar general a largo plazo.",
+      "ideal_for_1": "Personas que buscan una dieta saludable y sostenible.",
+      "ideal_for_2": "Usuarios enfocados en prevención y salud general."
+    }
+  },
+  "recipes": {
+    "title": "Recetas",
+    "coming_soon": "Próximamente...",
+    "recipes_disclaimer": "Nota: Todos los valores nutricionales son aproximaciones y no exactos.",
+    "like_question": "¿Te gustó esta receta?",
+    "liked_text": "¡Qué bueno que te gustó!",
+    "like_count": "{{count}} personas recomiendan esto",
+    "feedback_thanks": "¡Gracias por tu opinión!",
+    "categories": {
+        "lunch_dinner": "Almuerzo / Cena",
+        "snack_breakfast": "Snack / Desayuno",
+        "breakfast": "Desayuno"
+    },
+    "yogurt_fruits_granola": {
+      "name": "Yogur con Fruta y Granola",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "yogurt": "Yogur natural descremado",
+        "strawberries": "Fresas",
+        "banana": "Plátano",
+        "granola": "Granola",
+        "honey": "Miel (opcional)"
+      },
+      "instructions": [
+        "Cortar la fruta en trozos pequeños.",
+        "Mezclar el yogur con la fruta.",
+        "Espolvorear la granola por encima.",
+        "Añadir miel si se desea y servir."
+      ]
+    },
+    "spaghetti_bolognese": {
+      "name": "Espagueti a la Boloñesa",
+      "ingredients": "Ingredientes",
+      "steps": "Instrucciones",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "spaghetti": "Espagueti",
+        "ground_beef": "Carne molida (10–15% grasa)",
+        "tomato_sauce": "Tomate triturado o salsa natural",
+        "onion": "Cebolla",
+        "garlic": "Diente de ajo",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta",
+        "herbs": "Orégano o albahaca"
+      },
+      "instructions": [
+        "Hervir agua con sal y cocer el espagueti según las instrucciones (8–10 min). Escurrir.",
+        "Calentar aceite en sartén y sofreír cebolla y ajo picados por 2–3 min.",
+        "Agregar la carne molida y cocinar hasta dorar.",
+        "Añadir el tomate triturado, sal, pimienta y hierbas. Cocinar a fuego lento 10–15 min.",
+        "Mezclar la pasta con la salsa o servir encima."
+      ]
+    },
+    "grilled_chicken_rice": {
+      "name": "Pollo a la Plancha con Arroz y Ensalada",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "chicken_breast": "Pechuga de pollo",
+        "white_rice": "Arroz blanco (peso en crudo)",
+        "lettuce": "Lechuga",
+        "tomato": "Tomate",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta",
+        "lemon_juice": "Jugo de limón"
+      },
+      "instructions": [
+        "Cocer el arroz en agua con sal por 15–18 min. Escurrir.",
+        "Salar y pimentar la pechuga.",
+        "Calentar sartén con 5 g aceite y cocinar pollo 5–6 min por lado.",
+        "Picar lechuga y tomate, aliñar con limón y el resto del aceite.",
+        "Servir pollo junto con arroz y ensalada."
+      ]
+    },
+    "grilled_chicken_tacos": {
+      "name": "Tacos de Pollo Asado",
+      "ingredients": "Ingredientes",
+      "steps": "Instrucciones",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "chicken_breast": "Pechuga de pollo",
+        "corn_tortillas": "Tortillas de maíz",
+        "lettuce": "Lechuga",
+        "tomato": "Tomate",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cocinar el pollo en sartén con aceite, sal y pimienta 5-6 min por lado.",
+        "Calentar las tortillas.",
+        "Picar tomate y lechuga.",
+        "Rellenar las tortillas con el pollo y verduras.",
+        "Servir inmediatamente."
+      ]
+    },
+    "blueberry_almond_smoothie": {
+      "name": "Batido de Arándanos y Almendras",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "blueberries": "Arándanos frescos",
+        "almond_milk": "Leche de almendras sin azúcar",
+        "almonds": "Almendras crudas",
+        "yogurt": "Yogur natural descremado",
+        "honey": "Miel (opcional)"
+      },
+      "instructions": [
+        "Colocar arándanos, leche de almendras, almendras y yogur en la licuadora.",
+        "Licuar 30-45 segundos hasta que esté suave.",
+        "Probar y añadir miel si se desea más dulce. Licuar unos segundos más.",
+        "Servir inmediatamente."
+      ]
+    },
+    "mango_oat_smoothie": {
+      "name": "Licuado de Mango y Avena",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "mango": "Mango",
+        "milk": "Leche descremada o vegetal",
+        "oats": "Avena en hojuelas",
+        "honey": "Miel (opcional)"
+      },
+      "instructions": [
+        "Colocar todos los ingredientes en la licuadora.",
+        "Licuar 30-45 segundos hasta tener consistencia suave.",
+        "Servir inmediatamente."
+      ]
+    },
+    "oats_banana_peanut": {
+      "name": "Avena con Plátano y Crema de Cacahuate",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "oats": "Avena en hojuelas",
+        "milk": "Leche (o bebida vegetal)",
+        "banana": "Plátano",
+        "peanut_butter": "Crema de cacahuate",
+        "cinnamon": "Canela en polvo"
+      },
+      "instructions": [
+        "En una olla pequeña, mezclar la avena con la leche.",
+        "Cocinar a fuego medio 5-7 minutos hasta que espese.",
+        "Machacar la mitad del plátano y añadirlo junto con la canela a la avena. Mezclar bien.",
+        "Servir en un tazón y decorar con el resto del plátano en rodajas y la crema de cacahuate."
+      ]
+    },
+    "chicken_curry": {
+      "name": "Pollo al Curry con Arroz",
+      "ingredients": "Ingredientes",
+      "steps": "Instrucciones",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "chicken_breast": "Pechuga de pollo",
+        "white_rice": "Arroz blanco (crudo)",
+        "coconut_milk_light": "Leche de coco light",
+        "onion": "Cebolla",
+        "garlic": "Diente de ajo",
+        "olive_oil": "Aceite de oliva",
+        "curry_powder": "Curry en polvo",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cocer el arroz en agua con sal por 15–18 min. Escurrir.",
+        "En sartén, calentar aceite y sofreír cebolla y ajo 2–3 min.",
+        "Agregar pollo y cocinar hasta dorar.",
+        "Añadir leche de coco y curry, cocinar 10 min más.",
+        "Servir el pollo sobre el arroz."
+      ]
+    },
+    "tuna_quinoa_salad": {
+      "name": "Ensalada de Atún y Quinoa",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "tuna_water": "Atún en agua",
+        "cooked_quinoa": "Quinoa cocida",
+        "tomato": "Tomate",
+        "cucumber": "Pepino",
+        "olive_oil": "Aceite de oliva",
+        "lemon_juice": "Jugo de limón",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cocer la quinoa según empaque y escurrir.",
+        "Mezclar atún, tomate picado y pepino.",
+        "Añadir quinoa, aceite, limón, sal y pimienta.",
+        "Revolver y servir."
+      ]
+    },
+    "spinach_cheese_omelette": {
+      "name": "Omelette de Espinaca y Queso",
+      "ingredients": "Ingredientes",
+      "steps": "Instrucciones",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "eggs": "Huevos (aprox 2 pzas)",
+        "spinach": "Espinaca fresca",
+        "low_fat_cheese": "Queso bajo en grasa rallado",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Batir los huevos con sal y pimienta.",
+        "Calentar aceite en sartén y añadir espinaca por 1–2 min.",
+        "Verter los huevos y cocinar 2–3 min.",
+        "Agregar el queso, doblar a la mitad y servir."
+      ]
+    },
+    "baked_salmon_vegetables": {
+      "name": "Salmón al Horno con Verduras",
+      "ingredients": "Ingredientes",
+      "steps": "Instrucciones",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "salmon_fillet": "Filete de salmón",
+        "broccoli": "Brócoli",
+        "carrot": "Zanahoria",
+        "olive_oil": "Aceite de oliva",
+        "lemon_juice": "Jugo de limón",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Precalentar horno a 180 °C.",
+        "Colocar salmón y verduras en bandeja.",
+        "Añadir aceite, limón, sal y pimienta.",
+        "Hornear 20–25 min.",
+        "Servir caliente."
+      ]
+    },
+    "lentil_stew": {
+      "name": "Lentejas Guisadas con Verduras",
+      "ingredients": "Ingredientes",
+      "steps": "Instrucciones",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "cooked_lentils": "Lentejas cocidas",
+        "carrot": "Zanahoria",
+        "bell_pepper": "Pimiento",
+        "onion": "Cebolla",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta",
+        "cumin": "Comino"
+      },
+      "instructions": [
+        "Sofreír cebolla, zanahoria y pimiento en aceite por 5 min.",
+        "Añadir las lentejas y especias.",
+        "Cocinar a fuego medio 10–15 min.",
+        "Servir caliente."
+      ]
+    },
+    "turkey_mashed_potatoes": {
+      "name": "Pechuga de Pavo con Puré de Papa",
+      "ingredients": "Ingredientes",
+      "steps": "Instrucciones",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "turkey_breast": "Pechuga de pavo",
+        "potato": "Papa",
+        "skim_milk": "Leche descremada",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Hervir la papa hasta que esté suave y machacar con leche.",
+        "Cocinar el pavo a la plancha con aceite, sal y pimienta.",
+        "Servir el pavo acompañado del puré."
+      ]
+    },
+    "brown_rice_eggs": {
+      "name": "Arroz Integral con Huevo y Verduras",
+      "ingredients": "Ingredientes",
+      "steps": "Instrucciones",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "cooked_brown_rice": "Arroz integral cocido",
+        "eggs": "Huevos",
+        "spinach": "Espinaca",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Saltear la espinaca con aceite 1-2 min.",
+        "Añadir los huevos y cocinar al gusto (revueltos o estrellados).",
+        "Servir acompañando al arroz integral."
+      ]
+    },
+    "chicken_wrap": {
+      "name": "Wrap Integral de Pollo y Verduras",
+      "ingredients": "Ingredientes",
+      "steps": "Instrucciones",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "whole_wheat_tortilla": "Tortilla de trigo integral",
+        "chicken_breast": "Pechuga de pollo",
+        "lettuce": "Lechuga",
+        "tomato": "Tomate",
+        "yogurt": "Yogur natural descremado",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cocinar el pollo a la plancha con sal y pimienta.",
+        "Mezclar yogur con sal para aderezo.",
+        "Rellenar la tortilla con pollo, verduras y aderezo.",
+        "Enrollar y servir."
+      ]
+    },
+    "chicken_rice_bowl": {
+      "name": "Bowl de Pollo y Arroz Integral",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "chicken_breast": "Pechuga de pollo",
+        "cooked_brown_rice": "Arroz integral cocido",
+        "broccoli": "Brócoli",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cocinar la pechuga a la plancha.",
+        "Saltear el brócoli con aceite.",
+        "Servir todo junto con el arroz."
+      ]
+    },
+    "fish_potato": {
+      "name": "Filete de Pescado con Papa Cocida",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "white_fish": "Filete de pescado blanco",
+        "potato": "Papa",
+        "olive_oil": "Aceite de oliva",
+        "lemon_juice": "Limón",
+        "salt": "Sal",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Hervir la papa.",
+        "Cocinar el pescado a la plancha o sartén.",
+        "Servir con limón."
+      ]
+    },
+    "whole_wheat_pasta": {
+      "name": "Pasta Integral con Verduras",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "raw_whole_pasta": "Pasta integral cruda",
+        "zucchini": "Calabacín",
+        "bell_pepper": "Pimiento",
+        "olive_oil": "Aceite de oliva",
+        "salt": "Sal",
+        "herbs": "Especias"
+      },
+      "instructions": [
+        "Cocer la pasta.",
+        "Saltear las verduras.",
+        "Mezclar y servir."
+      ]
+    },
+    "beef_salad": {
+      "name": "Carne Magra con Ensalada Mixta",
+      "ingredients": "Ingredientes",
+      "steps": "Pasos",
+      "nutritional_info": "Info Nutricional",
+      "per_serving": "Por porción",
+      "time_total": "Tiempo total",
+      "minutes": "minutos",
+      "to_taste": "al gusto",
+      "add_to_log": "Agregar al Diario",
+      "portions": "Porciones",
+      "list": {
+        "lean_beef": "Carne magra de res",
+        "lettuce": "Lechuga",
+        "tomato": "Tomate",
+        "olive_oil": "Aceite de oliva"
+      },
+      "instructions": [
+        "Asar la carne.",
+        "Preparar la ensalada.",
+        "Servir junto."
+      ]
     }
   }
 }

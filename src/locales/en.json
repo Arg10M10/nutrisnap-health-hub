@@ -367,6 +367,22 @@
       "ideal_for_2": "People looking for quick results under control.",
       "not_recommended_for_1": "People with liver or kidney issues.",
       "not_recommended_for_2": "Pregnant or breastfeeding women."
+    },
+    "vegetarian": {
+      "name": "Vegetarian",
+      "short_desc": "Eliminates meat, includes eggs and dairy.",
+      "description": "Eliminates meat consumption but allows foods like eggs and dairy, basing the diet mainly on plant sources.",
+      "objective": "Reduce meat consumption while maintaining balanced nutrition.",
+      "ideal_for_1": "People who do not consume meat.",
+      "ideal_for_2": "Users looking for a lighter and more sustainable diet."
+    },
+    "mediterranean": {
+      "name": "Mediterranean",
+      "short_desc": "Fresh foods and healthy fats.",
+      "description": "Based on fresh foods, healthy fats, and low consumption of ultra-processed foods, emphasizing nutritional quality.",
+      "objective": "Improve cardiovascular health and long-term general well-being.",
+      "ideal_for_1": "People looking for a healthy and sustainable diet.",
+      "ideal_for_2": "Users focused on prevention and general health."
     }
   },
   "recipes": {
@@ -1456,7 +1472,9 @@
     "step_1": "Go to your phone's home screen.",
     "step_2": "Long press on an empty space.",
     "step_3": "Select 'Widgets'.",
-    "step_4": "Search for 'Calorel' and drag the widget."
+    "step_4": "Search for 'Calorel' and drag the widget.",
+    "preview": "Vista Previa",
+    "adaptive_note": "El widget se adapta automáticamente al modo claro u oscuro de tu teléfono."
   },
   "bottom_nav": {
     "home": "Home",
@@ -1472,7 +1490,8 @@
     "log_weight": "Log Weight",
     "log_water": "Log Water",
     "recipes": "Recipes",
-    "diets_label": "Diets"
+    "diets_label": "Weekly Plan",
+    "diet_types": "Diet Types"
   },
   "diet_list": {
     "title": "Premium Diets",
@@ -1504,6 +1523,536 @@
       "ideal_for_2": "People looking for quick results under control.",
       "not_recommended_for_1": "People with liver or kidney issues.",
       "not_recommended_for_2": "Pregnant or breastfeeding women."
+    },
+    "vegetarian": {
+      "name": "Vegetarian",
+      "short_desc": "Eliminates meat, includes eggs and dairy.",
+      "description": "Eliminates meat consumption but allows foods like eggs and dairy, basing the diet mainly on plant sources.",
+      "objective": "Reduce meat consumption while maintaining balanced nutrition.",
+      "ideal_for_1": "People who do not consume meat.",
+      "ideal_for_2": "Users looking for a lighter and more sustainable diet."
+    },
+    "mediterranean": {
+      "name": "Mediterranean",
+      "short_desc": "Fresh foods and healthy fats.",
+      "description": "Based on fresh foods, healthy fats, and low consumption of ultra-processed foods, emphasizing nutritional quality.",
+      "objective": "Improve cardiovascular health and long-term general well-being.",
+      "ideal_for_1": "People looking for a healthy and sustainable diet.",
+      "ideal_for_2": "Users focused on prevention and general health."
+    }
+  },
+  "recipes": {
+    "title": "Recipes",
+    "coming_soon": "Coming soon...",
+    "recipes_disclaimer": "Note: All nutritional values are approximations and not exact.",
+    "like_question": "Did you like this recipe?",
+    "liked_text": "Glad you liked it!",
+    "like_count": "{{count}} people recommend this",
+    "feedback_thanks": "Thanks for your feedback!",
+    "categories": {
+        "lunch_dinner": "Lunch / Dinner",
+        "snack_breakfast": "Snack / Breakfast",
+        "breakfast": "Breakfast"
+    },
+    "yogurt_fruits_granola": {
+      "name": "Yogurt with Fruit and Granola",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "yogurt": "Non-fat plain yogurt",
+        "strawberries": "Strawberries",
+        "banana": "Banana",
+        "granola": "Granola",
+        "honey": "Honey (optional)"
+      },
+      "instructions": [
+        "Cut the fruit into small pieces.",
+        "Mix the yogurt with the fruit.",
+        "Sprinkle the granola on top.",
+        "Add honey if desired and serve."
+      ]
+    },
+    "spaghetti_bolognese": {
+      "name": "Spaghetti Bolognese",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "spaghetti": "Spaghetti",
+        "ground_beef": "Ground Beef (10–15% fat)",
+        "tomato_sauce": "Crushed tomatoes or natural tomato sauce",
+        "onion": "Onion",
+        "garlic": "Clove of garlic",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper",
+        "herbs": "Oregano or basil"
+      },
+      "instructions": [
+        "Boil salted water and cook spaghetti according to package instructions (8–10 minutes). Drain.",
+        "Heat oil in a pan and sauté chopped onion and garlic for 2–3 minutes.",
+        "Add ground beef and cook until browned.",
+        "Add crushed tomatoes, salt, pepper, and herbs. Simmer for 10–15 minutes.",
+        "Mix pasta with sauce or serve sauce over spaghetti."
+      ]
+    },
+    "grilled_chicken_rice": {
+      "name": "Grilled Chicken with Rice and Salad",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "chicken_breast": "Chicken breast",
+        "white_rice": "Uncooked white rice",
+        "lettuce": "Lettuce",
+        "tomato": "Tomato",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper",
+        "lemon_juice": "Lemon juice"
+      },
+      "instructions": [
+        "Cook the rice in salted water for 15–18 minutes. Drain.",
+        "Season the chicken breast with salt and pepper.",
+        "Heat a pan or griddle with 5 g of oil and cook the chicken for 5–6 minutes per side until well cooked.",
+        "Chop the lettuce and tomato, mix and dress with lemon juice and the remaining 5 g of oil.",
+        "Serve the chicken alongside the rice and salad."
+      ]
+    },
+    "grilled_chicken_tacos": {
+      "name": "Grilled Chicken Tacos",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "chicken_breast": "Chicken breast",
+        "corn_tortillas": "Corn tortillas",
+        "lettuce": "Lettuce",
+        "tomato": "Tomato",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Cook the chicken in a pan with oil, salt, and pepper for 5–6 minutes per side.",
+        "Heat the tortillas.",
+        "Chop tomato and lettuce.",
+        "Fill the tortillas with chicken and vegetables.",
+        "Serve immediately."
+      ]
+    },
+    "blueberry_almond_smoothie": {
+      "name": "Blueberry Almond Smoothie",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "blueberries": "Fresh blueberries",
+        "almond_milk": "Unsweetened almond milk",
+        "almonds": "Raw almonds",
+        "yogurt": "Non-fat plain yogurt",
+        "honey": "Honey (optional)"
+      },
+      "instructions": [
+        "Place blueberries, almond milk, almonds, and yogurt in a blender.",
+        "Blend for 30–45 seconds until smooth.",
+        "Taste and add honey if more sweetness is desired. Blend for a few more seconds.",
+        "Serve immediately."
+      ]
+    },
+    "mango_oat_smoothie": {
+      "name": "Mango Oat Smoothie",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "mango": "Mango",
+        "milk": "Skim or plant-based milk",
+        "oats": "Rolled oats",
+        "honey": "Honey (optional)"
+      },
+      "instructions": [
+        "Place all ingredients in the blender.",
+        "Blend for 30–45 seconds until smooth.",
+        "Serve immediately."
+      ]
+    },
+    "oats_banana_peanut": {
+      "name": "Oatmeal with Banana & Peanut Butter",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "oats": "Rolled oats",
+        "milk": "Milk (or plant-based)",
+        "banana": "Banana",
+        "peanut_butter": "Peanut butter",
+        "cinnamon": "Cinnamon"
+      },
+      "instructions": [
+        "In a small pot, mix the oats with the milk.",
+        "Cook over medium heat for 5-7 minutes until thickened.",
+        "Mash half the banana and add it along with cinnamon to the oats. Mix well.",
+        "Serve in a bowl and top with the rest of the sliced banana and peanut butter."
+      ]
+    },
+    "chicken_curry": {
+      "name": "Chicken Curry with Rice",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "chicken_breast": "Chicken breast",
+        "white_rice": "Uncooked white rice",
+        "coconut_milk_light": "Light coconut milk",
+        "onion": "Onion",
+        "garlic": "Clove of garlic",
+        "olive_oil": "Olive oil",
+        "curry_powder": "Curry powder",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Cook the rice in salted water for 15–18 minutes. Drain.",
+        "In a pan, heat oil and sauté onion and garlic for 2–3 minutes.",
+        "Add chicken and cook until browned.",
+        "Add coconut milk and curry, cook for 10 minutes more.",
+        "Serve the chicken over the rice."
+      ]
+    },
+    "tuna_quinoa_salad": {
+      "name": "Tuna and Quinoa Salad",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "tuna_water": "Tuna in water",
+        "cooked_quinoa": "Cooked quinoa",
+        "tomato": "Tomato",
+        "cucumber": "Cucumber",
+        "olive_oil": "Olive oil",
+        "lemon_juice": "Lemon juice",
+        "salt": "Salt",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Cook quinoa according to package instructions and drain.",
+        "Mix chopped tuna, tomato, and cucumber.",
+        "Add quinoa, oil, lemon juice, salt, and pepper.",
+        "Toss and serve."
+      ]
+    },
+    "spinach_cheese_omelette": {
+      "name": "Spinach and Cheese Omelette",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "eggs": "Eggs (100g)",
+        "spinach": "Fresh spinach",
+        "low_fat_cheese": "Low fat grated cheese",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pimienta"
+      },
+      "instructions": [
+        "Beat the eggs with salt and pepper.",
+        "Heat oil in a pan and add spinach for 1–2 minutes.",
+        "Add the eggs and cook for 2–3 minutes.",
+        "Add cheese, fold the omelette and serve."
+      ]
+    },
+    "baked_salmon_vegetables": {
+      "name": "Baked Salmon with Vegetables",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "salmon_fillet": "Salmon fillet",
+        "broccoli": "Broccoli",
+        "carrot": "Carrot",
+        "olive_oil": "Olive oil",
+        "lemon_juice": "Lemon juice",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Preheat the oven to 180 °C (350 °F).",
+        "Place the salmon and vegetables on a baking tray.",
+        "Add olive oil, lemon juice, salt, and pepper.",
+        "Bake for 20–25 minutes.",
+        "Serve hot."
+      ]
+    },
+    "lentil_stew": {
+      "name": "Stewed Lentils with Vegetables",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "cooked_lentils": "Cooked lentils",
+        "carrot": "Carrot",
+        "bell_pepper": "Bell pepper",
+        "onion": "Onion",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper",
+        "cumin": "Cumin"
+      },
+      "instructions": [
+        "Sauté onion, carrot, and pepper in oil for 5 minutes.",
+        "Add the lentils and spices.",
+        "Cook over medium heat for 10–15 minutes.",
+        "Serve hot."
+      ]
+    },
+    "turkey_mashed_potatoes": {
+      "name": "Turkey Breast with Mashed Potatoes",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "turkey_breast": "Turkey breast",
+        "potato": "Potato",
+        "skim_milk": "Skim milk",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Boil the potato until soft and mash with milk.",
+        "Grill the turkey with oil, salt, and pepper.",
+        "Serve the turkey with the mashed potatoes."
+      ]
+    },
+    "brown_rice_eggs": {
+      "name": "Brown Rice with Eggs and Vegetables",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "cooked_brown_rice": "Cooked brown rice",
+        "eggs": "Eggs",
+        "spinach": "Spinach",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Sauté spinach with oil for 1-2 minutes.",
+        "Add eggs and cook to taste.",
+        "Serve with brown rice."
+      ]
+    },
+    "chicken_wrap": {
+      "name": "Whole Wheat Chicken and Vegetable Wrap",
+      "ingredients": "Ingredients",
+      "steps": "Instructions",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "whole_wheat_tortilla": "Whole wheat tortilla",
+        "chicken_breast": "Chicken breast",
+        "lettuce": "Lettuce",
+        "tomato": "Tomato",
+        "yogurt": "Non-fat plain yogurt",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Grill chicken with salt and pepper.",
+        "Mix yogurt with salt for sauce.",
+        "Fill tortilla with chicken, vegetables and sauce.",
+        "Roll and serve."
+      ]
+    },
+    "chicken_rice_bowl": {
+      "name": "Chicken & Brown Rice Bowl",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "chicken_breast": "Chicken breast",
+        "cooked_brown_rice": "Cooked brown rice",
+        "broccoli": "Broccoli",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Grill the chicken breast.",
+        "Sauté the broccoli with olive oil.",
+        "Serve everything together with the rice."
+      ]
+    },
+    "fish_potato": {
+      "name": "Fish Fillet with Boiled Potato",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "white_fish": "White fish fillet",
+        "potato": "Potato",
+        "olive_oil": "Olive oil",
+        "lemon_juice": "Lemon",
+        "salt": "Salt",
+        "pepper": "Pepper"
+      },
+      "instructions": [
+        "Boil the potato.",
+        "Cook the fish on a griddle or pan.",
+        "Serve with lemon."
+      ]
+    },
+    "whole_wheat_pasta": {
+      "name": "Whole Wheat Pasta with Veggies",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "raw_whole_pasta": "Uncooked whole wheat pasta",
+        "zucchini": "Zucchini",
+        "bell_pepper": "Bell pepper",
+        "olive_oil": "Olive oil",
+        "salt": "Salt",
+        "herbs": "Spices"
+      },
+      "instructions": [
+        "Cook the pasta.",
+        "Sauté the vegetables.",
+        "Mix and serve."
+      ]
+    },
+    "beef_salad": {
+      "name": "Lean Beef with Mixed Salad",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "nutritional_info": "Nutritional Info",
+      "per_serving": "Per serving",
+      "time_total": "Total time",
+      "minutes": "minutes",
+      "to_taste": "to taste",
+      "add_to_log": "Add to Diary",
+      "portions": "Portions",
+      "list": {
+        "lean_beef": "Lean beef",
+        "lettuce": "Lettuce",
+        "tomato": "Tomato",
+        "olive_oil": "Olive oil"
+      },
+      "instructions": [
+        "Grill the beef.",
+        "Prepare the salad.",
+        "Serve together."
+      ]
     }
   }
 }
