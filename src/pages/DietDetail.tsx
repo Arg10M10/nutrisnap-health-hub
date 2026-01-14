@@ -55,8 +55,8 @@ const DietDetail = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-background relative flex flex-col"
     >
-      {/* Header Image Section - Takes ~60% of viewport */}
-      <div className="relative h-[60vh] w-full shrink-0">
+      {/* Header Image Section - Takes ~65% of viewport for better immersion */}
+      <div className="relative h-[65vh] w-full shrink-0">
         <motion.img 
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
@@ -67,10 +67,8 @@ const DietDetail = () => {
         />
         
         {/* Gradient Overlays */}
-        {/* Top gradient for status bar visibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent opacity-80" />
-        {/* Bottom gradient for text visibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
         
         {/* Close Button - Top Right */}
         <div className="absolute top-12 right-6 z-50">
@@ -78,14 +76,14 @@ const DietDetail = () => {
             variant="ghost" 
             size="icon" 
             onClick={() => navigate(-1)} 
-            className="rounded-full bg-white/90 text-black hover:bg-white w-10 h-10 shadow-lg"
+            className="rounded-full bg-white/20 text-white hover:bg-white/40 backdrop-blur-md w-10 h-10 border border-white/10"
           >
             <X className="w-5 h-5" />
           </Button>
         </div>
 
         {/* Title Area - Top Left */}
-        <div className="absolute top-20 left-6 pr-12">
+        <div className="absolute top-24 left-6 pr-12">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -105,21 +103,23 @@ const DietDetail = () => {
         </div>
 
         {/* Short Description Overlay - Bottom */}
-        <div className="absolute bottom-8 left-6 right-6">
+        <div className="absolute bottom-12 left-6 right-6 z-20">
           <motion.p 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-white text-xl font-semibold leading-snug drop-shadow-lg"
+            className="text-white/95 text-xl font-medium leading-snug drop-shadow-md"
           >
             {t(diet.shortDescKey as any)}
           </motion.p>
         </div>
       </div>
 
-      {/* Content Body */}
-      <div className="flex-1 bg-background -mt-4 relative rounded-t-[2rem] z-10 px-6 pt-10 pb-32 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
-         
+      {/* Content Body - Improved integration */}
+      <div className="flex-1 bg-background -mt-6 relative rounded-t-[32px] z-10 px-6 pt-8 pb-32">
+         {/* Small decorative handle to mimic drawer look */}
+         <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-6 opacity-50" />
+
          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -128,7 +128,7 @@ const DietDetail = () => {
          >
             {/* "How it Works" Section */}
             <section>
-                <h2 className="text-2xl font-bold mb-4 text-foreground">How it Works</h2>
+                <h2 className="text-2xl font-bold mb-3 text-foreground">How it Works</h2>
                 <p className="text-muted-foreground leading-relaxed text-lg font-normal">
                     {t(diet.descriptionKey as any)}
                 </p>
@@ -136,8 +136,8 @@ const DietDetail = () => {
 
             {/* Objective Section */}
             <section>
-                <h3 className="font-bold text-lg mb-3 text-foreground">{t('diet_list.objective', 'Objective')}</h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <h3 className="font-bold text-lg mb-2 text-foreground uppercase tracking-wider text-xs opacity-70">{t('diet_list.objective', 'Objective')}</h3>
+                <p className="text-foreground leading-relaxed font-medium">
                     {t(diet.objectiveKey as any)}
                 </p>
             </section>
@@ -147,11 +147,11 @@ const DietDetail = () => {
                 <h3 className="font-bold text-lg mb-4 text-foreground">{t('diet_list.ideal_for', 'Ideal For')}</h3>
                 <ul className="space-y-3">
                     {diet.idealForKeys.map((key, idx) => (
-                        <li key={idx} className="flex gap-4 items-start">
-                            <div className="bg-green-100 dark:bg-green-900/30 p-1 rounded-full mt-0.5 shrink-0">
-                                <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" strokeWidth={4} />
+                        <li key={idx} className="flex gap-4 items-start p-3 rounded-xl bg-muted/30 border border-transparent hover:border-border transition-colors">
+                            <div className="bg-primary/10 p-1.5 rounded-full shrink-0 mt-0.5">
+                                <Check className="w-3.5 h-3.5 text-primary" strokeWidth={4} />
                             </div>
-                            <span className="text-foreground/80 font-medium">{t(key as any)}</span>
+                            <span className="text-foreground/90 font-medium">{t(key as any)}</span>
                         </li>
                     ))}
                 </ul>
@@ -168,7 +168,7 @@ const DietDetail = () => {
       >
          <Button 
             onClick={handleStartDiet}
-            className="h-14 pl-8 pr-6 rounded-full shadow-2xl text-base font-bold bg-[#38bdf8] hover:bg-[#0ea5e9] text-white flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 border border-white/20"
+            className="h-14 pl-8 pr-6 rounded-full shadow-xl shadow-primary/30 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 transition-transform hover:scale-105 active:scale-95"
          >
             Start Diet <ArrowRight className="w-5 h-5" />
          </Button>
