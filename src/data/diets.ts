@@ -17,6 +17,7 @@ export type Diet = {
   category?: string;
   foodsToEat?: string[];
   foodsToAvoid?: string[];
+  textColor?: 'light' | 'dark';
 };
 
 export const diets: Diet[] = [
@@ -41,7 +42,8 @@ export const diets: Diet[] = [
       fats: "20–30 %"
     },
     image: "/diets/high-protein.jpg",
-    icon: "💪"
+    icon: "💪",
+    textColor: 'light'
   }
   // Future diets can be added here
 ];

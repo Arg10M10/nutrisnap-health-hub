@@ -1,35 +1,41 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { diets } from "@/data/diets";
-import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 const DietTypes = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   return (
-    <PageLayout>
-      <div className="space-y-6 pb-20">
-        <header className="flex items-center gap-4 sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="rounded-full">
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Custom Header matching the design */}
+      <header className="bg-[#10b981] text-white pt-12 pb-6 px-4 shadow-sm sticky top-0 z-20">
+        <div className="max-w-2xl mx-auto flex items-center gap-4">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => navigate(-1)} 
+            className="rounded-full hover:bg-white/20 text-white -ml-2"
+          >
             <ArrowLeft className="w-6 h-6" />
           </Button>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">{t('diet_list.title', 'Dietas Premium')}</h1>
-          </div>
-        </header>
+          <h1 className="text-2xl font-bold tracking-tight">{t('diet_list.title', 'Premium Diets')}</h1>
+        </div>
+      </header>
 
-        <p className="text-muted-foreground px-1 -mt-2">
-          {t('diet_list.subtitle', 'Explora diferentes estilos de alimentación para encontrar el mejor para ti.')}
-        </p>
-        
+      <main className="flex-1 max-w-2xl mx-auto w-full px-4 pt-6 pb-20">
         <div className="grid grid-cols-1 gap-6">
-          {diets.map((diet) => (
-            <div 
-              key={diet.id} 
-              className="relative w-full aspect-[4/5] sm:aspect-[16/10] rounded-3xl overflow-hidden cursor-pointer shadow-lg group transition-transform active:scale-[0.98]"
+          {diets.map((diet, index) => (
+            <motion.div 
+              key={diet.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="relative w-full aspect-[4/5] sm:aspect-[16/10] rounded-[2rem] overflow-hidden cursor-pointer shadow-xl group transition-all active:scale-[0.98]"
               onClick={() => navigate(`/diet-types/${diet.id}`)}
             >
               {/* Background Image */}
@@ -39,34 +45,39 @@ const DietTypes = () => {
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30 pointer-events-none" />
+              {/* Gradient Overlay - Only at bottom for description readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
 
               {/* Content Container */}
-              <div className="absolute inset-0 p-6 flex flex-col justify-between">
+              <div className="absolute inset-0 p-7 flex flex-col justify-between">
                 
-                {/* Top Section */}
-                <div>
-                  <h2 className="text-4xl font-bold text-white mb-1 drop-shadow-md">
+                {/* Top Section: Title & Link */}
+                <div className="flex flex-col items-start gap-2">
+                  <h2 className={cn(
+                    "text-4xl font-bold leading-tight",
+                    diet.textColor === 'dark' ? "text-gray-900" : "text-white drop-shadow-md"
+                  )}>
                     {t(diet.nameKey as any)}
                   </h2>
-                  <div className="flex items-center text-orange-400 font-semibold text-sm group-hover:translate-x-1 transition-transform">
-                    {t('diet_list.view_diet', 'Ver Dieta')} <ChevronRight className="w-4 h-4 ml-1" />
+                  
+                  <div className="flex items-center text-orange-500 font-bold text-base group-hover:translate-x-1 transition-transform bg-white/90 px-3 py-1.5 rounded-full shadow-sm">
+                    {t('diet_list.view_diet', 'View Diet')} 
+                    <ChevronRight className="w-5 h-5 ml-0.5" strokeWidth={3} />
                   </div>
                 </div>
 
-                {/* Bottom Description */}
-                <div className="max-w-[90%]">
-                  <p className="text-white/90 text-lg font-medium leading-snug drop-shadow-md">
+                {/* Bottom Section: Description */}
+                <div className="max-w-[95%]">
+                  <p className="text-white text-lg font-medium leading-snug drop-shadow-md">
                     {t(diet.shortDescKey as any)}
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
-    </PageLayout>
+      </main>
+    </div>
   );
 };
 
