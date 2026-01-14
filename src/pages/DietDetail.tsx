@@ -40,7 +40,7 @@ const DietDetail = () => {
         
         if (error) throw error;
         
-        toast.success(t('common.saved', { defaultValue: 'Guardado correctamente' }));
+        toast.success(t('common.saved', { defaultValue: 'Preferencia guardada' }));
         navigate('/diets'); // Go to weekly plan
     } catch (e) {
         console.error(e);
@@ -98,7 +98,7 @@ const DietDetail = () => {
             transition={{ delay: 0.3 }}
             className="text-[#fbbf24] font-black tracking-[0.2em] text-sm mt-3 block uppercase drop-shadow-md pl-1"
           >
-            {t('diet_list.diet_label', 'DIET')}
+            DIET
           </motion.span>
         </div>
 
@@ -128,7 +128,7 @@ const DietDetail = () => {
          >
             {/* "How it Works" Section */}
             <section>
-                <h2 className="text-2xl font-bold mb-3 text-foreground">{t('diet_list.how_it_works', 'How it Works')}</h2>
+                <h2 className="text-2xl font-bold mb-3 text-foreground">How it Works</h2>
                 <p className="text-muted-foreground leading-relaxed text-lg font-normal">
                     {t(diet.descriptionKey as any)}
                 </p>
@@ -170,7 +170,7 @@ const DietDetail = () => {
             onClick={handleStartDiet}
             className="h-14 pl-8 pr-6 rounded-full shadow-xl shadow-primary/30 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2 transition-transform hover:scale-105 active:scale-95"
          >
-            {t('diet_list.start_diet', 'Start Diet')} <ArrowRight className="w-5 h-5" />
+            Start Diet <ArrowRight className="w-5 h-5" />
          </Button>
       </motion.div>
     </motion.div>

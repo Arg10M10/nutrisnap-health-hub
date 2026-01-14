@@ -14,8 +14,7 @@
     "ai_limit_daily_desc": "Has alcanzado el límite de {{limit}} usos diarios para esta función. Vuelve mañana para continuar.",
     "ai_limit_weekly_desc": "Has alcanzado el límite de {{limit}} usos semanales para esta función. Vuelve la próxima semana para continuar.",
     "add": "Añadir",
-    "deleted_success": "Eliminado correctamente",
-    "saved": "Guardado correctamente"
+    "deleted_success": "Eliminado correctamente"
   },
   "water": {
     "remaining": "Restante",
@@ -325,10 +324,7 @@
     "objective": "OBJETIVO",
     "ideal_for": "IDEAL PARA",
     "not_recommended_for": "NO RECOMENDADA PARA",
-    "target_macros": "MACROS OBJETIVO",
-    "how_it_works": "CÓMO FUNCIONA",
-    "start_diet": "Empezar Dieta",
-    "diet_label": "DIETA"
+    "target_macros": "MACROS OBJETIVO"
   },
   "diet_types_data": {
     "high_protein": {
