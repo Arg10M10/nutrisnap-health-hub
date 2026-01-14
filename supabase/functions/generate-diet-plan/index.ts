@@ -26,9 +26,8 @@ serve(async (req) => {
   }
 
   try {
-    const { goal, activityLevel, preferences, cookingTime, budget, language, country } = await req.json();
+    const { goal, activityLevel, preferences, cookingTime, budget, country } = await req.json();
 
-    const targetLanguage = language && language.startsWith('es') ? 'Spanish' : 'English';
     const userCountry = country || 'their location';
 
     const prompt = `
@@ -43,7 +42,7 @@ serve(async (req) => {
       - Country/Region: ${userCountry}
 
       CRITICAL INSTRUCTIONS:
-      1. The user's preferred language is ${targetLanguage}. All meal names MUST be written in ${targetLanguage}.
+      1. The user's preferred language is English. All meal names MUST be written in English.
       2. **ADAPT TO THE COUNTRY**: Prioritize dishes, ingredients, and culinary styles typical of ${userCountry}. Make it feel local and culturally relevant.
       3. For each day, include breakfast, lunch, dinner, and a snack.
       4. For EACH meal, provide the meal name and an estimation of its nutritional values: calories (kcal), protein (g), carbs (g), and fats (g). All values must be numbers.

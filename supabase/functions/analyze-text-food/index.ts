@@ -38,7 +38,7 @@ serve(async (req) => {
   }
 
   try {
-    const { entry_id, foodName, description, portionSize, language } = await req.json();
+    const { entry_id, foodName, description, portionSize } = await req.json();
     
     if (!foodName || !portionSize) {
       return new Response(JSON.stringify({ error: "foodName and portionSize are required." }), {
@@ -47,28 +47,26 @@ serve(async (req) => {
       });
     }
 
-    const userLang = language && language.startsWith('es') ? 'Español' : 'Inglés';
-
     const prompt = `
-      Analiza esta comida basándote en su nombre, descripción y porción.
-      - Nombre: "${foodName}"
-      - Descripción: "${description || 'No proporcionada'}"
-      - Tamaño: "${portionSize}"
+      Analyze this meal based on its name, description, and portion size.
+      - Name: "${foodName}"
+      - Description: "${description || 'Not provided'}"
+      - Size: "${portionSize}"
       
-      Responde ÚNICAMENTE con un objeto JSON.
-      IMPORTANTE: Todos los textos explicativos deben estar en ${userLang}.
+      Respond ONLY with a JSON object.
+      IMPORTANT: All explanatory texts must be in English.
 
-      Estructura JSON:
+      JSON Structure:
       {
         "foodName": "${foodName}",
-        "calories": "Estimación (ej. '350-450 kcal')",
-        "protein": "Estimación (ej. '20-25g')",
-        "carbs": "Estimación (ej. '30-40g')",
-        "fats": "Estimación (ej. '15-20g')",
-        "sugars": "Estimación (ej. '5-10g')",
-        "fiber": "Estimación (ej. '5-10g')",
-        "healthRating": "Clasificación ('Saludable', 'Moderado', 'Evitar' - en ${userLang})",
-        "reason": "Explicación breve (máx 20 palabras, en ${userLang})."
+        "calories": "Estimate (e.g., '350-450 kcal')",
+        "protein": "Estimate (e.g., '20-25g')",
+        "carbs": "Estimate (e.g., '30-40g')",
+        "fats": "Estimate (e.g., '15-20g')",
+        "sugars": "Estimate (e.g., '5-10g')",
+        "fiber": "Estimate (e.g., '5-10g')",
+        "healthRating": "Classification ('Healthy', 'Moderate', 'Avoid')",
+        "reason": "Brief explanation (max 20 words, in English)."
       }
     `;
 
@@ -85,16 +83,16 @@ serve(async (req) => {
     });
 
     if (!aiRes.ok) {
-      throw new Error(`Error en la API de IA: ${aiRes.statusText}`);
+      throw new Error(`Error in AI API: ${aiRes.statusText}`);
     }
 
     const aiData = await aiRes.json();
     const jsonText = aiData.choices?.[0]?.message?.content ?? "";
     const analysisResult = safeParseJson(jsonText);
     
-    if (!analysisResult) throw new Error("La IA devolvió una respuesta en un formato inesperado.");
+    if (!analysisResult) throw new Error("The AI returned a response in an unexpected format.");
 
-    // Si hay un entry_id, actualizamos la base de datos (comportamiento para entrada manual)
+    // If there is an entry_id, update the database (behavior for manual entry)
     if (entry_id) {
       const supabaseAdmin = createClient(
         Deno.env.get('SUPABASE_URL') ?? '',
@@ -125,14 +123,14 @@ serve(async (req) => {
       if (updateError) throw updateError;
     }
 
-    // Siempre devolvemos el resultado para que el frontend pueda usarlo directamente
+    // Always return the result so the frontend can use it directly
     return new Response(JSON.stringify(analysisResult), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
 
   } catch (error) {
-    console.error("Error en la función Edge:", error);
+    console.error("Error in Edge function:", error);
     return new Response(JSON.stringify({ error: (error as Error).message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,

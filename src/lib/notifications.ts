@@ -1,34 +1,33 @@
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Capacitor } from '@capacitor/core';
-import i18n from './i18n';
 
-// --- Banco de Mensajes General (Mezclados) ---
+// --- Message Bank (English only) ---
 
 const getGeneralMessages = () => [
-  { title: "💧 " + i18n.t('notifications.water_title_1', 'Hidratación'), body: i18n.t('notifications.water_body_1', 'Tu cuerpo necesita agua. ¡Bebe un vaso!') },
-  { title: "🍽️ " + i18n.t('notifications.food_title', 'Hora de Comer'), body: i18n.t('notifications.food_body_1', '¿Qué hay de rico hoy? Regístralo.') },
-  { title: "🍎 " + i18n.t('notifications.snack_title', 'Snack Time'), body: i18n.t('notifications.snack_body', 'Pequeña pausa, registra tu snack.') },
-  { title: "✨ " + i18n.t('notifications.water_title_2', 'Hábito Saludable'), body: i18n.t('notifications.water_body_2', 'Mantente hidratado para mejores resultados.') },
-  { title: "💪 " + i18n.t('notifications.weight_title_1', 'Sigue así'), body: "La constancia es la clave del éxito." },
-  { title: "📝 " + i18n.t('bottom_nav.log_title', 'Registrar'), body: "No olvides registrar tus comidas de hoy." },
-  { title: "🎯 " + i18n.t('home.title', 'Calorel'), body: "¿Ya completaste tus metas de hoy?" },
+  { title: "💧 Hydration", body: "Your body needs water. Drink a glass!" },
+  { title: "🍽️ Lunch Time", body: "What's for lunch? Log it now." },
+  { title: "🍎 Snack Time", body: "Quick break, log your snack." },
+  { title: "✨ Healthy Habit", body: "Stay hydrated for better results." },
+  { title: "💪 Keep it up", body: "Consistency is the key to success." },
+  { title: "📝 Log it", body: "Don't forget to log your meals today." },
+  { title: "🎯 Calorel", body: "Have you completed your goals for today?" },
 ];
 
 // --- Helpers ---
 
-// Calcula la próxima fecha para una hora específica
+// Calculates the next date for a specific time
 const getNextTime = (hour: number, minute: number = 0) => {
   const now = new Date();
   const next = new Date();
   next.setHours(hour, minute, 0, 0);
-  // Si la hora ya pasó hoy, programar para mañana
+  // If the time has already passed today, schedule for tomorrow
   if (next <= now) {
     next.setDate(next.getDate() + 1);
   }
   return next;
 };
 
-// --- Gestor ---
+// --- Manager ---
 
 export const NotificationManager = {
   async requestPermissions() {
@@ -41,11 +40,11 @@ export const NotificationManager = {
       const result = await LocalNotifications.requestPermissions();
       
       if (result.display === 'granted') {
-        // Crear canal de alta importancia para Android (CRÍTICO para que suenen)
+        // Create high-importance channel for Android (CRITICAL for sound/pop-up)
         await LocalNotifications.createChannel({
           id: 'calorel_alerts',
-          name: 'Alertas Calorel',
-          description: 'Recordatorios diarios',
+          name: 'Calorel Alerts',
+          description: 'Daily reminders',
           importance: 5, // 5 = High importance (pop-up)
           visibility: 1,
           vibration: true,
@@ -61,65 +60,65 @@ export const NotificationManager = {
     }
   },
 
-  // --- Nueva lógica: Intervalos de 3 horas ---
+  // --- New logic: 3-hour intervals ---
 
   async scheduleRandomReminders() {
     if (!(await this.requestPermissions())) return;
     
-    // Cancelar todo lo anterior para evitar duplicados
+    // Cancel all previous to avoid duplicates
     await this.cancelAll();
 
     const messages = getGeneralMessages();
-    const hours = [9, 12, 15, 18, 21]; // 9am, 12pm, 3pm, 6pm, 9pm (Cada 3 horas aprox)
+    const hours = [9, 12, 15, 18, 21]; // 9am, 12pm, 3pm, 6pm, 9pm (Approx every 3 hours)
     
     const notifications = hours.map((hour, index) => {
-      // Elegir un mensaje aleatorio para esta franja horaria (pseudo-aleatorio basado en índice para variar)
-      // Usamos el resto del índice + hora para rotar mensajes
+      // Choose a random message for this time slot (pseudo-random based on index to vary)
+      // Use remainder of index + hour to rotate messages
       const msgIndex = (index + new Date().getDate()) % messages.length; 
       const msg = messages[msgIndex];
 
       return {
-        id: 100 + index, // IDs únicos: 100, 101, 102...
+        id: 100 + index, // Unique IDs: 100, 101, 102...
         title: msg.title,
         body: msg.body,
         schedule: { 
           at: getNextTime(hour), 
           repeats: true, 
           every: 'day', 
-          allowWhileIdle: true // Importante para Android Doze mode
+          allowWhileIdle: true // Important for Android Doze mode
         },
         channelId: 'calorel_alerts',
-        smallIcon: 'ic_stat_icon_config_sample', // Icono por defecto de Android
+        smallIcon: 'ic_stat_icon_config_sample', // Default Android icon
         sound: 'default'
       };
     });
 
     try {
       await LocalNotifications.schedule({ notifications });
-      console.log(`Programadas ${notifications.length} notificaciones cada 3 horas.`);
+      console.log(`Scheduled ${notifications.length} notifications every 3 hours.`);
     } catch (error) {
       console.error("Error scheduling notifications:", error);
     }
   },
 
-  // --- Mantener métodos legacy para compatibilidad con Settings (redirigen al nuevo) ---
+  // --- Keep legacy methods for compatibility with Settings (redirect to new one) ---
 
   async scheduleMealReminders() {
-    // Ahora es parte del scheduler general
+    // Now part of the general scheduler
     await this.scheduleRandomReminders();
   },
 
   async scheduleWaterReminders() {
-    // Ahora es parte del scheduler general
+    // Now part of the general scheduler
     await this.scheduleRandomReminders();
   },
 
   async scheduleWeightReminder() {
-    // Ahora es parte del scheduler general
+    // Now part of the general scheduler
     await this.scheduleRandomReminders();
   },
 
-  // --- Canceladores ---
+  // --- Cancellers ---
 
   async cancelMealReminders() { await this.cancelAll(); },
   async cancelWaterReminders() { await this.cancelAll(); },
