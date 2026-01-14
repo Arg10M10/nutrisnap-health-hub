@@ -89,8 +89,8 @@ const Subscribe = () => {
     navigate('/');
   };
 
-  const annualPrice = "$71.88";
-  const annualMonthlyEquivalent = "$5.99";
+  const annualPrice = "$36.00";
+  const annualMonthlyEquivalent = "$3.00";
   const monthlyPrice = "$9.00";
 
   const benefits = [
@@ -106,7 +106,7 @@ const Subscribe = () => {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="absolute top-12 left-4 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors z-50"
+        className="absolute top-4 left-4 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors z-50"
         onClick={handleSkip}
       >
         <X className="w-6 h-6" />

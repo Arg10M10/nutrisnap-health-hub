@@ -108,14 +108,14 @@ const RecentAnalysisCard = ({
       
       <div className="flex-1 min-w-0 flex flex-col justify-center min-h-[5rem]">
         <div className="flex justify-between items-start mb-2 gap-2">
-          <h4 className="font-semibold text-foreground leading-tight">{isProcessing ? t('analysis.analyzing_short') : foodName}</h4>
+          <h4 className="font-semibold text-foreground leading-tight">{foodName}</h4>
           <span className="text-xs text-muted-foreground flex-shrink-0 pt-0.5">{time}</span>
         </div>
         
         {isProcessing ? (
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-primary font-medium animate-pulse">{t('analysis.processing')}</span>
+              <span className="text-primary font-medium animate-pulse">Analizando con IA...</span>
               <span className="font-bold text-foreground">{Math.floor(progress)}%</span>
             </div>
             <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
@@ -126,7 +126,7 @@ const RecentAnalysisCard = ({
             </div>
           </div>
         ) : hasFailed ? (
-          <p className="text-sm text-destructive font-medium leading-tight">{reason || t('analysis.failed')}</p>
+          <p className="text-sm text-destructive font-medium leading-tight">{reason || 'Análisis fallido.'}</p>
         ) : isMenu ? (
           <div className="mt-1 flex items-center">
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold transition-colors group-hover:bg-primary/20">

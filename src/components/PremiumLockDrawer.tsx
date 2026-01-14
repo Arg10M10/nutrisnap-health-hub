@@ -96,7 +96,7 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
                 whileTap={{ scale: 0.99 }}
               >
                 <div className="bg-primary text-white text-center py-1 text-[10px] font-bold tracking-wide uppercase">
-                  Ahorra 33%
+                  Ahorra 67%
                 </div>
                 <div className="p-3 flex items-center justify-between">
                   <div className="flex flex-col">
@@ -106,10 +106,10 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
                   
                   <div className="flex flex-col items-end">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-primary">$5.99</span>
+                      <span className="text-2xl font-black text-primary">$3.00</span>
                       <span className="text-xs font-medium text-muted-foreground">/mes</span>
                     </div>
-                    <span className="text-[10px] font-semibold text-primary/80">$71.88 facturado hoy</span>
+                    <span className="text-[10px] font-semibold text-primary/80">$36.00 facturado hoy</span>
                   </div>
 
                   {selectedPlan === 'annual' && (
