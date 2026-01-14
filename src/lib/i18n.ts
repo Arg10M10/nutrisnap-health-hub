@@ -15,17 +15,17 @@ const resources = {
 };
 
 i18n
-  .use(LanguageDetector) // Detects user language
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: "en", // El idioma por defecto si no se detecta nada
-    supportedLngs: ['en', 'es'],
+    fallbackLng: "es", // Español como fallback principal
+    lng: "es", // Forzar inicio en español si no se detecta nada
+    supportedLngs: ['es', 'en'],
     detection: {
-      // Eliminamos 'navigator' para que no detecte el idioma del navegador por defecto.
-      // Ahora, si no hay nada en localStorage, usará el fallbackLng ('en').
-      order: ['localStorage'],
-      caches: ['localStorage'], // Guarda la elección del usuario
+      // Orden: Primero localstorage, luego navegador
+      order: ['localStorage', 'navigator'], 
+      caches: ['localStorage'],
     },
     interpolation: {
       escapeValue: false,
