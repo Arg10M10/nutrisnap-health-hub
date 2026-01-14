@@ -290,35 +290,15 @@
     "desc_monthly": "Thank you for trusting Calorel. Let's reach those goals together!",
     "button": "Start Now"
   },
-  "generating_plan": {
-    "step1": "Analyzing your profile and goals...",
-    "step2": "Calculating your personalized macro targets...",
-    "step3": "Generating your first week's meal plan...",
-    "step4": "Plan ready!"
-  },
-  "home": {
-    "title": "Calorel",
-    "goal_achieved_toast": "Great! Based on your rate, you should reach your goal weight around {{date}}.",
-    "kcal_remaining": "{{count}} kcal remaining",
-    "kcal_over": "{{count}} kcal over",
-    "protein": "Protein",
-    "carbs": "Carbs",
-    "fats": "Fats",
-    "sugars": "Sugars",
-    "fiber": "Fiber",
-    "health_score": "Health Score",
-    "health_score_excellent": "Excellent",
-    "health_score_good": "Good",
-    "health_score_fair": "Fair",
-    "health_score_improvable": "Improvable",
-    "water_tracker_glasses": "{{goal}} oz goal",
-    "water_tracker_title": "oz",
-    "todays_analysis": "Today's Log",
-    "no_data": "No entries yet.",
-    "start_logging": "Tap the '+' button to log your first meal or exercise.",
-    "log_water_title": "Log Water",
-    "steps": "Steps",
-    "active_calories": "Active"
+  "widgets": {
+    "title": "Widgets",
+    "preview_title": "Your progress at home",
+    "how_to_add": "How to add?",
+    "instructions_title": "Add Widget to Home",
+    "step_1": "Go to your phone's home screen.",
+    "step_2": "Long press on an empty space.",
+    "step_3": "Select 'Widgets'.",
+    "step_4": "Search for 'Calorel' and drag the widget."
   },
   "bottom_nav": {
     "home": "Home",
@@ -367,6 +347,22 @@
       "ideal_for_2": "People looking for quick results under control.",
       "not_recommended_for_1": "People with liver or kidney issues.",
       "not_recommended_for_2": "Pregnant or breastfeeding women."
+    },
+    "vegetarian": {
+      "name": "Vegetarian Diet",
+      "short_desc": "No meat, rich in vegetables and dairy.",
+      "description": "Eliminates meat consumption but allows foods like eggs and dairy, basing the diet mainly on plant sources.",
+      "objective": "Reduce meat consumption while maintaining balanced nutrition.",
+      "ideal_for_1": "People who do not consume meat.",
+      "ideal_for_2": "Users looking for a lighter and more sustainable diet."
+    },
+    "mediterranean": {
+      "name": "Mediterranean Diet",
+      "short_desc": "Fresh foods and healthy fats.",
+      "description": "Based on fresh foods, healthy fats, and low consumption of ultra-processed foods, with an emphasis on nutritional quality.",
+      "objective": "Improve cardiovascular health and overall well-being in the long term.",
+      "ideal_for_1": "People looking for a healthy and sustainable diet.",
+      "ideal_for_2": "Users focused on prevention and general health."
     }
   },
   "recipes": {
@@ -1472,7 +1468,8 @@
     "log_weight": "Log Weight",
     "log_water": "Log Water",
     "recipes": "Recipes",
-    "diets_label": "Diets"
+    "diets_label": "Weekly Plan",
+    "diet_types": "Diet Types"
   },
   "diet_list": {
     "title": "Premium Diets",
@@ -1504,6 +1501,22 @@
       "ideal_for_2": "People looking for quick results under control.",
       "not_recommended_for_1": "People with liver or kidney issues.",
       "not_recommended_for_2": "Pregnant or breastfeeding women."
+    },
+    "vegetarian": {
+      "name": "Vegetarian Diet",
+      "short_desc": "No meat, rich in vegetables and dairy.",
+      "description": "Eliminates meat consumption but allows foods like eggs and dairy, basing the diet mainly on plant sources.",
+      "objective": "Reduce meat consumption while maintaining balanced nutrition.",
+      "ideal_for_1": "People who do not consume meat.",
+      "ideal_for_2": "Users looking for a lighter and more sustainable diet."
+    },
+    "mediterranean": {
+      "name": "Mediterranean Diet",
+      "short_desc": "Fresh foods and healthy fats.",
+      "description": "Based on fresh foods, healthy fats, and low consumption of ultra-processed foods, with an emphasis on nutritional quality.",
+      "objective": "Improve cardiovascular health and overall well-being in the long term.",
+      "ideal_for_1": "People looking for a healthy and sustainable diet.",
+      "ideal_for_2": "Users focused on prevention and general health."
     }
   }
 }
