@@ -364,5 +364,45 @@
       "ideal_for_1": "Personas que buscan una dieta saludable y sostenible.",
       "ideal_for_2": "Usuarios enfocados en prevención y salud general."
     }
+  },
+  "home": {
+    "protein": "Proteína",
+    "carbs": "Carbos",
+    "fats": "Grasas",
+    "sugars": "Azúcares",
+    "fiber": "Fibra",
+    "health_score": "Puntuación de Salud",
+    "health_score_excellent": "Excelente",
+    "health_score_good": "Buena",
+    "health_score_improvable": "Mejorable",
+    "kcal_remaining": "{{count}} kcal restantes",
+    "kcal_over": "{{count}} kcal de más",
+    "todays_analysis": "Análisis de Hoy",
+    "no_data": "Sin datos aún",
+    "start_logging": "Escanea una comida o registra ejercicio para empezar.",
+    "log_water_title": "Agua"
+  },
+  "analysis": {
+    "calories": "Calorías",
+    "protein": "Proteína",
+    "carbs": "Carbos",
+    "fats": "Grasas",
+    "sugars": "Azúcares",
+    "fiber": "Fibra",
+    "recommendation": "Recomendación IA",
+    "default_reason": "Análisis basado en estimación visual y porciones comunes.",
+    "health_rating": {
+      "healthy": "Saludable",
+      "moderate": "Moderado",
+      "avoid": "Evitar"
+    },
+    "save_to_diary": "Guardar en Diario",
+    "details_title": "Detalles de la Comida",
+    "close": "Cerrar",
+    "detected_ingredients": "Ingredientes Detectados",
+    "processing": "Analizando con IA...",
+    "failed": "Análisis fallido.",
+    "calculating_exercise": "La IA está calculando tu esfuerzo...",
+    "analyzing_short": "Analizando..."
   }
 }

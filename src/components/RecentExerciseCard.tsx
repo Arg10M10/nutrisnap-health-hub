@@ -43,17 +43,17 @@ const RecentExerciseCard = ({ entry }: RecentExerciseCardProps) => {
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start mb-2">
           <h4 className="font-semibold text-foreground truncate pr-2">
-            {isProcessing ? (entry.description || 'Analizando...') : t(`exercise.${entry.exercise_type}` as any, { defaultValue: entry.exercise_type })}
+            {isProcessing ? (entry.description || t('analysis.analyzing_short')) : t(`exercise.${entry.exercise_type}` as any, { defaultValue: entry.exercise_type })}
           </h4>
           <span className="text-xs text-muted-foreground flex-shrink-0">{new Date(entry.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         </div>
         
         {isProcessing ? (
           <div className="space-y-2">
-            <p className="text-sm text-primary animate-pulse">La IA está calculando tu esfuerzo...</p>
+            <p className="text-sm text-primary animate-pulse">{t('analysis.calculating_exercise')}</p>
           </div>
         ) : hasFailed ? (
-          <p className="text-sm text-destructive font-medium">Análisis fallido.</p>
+          <p className="text-sm text-destructive font-medium">{t('analysis.failed')}</p>
         ) : (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">

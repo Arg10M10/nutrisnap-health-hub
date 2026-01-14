@@ -38,7 +38,7 @@ const Index = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   
   const [selectedAnalysis, setSelectedAnalysis] = useState<FoodEntry | null>(null);
   const [selectedMenuData, setSelectedMenuData] = useState<MenuAnalysisData | null>(null);
@@ -46,6 +46,9 @@ const Index = () => {
 
   const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Dynamic locale for dates
+  const dateLocale = i18n.language.startsWith('es') ? es : enUS;
 
   useEffect(() => {
     if (!api) {
@@ -256,7 +259,7 @@ const Index = () => {
                       <RecentAnalysisCard 
                         imageUrl={item.image_url}
                         foodName={item.food_name}
-                        time={format(new Date(item.created_at), 'p', { locale: es })}
+                        time={format(new Date(item.created_at), 'p', { locale: dateLocale })}
                         calories={item.calories_value}
                         protein={item.protein_value}
                         carbs={item.carbs_value}
