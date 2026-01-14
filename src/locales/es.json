@@ -282,7 +282,7 @@
     "features_title": "Funciones Premium Incluidas:",
     "features": {
       "scanner": "Escáner de Comida con IA (Ilimitado)",
-      "exercise": "Análisis de Ejercicio con IA (Ilimitado)",
+      "exercise": "Análisis Ejercicio IA (Ilimitado)",
       "diet_plans": "Planes de Dieta Semanales Personalizados",
       "goals": "Seguimiento Avanzado de Metas y Sugerencias",
       "menu_analysis": "Análisis de Menús de Restaurante",
@@ -389,6 +389,14 @@
       "objective": "Mejorar la salud cardiovascular y el bienestar general a largo plazo.",
       "ideal_for_1": "Personas que buscan una dieta saludable y sostenible.",
       "ideal_for_2": "Usuarios enfocados en prevención y salud general."
+    },
+    "dash": {
+      "name": "DASH",
+      "short_desc": "Equilibrio nutricional y control de sodio.",
+      "description": "Prioriza el equilibrio nutricional y el control del sodio para apoyar la salud cardiovascular.",
+      "objective": "Mejorar la presión arterial y la salud del corazón.",
+      "ideal_for_1": "Personas con enfoque en salud cardiovascular.",
+      "ideal_for_2": "Usuarios que buscan una dieta preventiva y controlada."
     }
   },
   "recipes": {
