@@ -291,17 +291,35 @@
     "desc_monthly": "Thank you for trusting Calorel. Let's reach those goals together!",
     "button": "Start Now"
   },
-  "widgets": {
-    "title": "Widgets",
-    "preview_title": "Your progress at home",
-    "how_to_add": "How to add?",
-    "instructions_title": "Add Widget to Home",
-    "step_1": "Go to your phone's home screen.",
-    "step_2": "Long press on an empty space.",
-    "step_3": "Select 'Widgets'.",
-    "step_4": "Search for 'Calorel' and drag the widget.",
-    "preview": "Preview",
-    "adaptive_note": "The widget automatically adapts to your phone's light or dark mode."
+  "generating_plan": {
+    "step1": "Analyzing your profile and goals...",
+    "step2": "Calculating your personalized macro targets...",
+    "step3": "Generating your first week's meal plan...",
+    "step4": "Plan ready!"
+  },
+  "home": {
+    "title": "Calorel",
+    "goal_achieved_toast": "Great! Based on your rate, you should reach your goal weight around {{date}}.",
+    "kcal_remaining": "{{count}} kcal remaining",
+    "kcal_over": "{{count}} kcal over",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fats": "Fats",
+    "sugars": "Sugars",
+    "fiber": "Fiber",
+    "health_score": "Health Score",
+    "health_score_excellent": "Excellent",
+    "health_score_good": "Good",
+    "health_score_fair": "Fair",
+    "health_score_improvable": "Improvable",
+    "water_tracker_glasses": "{{goal}} oz goal",
+    "water_tracker_title": "oz",
+    "todays_analysis": "Today's Log",
+    "no_data": "No entries yet.",
+    "start_logging": "Tap the '+' button to log your first meal or exercise.",
+    "log_water_title": "Log Water",
+    "steps": "Steps",
+    "active_calories": "Active"
   },
   "bottom_nav": {
     "home": "Home",
@@ -374,24 +392,6 @@
       "objective": "Improve blood pressure and heart health.",
       "ideal_for_1": "People focusing on cardiovascular health.",
       "ideal_for_2": "Users looking for a preventive and controlled diet."
-    },
-    "low_carb": {
-      "name": "Low Carb",
-      "short_desc": "Moderately reduces carbohydrates.",
-      "description": "Moderately reduces carbohydrates without eliminating them completely, prioritizing proteins and healthy fats as main energy sources.",
-      "objective": "Decrease blood sugar spikes, improve satiety, and facilitate sustainable fat loss.",
-      "ideal_for_1": "People wanting to lower carbs without going full Keto.",
-      "ideal_for_2": "Users seeking appetite control.",
-      "ideal_for_3": "Those preferring a flexible, long-term maintainable diet."
-    },
-    "low_fat": {
-      "name": "Low Fat",
-      "short_desc": "Limits total fat consumption.",
-      "description": "Limits total fat consumption, prioritizing complex carbohydrates, fruits, vegetables, and lean proteins.",
-      "objective": "Reduce calories from fats, improve cardiovascular profile, and facilitate weight loss for those sensitive to dietary fat.",
-      "ideal_for_1": "People with high cholesterol or cardiovascular risk.",
-      "ideal_for_2": "Users who tolerate carbohydrates well.",
-      "ideal_for_3": "Those looking for a simple strategy to reduce calories."
     }
   },
   "recipes": {
@@ -1391,5 +1391,14 @@
     "profile_content": "The Profile tab is your personal space. Here you can edit your details, manage goals, and configure app settings.",
     "finish": "Finish",
     "next": "Next"
+  },
+  "widgets": {
+    "title": "Widgets",
+    "how_to_add": "How to add?",
+    "instructions_title": "Add Widget to Home",
+    "step_1": "Go to your phone's home screen.",
+    "step_2": "Long press on an empty space.",
+    "step_3": "Select 'Widgets'.",
+    "step_4": "Search for 'Calorel' and drag the widget."
   }
 }
