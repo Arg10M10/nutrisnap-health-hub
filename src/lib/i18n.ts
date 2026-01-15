@@ -1424,6 +1424,71 @@ const resources = {
         "step_2": "Long press on an empty space.",
         "step_3": "Select 'Widgets'.",
         "step_4": "Search for 'Calorel' and drag the widget."
+      },
+      "diet_types_data": {
+        "high_protein": {
+          "name": "High Protein",
+          "short_desc": "Boost protein intake to gain muscle and lose fat.",
+          "description": "A nutritional plan focused on increasing the proportion of protein within daily intake to promote muscle mass preservation, improve satiety, and support body fat reduction while maintaining an adequate caloric balance.",
+          "objective": "Prioritize protein consumption within a balanced diet without completely eliminating carbohydrates or fats.",
+          "ideal_for_1": "People looking to lose fat without losing muscle mass.",
+          "ideal_for_2": "Users who perform physical activity or strength training.",
+          "ideal_for_3": "People who want better appetite control.",
+          "not_recommended_for_1": "People with medical restrictions related to high protein diets.",
+          "not_recommended_for_2": "People following a strictly vegan diet."
+        },
+        "keto": {
+          "name": "Keto Diet",
+          "short_desc": "High fat, low carb.",
+          "description": "Drastically reduces carbohydrates and increases fat consumption so the body uses fat as the main energy source.",
+          "objective": "Induce a metabolic state that favors fat burning.",
+          "ideal_for_1": "Users experienced in nutritional control.",
+          "ideal_for_2": "People looking for quick results under control.",
+          "not_recommended_for_1": "People with liver or kidney issues.",
+          "not_recommended_for_2": "Pregnant or breastfeeding women."
+        },
+        "vegetarian": {
+          "name": "Vegetarian",
+          "short_desc": "Eliminates meat, includes eggs and dairy.",
+          "description": "Eliminates meat consumption but allows foods like eggs and dairy, basing the diet mainly on plant sources.",
+          "objective": "Reduce meat consumption while maintaining balanced nutrition.",
+          "ideal_for_1": "People who do not consume meat.",
+          "ideal_for_2": "Users looking for a lighter and more sustainable diet."
+        },
+        "mediterranean": {
+          "name": "Mediterranean",
+          "short_desc": "Fresh foods and healthy fats.",
+          "description": "Based on fresh foods, healthy fats, and low consumption of ultra-processed foods, emphasizing nutritional quality.",
+          "objective": "Improve cardiovascular health and long-term general well-being.",
+          "ideal_for_1": "People looking for a healthy and sustainable diet.",
+          "ideal_for_2": "Users focused on prevention and general health."
+        },
+        "dash": {
+          "name": "DASH Diet",
+          "short_desc": "Balanced nutrition to stop hypertension.",
+          "description": "Prioritizes nutritional balance and sodium control to support cardiovascular health.",
+          "objective": "Improve blood pressure and heart health.",
+          "ideal_for_1": "People focusing on cardiovascular health.",
+          "ideal_for_2": "Users looking for a preventive and controlled diet."
+        },
+        "low_carb": {
+          "name": "Low Carb",
+          "short_desc": "Moderately reduces carbohydrates.",
+          "description": "Moderately reduces carbohydrates without eliminating them completely, prioritizing protein and healthy fats as main energy sources.",
+          "objective": "Lower blood sugar spikes, improve satiety, and support sustainable fat loss.",
+          "ideal_for_1": "People who want to reduce carbs without going fully keto.",
+          "ideal_for_2": "Users looking for better appetite control.",
+          "ideal_for_3": "Those who prefer a flexible and maintainable approach."
+        },
+        "low_fat": {
+          "name": "Low Fat",
+          "short_desc": "Limits total fat intake.",
+          "description": "Limits total fat intake while prioritizing complex carbohydrates, fruits, vegetables, and lean proteins.",
+          "objective": "Reduce calorie intake from fats, improve cardiovascular health markers, and support weight loss for people sensitive to dietary fat.",
+          "ideal_for_1": "People with high cholesterol or cardiovascular risk.",
+          "ideal_for_2": "Users who tolerate carbohydrates well.",
+          "ideal_for_3": "Those who want a simple, structured way to reduce calories."
+        }
       }
     }
   }

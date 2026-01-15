@@ -127,5 +127,47 @@ export const diets: Diet[] = [
     image: "/diets/dash.webp",
     icon: "❤️",
     textColor: 'light'
+  },
+  {
+    id: "low_carb",
+    nameKey: "diet_types_data.low_carb.name",
+    shortDescKey: "diet_types_data.low_carb.short_desc",
+    descriptionKey: "diet_types_data.low_carb.description",
+    objectiveKey: "diet_types_data.low_carb.objective",
+    idealForKeys: [
+      "diet_types_data.low_carb.ideal_for_1",
+      "diet_types_data.low_carb.ideal_for_2",
+      "diet_types_data.low_carb.ideal_for_3"
+    ],
+    notRecommendedForKeys: [],
+    macros: {
+      protein: "30–35 %",
+      carbs: "20–30 %",
+      fats: "35–50 %"
+    },
+    image: "/diets/low-carb.webp",
+    icon: "🥩",
+    textColor: 'light'
+  },
+  {
+    id: "low_fat",
+    nameKey: "diet_types_data.low_fat.name",
+    shortDescKey: "diet_types_data.low_fat.short_desc",
+    descriptionKey: "diet_types_data.low_fat.description",
+    objectiveKey: "diet_types_data.low_fat.objective",
+    idealForKeys: [
+      "diet_types_data.low_fat.ideal_for_1",
+      "diet_types_data.low_fat.ideal_for_2",
+      "diet_types_data.low_fat.ideal_for_3"
+    ],
+    notRecommendedForKeys: [],
+    macros: {
+      protein: "20–25 %",
+      carbs: "55–60 %",
+      fats: "15–20 %"
+    },
+    image: "/diets/low-fat.webp",
+    icon: "🥦",
+    textColor: 'light'
   }
 ];
