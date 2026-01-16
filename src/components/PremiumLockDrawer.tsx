@@ -23,12 +23,12 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
   };
 
   const benefits = [
-    { name: "Escáner de Comida IA", free: false, premium: true },
-    { name: "Análisis Ejercicio IA", free: false, premium: true },
-    { name: "Planes de Dieta", free: false, premium: true },
-    { name: "Análisis de Menús", free: false, premium: true },
-    { name: "Sugerencias Macros", free: false, premium: true },
-    { name: "Registro Peso/Agua", free: true, premium: true },
+    { name: "AI Food Scanner", free: false, premium: true },
+    { name: "AI Exercise Analysis", free: false, premium: true },
+    { name: "Diet Plans", free: false, premium: true },
+    { name: "Menu Analysis", free: false, premium: true },
+    { name: "Macro Suggestions", free: false, premium: true },
+    { name: "Weight/Water Tracking", free: true, premium: true },
   ];
 
   return (
@@ -47,10 +47,10 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
             </div>
 
             <h2 className="text-xl font-bold leading-tight text-foreground mb-1">
-              Mejora tu versión con <span className="text-primary font-black">Calorel Premium</span>
+              Upgrade to <span className="text-primary font-black">Calorel Premium</span>
             </h2>
             <p className="text-xs text-muted-foreground font-medium">
-              Logra tu objetivo 3x más rápido.
+              Reach your goal 3x faster.
             </p>
           </div>
 
@@ -61,7 +61,7 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
             <div className="bg-white rounded-xl shadow-sm border border-border/40 overflow-hidden">
               <div className="grid grid-cols-[1.4fr_0.8fr_0.8fr] border-b border-border/40 bg-gray-50/50">
                 <div className="p-2"></div>
-                <div className="p-2 text-center text-[10px] font-bold text-muted-foreground tracking-wider self-center">GRATIS</div>
+                <div className="p-2 text-center text-[10px] font-bold text-muted-foreground tracking-wider self-center">FREE</div>
                 <div className="p-2 text-center text-[10px] font-bold text-primary-foreground bg-primary tracking-wider self-center">PREMIUM</div>
               </div>
 
@@ -96,20 +96,20 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
                 whileTap={{ scale: 0.99 }}
               >
                 <div className="bg-primary text-white text-center py-1 text-[10px] font-bold tracking-wide uppercase">
-                  Ahorra 67%
+                  Save 44%
                 </div>
                 <div className="p-3 flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold text-foreground">Anual</span>
+                    <span className="text-sm font-bold text-foreground">Annual</span>
                     <span className="text-[10px] text-muted-foreground line-through">$108.00</span>
                   </div>
                   
                   <div className="flex flex-col items-end">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-primary">$3.00</span>
-                      <span className="text-xs font-medium text-muted-foreground">/mes</span>
+                      <span className="text-2xl font-black text-primary">$5.00</span>
+                      <span className="text-xs font-medium text-muted-foreground">/mo</span>
                     </div>
-                    <span className="text-[10px] font-semibold text-primary/80">$36.00 facturado hoy</span>
+                    <span className="text-[10px] font-semibold text-primary/80">$60.00 billed today</span>
                   </div>
 
                   {selectedPlan === 'annual' && (
@@ -132,8 +132,8 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
                 onClick={() => setSelectedPlan('monthly')}
                 whileTap={{ scale: 0.99 }}
               >
-                <span className="text-sm font-bold text-foreground">Mensual</span>
-                <span className="text-base font-bold text-foreground">$9.00<span className="text-xs font-normal text-muted-foreground">/mes</span></span>
+                <span className="text-sm font-bold text-foreground">Monthly</span>
+                <span className="text-base font-bold text-foreground">$9.00<span className="text-xs font-normal text-muted-foreground">/mo</span></span>
               </motion.div>
             </div>
           </div>
@@ -145,18 +145,18 @@ const PremiumLockDrawer = ({ isOpen, onClose }: PremiumLockDrawerProps) => {
               className="w-full h-12 text-base font-bold rounded-full shadow-xl shadow-primary/20 bg-primary text-primary-foreground hover:bg-primary/90 transition-transform active:scale-95"
               onClick={handleUnlock}
             >
-              Continuar
+              Continue
             </Button>
             
             <div className="mt-3 flex justify-center gap-4 text-[10px] text-muted-foreground/70">
-              <button className="hover:text-foreground hover:underline">Términos</button>
-              <button className="hover:text-foreground hover:underline">Privacidad</button>
-              <button className="hover:text-foreground hover:underline">Restaurar</button>
+              <button className="hover:text-foreground hover:underline">Terms</button>
+              <button className="hover:text-foreground hover:underline">Privacy</button>
+              <button className="hover:text-foreground hover:underline">Restore</button>
             </div>
             
             <div className="mt-2 text-center">
                <button onClick={onClose} className="text-[10px] text-muted-foreground/50 font-medium hover:text-foreground p-2 transition-colors">
-                 No gracias, continuaré limitado
+                 No thanks, I'll stay limited
                </button>
             </div>
           </div>

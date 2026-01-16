@@ -241,7 +241,7 @@ const resources = {
       "subscribe": {
         "title": "Unlock Your Full Potential",
         "subtitle": "Get all premium features to reach your goals faster.",
-        "best_value": "Best Value - Save 67%",
+        "best_value": "Best Value - Save 44%",
         "month_short": "mo",
         "billed_yearly": "{{price}} billed yearly",
         "billed_yearly_simple": "billed today",
@@ -1489,6 +1489,1013 @@ const resources = {
           "ideal_for_2": "Users who tolerate carbohydrates well.",
           "ideal_for_3": "Those who want a simple, structured way to reduce calories."
         }
+      },
+      "recipes": {
+        "title": "Recipes",
+        "coming_soon": "Coming soon...",
+        "recipes_disclaimer": "Note: All nutritional values are approximations and not exact.",
+        "like_question": "Did you like this recipe?",
+        "liked_text": "Glad you liked it!",
+        "like_count": "{{count}} people recommend this",
+        "feedback_thanks": "Thanks for your feedback!",
+        "categories": {
+            "lunch_dinner": "Lunch / Dinner",
+            "snack_breakfast": "Snack / Breakfast",
+            "breakfast": "Breakfast"
+        },
+        "yogurt_fruits_granola": {
+          "name": "Yogurt with Fruit and Granola",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "yogurt": "Non-fat plain yogurt",
+            "strawberries": "Strawberries",
+            "banana": "Banana",
+            "granola": "Granola",
+            "honey": "Honey (optional)"
+          },
+          "instructions": [
+            "Cut the fruit into small pieces.",
+            "Mix the yogurt with the fruit.",
+            "Sprinkle the granola on top.",
+            "Add honey if desired and serve."
+          ]
+        },
+        "spaghetti_bolognese": {
+          "name": "Spaghetti Bolognese",
+          "ingredients": "Ingredients",
+          "steps": "Instructions",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "spaghetti": "Spaghetti",
+            "ground_beef": "Ground Beef (10–15% fat)",
+            "tomato_sauce": "Crushed tomatoes or natural tomato sauce",
+            "onion": "Onion",
+            "garlic": "Clove of garlic",
+            "olive_oil": "Olive oil",
+            "salt": "Salt",
+            "pepper": "Pepper",
+            "herbs": "Oregano or basil"
+          },
+          "instructions": [
+            "Boil salted water and cook spaghetti according to package instructions (8–10 minutes). Drain.",
+            "Heat oil in a pan and sauté chopped onion and garlic for 2–3 minutes.",
+            "Add ground beef and cook until browned.",
+            "Add crushed tomatoes, salt, pepper, and herbs. Simmer for 10–15 minutes.",
+            "Mix pasta with sauce or serve sauce over spaghetti."
+          ]
+        },
+        "grilled_chicken_rice": {
+          "name": "Grilled Chicken with Rice and Salad",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "chicken_breast": "Chicken breast",
+            "white_rice": "Uncooked white rice",
+            "lettuce": "Lettuce",
+            "tomato": "Tomato",
+            "olive_oil": "Olive oil",
+            "salt": "Salt",
+            "pepper": "Pepper",
+            "lemon_juice": "Lemon juice"
+          },
+          "instructions": [
+            "Cook the rice in salted water for 15–18 minutes. Drain.",
+            "Season the chicken breast with salt and pepper.",
+            "Heat a pan or griddle with 5 g of oil and cook the chicken for 5–6 minutes per side until well cooked.",
+            "Chop the lettuce and tomato, mix and dress with lemon juice and the remaining 5 g of oil.",
+            "Serve the chicken alongside the rice and salad."
+          ]
+        },
+        "grilled_chicken_tacos": {
+          "name": "Grilled Chicken Tacos",
+          "ingredients": "Ingredients",
+          "steps": "Instructions",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "chicken_breast": "Chicken breast",
+            "corn_tortillas": "Corn tortillas",
+            "lettuce": "Lettuce",
+            "tomato": "Tomato",
+            "olive_oil": "Olive oil",
+            "salt": "Salt",
+            "pepper": "Pepper"
+          },
+          "instructions": [
+            "Cook the chicken in a pan with oil, salt, and pepper for 5–6 minutes per side.",
+            "Heat the tortillas.",
+            "Chop tomato and lettuce.",
+            "Fill the tortillas with chicken and vegetables.",
+            "Serve immediately."
+          ]
+        },
+        "blueberry_almond_smoothie": {
+          "name": "Blueberry Almond Smoothie",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "blueberries": "Fresh blueberries",
+            "almond_milk": "Unsweetened almond milk",
+            "almonds": "Raw almonds",
+            "yogurt": "Non-fat plain yogurt",
+            "honey": "Honey (optional)"
+          },
+          "instructions": [
+            "Place blueberries, almond milk, almonds, and yogurt in a blender.",
+            "Blend for 30–45 seconds until smooth.",
+            "Taste and add honey if more sweetness is desired. Blend for a few more seconds.",
+            "Serve immediately."
+          ]
+        },
+        "mango_oat_smoothie": {
+          "name": "Mango Oat Smoothie",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "mango": "Mango",
+            "milk": "Skim or plant-based milk",
+            "oats": "Rolled oats",
+            "honey": "Honey (optional)"
+          },
+          "instructions": [
+            "Place all ingredients in the blender.",
+            "Blend for 30–45 seconds until smooth.",
+            "Serve immediately."
+          ]
+        },
+        "oats_banana_peanut": {
+          "name": "Oatmeal with Banana & Peanut Butter",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "oats": "Rolled oats",
+            "milk": "Milk (or plant-based)",
+            "banana": "Banana",
+            "peanut_butter": "Peanut butter",
+            "cinnamon": "Cinnamon"
+          },
+          "instructions": [
+            "In a small pot, mix the oats with the milk.",
+            "Cook over medium heat for 5-7 minutes until thickened.",
+            "Mash half the banana and add it along with cinnamon to the oats. Mix well.",
+            "Serve in a bowl and top with the rest of the sliced banana and peanut butter."
+          ]
+        },
+        "chicken_curry": {
+          "name": "Chicken Curry with Rice",
+          "ingredients": "Ingredients",
+          "steps": "Instructions",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "chicken_breast": "Chicken breast",
+            "white_rice": "Uncooked white rice",
+            "coconut_milk_light": "Light coconut milk",
+            "onion": "Onion",
+            "garlic": "Clove of garlic",
+            "olive_oil": "Olive oil",
+            "curry_powder": "Curry powder",
+            "salt": "Salt",
+            "pepper": "Pepper"
+          },
+          "instructions": [
+            "Cook the rice in salted water for 15–18 minutes. Drain.",
+            "In a pan, heat oil and sauté onion and garlic for 2–3 minutes.",
+            "Add chicken and cook until browned.",
+            "Add coconut milk and curry, cook for 10 minutes more.",
+            "Serve the chicken over the rice."
+          ]
+        },
+        "tuna_quinoa_salad": {
+          "name": "Tuna and Quinoa Salad",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "tuna_water": "Tuna in water",
+            "cooked_quinoa": "Cooked quinoa",
+            "tomato": "Tomato",
+            "cucumber": "Cucumber",
+            "olive_oil": "Olive oil",
+            "lemon_juice": "Lemon juice",
+            "salt": "Salt",
+            "pepper": "Pimienta"
+          },
+          "instructions": [
+            "Cook quinoa according to package instructions and drain.",
+            "Mix chopped tuna, tomato, and cucumber.",
+            "Add quinoa, oil, lemon juice, salt, and pepper.",
+            "Toss and serve."
+          ]
+        },
+        "spinach_cheese_omelette": {
+          "name": "Spinach and Cheese Omelette",
+          "ingredients": "Ingredients",
+          "steps": "Instructions",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "eggs": "Eggs (100g)",
+            "spinach": "Fresh spinach",
+            "low_fat_cheese": "Low fat grated cheese",
+            "olive_oil": "Olive oil",
+            "salt": "Salt",
+            "pepper": "Pimienta"
+          },
+          "instructions": [
+            "Beat the eggs with salt and pepper.",
+            "Heat oil in a pan and add spinach for 1–2 minutes.",
+            "Add the eggs and cook for 2–3 minutes.",
+            "Add cheese, fold the omelette and serve."
+          ]
+        },
+        "baked_salmon_vegetables": {
+          "name": "Baked Salmon with Vegetables",
+          "ingredients": "Ingredients",
+          "steps": "Instructions",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "salmon_fillet": "Salmon fillet",
+            "broccoli": "Broccoli",
+            "carrot": "Carrot",
+            "olive_oil": "Olive oil",
+            "lemon_juice": "Lemon juice",
+            "salt": "Salt",
+            "pepper": "Pepper"
+          },
+          "instructions": [
+            "Preheat the oven to 180 °C (350 °F).",
+            "Place the salmon and vegetables on a baking tray.",
+            "Add olive oil, lemon juice, salt, and pepper.",
+            "Bake for 20–25 minutes.",
+            "Serve hot."
+          ]
+        },
+        "lentil_stew": {
+          "name": "Stewed Lentils with Vegetables",
+          "ingredients": "Ingredients",
+          "steps": "Instructions",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "cooked_lentils": "Cooked lentils",
+            "carrot": "Carrot",
+            "bell_pepper": "Bell pepper",
+            "onion": "Onion",
+            "olive_oil": "Olive oil",
+            "salt": "Salt",
+            "pepper": "Pepper",
+            "cumin": "Cumin"
+          },
+          "instructions": [
+            "Sauté onion, carrot, and pepper in oil for 5 minutes.",
+            "Add the lentils and spices.",
+            "Cook over medium heat for 10–15 minutes.",
+            "Serve hot."
+          ]
+        },
+        "turkey_mashed_potatoes": {
+          "name": "Turkey Breast with Mashed Potatoes",
+          "ingredients": "Ingredients",
+          "steps": "Instructions",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "turkey_breast": "Turkey breast",
+            "potato": "Potato",
+            "skim_milk": "Skim milk",
+            "olive_oil": "Olive oil",
+            "salt": "Salt",
+            "pepper": "Pepper"
+          },
+          "instructions": [
+            "Boil the potato until soft and mash with milk.",
+            "Grill the turkey with oil, salt, and pepper.",
+            "Serve the turkey with the mashed potatoes."
+          ]
+        },
+        "brown_rice_eggs": {
+          "name": "Brown Rice with Eggs and Vegetables",
+          "ingredients": "Ingredients",
+          "steps": "Instructions",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "cooked_brown_rice": "Cooked brown rice",
+            "eggs": "Eggs",
+            "spinach": "Spinach",
+            "olive_oil": "Olive oil",
+            "salt": "Salt",
+            "pepper": "Pepper"
+          },
+          "instructions": [
+            "Sauté spinach with oil for 1-2 minutes.",
+            "Add eggs and cook to taste.",
+            "Serve with brown rice."
+          ]
+        },
+        "chicken_wrap": {
+          "name": "Whole Wheat Chicken and Vegetable Wrap",
+          "ingredients": "Ingredients",
+          "steps": "Instructions",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "whole_wheat_tortilla": "Whole wheat tortilla",
+            "chicken_breast": "Chicken breast",
+            "lettuce": "Lettuce",
+            "tomato": "Tomato",
+            "yogurt": "Non-fat plain yogurt",
+            "salt": "Salt",
+            "pepper": "Pepper"
+          },
+          "instructions": [
+            "Grill chicken with salt and pepper.",
+            "Mix yogurt with salt for sauce.",
+            "Fill tortilla with chicken, vegetables and sauce.",
+            "Roll and serve."
+          ]
+        },
+        "chicken_rice_bowl": {
+          "name": "Chicken & Brown Rice Bowl",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "chicken_breast": "Chicken breast",
+            "cooked_brown_rice": "Cooked brown rice",
+            "broccoli": "Broccoli",
+            "olive_oil": "Olive oil",
+            "salt": "Salt",
+            "pepper": "Pepper"
+          },
+          "instructions": [
+            "Grill the chicken breast.",
+            "Sauté the broccoli with olive oil.",
+            "Serve everything together with the rice."
+          ]
+        },
+        "fish_potato": {
+          "name": "Fish Fillet with Boiled Potato",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "white_fish": "White fish fillet",
+            "potato": "Potato",
+            "olive_oil": "Olive oil",
+            "lemon_juice": "Lemon",
+            "salt": "Salt",
+            "pepper": "Pepper"
+          },
+          "instructions": [
+            "Boil the potato.",
+            "Cook the fish on a griddle or pan.",
+            "Serve with lemon."
+          ]
+        },
+        "whole_wheat_pasta": {
+          "name": "Whole Wheat Pasta with Veggies",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "raw_whole_pasta": "Uncooked whole wheat pasta",
+            "zucchini": "Zucchini",
+            "bell_pepper": "Bell pepper",
+            "olive_oil": "Olive oil",
+            "salt": "Salt",
+            "herbs": "Spices"
+          },
+          "instructions": [
+            "Cook the pasta.",
+            "Sauté the vegetables.",
+            "Mix and serve."
+          ]
+        },
+        "beef_salad": {
+          "name": "Lean Beef with Mixed Salad",
+          "ingredients": "Ingredients",
+          "steps": "Steps",
+          "nutritional_info": "Nutritional Info",
+          "per_serving": "Per serving",
+          "time_total": "Total time",
+          "minutes": "minutes",
+          "to_taste": "to taste",
+          "add_to_log": "Add to Diary",
+          "portions": "Portions",
+          "list": {
+            "lean_beef": "Lean beef",
+            "lettuce": "Lettuce",
+            "tomato": "Tomato",
+            "olive_oil": "Olive oil"
+          },
+          "instructions": [
+            "Grill the beef.",
+            "Prepare the salad.",
+            "Serve together."
+          ]
+        }
+      },
+      "scanner": {
+        "starting": "Starting camera...",
+        "processing": "Analyzing...",
+        "retake": "Retake",
+        "retry": "Retry",
+        "error_camera_title": "Camera Access Denied",
+        "error_camera_desc": "Please grant camera permissions in your device settings.",
+        "error_analysis": "Analysis Failed",
+        "help_title": "How to Scan",
+        "help_desc": "Point the camera at your food or menu. Ensure good lighting and a clear view for the best AI analysis.",
+        "flash_unavailable": "Flash/Torch is unavailable on this device or camera.",
+        "disclaimer_title": "Disclaimer",
+        "disclaimer_text": "The results from this scanner are AI-based estimations. They may not be 100% accurate and should not be considered medical advice.",
+        "disclaimer_accept": "I Understand"
+      },
+      "menu_analysis": {
+        "title": "Menu Analysis",
+        "recommended": "Best Options",
+        "avoid": "Limit or Avoid",
+        "view_result": "View Analysis",
+        "partial_list_note": "Nota: This analysis does not list the entire menu. The AI has filtered the content to show only the best options for your goal and what to avoid."
+      },
+      "analysis": {
+        "calories": "Calories",
+        "protein": "Protein",
+        "carbs": "Carbs",
+        "fats": "Fats",
+        "sugars": "Sugars",
+        "fiber": "Fiber",
+        "recommendation": "AI Recommendation",
+        "default_reason": "Analysis based on visual estimation and common portion sizes.",
+        "health_rating": {
+          "healthy": "Healthy",
+          "moderate": "Moderate",
+          "avoid": "Avoid"
+        },
+        "save_to_diary": "Save to Diary",
+        "details_title": "Meal Details",
+        "close": "Close",
+        "detected_ingredients": "Detected Ingredients"
+      },
+      "manual_food": {
+        "title": "Manual Food Entry",
+        "name_label": "Food Name",
+        "name_placeholder": "e.g., Chicken Salad",
+        "desc_label": "Description (Optional)",
+        "desc_placeholder": "e.g., Large portion with vinaigrette dressing",
+        "portion_label": "Portion Size",
+        "portion_small": "Small",
+        "portion_medium": "Medium",
+        "portion_large": "Large",
+        "submit": "Analyze & Save",
+        "error_analysis": "Failed to analyze food. Please check the description.",
+        "ai_disclaimer": "Note: Nutritional values are AI-generated estimates."
+      },
+      "exercise": {
+        "title": "Log Exercise",
+        "subtitle": "Choose how you want to track your activity.",
+        "running": "Running / Cardio",
+        "weights": "Strength Training",
+        "write": "AI Analysis",
+        "manual": "Manual Calories",
+        "btn_cardio": "Cardio",
+        "btn_strength": "Weights",
+        "btn_ai": "AI Text",
+        "btn_manual": "Manual"
+      },
+      "running": {
+        "title": "Running / Cardio",
+        "choose_intensity": "1. Choose Intensity",
+        "adjust_duration": "2. Adjust Duration",
+        "minutes_unit": "minutes",
+        "intensity_low": "Low Intensity",
+        "intensity_low_desc": "Light effort, easy to maintain a conversation.",
+        "intensity_low_example": "Brisk walking, light cycling.",
+        "intensity_medium": "Medium Intensity",
+        "intensity_medium_desc": "Moderate effort, conversation is difficult.",
+        "intensity_medium_example": "Jogging, elliptical.",
+        "intensity_high": "High Intensity",
+        "intensity_high_desc": "High effort, difficult to speak more than a few words.",
+        "intensity_high_example": "Sprinting, HIIT.",
+        "save_run": "Save {{calories}} kcal",
+        "error_toast_title": "Error saving exercise"
+      },
+      "weights": {
+        "title": "Strength Training",
+        "intensity_low": "Light Weights",
+        "intensity_low_desc": "Focus on high reps, low weight, or light stretching.",
+        "intensity_low_example": "Yoga, light resistance bands.",
+        "intensity_medium": "Moderate Weights",
+        "intensity_medium_desc": "Standard weightlifting, moderate intensity.",
+        "intensity_medium_example": "Circuit training, bodyweight exercises.",
+        "intensity_high": "Intense Weights",
+        "intensity_high_desc": "Heavy lifting, high effort, long rest periods.",
+        "intensity_high_example": "Powerlifting, intense bodybuilding.",
+        "save_action": "Save {{calories}} kcal",
+        "error_toast_title": "Error saving exercise"
+      },
+      "write_exercise": {
+        "title": "AI Exercise Analysis",
+        "placeholder": "Describe your workout. E.g., 'I ran for 45 minutes at a moderate pace' or 'I did 1 hour of heavy weightlifting.'",
+        "example": "The AI will estimate the calories burned based on your description and profile.",
+        "ai_button": "AI Powered",
+        "add_button": "Analyze & Save",
+        "error_toast_title": "Analysis Failed"
+      },
+      "manual_exercise": {
+        "title": "Manual Calories",
+        "calories_burned": "Calories Burned",
+        "add_button": "Add to Diary",
+        "validation_error": "Please enter a valid calorie amount.",
+        "error_toast_title": "Error saving manual entry"
+      },
+      "progress": {
+        "title": "Progress",
+        "subtitle": "Track your journey and celebrate your achievements.",
+        "day_streak": "Day Streak",
+        "day_streaks": "Day Streaks",
+        "update_weight": "Update Weight",
+        "weight_updated_today": "Weight updated today (Max 2/day)",
+        "weight_progress_title": "Weight Progress",
+        "weight_progress_no_data": "Not enough data to display the chart.",
+        "weight_progress_start_logging": "Log your weight regularly to see your progress.",
+        "chart_all": "ALL",
+        "1y": "1Y",
+        "calorie_intake": "Calorie Intake",
+        "last_7_days": "Last 7 days",
+        "weight_goal": "Weight Goal",
+        "current_weight": "Current Weight",
+        "height": "Height",
+        "gender": "Gender",
+        "updated_today": "Updated today"
+      },
+      "bmi_calculator": {
+        "title": "BMI Calculator",
+        "your_weight_is": "Your weight is:",
+        "underweight": "Underweight",
+        "healthy": "Healthy",
+        "overweight": "Overweight",
+        "obesity": "Obesity",
+        "incomplete_data": "Complete your height and weight in settings to calculate BMI.",
+        "tooltip": "The Body Mass Index (BMI) is a measure used to screen for weight categories that may lead to health problems. It is calculated by dividing weight by the square of the height. It is an estimate and should not be used as the sole indicator of health."
+      },
+      "edit_weight": {
+        "title": "Update Current Weight",
+        "weight_unit": "kg",
+        "save": "Save Weight"
+      },
+      "edit_goal_weight": {
+        "title": "Update Goal Weight",
+        "weight_unit": "kg",
+        "save": "Save Goal"
+      },
+      "streak_modal": {
+        "title": "Daily Streak!",
+        "subtitle": "You've logged food or exercise for {{streak}} consecutive days. Keep up the great work!",
+        "keep_it_up": "Keep it up!"
+      },
+      "badges": {
+        "title": "Achievements",
+        "subtitle": "Unlock badges by achieving milestones in your health journey.",
+        "meal_streak": "Meal Streak",
+        "hydration_streak": "Hydration Streak",
+        "weight_loss": "Weight Loss",
+        "total_badges": "Total Unlocked"
+      },
+      "badge_names": {
+        "streak_1": { "name": "First Log", "desc": "Log your first meal or exercise." },
+        "streak_3": { "name": "3-Day Streak", "desc": "Log for 3 consecutive days." },
+        "streak_6": { "name": "6-Day Streak", "desc": "Log for 6 consecutive days." },
+        "streak_10": { "name": "10-Day Streak", "desc": "Log for 10 consecutive days." },
+        "streak_30": { "name": "Month of Consistency", "desc": "Log for 30 consecutive days." },
+        "streak_60": { "name": "Two Months Strong", "desc": "Log for 60 consecutive days." },
+        "streak_90": { "name": "Quarter Year", "desc": "Log for 90 consecutive days." },
+        "streak_100": { "name": "Century Club", "desc": "Log for 100 consecutive days." },
+        "streak_150": { "name": "Halfway to a Year", "desc": "Log for 150 consecutive days." },
+        "streak_200": { "name": "Double Century", "desc": "Log for 200 consecutive days." },
+        "streak_250": { "name": "Almost There", "desc": "Log for 250 consecutive days." },
+        "streak_300": { "name": "Triple Century", "desc": "Log for 300 consecutive days." },
+        "streak_350": { "name": "The Final Countdown", "desc": "Log for 350 consecutive days." },
+        "streak_400": { "name": "Beyond a Year", "desc": "Log for 400 consecutive days." },
+        "streak_450": { "name": "Master Logger", "desc": "Log for 450 consecutive days." },
+        "streak_500": { "name": "Legendary Logger", "desc": "Log for 500 consecutive days." },
+        "water_1": { "name": "First Sip", "desc": "Hit your water goal once." },
+        "water_3": { "name": "Hydrated Trio", "desc": "Hit your water goal 3 times." },
+        "water_6": { "name": "Half Dozen Drops", "desc": "Hit your water goal 6 times." },
+        "water_10": { "name": "Hydration Master", "desc": "Hit your water goal 10 times." },
+        "weight_1": { "name": "1 kg Lost", "desc": "Achieve 1 kg of weight loss." },
+        "weight_10": { "name": "10 kg Lost", "desc": "Achieve 10 kg of weight loss." },
+        "weight_20": { "name": "20 kg Lost", "desc": "Achieve 20 kg of weight loss." },
+        "weight_50": { "name": "50 kg Lost", "desc": "Achieve 50 kg of weight loss." },
+        "weight_70": { "name": "70 kg Lost", "desc": "Achieve 70 kg of weight loss." }
+      },
+      "share": {
+        "meal_message": "I just analyzed my {{food}} with Calorel! Check out my nutrition.",
+        "badge_message": "I just unlocked the '{{name}}' achievement on Calorel! Time to celebrate.",
+        "achievement_unlocked": "Achievement Unlocked!",
+        "generated_with": "Generated with Calorel",
+        "prot_short": "Prot.",
+        "carb_short": "Carbs",
+        "fat_short": "Fats"
+      },
+      "diets": {
+        "title": "Weekly Plan",
+        "subtitle": "Explore personalized diet plans generated by AI.",
+        "weekly_plan_title": "Your Weekly Plan",
+        "weekly_plan_subtitle": "Personalized plan generated by AI.",
+        "regenerate_tooltip": "Regenerate Plan (Weekly Limit)",
+        "regenerate_dialog_title": "Regenerate Diet Plan?",
+        "regenerate_dialog_desc": "Generating a new plan will consume one of your weekly AI uses. Are you sure you want to proceed?",
+        "regenerate_confirm": "Regenerate",
+        "active_diet": "Active Meal",
+        "gap_title": "Break Time",
+        "gap_time_message": "It's break time. Remember to stay hydrated and prepare for your next meal!",
+        "breakfast": "Breakfast",
+        "lunch": "Lunch",
+        "snack": "Snack",
+        "dinner": "Dinner",
+        "drawer_eat": "Foods to Eat",
+        "drawer_avoid": "Foods to Avoid",
+        "drawer_close": "Close Details",
+        "scan_food_button": "Scan Meal"
+      },
+      "diets_onboarding": {
+        "title": "Personalized Diet Plan",
+        "subtitle": "Answer a few questions to generate your custom weekly meal plan.",
+        "step_country_title": "Where are you located?",
+        "step_country_desc": "This helps the AI suggest local and accessible ingredients.",
+        "country_expansion_note": "We currently support local cuisine suggestions for these countries. If yours is not listed, select 'United States' for a general Western diet.",
+        "step1_title": "Activity Level",
+        "step1_desc": "How active are you on a typical week?",
+        "activity": {
+          "sedentary": "Sedentary",
+          "sedentary_desc": "Little or no exercise.",
+          "light": "Lightly Active",
+          "light_desc": "Light exercise 1-3 days/week.",
+          "moderate": "Moderately Active",
+          "moderate_desc": "Moderate exercise 3-5 days/week.",
+          "high": "Very Active",
+          "high_desc": "Intense exercise 6-7 days/week."
+        },
+        "step2_title": "Dietary Preferences",
+        "step2_desc": "Select any dietary restrictions or preferences.",
+        "preferences": {
+          "vegetarian": "Vegetarian",
+          "lactose_free": "Lactose Free",
+          "sugar_free": "Sugar Free",
+          "gluten_free": "Gluten Free"
+        },
+        "step2_tip": "You can select multiple options.",
+        "step3_title": "Lifestyle Factors",
+        "step3_desc": "Tell us about your cooking habits and budget.",
+        "cooking_time": "Available Cooking Time",
+        "budget": "Shopping Budget",
+        "levels": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        },
+        "next": "Next",
+        "generate": "Generate Plan",
+        "toast_error_title": "Failed to Generate Plan",
+        "generating_step1": "Analyzing your goals and preferences...",
+        "generating_step2": "Adapting plan to local cuisine in {{country}}...",
+        "generating_step2_generic": "Adapting plan to general Western cuisine...",
+        "generating_step3": "Calculating nutritional balance...",
+        "generating_step4": "Finalizing weekly meal structure...",
+        "generating_step5": "Plan ready! Saving to your profile.",
+        "ai_processing": "AI Processing",
+        "toast_success": "Weekly plan generated successfully!"
+      },
+      "countries": {
+        "united_states": "United States",
+        "mexico": "Mexico",
+        "spain": "Spain",
+        "argentina": "Argentina",
+        "brazil": "Brazil",
+        "dominican_republic": "Dominican Republic",
+        "colombia": "Colombia",
+        "chile": "Chile",
+        "peru": "Perú"
+      },
+      "settings": {
+        "title": "Profile",
+        "subtitle": "Your personal space",
+        "configuration_title": "Configuration",
+        "manage_intake": "Manage my intake",
+        "current_weight": "Current weight",
+        "goal_weight_short": "Goal weight",
+        "current_bmi": "Current BMI",
+        "daily_goal": "Daily Goal",
+        "caloric_budget": "Caloric budget",
+        "net_carbs": "Net Carbs",
+        "protein": "Protein",
+        "fat": "Fat",
+        "edit": "Edit",
+        "macros": "Macros",
+        "register_button": "Sign Up",
+        "save_progress": "Save your progress",
+        "profileCard": {
+          "namePlaceholder": "Complete Profile",
+          "viewAndEdit": "Edit Details"
+        },
+        "account": {
+          "title": "Account",
+          "personalDetails": "Personal Details",
+          "preferences": "Preferences",
+          "reminders": "Reminders"
+        },
+        "language": "Language",
+        "goals": {
+          "title": "Goals & Tracking",
+          "editNutrition": "Nutritional Goals",
+          "editWeight": "Weight Goal",
+          "ringColors": "Ring Colors",
+          "connectApps": "Connect Apps"
+        },
+        "support": {
+          "title": "Support & Legal",
+          "requestFeature": "Request a Feature",
+          "supportEmail": "Contact Support",
+          "terms": "Terms of Service",
+          "privacy": "Privacy Policy"
+        },
+        "social": {
+          "title": "Social Media",
+          "instagram": "Instagram",
+          "tiktok": "TikTok"
+        },
+        "actions": {
+          "title": "Actions",
+          "signOut": "Sign Out",
+          "deleteAccount": "Delete Account"
+        },
+        "deleteDialog": {
+          "title": "Are you absolutely sure?",
+          "description": "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+          "cancel": "Cancel",
+          "confirm": "Delete Account"
+        }
+      },
+      "reminders": {
+        "title": "Reminders",
+        "subtitle": "Configure Alerts",
+        "description": "Receive local notifications to maintain your habits. Max 4 per day.",
+        "meals_title": "Meals",
+        "meals_desc": "Breakfast, Lunch, and Dinner",
+        "water_title": "Hydration",
+        "water_desc": "Gentle afternoon nudge",
+        "weight_title": "Weight & Progress",
+        "weight_desc": "Mondays & Thursdays (9am)",
+        "toast_enabled": "Reminders enabled",
+        "toast_disabled": "Reminders disabled",
+        "toast_denied": "Notification permissions denied",
+        "toast_denied_desc": "Please enable notifications in your phone's settings.",
+        "toast_error_generic": "An error occurred while enabling notifications."
+      },
+      "edit_profile": {
+        "title": "Edit Profile",
+        "full_name": "Full Name",
+        "save": "Save Changes",
+        "toast_error": "Failed to save profile.",
+        "age": "Age",
+        "height": "Height",
+        "weight": "Weight",
+        "years_unit": "years",
+        "gender": "Gender",
+        "goal": "Goal",
+        "experience": "Experience",
+        "gender_female": "Female",
+        "gender_male": "Male",
+        "gender_not_say": "Prefer not to say",
+        "goal_lose": "Lose Weight",
+        "goal_maintain": "Maintain Weight",
+        "goal_gain": "Gain Weight",
+        "experience_several": "Used several apps",
+        "experience_one_or_two": "Used one or two apps",
+        "experience_first_time": "First time using an app",
+        "save_success": "{{field}} saved successfully"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "theme_title": "App Theme",
+        "theme_light": "Light",
+        "theme_dark": "Dark",
+        "theme_system": "System",
+        "time_format_title": "Time Format",
+        "time_format_12h": "12 Hours (AM/PM)",
+        "time_format_24h": "24 Hours",
+        "toast_error": "Failed to save preference."
+      },
+      "nutritional_goals": {
+        "title": "Nutritional Goals",
+        "daily_goals": "Daily Macro Goals",
+        "subtitle": "Adjust your daily goals. Changes are saved automatically.",
+        "calories": "Calories",
+        "protein": "Protein",
+        "carbs": "Carbohydrates",
+        "fats": "Fats",
+        "sugars": "Sugars",
+        "fiber": "Fiber",
+        "save_error": "Failed to save goals.",
+        "ai_suggestions": "AI Suggestions"
+      },
+      "ai_suggestions": {
+        "workouts_label": "Weekly Workouts",
+        "workouts_per_week": "per week",
+        "workouts_light": "Light (1-2)",
+        "workouts_moderate": "Moderate (3-4)",
+        "workouts_active": "Active (5-6)",
+        "workouts_very_active": "Very Active (7+)",
+        "goal_weight_label": "Goal Weight",
+        "rate_label": "Weekly Rate",
+        "week": "week",
+        "summary_title": "Summary & Generation",
+        "disclaimer": "AI will use this info to calculate your optimal calorie and macro targets.",
+        "continue": "Continue",
+        "generate": "Generate Goals",
+        "generate_loading": "Generating...",
+        "toast_success": "New goals generated and saved!",
+        "toast_error": "Failed to generate goals."
+      },
+      "weight_goal": {
+        "title": "Weight Goal",
+        "change_button": "Change Goal",
+        "current_weight": "Current Weight",
+        "height": "Height",
+        "gender": "Gender",
+        "updated_today": "Updated today"
+      },
+      "ring_colors": {
+        "title": "Ring Colors",
+        "subtitle": "Understand what each color means on your daily progress rings.",
+        "green_title": "Green (Main)",
+        "green_desc": "You are within 10% of your goal (or exceeded it safely).",
+        "yellow_title": "Yellow (Amber)",
+        "yellow_desc": "You are between 10% and 20% over your goal (e.g. too many calories).",
+        "red_title": "Red (Destructive)",
+        "red_desc": "You are more than 20% over your goal, indicating significant excess.",
+        "dotted_title": "Dotted Line",
+        "dotted_desc": "No data logged for this day yet."
+      },
+      "request_feature": {
+        "title": "Request a Feature",
+        "subtitle": "Help us improve Calorel!",
+        "description": "Vote for existing features or suggest a new one. Most voted are prioritized.",
+        "search_placeholder": "Search existing requests...",
+        "create_button": "New Request",
+        "delete_toast_success": "Request deleted successfully.",
+        "delete_toast_error": "Failed to delete request."
+      },
+      "new_request_drawer": {
+        "title": "Suggest a New Feature",
+        "description": "Describe the feature you would like to see in Calorel.",
+        "title_label": "Title",
+        "title_placeholder": "e.g., Add Apple Health integration",
+        "desc_label": "Detailed Description",
+        "desc_placeholder": "Explain why this feature is important and how it should work.",
+        "submit_button": "Submit Request",
+        "cancel_button": "Cancel",
+        "toast_success": "Feature request submitted successfully!",
+        "toast_error": "Failed to submit request."
+      },
+      "toasts": {
+        "coming_soon_title": "Coming Soon",
+        "coming_soon_desc": "This feature is currently in development.",
+        "delete_success_title": "Account Deleted",
+        "delete_success_desc": "Your account and all associated data have been permanently deleted.",
+        "delete_error_title": "Failed to Delete"
+      },
+      "tutorial": {
+        "welcome_title": "Welcome to Calorel!",
+        "welcome_content": "Let's take a quick tour of the main features to start your health journey.",
+        "carousel_title": "Your Daily Summary",
+        "carousel_content": "Here you will find your daily progress for calories, macros, and other key metrics. Swipe to see more details!",
+        "scanner_title": "Log Everything Easily",
+        "scanner_content": "Tap the center button to open the menu. You can scan your food with AI, log an exercise, or add entries manually.",
+        "progress_title": "Track Your Progress",
+        "progress_content": "Visit the Progress tab to see your weight evolution, BMI, and track your daily streaks.",
+        "profile_title": "Your Profile",
+        "profile_content": "The Profile tab is your personal space. Here you can edit your details, manage goals, and configure app settings.",
+        "finish": "Finish",
+        "next": "Next"
+      },
+      "widgets": {
+        "title": "Widgets",
+        "how_to_add": "How to add?",
+        "instructions_title": "Add Widget to Home",
+        "step_1": "Go to your phone's home screen.",
+        "step_2": "Long press on an empty space.",
+        "step_3": "Select 'Widgets'.",
+        "step_4": "Search for 'Calorel' and drag the widget."
       }
     }
   }

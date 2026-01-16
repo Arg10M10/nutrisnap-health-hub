@@ -89,8 +89,8 @@ const Subscribe = () => {
     navigate('/');
   };
 
-  const annualPrice = "$36.00";
-  const annualMonthlyEquivalent = "$3.00";
+  const annualPrice = "$60.00";
+  const annualMonthlyEquivalent = "$5.00";
   const monthlyPrice = "$9.00";
 
   const benefits = [
